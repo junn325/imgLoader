@@ -17,7 +17,7 @@ namespace imgLoader
         internal const byte FAIL_RETRY   = 10;
 
         internal const string TEMP_ROUTE                = "hpdTempRout";
-        internal const string PROJECT_NAME              = "imgDownloader";
+        internal const string PROJECT_NAME              = "imgLoader";
         internal const string TEMP_CHKDITEM_IO_FILENAME = "hpdTemp";
 
         private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", @"""", "<", ">", "/", "*" };
@@ -125,12 +125,9 @@ namespace imgLoader
                 if (val.Contains("#")) val = val.Split('#')[0];
                 if (val.Split('/').Last().Length == 0) val = val.Split('/')[val.Split('/').Length - 2];    //nhentai
                 else val = val.Split('/').Last();                                                          //hitomi/hiyobi/pixiv
-
                 if (val.Contains(".html")) val = val.Split(".html")[0];                                    //hitomi
 
-
                 return int.TryParse(val, out _) ? val : "";
-
             }
             catch
             {
@@ -171,29 +168,27 @@ namespace imgLoader
         {
             string mNumber = GetNumber(link);
 
-            if (link.Contains("hiyobi.me")) return new hiyobi(mNumber);
-            else if (link.Contains("hitomi.la")) return new Hitomi(mNumber);
-            else if (link.Contains("pixiv")) return new pixiv(mNumber);
-            else if (link.Contains("nhentai.net")) return new nhentai(mNumber);
-            else
-            {
-                MessageBox.Show("사이트 로드 오류.");
-                return null;
-            }
-        }
+            if (mNumber.Length == 0) return null;
 
+            if (link.Contains("hiyobi.me")) return new hiyobi(mNumber);
+            if (link.Contains("hitomi.la")) return new Hitomi(mNumber);
+            if (link.Contains("pixiv")) return new pixiv(mNumber);
+            if (link.Contains("nhentai.net")) return new nhentai(mNumber);
+
+            return null;
+        }
     }
 
     internal class ListViewItemComparer : IComparer
     {
-        private readonly int col;
+        private readonly int _col;
         public ListViewItemComparer()
         {
-            col = 0;
+            _col = 0;
         }
         public ListViewItemComparer(int column)
         {
-            col = column;
+            _col = column;
         }
         public int Compare(object x, object y)
         {

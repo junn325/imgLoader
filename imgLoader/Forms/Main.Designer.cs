@@ -86,6 +86,7 @@ namespace imgLoader.Forms
             this.menuItem_Settings});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(163, 132);
+            this.contextMenuStrip1.Opening += new CancelEventHandler(this.ContextMenuStrip1_Opening);
             // 
             // menuItem_Add
             // 
@@ -242,7 +243,6 @@ namespace imgLoader.Forms
             this.listView1.TabIndex = 12;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ListView1_MouseDown);
             // 
             // statusStrip1
             // 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -76,6 +77,7 @@ namespace imgLoader.Forms
                         millisec = sw.ElapsedMilliseconds;
 
                         site = Core.LoadSite(link.Value);
+                        if (site?.IsValidated() != true) { MessageBox.Show("오류: 로드 실패"); return; }
 
                         Trace.WriteLine($"BeforeGetList: {sw.ElapsedMilliseconds - millisec}ms"); millisec = sw.ElapsedMilliseconds;
 
@@ -103,7 +105,8 @@ namespace imgLoader.Forms
                         }
                         Trace.WriteLine($"GetTitle: {sw.ElapsedMilliseconds - millisec}ms"); millisec = sw.ElapsedMilliseconds;
 
-                        route = artist == "N/A"
+                        route =
+                            artist == "N/A"
                             ? $@"{Core.Route}\{title}"
                             : Properties.Settings.Default.showAuthor
                                 ? $@"{Core.Route}\{title} ({artist})"
@@ -118,7 +121,6 @@ namespace imgLoader.Forms
                     try
                     {
                         if (!Directory.Exists(route)) Directory.CreateDirectory(route);
-
                         Core.CreateInfo(route, Core.GetNumber(link.Value), site);
                     }
                     catch (DirectoryNotFoundException)
@@ -245,7 +247,7 @@ namespace imgLoader.Forms
             }
 
             _done++;
-        }          //버퍼 크기 조절해보기
+        }
 
         private void HandleFail(string route)
         {
@@ -474,23 +476,15 @@ namespace imgLoader.Forms
             setting.ShowDialog();
         }
 
-        private void ListView1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Right) return;
-
-            bool temp = listView1.GetItemAt(listView1.PointToClient(MousePosition).X, listView1.PointToClient(MousePosition).Y) != null;
-            menuItem_LinkCp.Enabled = temp;
-            menuItem_Remove.Enabled = temp;
-        }
-
         private void TextBox1_Leave(object sender, EventArgs e)
         {
             textBox1.Text = "주소 입력 후 엔터로 추가";
         }
 
-        private void ContextMenuStrip1_Opening(object sender, EventArgs e)
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
-
+            menuItem_LinkCp.Enabled = listView1.SelectedItems.Count != 0;
+            menuItem_Remove.Enabled = listView1.SelectedItems.Count != 0;
         }
     }
 }
