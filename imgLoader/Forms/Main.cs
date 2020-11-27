@@ -318,7 +318,7 @@ namespace imgLoader.Forms
 
             foreach (ListViewItem item in listView1.CheckedItems)
             {
-                itm.Add(item.SubItems[2].Text, item.SubItems[2].Text);
+                itm.Add(item.SubItems[1].Text, item.SubItems[2].Text);
             }
 
             if (itm.Count == 0)

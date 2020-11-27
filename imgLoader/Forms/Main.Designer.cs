@@ -86,7 +86,7 @@ namespace imgLoader.Forms
             this.menuItem_Settings});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
             this.contextMenuStrip1.Size = new System.Drawing.Size(163, 132);
-            this.contextMenuStrip1.Opening += new CancelEventHandler(this.ContextMenuStrip1_Opening);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
             // 
             // menuItem_Add
             // 
