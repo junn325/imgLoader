@@ -48,7 +48,7 @@ namespace imgLoader.Forms
             }
         }
 
-        private void Download(Dictionary<string,string> url)
+        private void Process(Dictionary<string,string> url)
         {
             try
             {
@@ -199,7 +199,7 @@ namespace imgLoader.Forms
             {
                 if (we.Response == null)
                 {
-                    Core.Log($"실패:null: {uri}");
+                    Core.Log($"실패:응답없음: {uri}");
                     failed.Add(fileName, uri);
                     return;
                 }
@@ -337,7 +337,7 @@ namespace imgLoader.Forms
 
             toolStrip_lblTotalNum.Text = "0/*";
 
-            thrDownStart = new Thread(() => Download(itm)) { Name = "스레드" };
+            thrDownStart = new Thread(() => Process(itm)) { Name = "스레드" };
             thrDownStart.Start();
         }
 

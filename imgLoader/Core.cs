@@ -16,9 +16,11 @@ namespace imgLoader
         internal const byte WAIT_TIME    = 25; //밀리세컨드
         internal const byte FAIL_RETRY   = 10;
 
-        internal const string TEMP_ROUTE                = "hpdTempRout";
-        internal const string PROJECT_NAME              = "imgLoader";
-        internal const string TEMP_CHKDITEM_IO_FILENAME = "hpdTemp";
+        internal const string PROJECT_NAME = "imgLoader";
+        internal const string TEMP_ROUTE   = "ILTempRout";
+
+        private const string LOG_DIR = "ILLOG";
+        private const string LOG_FILE = "ILLG";
 
         private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", @"""", "<", ">", "/", "*" };
         private static readonly string[] DREPLACE = { "[", "]", ";", "-", "", "''", "[", "]", "", "" };
@@ -31,9 +33,9 @@ namespace imgLoader
         internal static void Log(string content)
         {
             new Thread(() => {
-                if (!Directory.Exists(Path.GetTempPath() + @"\imgDownloaderLog"))
+                if (!Directory.Exists(Path.GetTempPath() + @$"\{LOG_DIR}"))
                 {
-                    Directory.CreateDirectory(Path.GetTempPath() + @"\imgDownloaderLog");
+                    Directory.CreateDirectory(Path.GetTempPath() + @$"\{LOG_DIR}");
                 }
 
                 var temp = false;
@@ -43,7 +45,7 @@ namespace imgLoader
                 {
                     try
                     {
-                        file= new FileStream(Path.GetTempPath() + @"\imgDownloaderLog\pDLog_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append, FileAccess.Write);
+                        file = new FileStream(Path.GetTempPath() + @$"\{LOG_DIR}\{LOG_FILE}_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append, FileAccess.Write);
                         temp = true;
                     }
                     catch

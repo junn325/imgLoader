@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Reflection;
@@ -9,42 +8,78 @@ using System.Threading.Tasks;
 
 namespace imgLoader_CLI
 {
-    static class Program
+    internal static class Program
     {
         private static void Main(string[] args)
         {
+            Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}");
+
             if (File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
+                Console.WriteLine($"\n현재 경로:{Core.Route}");
             }
 
-            //todo: 경로 설정 추가
+            if (args.Length == 0) Console.WriteLine("\n작업 취소: exit    경로 재설정: R\n");
 
-            Console.WriteLine($"\nimgLoader_CLI {Assembly.GetExecutingAssembly().GetName().Version}");
-
-            if (args.Length == 0)
+            while (true)
             {
-                Console.Write("\nURL: ");
+                if (Core.Route.Length == 0)
+                {
+                    Console.Write("\n경로: ");
 
-                Processor psr = new Processor();
-                psr.Initialize(new string[]{ Console.ReadLine() });
-            }
-            else
-            {
-                Processor psr = new Processor();
-                psr.Initialize(args);
+                    string path = Console.ReadLine();
+
+                    if (string.Equals(path, "exit", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
+                        continue;
+                    }
+
+                    if (Directory.Exists(path))
+                    {
+                        Core.Route = path;
+                        File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", path);
+                    }
+                    else
+                    {
+                        Console.WriteLine("\n 존재하지 않는 경로\n");
+                        continue;
+                    }
+                }
+
+                if (args.Length == 0)
+                {
+                    Console.Write("\nURL: ");
+
+                    string temp = Console.ReadLine();
+
+                    if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        break;
+                    }
+
+                    if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0)
+                    {
+                        Core.Route = "";
+                        continue;
+                    }
+
+                    Processor psr = new Processor();
+                    psr.Initialize(new string[] { temp });
+                }
+                else
+                {
+                    Processor psr = new Processor();
+                    psr.Initialize(args);
+                    break;
+                }
             }
         }
     }
 
     class Processor
     {
-        internal const string InitString_Item = "0개 항목";
-        internal const string InitString_NUM = "*/*";
-
-        internal const ushort FORM_WIDTH = 825;
-        internal const ushort FORM_HEIGHT = 495;
-
         private readonly Dictionary<string, string> failed = new Dictionary<string, string>();
         private List<Task> tasks = new List<Task>();
         private bool _stop = false;
@@ -55,20 +90,20 @@ namespace imgLoader_CLI
 
         internal void Initialize(string[] url)
         {
-            thrDownStart = new Thread(() => Download(url));
+            Console.Write("\n");
+
+            bool temp = false;
+            thrDownStart = new Thread(() => { Process(url); temp = true; });
             thrDownStart.Start();
+
+            while (!temp) Thread.Sleep(Core.WAIT_TIME *4); 
         }
 
-        internal void Download(string[] url)
+        internal void Process(string[] url)
         {
             try
             {
-                var sw = Stopwatch.StartNew();
-                Trace.WriteLine($"Download: start: {sw.ElapsedMilliseconds}ms");
-
                 Thread thStop = new Thread(Stopping);
-                long millisec = sw.ElapsedMilliseconds;
-
                 foreach (var link in url)
                 {
                     if (url.Length == 0) break;
@@ -80,10 +115,8 @@ namespace imgLoader_CLI
 
                     try
                     {
-                        millisec = sw.ElapsedMilliseconds;
-
                         site = Core.LoadSite(link);
-                        if (site?.IsValidated() != true) { Console.WriteLine("오류: 로드 실패"); return; }
+                        if (site?.IsValidated() != true) { Console.Write("오류: 로드 실패\n"); return; }
 
                         Console.Write("이미지 리스트 추출: ");
                         imgList = site.GetImgUrls();
@@ -94,17 +127,19 @@ namespace imgLoader_CLI
                         Console.WriteLine($"{artist}");
 
                         Console.Write("작품명 추출: ");
-                        title = Core.DirFilter(site.GetTitle());
+                        title = site.GetTitle();
                         Console.WriteLine($"{title}");
+
+                        title = Core.DirFilter(title);
 
                         route =
                             artist == "N/A"
-                                ? $@"{Core.Route}\{title} ({artist})"
-                                : $@"{Core.Route}\{title}";
+                                ? $@"{Core.Route}\{title}"
+                                : $@"{Core.Route}\{title} ({artist})";
                     }
                     catch
                     {
-                        Console.WriteLine("오류: 연결 실패");
+                        Console.Write(" 오류: 연결 실패");
                         continue;
                     }
 
@@ -115,11 +150,11 @@ namespace imgLoader_CLI
                     }
                     catch (DirectoryNotFoundException)
                     {
-                        Console.WriteLine("오류: 디렉토리를 찾을 수 없음");
+                        Console.Write(" 오류: 디렉토리를 찾을 수 없음");
                     }
                     catch (FileNotFoundException)
                     {
-                        Console.WriteLine("오류: 파일을 찾을 수 없음");
+                        Console.Write(" 오류: 파일을 찾을 수 없음");
                     }
 
                     _done = 0;
@@ -129,19 +164,23 @@ namespace imgLoader_CLI
                     AllocDown(route, imgList);
                     Console.Write("\n|");
 
-                    Trace.WriteLine($"AllocDown: {sw.ElapsedMilliseconds - millisec}ms");
-
-                    while (_done < imgList.Count - failed.Count) Thread.Sleep(Core.WAIT_TIME);
+                    while (_done < imgList.Count - failed.Count) Thread.Sleep(Core.WAIT_TIME *2);
 
                     _done = 0;
 
-                    HandleFail(route);
-                    while (_done < failed.Count) Thread.Sleep(Core.WAIT_TIME);
-
-                    Console.Write("|\n");
+                    var success = HandleFail(route);
+                    while (_done < failed.Count) Thread.Sleep(Core.WAIT_TIME *2);
 
                     Core.Log($"Item:Complete: {link}");
-                    Console.WriteLine("\n다운로드 완료.\n");
+                    if (success)
+                    {
+                        Console.Write("|\n");
+                        Console.WriteLine("\n다운로드 완료.\n");
+                    }
+                    else
+                    {
+                        Console.Write("\n다운로드 실패.\n");
+                    }
                 }
 
                 thStop.Start();
@@ -180,7 +219,7 @@ namespace imgLoader_CLI
             {
                 if (we.Response == null)
                 {
-                    Core.Log($"실패:null: {uri}");
+                    Core.Log($"실패:응답없음: {uri}");
                     failed.Add(fileName, uri);
                     return;
                 }
@@ -220,16 +259,21 @@ namespace imgLoader_CLI
             _done++;
         }
 
-        internal void HandleFail(string route)
+        internal bool HandleFail(string route)
         {
-            if (failed.Count == 0) return;
+            if (failed.Count == 0) return true;
 
             int cnt = Core.FAIL_RETRY;
             var failCopy = new Dictionary<string, string>(failed);
 
             AllocDown(route, failCopy);
 
-            while (_done < failCopy.Count - failed.Count) Thread.Sleep(Core.WAIT_TIME);
+            int wait = Core.FAIL_RETRY * 60;
+            while (_done < failCopy.Count - failed.Count || wait != 0)
+            {
+                wait--;
+                Thread.Sleep(Core.WAIT_TIME);
+            }
 
             while (failed.Count != 0 && cnt > 0)
             {
@@ -238,6 +282,7 @@ namespace imgLoader_CLI
             }
 
             failed.Clear();
+            return true;
         }
 
         internal void Stopping()

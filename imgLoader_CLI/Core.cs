@@ -12,8 +12,11 @@ namespace imgLoader_CLI
         internal const byte WAIT_TIME    = 25; //밀리세컨드
         internal const byte FAIL_RETRY   = 10;
 
-        internal const string PROJECT_NAME              = "imgLoader";
-        internal const string TEMP_ROUTE                = "hpdTempRout";
+        internal const string PROJECT_NAME = "imgLoader_CLI";
+        internal const string TEMP_ROUTE   = "ILCTempRout";
+
+        private const string LOG_DIR = "ILLOG";
+        private const string LOG_FILE = "ILLG";
 
         private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", @"""", "<", ">", "/", "*" };
         private static readonly string[] DREPLACE = { "[", "]", ";", "-", "", "''", "[", "]", "", "" };
@@ -23,9 +26,9 @@ namespace imgLoader_CLI
         internal static void Log(string content)
         {
             new Thread(() => {
-                if (!Directory.Exists(Path.GetTempPath() + @"\imgDownloaderLog"))
+                if (!Directory.Exists(Path.GetTempPath() + @$"\{LOG_DIR}"))
                 {
-                    Directory.CreateDirectory(Path.GetTempPath() + @"\imgDownloaderLog");
+                    Directory.CreateDirectory(Path.GetTempPath() + @$"\{LOG_DIR}");
                 }
 
                 var temp = false;
@@ -35,7 +38,7 @@ namespace imgLoader_CLI
                 {
                     try
                     {
-                        file= new FileStream(Path.GetTempPath() + @"\imgDownloaderLog\pDLog_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append, FileAccess.Write);
+                        file= new FileStream(Path.GetTempPath() + @$"\{LOG_DIR}\{LOG_FILE}_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append, FileAccess.Write);
                         temp = true;
                     }
                     catch
@@ -54,7 +57,7 @@ namespace imgLoader_CLI
             string fileName = $"{baseRoute}\\{mNumber}.{site.GetType().Name.ToLower()}";
             FileInfo file = new FileInfo(fileName);
 
-            if (file.Exists)                                                                        //총 이미지 장수 넣기
+            if (file.Exists)                                                                        //todo: 총 이미지 장수 넣기
             {
                 file.Attributes &= ~FileAttributes.Hidden;
             }
