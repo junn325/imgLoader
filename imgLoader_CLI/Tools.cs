@@ -17,7 +17,7 @@ namespace imgLoader_CLI
         /// </summary>
         public static int StrLen(this string input, string find)
         {
-            return input.Split(new string[] { find }, StringSplitOptions.None).Length - 1;
+            return input.Split(find).Length - 1;
         }
 
         public static string GetStringValue(string source, string name)

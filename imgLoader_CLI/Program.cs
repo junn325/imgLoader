@@ -30,22 +30,10 @@ namespace imgLoader_CLI
 
                     string path = Console.ReadLine();
 
-                    if (string.Equals(path, "exit", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
-                        continue;
-                    }
+                    if (string.Equals(path, "exit", StringComparison.OrdinalIgnoreCase)) { Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt"); continue; }
 
-                    if (Directory.Exists(path))
-                    {
-                        Core.Route = path;
-                        File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", path);
-                    }
-                    else
-                    {
-                        Console.WriteLine("\n 존재하지 않는 경로\n");
-                        continue;
-                    }
+                    if (Directory.Exists(path)) { Core.Route = path; File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", path); }
+                    else { Console.WriteLine("\n 존재하지 않는 경로\n"); continue; }
                 }
 
                 if (args.Length == 0)
@@ -53,17 +41,8 @@ namespace imgLoader_CLI
                     Console.Write("\nURL: ");
 
                     string temp = Console.ReadLine();
-
-                    if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        break;
-                    }
-
-                    if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        Core.Route = "";
-                        continue;
-                    }
+                    if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
+                    if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
 
                     Processor psr = new Processor();
                     psr.Initialize(new string[] { temp });
