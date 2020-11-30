@@ -78,7 +78,7 @@ namespace imgLoader_CLI
             while (!temp) Thread.Sleep(Core.WAIT_TIME *4); 
         }
 
-        internal void Process(string[] url)
+        private void Process(string[] url)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace imgLoader_CLI
             catch (ThreadInterruptedException) { }
         }
 
-        internal void AllocDown(string route, Dictionary<string, string> urlList)
+        private void AllocDown(string route, Dictionary<string, string> urlList)
         {
             failed.Clear();
 
@@ -177,7 +177,7 @@ namespace imgLoader_CLI
             }
         }
 
-        internal void ThrDownload(string uri, string route, string fileName)
+        private void ThrDownload(string uri, string route, string fileName)
         {
             if (_stop)
             {
@@ -238,7 +238,7 @@ namespace imgLoader_CLI
             _done++;
         }
 
-        internal bool HandleFail(string route)
+        private bool HandleFail(string route)
         {
             if (failed.Count == 0) return true;
 
@@ -264,7 +264,7 @@ namespace imgLoader_CLI
             return true;
         }
 
-        internal void Stopping()
+        private void Stopping()
         {
             new Thread(() =>
             {
