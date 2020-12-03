@@ -41,6 +41,17 @@ namespace imgLoader_CLI
                     Console.Write("\nURL: ");
 
                     string temp = Console.ReadLine();
+
+#if  DEBUG
+                    if (temp == "D")       //테스트용
+                    {
+                        var site = new Sites.hiyobi("1624005");
+                        var strTemp = site.GetImgUrls();
+                        ;
+                        return;
+                    }
+#endif
+
                     if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
                     if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
 
@@ -94,7 +105,10 @@ namespace imgLoader_CLI
 
                     try
                     {
+                        Console.Write("작품 정보 로드: ");
                         site = Core.LoadSite(link);
+                        Console.WriteLine($"{site.GetType().Name}:");
+
                         if (site?.IsValidated() != true) { Console.Write("오류: 로드 실패\n"); return; }
 
                         Console.Write("이미지 리스트 추출: ");
@@ -125,6 +139,24 @@ namespace imgLoader_CLI
                     try
                     {
                         if (!Directory.Exists(route)) Directory.CreateDirectory(route);
+                        else
+                        {
+                            if (File.Exists($"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}"))
+                            {
+                                var fileTmp = File.ReadAllText($"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}");
+                                if (fileTmp.Length != 0)
+                                {
+                                    int.TryParse(fileTmp.Split('\n')[2], out var temp);
+                                    if (temp == imgList.Count)
+                                    {
+                                        Console.WriteLine("\n해당 작품이 이미 존재합니다. 다시 다운로드하시겠습니까? Y/N");
+                                        a: string result = Console.ReadLine().ToLower();
+                                        if (result == "n") return;
+                                        if (result != "y") goto a;
+                                    }
+                                }
+                            }
+                        }
                         Core.CreateInfo(route, Core.GetNumber(link), site);
                     }
                     catch (DirectoryNotFoundException)
@@ -236,27 +268,28 @@ namespace imgLoader_CLI
             }
 
             _done++;
+            req.Abort();
+            resp.Close();
         }
 
         private bool HandleFail(string route)
         {
             if (failed.Count == 0) return true;
 
-            int cnt = Core.FAIL_RETRY;
             var failCopy = new Dictionary<string, string>(failed);
 
             AllocDown(route, failCopy);
 
             int wait = Core.FAIL_RETRY * 60;
-            while (_done < failCopy.Count - failed.Count || wait != 0)
+            while (_done < failCopy.Count - failed.Count && wait != 0)
             {
                 wait--;
                 Thread.Sleep(Core.WAIT_TIME);
             }
 
-            while (failed.Count != 0 && cnt > 0)
+            while (failed.Count != 0 )
             {
-                cnt--;
+                Thread.Sleep(Core.WAIT_TIME * 40);
                 HandleFail(route);
             }
 

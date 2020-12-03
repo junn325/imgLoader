@@ -32,7 +32,7 @@ namespace imgLoader_CLI.Sites
                 _source = wc.DownloadString($"https://ltn.hitomi.la/galleries/{mNumber}.js");
 
             }
-            catch (Exception ex)
+            catch
             {
                 return;
             }
@@ -52,7 +52,7 @@ namespace imgLoader_CLI.Sites
                 _artist = source.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
                 return _artist;
             }
-            catch (Exception ex)
+            catch
             {
                 return "N/A";
             }

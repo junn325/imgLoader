@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Text;
 
 namespace imgLoader_CLI.Sites
 {
     internal class nhentai : ISite
-
     {
-        
         public static string[] Supplement = { "g", "-5" };
         public static string Host = "nhentai.net";
 
@@ -17,6 +18,19 @@ namespace imgLoader_CLI.Sites
 
         public nhentai(string mNumber)
         {
+            var wc = new WebClient();
+            wc.Encoding = Encoding.UTF8;
+
+            try
+            {
+                _source = wc.DownloadString($"https://nhentai.net/g/{mNumber}/");
+            }
+            catch
+            {
+                return;
+            }
+
+            _number = mNumber;
         }
 
         public string GetArtist()
