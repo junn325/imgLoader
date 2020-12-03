@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Text.Json;
 
 namespace imgLoader_CLI.Sites
 {
@@ -19,6 +20,7 @@ namespace imgLoader_CLI.Sites
         private readonly string _src_api;
 
         private readonly string _number;
+        private string _title;
         private string _artist;
 
         public hiyobi(string mNumber)
@@ -70,14 +72,15 @@ namespace imgLoader_CLI.Sites
 
         public string GetTitle()
         {
-            return Filter(_src_api.Split("title\":\"")[1].Split('\"')[0]);
+            _title = StrTools.GetStringValue(_src_api, "title");
+            return _title;
         }
 
         public string[] ReturnInfo()
         {
             string[] info = new string[5];
 
-            info[0] = StrTools.GetStringValue(_src_api, "title");
+            info[0] = _title;
             info[1] = _artist ?? "N/A";
             info[2] = _src_api.StrLen("hash").ToString();
 

@@ -15,6 +15,8 @@ namespace imgLoader_CLI.Sites
 
         private readonly string _source;
         private readonly string _number;
+        private string _artist;
+        private string _title;
 
         public nhentai(string mNumber)
         {
@@ -35,12 +37,14 @@ namespace imgLoader_CLI.Sites
 
         public string GetArtist()
         {
-            return "";
+            _artist = _source.Split("artist\\u002F")[1].Split("\\u002F")[0]; 
+            return _artist;
         }
 
         public string GetTitle()
-        {
-            return "";
+        { 
+            _title = _source.Split("\\u0022pretty\\u0022:\\u0022")[1].Split("\\u0022")[0];
+            return _title;
         }
 
         public string[] ReturnInfo()
