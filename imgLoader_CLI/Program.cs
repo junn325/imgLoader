@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace imgLoader_CLI
 {
+
+    //todo: 정보 읽어오는 함수 만들것
     internal static class Program
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}");
+            Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 
             if (File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
             {
@@ -20,7 +22,9 @@ namespace imgLoader_CLI
                 Console.WriteLine($"\n현재 경로:{Core.Route}");
             }
 
-            if (args.Length == 0) Console.WriteLine("\n작업 취소: exit    경로 재설정: R\n");
+            if (args.Length == 0) Console.WriteLine("\n명령 취소: exit  경로 재설정: R   Hitomi.la 우선 다운로드 토글: H");
+
+            Console.WriteLine($"\nHitomi.la에 존재할 시 Hitomi.la에서 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}");
 
             while (true)
             {
@@ -51,7 +55,7 @@ namespace imgLoader_CLI
                         return;
                     }
 #endif
-
+                    if (string.Compare(temp, "H", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; continue; }
                     if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
                     if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
 
@@ -107,9 +111,9 @@ namespace imgLoader_CLI
                     {
                         Console.Write("작품 정보 로드: ");
                         site = Core.LoadSite(link);
-                        Console.WriteLine($"{site.GetType().Name}:");
 
-                        if (site?.IsValidated() != true) { Console.Write("오류: 로드 실패\n"); return; }
+                        if (site == null || !site.IsValidated()) { Console.Write("오류: 로드 실패\n"); return; }
+                        Console.WriteLine($"{site.GetType().Name}:");
 
                         Console.Write("이미지 리스트 추출: ");
                         imgList = site.GetImgUrls();
@@ -216,7 +220,7 @@ namespace imgLoader_CLI
                 return;
             }
 
-            var req = (HttpWebRequest)WebRequest.Create(uri);
+            var req = WebRequest.Create(uri) as HttpWebRequest;
             HttpWebResponse resp;
 
             req.Referer = $"https://{new Uri(uri).Host}";
@@ -224,7 +228,7 @@ namespace imgLoader_CLI
 
             try
             {
-                resp = (HttpWebResponse)req.GetResponse();
+                resp = req.GetResponse() as HttpWebResponse;
             }
             catch (WebException we)
             {

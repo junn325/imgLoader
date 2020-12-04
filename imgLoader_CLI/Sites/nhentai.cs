@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
@@ -15,6 +14,8 @@ namespace imgLoader_CLI.Sites
 
         private readonly string _source;
         private readonly string _number;
+
+        private int _imgNum;
         private string _artist;
         private string _title;
 
@@ -25,7 +26,7 @@ namespace imgLoader_CLI.Sites
 
             try
             {
-                _source = wc.DownloadString($"https://nhentai.net/g/{mNumber}/");
+                _source = wc.DownloadString($"https://nhentai.net/api/gallery/{mNumber}");
             }
             catch
             {
@@ -37,36 +38,75 @@ namespace imgLoader_CLI.Sites
 
         public string GetArtist()
         {
-            _artist = _source.Split("artist\\u002F")[1].Split("\\u002F")[0]; 
+            _artist = StrTools.GetStringValue(_source, "artist\",\"name");
             return _artist;
         }
 
         public string GetTitle()
         { 
-            _title = _source.Split("\\u0022pretty\\u0022:\\u0022")[1].Split("\\u0022")[0];
+            _title = StrTools.GetStringValue(_source, "pretty");
             return _title;
         }
 
         public string[] ReturnInfo()
         {
-            string[] temp = { };
-            return temp;
+            string[] info = new string[5];
+
+            info[0] = _title;
+            info[1] = _artist ?? "N/A";
+            info[2] = _imgNum.ToString();
+
+            StringBuilder temp = new StringBuilder();
+            temp.Append("tags: ");
+            foreach (string item in _source.Split("\"type\":\"tag\",\"name\":\""))
+            {
+                if (item.Length == 0) continue;
+                temp.Append(item.Split('\"')).Append(", ");
+            }
+            info[3] = temp.ToString().Trim();
+
+            if (!_source.Contains("datetime")) return info;
+            info[4] = _source.Split("datetime=\"")[1].Split('\"')[0];
+
+            return info;
         }
 
         public Dictionary<string, string> GetImgUrls()
         {
-            return new Dictionary<string, string>();
+            var temp = new Dictionary<string, string>();
+            _imgNum = int.Parse(StrTools.GetValue(_source,"num_pages"));
+            string ext;
+
+            for (int i = 1; i <= _imgNum; i++)
+            {
+                ext = StrTools.GetStringValue(StrTools.GetValue(_source, "pages", '[').Split('{')[i],"t");
+                switch (ext)
+                {
+                    case "j":
+                        ext = "jpg";
+                        break;
+                    case "p":
+                        ext = "png";
+                        break;
+                    case "g":
+                        ext = "gif";
+                        break;
+                }
+                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/1789233/{i}.{ext}");
+            }
+
+            return temp;
         }
 
         internal static string Filter(string dirName)
         {
-            //for (byte i = 0; i < FILTER.Length; i++)
-            //{
-            //    if (dirName.Contains(FILTER[i]))
-            //    {
-            //        dirName = dirName.Replace(FILTER[i], REPLACE[i]);
-            //    }
-            //}
+            for (byte i = 0; i < FILTER.Length; i++)
+            {
+                if (dirName.Contains(FILTER[i]))
+                {
+                    dirName = dirName.Replace(FILTER[i], REPLACE[i]);
+                }
+            }
 
             return dirName;
         }

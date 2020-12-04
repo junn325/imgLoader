@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Text.Json;
 
 namespace imgLoader_CLI.Sites
 {
@@ -45,7 +41,7 @@ namespace imgLoader_CLI.Sites
         {
             try
             {
-                _artist = StrTools.GetStringValue(StrTools.GetStringValue(_src_api, "artists", '['), "value");
+                _artist = StrTools.GetStringValue(StrTools.GetValue(_src_api, "artists", '['), "value");
                 return _artist;
             }
             catch
@@ -85,7 +81,7 @@ namespace imgLoader_CLI.Sites
             info[2] = _src_api.StrLen("hash").ToString();
 
             StringBuilder temp = new StringBuilder();
-            foreach (string item in StrTools.GetStringValue(_src_api, "tags", '[', ']').Split('{'))
+            foreach (string item in StrTools.GetValue(_src_api, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
 

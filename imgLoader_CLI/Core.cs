@@ -1,9 +1,10 @@
-﻿using System;
+﻿using imgLoader_CLI.Sites;
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using imgLoader_CLI.Sites;
 
 namespace imgLoader_CLI
 {
@@ -22,6 +23,7 @@ namespace imgLoader_CLI
         private static readonly string[] DREPLACE = { "[", "]", ";", "-", "", "''", "[", "]", "", "" };
 
         internal static string Route = "";
+        internal static bool HitomiAlways = true;
 
         internal static void Log(string content)
         {
@@ -114,10 +116,16 @@ namespace imgLoader_CLI
 
             if (mNumber.Length == 0) return null;
 
-            if (link.Contains("hiyobi.me")) return new hiyobi(mNumber);
-            if (link.Contains("hitomi.la")) return new Hitomi(mNumber);
-            if (link.Contains("pixiv")) return new pixiv(mNumber);
-            if (link.Contains("nhentai.net")) return new nhentai(mNumber);
+            if (HitomiAlways)
+            {
+                var temp = new Hitomi(mNumber);
+                if (temp.IsValidated()) return temp;
+            }
+
+            if (link.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase)) return new hiyobi(mNumber);
+            if (link.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase)) return new Hitomi(mNumber);
+            if (link.Contains("pixiv"      , StringComparison.OrdinalIgnoreCase)) return new pixiv(mNumber);
+            if (link.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase)) return new nhentai(mNumber);
 
             return null;
         }

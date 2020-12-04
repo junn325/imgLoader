@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace imgLoader_CLI
+﻿namespace imgLoader_CLI
 {
     internal static class StrTools
     {
@@ -25,12 +23,12 @@ namespace imgLoader_CLI
             return source.Split($"\"{name}\":\"")[1].Split('\"')[0];
         }
 
-        public static string GetStringValue(string source, string name, char separator)
+        public static string GetValue(string source, string name, char separator)
         {
             return source.Split($"\"{name}\":{separator}")[1].Split(separator)[0];
         }
 
-        public static string GetStringValue(string source, string name, char firstSeparator, char lastSeparator)
+        public static string GetValue(string source, string name, char firstSeparator, char lastSeparator)
         {
             return source.Split($"\"{name}\":{firstSeparator}")[1].Split(lastSeparator)[0];
         }

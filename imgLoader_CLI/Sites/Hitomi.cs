@@ -113,7 +113,7 @@ namespace imgLoader_CLI.Sites
             info[1] = _artist ?? "N/A";
 
             StringBuilder temp = new StringBuilder();
-            foreach (string item in StrTools.GetStringValue(_source, "tags", '[', ']').Split('{'))
+            foreach (string item in StrTools.GetValue(_source, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
 
