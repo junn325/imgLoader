@@ -98,7 +98,7 @@ namespace imgLoader_CLI
                 string val = url.Contains("//") ? url.Split("//")[1] : url;
 
                 if (val.Contains("#")) val = val.Split('#')[0];
-                if (val.Split('/').Last().Length == 0) val = val.Split('/')[val.Split('/').Length - 2];    //nhentai
+                if (val.Split('/').Last().Length == 0) val = val.Split('/')[val.Split('/').Length - 3];    //nhentai
                 else val = val.Split('/').Last();                                                          //hitomi/hiyobi/pixiv
                 if (val.Contains(".html")) val = val.Split(".html")[0];                                    //hitomi
 

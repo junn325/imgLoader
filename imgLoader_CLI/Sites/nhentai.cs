@@ -33,7 +33,7 @@ namespace imgLoader_CLI.Sites
                 return;
             }
 
-            _number = mNumber;
+            _number = StrTools.GetStringValue(_source,"media_id");
         }
 
         public string GetArtist()
@@ -43,7 +43,7 @@ namespace imgLoader_CLI.Sites
         }
 
         public string GetTitle()
-        { 
+        {
             _title = StrTools.GetStringValue(_source, "pretty");
             return _title;
         }
@@ -58,10 +58,10 @@ namespace imgLoader_CLI.Sites
 
             StringBuilder temp = new StringBuilder();
             temp.Append("tags: ");
-            foreach (string item in _source.Split("\"type\":\"tag\",\"name\":\""))
+            foreach (string item in StrTools.GetValue(_source,"tags",'[',']').Split("\"type\":\"tag\",\"name\":\""))
             {
-                if (item.Length == 0) continue;
-                temp.Append(item.Split('\"')).Append(", ");
+                if (!item.Contains("tag")) continue;
+                temp.Append(item.Split('\"')[0]).Append(", ");
             }
             info[3] = temp.ToString().Trim();
 
@@ -73,9 +73,9 @@ namespace imgLoader_CLI.Sites
 
         public Dictionary<string, string> GetImgUrls()
         {
+            string ext;
             var temp = new Dictionary<string, string>();
             _imgNum = int.Parse(StrTools.GetValue(_source,"num_pages"));
-            string ext;
 
             for (int i = 1; i <= _imgNum; i++)
             {
@@ -92,7 +92,7 @@ namespace imgLoader_CLI.Sites
                         ext = "gif";
                         break;
                 }
-                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/1789233/{i}.{ext}");
+                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/{_number}/{i}.{ext}");
             }
 
             return temp;
@@ -110,6 +110,7 @@ namespace imgLoader_CLI.Sites
 
             return dirName;
         }
+
         public bool IsValidated()
         {
             if (_number == null)
@@ -118,8 +119,6 @@ namespace imgLoader_CLI.Sites
             }
 
             return true;
-
         }
-
     }
 }

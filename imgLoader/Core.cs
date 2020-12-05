@@ -52,6 +52,8 @@ namespace imgLoader
                     {
                         temp = false;
                     }
+
+                    Thread.Sleep(WAIT_TIME);
                 }
 
                 using StreamWriter sw = new StreamWriter(file);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Threading;
@@ -8,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace imgLoader_CLI
 {
-
-    //todo: 정보 읽어오는 함수 만들것
+    //todo: 저장된 정보 읽어오는 함수 만들것
+    //todo: hitomi.la 토글을 프로그램 settings에 추가
+    //todo: -a 같은 옵션 추가
     internal static class Program
     {
         private static void Main(string[] args)
@@ -22,9 +24,30 @@ namespace imgLoader_CLI
                 Console.WriteLine($"\n현재 경로:{Core.Route}");
             }
 
-            if (args.Length == 0) Console.WriteLine("\n명령 취소: exit  경로 재설정: R   Hitomi.la 우선 다운로드 토글: H");
 
-            Console.WriteLine($"\nHitomi.la에 존재할 시 Hitomi.la에서 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}");
+            if (args.Length == 0)
+            {
+                Console.WriteLine("\n명령 취소: exit / 경로 재설정: R / Hitomi.la 우선 다운로드 토글: H");
+                Console.WriteLine("\n주소를 입력해 다운로드를 시작합니다.");
+            }
+            else
+            {
+                string[] temp = new string[args.Length];
+                for (var i = 0; i < args.Length; i++)
+                {
+                    temp[i] = "";
+                    if (!args[i].Contains('-')) temp[i] = args[i];
+                    if (string.Equals(args[i], "-nh", StringComparison.OrdinalIgnoreCase)) Core.HitomiAlways = false;
+                    if (string.Equals(args[i], "-r", StringComparison.OrdinalIgnoreCase))
+                    {
+                        if (Directory.Exists(args[i + 1])) { Core.Route = args[i + 1]; i++; }
+                        else {Console.WriteLine("\n 존재하지 않는 경로\n"); return;}
+                    }
+                }
+                args = temp.ToArray();
+            }
+
+            Console.WriteLine($"\nHitomi.la에서 우선적으로 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}\n");
 
             while (true)
             {
@@ -42,20 +65,12 @@ namespace imgLoader_CLI
 
                 if (args.Length == 0)
                 {
-                    Console.Write("\nURL: ");
+                    Console.Write("\n입력: ");
 
                     string temp = Console.ReadLine();
 
-#if  DEBUG
-                    if (temp == "D")       //테스트용
-                    {
-                        var site = new Sites.hiyobi("1624005");
-                        var strTemp = site.GetImgUrls();
-                        ;
-                        return;
-                    }
-#endif
-                    if (string.Compare(temp, "H", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; continue; }
+                    if (string.Compare(temp, "H", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\nHitomi.la에서 우선적으로 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}");
+                        continue; }
                     if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
                     if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
 
@@ -76,7 +91,7 @@ namespace imgLoader_CLI
     {
         private readonly Dictionary<string, string> failed = new Dictionary<string, string>();
         private List<Task> tasks = new List<Task>();
-        private bool _stop = false;
+        private bool _stop;
 
         private Thread thrDownStart;
 
@@ -100,7 +115,7 @@ namespace imgLoader_CLI
                 Thread thStop = new Thread(Stopping);
                 foreach (var link in url)
                 {
-                    if (url.Length == 0) break;
+                    if (string.IsNullOrEmpty(link)) continue;
 
                     ISite site;
                     Dictionary<string, string> imgList;
@@ -112,7 +127,7 @@ namespace imgLoader_CLI
                         Console.Write("작품 정보 로드: ");
                         site = Core.LoadSite(link);
 
-                        if (site == null || !site.IsValidated()) { Console.Write("오류: 로드 실패\n"); return; }
+                        if (site == null || !site.IsValidated()) { Console.Write("오류: 로드 실패\n"); continue; }
                         Console.WriteLine($"{site.GetType().Name}:");
 
                         Console.Write("이미지 리스트 추출: ");
@@ -155,7 +170,7 @@ namespace imgLoader_CLI
                                     {
                                         Console.WriteLine("\n해당 작품이 이미 존재합니다. 다시 다운로드하시겠습니까? Y/N");
                                         a: string result = Console.ReadLine().ToLower();
-                                        if (result == "n") return;
+                                        if (result == "n") continue;
                                         if (result != "y") goto a;
                                     }
                                 }
@@ -307,7 +322,7 @@ namespace imgLoader_CLI
             {
                 if (thrDownStart == null) return;
 
-                while (thrDownStart.ThreadState == System.Threading.ThreadState.Running)
+                while (thrDownStart.ThreadState == ThreadState.Running)
                 {
                     thrDownStart.Interrupt();
                     Thread.Sleep(Core.WAIT_TIME);
