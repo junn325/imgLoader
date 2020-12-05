@@ -12,7 +12,7 @@ namespace imgLoader_CLI
     {
         private static void Main(string[] args)
         {
-            Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}");
+            Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 
             if (File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
             {
@@ -20,7 +20,10 @@ namespace imgLoader_CLI
                 Console.WriteLine($"\n현재 경로:{Core.Route}");
             }
 
-            if (args.Length == 0) Console.WriteLine("\n작업 취소: exit    경로 재설정: R\n");
+            if (args.Length == 0) Console.WriteLine("\n명령 취소: exit / 경로 재설정: R / Hitomi.la 우선 다운로드 토글: H");
+
+            Console.WriteLine($"\nHitomi.la에 존재할 시 Hitomi.la에서 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}\n");
+            Console.WriteLine("\n주소를 입력해 다운로드를 시작합니다.");
 
             while (true)
             {
@@ -30,40 +33,22 @@ namespace imgLoader_CLI
 
                     string path = Console.ReadLine();
 
-                    if (string.Equals(path, "exit", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
-                        continue;
-                    }
+                    if (string.Equals(path, "exit", StringComparison.OrdinalIgnoreCase)) { Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt"); continue; }
 
-                    if (Directory.Exists(path))
-                    {
-                        Core.Route = path;
-                        File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", path);
-                    }
-                    else
-                    {
-                        Console.WriteLine("\n 존재하지 않는 경로\n");
-                        continue;
-                    }
+                    if (Directory.Exists(path)) { Core.Route = path; File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", path); }
+                    else { Console.WriteLine("\n 존재하지 않는 경로\n"); continue; }
                 }
 
                 if (args.Length == 0)
                 {
-                    Console.Write("\nURL: ");
+                    Console.Write("\n입력: ");
 
                     string temp = Console.ReadLine();
 
-                    if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        break;
-                    }
-
-                    if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0)
-                    {
-                        Core.Route = "";
-                        continue;
-                    }
+                    if (string.Compare(temp, "H", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\nHitomi.la에 존재할 시 Hitomi.la에서 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}");
+                        continue; }
+                    if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
+                    if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
 
                     Processor psr = new Processor();
                     psr.Initialize(new string[] { temp });
@@ -99,7 +84,7 @@ namespace imgLoader_CLI
             while (!temp) Thread.Sleep(Core.WAIT_TIME *4); 
         }
 
-        internal void Process(string[] url)
+        private void Process(string[] url)
         {
             try
             {
@@ -115,8 +100,11 @@ namespace imgLoader_CLI
 
                     try
                     {
+                        Console.Write("작품 정보 로드: ");
                         site = Core.LoadSite(link);
-                        if (site?.IsValidated() != true) { Console.Write("오류: 로드 실패\n"); return; }
+
+                        if (site == null || !site.IsValidated()) { Console.Write("오류: 로드 실패\n"); return; }
+                        Console.WriteLine($"{site.GetType().Name}:");
 
                         Console.Write("이미지 리스트 추출: ");
                         imgList = site.GetImgUrls();
@@ -146,6 +134,24 @@ namespace imgLoader_CLI
                     try
                     {
                         if (!Directory.Exists(route)) Directory.CreateDirectory(route);
+                        else
+                        {
+                            if (File.Exists($"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}"))
+                            {
+                                var fileTmp = File.ReadAllText($"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}");
+                                if (fileTmp.Length != 0)
+                                {
+                                    int.TryParse(fileTmp.Split('\n')[2], out var temp);
+                                    if (temp == imgList.Count)
+                                    {
+                                        Console.WriteLine("\n해당 작품이 이미 존재합니다. 다시 다운로드하시겠습니까? Y/N");
+                                        a: string result = Console.ReadLine().ToLower();
+                                        if (result == "n") return;
+                                        if (result != "y") goto a;
+                                    }
+                                }
+                            }
+                        }
                         Core.CreateInfo(route, Core.GetNumber(link), site);
                     }
                     catch (DirectoryNotFoundException)
@@ -188,7 +194,7 @@ namespace imgLoader_CLI
             catch (ThreadInterruptedException) { }
         }
 
-        internal void AllocDown(string route, Dictionary<string, string> urlList)
+        private void AllocDown(string route, Dictionary<string, string> urlList)
         {
             failed.Clear();
 
@@ -198,14 +204,14 @@ namespace imgLoader_CLI
             }
         }
 
-        internal void ThrDownload(string uri, string route, string fileName)
+        private void ThrDownload(string uri, string route, string fileName)
         {
             if (_stop)
             {
                 return;
             }
 
-            var req = (HttpWebRequest)WebRequest.Create(uri);
+            var req = WebRequest.Create(uri) as HttpWebRequest;
             HttpWebResponse resp;
 
             req.Referer = $"https://{new Uri(uri).Host}";
@@ -213,7 +219,7 @@ namespace imgLoader_CLI
 
             try
             {
-                resp = (HttpWebResponse)req.GetResponse();
+                resp = req.GetResponse() as HttpWebResponse;
             }
             catch (WebException we)
             {
@@ -257,27 +263,28 @@ namespace imgLoader_CLI
             }
 
             _done++;
+            req.Abort();
+            resp.Close();
         }
 
-        internal bool HandleFail(string route)
+        private bool HandleFail(string route)
         {
             if (failed.Count == 0) return true;
 
-            int cnt = Core.FAIL_RETRY;
             var failCopy = new Dictionary<string, string>(failed);
 
             AllocDown(route, failCopy);
 
             int wait = Core.FAIL_RETRY * 60;
-            while (_done < failCopy.Count - failed.Count || wait != 0)
+            while (_done < failCopy.Count - failed.Count && wait != 0)
             {
                 wait--;
                 Thread.Sleep(Core.WAIT_TIME);
             }
 
-            while (failed.Count != 0 && cnt > 0)
+            while (failed.Count != 0 )
             {
-                cnt--;
+                Thread.Sleep(Core.WAIT_TIME * 40);
                 HandleFail(route);
             }
 
@@ -285,7 +292,7 @@ namespace imgLoader_CLI
             return true;
         }
 
-        internal void Stopping()
+        private void Stopping()
         {
             new Thread(() =>
             {
