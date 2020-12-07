@@ -10,7 +10,7 @@ namespace imgLoader_CLI
 
         string GetTitle();
 
-        string[] ReturnInfo();
+        string[] ReturnInfo();        //제목, 태그, 날짜,  파일이름: (품번).ini
 
         bool IsValidated();
     }
