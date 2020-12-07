@@ -120,6 +120,7 @@ namespace imgLoader_CLI
 
                     var success = HandleFail(route);
                     while (_done < failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
+                    foreach (var item in tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
 
                     Core.Log($"Item:Complete: {link}");
                     if (success)
