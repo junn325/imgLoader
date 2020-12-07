@@ -107,10 +107,11 @@ namespace imgLoader_CLI.Sites
 
         public string[] ReturnInfo()
         {
-            string[] info = new string[4];
+            string[] info = new string[5];
 
             info[0] = StrTools.GetStringValue(_source, "title");
             info[1] = _artist ?? "N/A";
+            info[2] = _source.StrLen("hash").ToString();
 
             StringBuilder temp = new StringBuilder();
             foreach (string item in StrTools.GetValue(_source, "tags", '[', ']').Split('{'))
@@ -120,8 +121,8 @@ namespace imgLoader_CLI.Sites
                 temp.Append(item.Split('}')[0] + '\n');
             }
 
-            info[2] = temp.ToString().Trim();
-            info[3] = StrTools.GetStringValue(_source, "date");
+            info[3] = temp.ToString().Trim();
+            info[4] = StrTools.GetStringValue(_source, "date");
 
             return info;
         }

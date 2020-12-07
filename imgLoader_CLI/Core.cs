@@ -102,7 +102,7 @@ namespace imgLoader_CLI
                 else val = val.Split('/').Last();                                                          //hitomi/hiyobi/pixiv
                 if (val.Contains(".html")) val = val.Split(".html")[0];                                    //hitomi
 
-                return int.TryParse(val, out _) ? val : "";
+                return val;
             }
             catch
             {

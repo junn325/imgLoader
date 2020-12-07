@@ -1,8 +1,7 @@
 {
   "profiles": {
     "imgLoader_CLI": {
-      "commandName": "Project",
-      "commandLineArgs": "-r \"D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (2)\" -nh https://nhentai.net/g/249257/7/"
+      "commandName": "Project"
     }
   }
 }

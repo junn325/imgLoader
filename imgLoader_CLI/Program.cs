@@ -28,7 +28,6 @@ namespace imgLoader_CLI
             if (args.Length == 0)
             {
                 Console.WriteLine("\n명령 취소: exit / 경로 재설정: R / Hitomi.la 우선 다운로드 토글: H");
-                Console.WriteLine("\n주소를 입력해 다운로드를 시작합니다.");
             }
             else
             {
@@ -48,7 +47,7 @@ namespace imgLoader_CLI
             }
 
             Console.WriteLine($"\nHitomi.la에서 우선적으로 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}\n");
-
+            Console.WriteLine("\n주소를 입력해 다운로드를 시작합니다.");
             while (true)
             {
                 if (Core.Route.Length == 0)
@@ -191,8 +190,8 @@ namespace imgLoader_CLI
 
                     tasks = new List<Task>();
 
-                    AllocDown(route, imgList);
                     Console.Write("\n|");
+                    AllocDown(route, imgList);
 
                     while (_done < imgList.Count - failed.Count) Thread.Sleep(Core.WAIT_TIME *2);
 
@@ -249,12 +248,12 @@ namespace imgLoader_CLI
             {
                 if (we.Response == null)
                 {
-                    Core.Log($"실패:응답없음: {uri}");
+                    Core.Log($"실패:응답없음: {uri} {fileName}");
                     failed.Add(fileName, uri);
                     return;
                 }
 
-                Core.Log($"실패:{((HttpWebResponse)we.Response).StatusCode}: {uri}");
+                Core.Log($"실패:{((HttpWebResponse)we.Response).StatusCode}: {uri} {fileName}");
                 failed.Add(fileName, uri);
                 return;
             }
