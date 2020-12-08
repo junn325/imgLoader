@@ -25,7 +25,7 @@ namespace imgLoader_CLI
             thrDownStart = new Thread(() => { Process(url); temp = true; });
             thrDownStart.Start();
 
-            while (!temp) Thread.Sleep(Core.WAIT_TIME * 4);
+            while (!temp) Thread.Sleep(Core.WAIT_TIME * 20);
         }
 
         private void Process(string[] url)
@@ -44,21 +44,21 @@ namespace imgLoader_CLI
 
                     try
                     {
-                        Console.Write("작품 정보 로드: ");
+                        Console.Write("Load info: ");
                         site = Core.LoadSite(link);
 
-                        if (site == null || !site.IsValidated()) { Console.Write("오류: 로드 실패\n"); continue; }
+                        if (site == null || !site.IsValidated()) { Console.Write(" Error: Failed to load\n"); continue; }
                         Console.WriteLine($"{site.GetType().Name}:");
 
-                        Console.Write("이미지 리스트 추출: ");
+                        Console.Write("Count: ");
                         imgList = site.GetImgUrls();
-                        Console.WriteLine($"{imgList.Count}개 이미지");
+                        Console.WriteLine($"{imgList.Count} images");
 
-                        Console.Write("작가명 추출: ");
+                        Console.Write("Artist name: ");
                         artist = site.GetArtist();
                         Console.WriteLine($"{artist}");
 
-                        Console.Write("작품명 추출: ");
+                        Console.Write("Title: ");
                         title = site.GetTitle();
                         Console.WriteLine($"{title}");
 
@@ -71,7 +71,7 @@ namespace imgLoader_CLI
                     }
                     catch
                     {
-                        Console.Write(" 오류: 연결 실패");
+                        Console.Write(" Error: Connection failed");
                         continue;
                     }
 
@@ -88,7 +88,7 @@ namespace imgLoader_CLI
                                     int.TryParse(fileTmp.Split('\n')[2], out var temp);
                                     if (temp == imgList.Count)
                                     {
-                                        Console.WriteLine("\n해당 작품이 이미 존재합니다. 다시 다운로드하시겠습니까? Y/N");
+                                        Console.WriteLine("\n Already exists. Download again? Y/N");
                                         a: string result = Console.ReadLine().ToLower();
                                         if (result == "n") continue;
                                         if (result != "y") goto a;
@@ -100,11 +100,11 @@ namespace imgLoader_CLI
                     }
                     catch (DirectoryNotFoundException)
                     {
-                        Console.Write(" 오류: 디렉토리를 찾을 수 없음");
+                        Console.Write(" Error: No such directory");
                     }
                     catch (FileNotFoundException)
                     {
-                        Console.Write(" 오류: 파일을 찾을 수 없음");
+                        Console.Write(" Error: No such file");
                     }
 
                     _done = 0;
@@ -126,11 +126,11 @@ namespace imgLoader_CLI
                     if (success)
                     {
                         Console.Write("|\n");
-                        Console.WriteLine("\n다운로드 완료.\n");
+                        Console.WriteLine("\n Download complete.\n");
                     }
                     else
                     {
-                        Console.Write("\n다운로드 실패.\n");
+                        Console.Write("\n Download failed.\n");
                     }
                 }
 
@@ -170,12 +170,12 @@ namespace imgLoader_CLI
             {
                 if (we.Response == null)
                 {
-                    Core.Log($"실패:응답없음: {uri} {fileName}");
+                    Core.Log($"Fail:NoResponse: {uri} {fileName}");
                     failed.Add(fileName, uri);
                     return;
                 }
 
-                Core.Log($"실패:{((HttpWebResponse)we.Response).StatusCode}: {uri} {fileName}");
+                Core.Log($"Fail:{((HttpWebResponse)we.Response).StatusCode}: {uri} {fileName}");
                 failed.Add(fileName, uri);
                 return;
             }

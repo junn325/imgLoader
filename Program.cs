@@ -14,13 +14,13 @@ namespace imgLoader_CLI
             if (File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
-                Console.WriteLine($"\n현재 경로:{Core.Route}");
+                Console.WriteLine($"\nCurrent path: {Core.Route}");
             }
 
 
             if (args.Length == 0)
             {
-                Console.WriteLine("\n명령 취소: exit / 경로 재설정: R / Hitomi.la 우선 다운로드 토글: H");
+                Console.WriteLine("\nCancel command: exit / Reset download path: R / Toggle download first from Hitomi.la : H");
             }
             else
             {
@@ -33,35 +33,35 @@ namespace imgLoader_CLI
                     if (string.Equals(args[i], "-r", StringComparison.OrdinalIgnoreCase))
                     {
                         if (Directory.Exists(args[i + 1])) { Core.Route = args[i + 1]; i++; }
-                        else {Console.WriteLine("\n 존재하지 않는 경로\n"); return;}
+                        else {Console.WriteLine("\n No such directory\n"); return;}
                     }
                 }
                 args = temp.ToArray();
             }
 
-            Console.WriteLine($"\nHitomi.la에서 우선적으로 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}\n");
-            Console.WriteLine("\n주소를 입력해 다운로드를 시작합니다.");
+            Console.WriteLine($"\nDownload first from Hitomi.la: {(Core.HitomiAlways ? "On" : "Off")}\n");
+            Console.WriteLine("\nInput the address to start the download.");
             while (true)
             {
                 if (Core.Route.Length == 0)
                 {
-                    Console.Write("\n경로: ");
+                    Console.Write("\nNew path: ");
 
                     string path = Console.ReadLine();
 
                     if (string.Equals(path, "exit", StringComparison.OrdinalIgnoreCase)) { Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt"); continue; }
 
                     if (Directory.Exists(path)) { Core.Route = path; File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", path); }
-                    else { Console.WriteLine("\n 존재하지 않는 경로\n"); continue; }
+                    else { Console.WriteLine("\n No such directory\n"); continue; }
                 }
 
                 if (args.Length == 0)
                 {
-                    Console.Write("\n입력: ");
+                    Console.Write("\nInput: ");
 
                     string temp = Console.ReadLine();
 
-                    if (string.Compare(temp, "H", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\nHitomi.la에서 우선적으로 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}");
+                    if (string.Compare(temp, "H", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\nDownload first from Hitomi.la:: {(Core.HitomiAlways ? "On" : "Off")}");
                         continue; }
                     if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
                     if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
