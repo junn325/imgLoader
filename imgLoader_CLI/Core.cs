@@ -116,6 +116,9 @@ namespace imgLoader_CLI
 
             if (mNumber.Length == 0) return null;
 
+            if (link.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase)) return new nhentai(mNumber);
+            if (link.Contains("pixiv", StringComparison.OrdinalIgnoreCase)) return new pixiv(mNumber);
+
             if (HitomiAlways)
             {
                 var temp = new Hitomi(mNumber);
@@ -124,8 +127,6 @@ namespace imgLoader_CLI
 
             if (link.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase)) return new hiyobi(mNumber);
             if (link.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase)) return new Hitomi(mNumber);
-            if (link.Contains("pixiv"      , StringComparison.OrdinalIgnoreCase)) return new pixiv(mNumber);
-            if (link.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase)) return new nhentai(mNumber);
 
             return null;
         }
