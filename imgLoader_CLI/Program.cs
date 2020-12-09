@@ -9,6 +9,9 @@ namespace imgLoader_CLI
     //todo: hitomi.la 토글을 프로그램 settings에 추가
     //todo: -a 같은 옵션 추가
     //todo: numericupdown 같은것으로 작품별로 순위 매기는 시스템
+    //todo: 50(100?) 장마다 작은 선분으로 표시
+    //todo: 작가, 태그 등으로 자동으로 폴더로 나눠주는 시스템
+    //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
     internal static class Program
     {
         private static void Main(string[] args)
@@ -18,15 +21,10 @@ namespace imgLoader_CLI
             if (File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
-                Console.WriteLine($"\n현재 경로:{Core.Route}");
+                Console.WriteLine($"\nCurrent path: {Core.Route}");
             }
 
-
-            if (args.Length == 0)
-            {
-                Console.WriteLine("\n명령 취소: exit / 경로 재설정: R / Hitomi.la 우선 다운로드 토글: H");
-            }
-            else
+            if (args.Length != 0)
             {
                 string[] temp = new string[args.Length];
                 for (var i = 0; i < args.Length; i++)
@@ -37,38 +35,39 @@ namespace imgLoader_CLI
                     if (string.Equals(args[i], "-r", StringComparison.OrdinalIgnoreCase))
                     {
                         if (Directory.Exists(args[i + 1])) { Core.Route = args[i + 1]; i++; }
-                        else {Console.WriteLine("\n 존재하지 않는 경로\n"); return;}
+                        else {Console.WriteLine("\n No such directory\n"); return;}
                     }
                 }
                 args = temp.ToArray();
             }
 
-            Console.WriteLine($"\nHitomi.la에서 우선적으로 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}\n");
-            Console.WriteLine("\n주소를 입력해 다운로드를 시작합니다.");
+            Console.WriteLine($"\n(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}\n");
+            Console.WriteLine("\nType \'help\' for help, Input address to start download.");
             while (true)
             {
                 if (Core.Route.Length == 0)
                 {
-                    Console.Write("\n경로: ");
+                    Console.Write("\nNew path: ");
 
                     string path = Console.ReadLine();
 
                     if (string.Equals(path, "exit", StringComparison.OrdinalIgnoreCase)) { Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt"); continue; }
 
                     if (Directory.Exists(path)) { Core.Route = path; File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", path); }
-                    else { Console.WriteLine("\n 존재하지 않는 경로\n"); continue; }
+                    else { Console.WriteLine("\n No such directory\n"); continue; }
                 }
 
                 if (args.Length == 0)
                 {
-                    Console.Write("\n입력: ");
+                    Console.Write("\nInput: ");
 
                     string temp = Console.ReadLine();
 
-                    if (string.Compare(temp, "H", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\nHitomi.la에서 우선적으로 다운로드: {(Core.HitomiAlways ? "켜짐" : "꺼짐")}");
+                    if (string.Compare(temp, "h", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\n(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}");
                         continue; }
                     if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
-                    if (string.Compare(temp, "R", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
+                    if (string.Compare(temp, "r", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
+                    if (string.Compare(temp, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nToggle download first from Hitomi.la : h\nCancel command: exit"); continue; }
 
                     Processor psr = new Processor();
                     psr.Initialize(new string[] { temp });

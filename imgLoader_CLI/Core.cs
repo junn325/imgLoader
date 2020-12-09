@@ -10,7 +10,7 @@ namespace imgLoader_CLI
 {
     internal static class Core
     {
-        internal const byte WAIT_TIME    = 25; //밀리세컨드
+        internal const byte WAIT_TIME    = 25;
         internal const byte FAIL_RETRY   = 10;
 
         internal const string PROJECT_NAME = "imgLoader_CLI";
@@ -59,7 +59,7 @@ namespace imgLoader_CLI
             string fileName = $"{baseRoute}\\{mNumber}.{site.GetType().Name.ToLower()}";
             FileInfo file = new FileInfo(fileName);
 
-            if (file.Exists)                                                                        //todo: 총 이미지 장수 넣기
+            if (file.Exists)
             {
                 file.Attributes &= ~FileAttributes.Hidden;
             }
@@ -88,13 +88,8 @@ namespace imgLoader_CLI
 
         internal static string GetNumber(string url)
         {
-            //  nhentai.net/g/169878/
-            //  hitomi.la/reader/1038169.html#5
-            //  hiyobi.me/reader/1574526#24-25
-            //  www.pixiv.net/artworks/77832611
             try
             {
-                //string reg = Regex.Match(url, @"(https:\/\/|).*\/(\d*)\/").Groups[1].Value;
                 string val = url.Contains("//") ? url.Split("//")[1] : url;
 
                 if (val.Contains("#")) val = val.Split('#')[0];
