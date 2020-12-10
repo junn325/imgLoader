@@ -45,7 +45,7 @@ namespace imgLoader_CLI
             Console.WriteLine("\nType \'help\' for help, Input address to start download.");
             while (true)
             {
-                if (Core.Route.Length == 0)
+                if (Core.Route?.Length == 0)
                 {
                     Console.Write("\nNew path: ");
 
