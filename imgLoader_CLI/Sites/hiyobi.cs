@@ -55,7 +55,7 @@ namespace imgLoader_CLI.Sites
             string[] js = _src_cdn.Split('{');
             var imgList = new Dictionary<string, string>();
 
-            for (int i = 1; i < js.Length - 1; i++)
+            for (int i = 1; i < js.Length; i++)
             {
                 if (!js[i].Contains("name")) continue;
 

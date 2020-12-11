@@ -63,7 +63,7 @@ namespace imgLoader_CLI.Sites
             string[] js = _source.Split('{');
             var imgList = new Dictionary<string, string>();
 
-            for (int i = 2; i < js.Length - 1; i++)
+            for (int i = 2; i < js.Length; i++)
             {
                 string Base = "";
                 if (!js[i].Contains("hash")) continue;
