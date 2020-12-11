@@ -80,21 +80,6 @@ namespace imgLoader_CLI
                         if (!Directory.Exists(route)) Directory.CreateDirectory(route);
                         else
                         {
-                            if (File.Exists($"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}"))
-                            {
-                                var fileTmp = File.ReadAllText($"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}");
-                                if (fileTmp.Length != 0)
-                                {
-                                    int.TryParse(fileTmp.Split('\n')[2], out var temp);
-                                    if (temp == imgList.Count)
-                                    {
-                                        Console.WriteLine("\n Already exists. Download again? Y/N");
-                                        a: string result = Console.ReadLine().ToLower();
-                                        if (result == "n") continue;
-                                        if (result != "y") goto a;
-                                    }
-                                }
-                            }
                         }
                         Core.CreateInfo(route, Core.GetNumber(link), site);
                     }

@@ -125,5 +125,7 @@ namespace imgLoader_CLI
 
             return null;
         }
+
+        internal static 
     }
 }
