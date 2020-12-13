@@ -69,12 +69,12 @@ namespace imgLoader_CLI
                     if (string.Compare(temp, "r", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
                     if (string.Compare(temp, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nToggle download first from Hitomi.la : h\nCancel command: exit"); continue; }
 
-                    Processor psr = new Processor();
+                    var psr = new Processor();
                     psr.Initialize(new string[] { temp });
                 }
                 else
                 {
-                    Processor psr = new Processor();
+                    var psr = new Processor();
                     psr.Initialize(args);
                     break;
                 }

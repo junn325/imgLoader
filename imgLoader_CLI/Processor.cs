@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace imgLoader_CLI
 {
-    class Processor
+    internal class Processor
     {
         private readonly Dictionary<string, string> failed = new Dictionary<string, string>();
         private List<Task> tasks = new List<Task>();
