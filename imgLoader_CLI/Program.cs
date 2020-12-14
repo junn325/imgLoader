@@ -12,6 +12,7 @@ namespace imgLoader_CLI
     //todo: 50(100?) 장마다 작은 선분으로 표시
     //todo: 작가, 태그 등으로 자동으로 폴더로 나눠주는 시스템
     //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
+    //todo: e-hentai
     internal static class Program
     {
         private static void Main(string[] args)
