@@ -117,21 +117,29 @@ namespace imgLoader
 
         internal static string GetNumber(string url)
         {
-            //  nhentai.net/g/169878/
-            //  hitomi.la/reader/1038169.html#5
-            //  hiyobi.me/reader/1574526#24-25
-            //  www.pixiv.net/artworks/77832611
             try
             {
-                //string reg = Regex.Match(url, @"(https:\/\/|).*\/(\d*)\/").Groups[1].Value;
-                string val = url.Contains("//") ? url.Split("//")[1] : url;
+                var val = url.Contains("//") ? url.Split("//")[1] : url;
 
-                if (val.Contains("#")) val = val.Split('#')[0];
-                if (val.Split('/').Last().Length == 0) val = val.Split('/')[val.Split('/').Length - 2];    //nhentai
-                else val = val.Split('/').Last();                                                          //hitomi/hiyobi/pixiv
-                if (val.Contains(".html")) val = val.Split(".html")[0];                                    //hitomi
+                if (val.Contains("hitomi")) return val.Split('/')[2].Split(".html")[0];
 
-                return int.TryParse(val, out _) ? val : "";
+                if (val.Contains("hiyobi"))
+                {
+                    if (val.Contains("#"))
+                    {
+                        return val.Split('/')[2].Split('#')[0];
+                    }
+                    return val.Split('/')[2];
+                }
+
+                if (val.Contains("nhentai")) return val.Split('/')[2];
+                if (val.Contains("pixiv"))
+                {
+                    if (val.Contains("artworks")) return val.Split('/')[2]; 
+                    if (val.Contains("id=")) return val.Split("id=")[1];
+                }
+
+                return "";
             }
             catch
             {

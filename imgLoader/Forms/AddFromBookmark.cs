@@ -114,18 +114,9 @@ namespace imgLoader.Forms
                 string bUrl = item.Split(@"""url"": """)[1].Split('"')[0];
                 if (bUrl.Contains("#")) bUrl = bUrl.Split('#')[0];
 
-                if (supplement.Length != 1) //supplement 추가시
+                if (supplement.Length > 1) //supplement 추가시
                 {
-                    foreach (var i in supplement)
-                    {
-                        if (i.StartsWith("-") && double.TryParse(i.Split('-')[1], out var tmp))
-                        {
-                            if (bUrl.Split('/').Length <= (int)tmp) continue;
-                            if (bUrl.Split('/')[(int)tmp].Length == 0) continue;
-
-                            bUrl = bUrl.Replace($"/{bUrl.Split('/')[(int)tmp]}/", "");
-                        }
-                    }
+                    bUrl = $"{supplement[1]}{Core.GetNumber(bUrl)}";
                 }
 
                 listitem.SubItems.Add(bUrl);

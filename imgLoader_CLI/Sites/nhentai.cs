@@ -6,7 +6,7 @@ namespace imgLoader_CLI.Sites
 {
     internal class nhentai : ISite
     {
-        public static string[] Supplement = { "g", "-5" };
+        public static string[] Supplement = { "g", "http://nhentai.net/g/" };
         public static string Host = "nhentai.net";
 
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
