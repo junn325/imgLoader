@@ -19,12 +19,6 @@ namespace imgLoader_CLI
         {
             Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 
-            if (File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
-            {
-                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
-                Console.WriteLine($"\nCurrent path: {Core.Route}");
-            }
-
             if (args.Length != 0)
             {
                 string[] temp = new string[args.Length];
@@ -42,8 +36,19 @@ namespace imgLoader_CLI
                 args = temp.ToArray();
             }
 
-            Console.WriteLine($"\n(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}\n");
-            Console.WriteLine("\nType \'help\' for help, Input address to start download.");
+            if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
+            {
+                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
+            }
+
+            Console.WriteLine($"Current path: {Core.Route}\n");
+
+            if (args.Length == 0)
+            {
+                Console.WriteLine($"(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}\n");
+                Console.WriteLine("\nType \'help\' for help, Input address to start download.");
+            }
+
             while (true)
             {
                 if (Core.Route?.Length == 0)
@@ -80,7 +85,7 @@ namespace imgLoader_CLI
                         }
                         if (string.Compare(read, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
                         if (string.Compare(read, "r", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
-                        if (string.Compare(read, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nToggle download first from Hitomi.la : h\nCancel command: exit"); continue; }
+                        if (string.Compare(read, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nToggle try download first from Hitomi.la : h\nCancel command: exit"); continue; }
 
                         var psr = new Processor();
                         psr.Initialize(new string[] { read });
