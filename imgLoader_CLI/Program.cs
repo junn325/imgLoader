@@ -62,16 +62,29 @@ namespace imgLoader_CLI
                 {
                     Console.Write("\nInput: ");
 
-                    string temp = Console.ReadLine();
+                    var read = Console.ReadLine();
+                    string[] temp;
 
-                    if (string.Compare(temp, "h", StringComparison.OrdinalIgnoreCase) == 0) {Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\n(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}");
-                        continue; }
-                    if (string.Compare(temp, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
-                    if (string.Compare(temp, "r", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
-                    if (string.Compare(temp, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nToggle download first from Hitomi.la : h\nCancel command: exit"); continue; }
+                    if (read.Contains(" "))
+                    {
+                        temp = read.Split(" ");
+                        var psr = new Processor();
+                        psr.Initialize(temp);
+                    }
+                    else
+                    {
+                        if (string.Compare(read, "h", StringComparison.OrdinalIgnoreCase) == 0)
+                        {
+                            Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\n(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}");
+                            continue;
+                        }
+                        if (string.Compare(read, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
+                        if (string.Compare(read, "r", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
+                        if (string.Compare(read, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nToggle download first from Hitomi.la : h\nCancel command: exit"); continue; }
 
-                    var psr = new Processor();
-                    psr.Initialize(new string[] { temp });
+                        var psr = new Processor();
+                        psr.Initialize(new string[] { read });
+                    }
                 }
                 else
                 {

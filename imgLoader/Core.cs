@@ -117,34 +117,27 @@ namespace imgLoader
 
         internal static string GetNumber(string url)
         {
-            try
+            var val = url.Contains("//") ? url.Split("//")[1] : url;
+
+            if (val.Contains("hitomi")) return val.Split('/')[2].Split(".html")[0];
+
+            if (val.Contains("hiyobi"))
             {
-                var val = url.Contains("//") ? url.Split("//")[1] : url;
-
-                if (val.Contains("hitomi")) return val.Split('/')[2].Split(".html")[0];
-
-                if (val.Contains("hiyobi"))
+                if (val.Contains("#"))
                 {
-                    if (val.Contains("#"))
-                    {
-                        return val.Split('/')[2].Split('#')[0];
-                    }
-                    return val.Split('/')[2];
+                    return val.Split('/')[2].Split('#')[0];
                 }
-
-                if (val.Contains("nhentai")) return val.Split('/')[2];
-                if (val.Contains("pixiv"))
-                {
-                    if (val.Contains("artworks")) return val.Split('/')[2]; 
-                    if (val.Contains("id=")) return val.Split("id=")[1];
-                }
-
-                return "";
+                return val.Split('/')[2];
             }
-            catch
+
+            if (val.Contains("nhentai")) return val.Split('/')[2];
+            if (val.Contains("pixiv"))
             {
-                return "";
+                if (val.Contains("artworks")) return val.Split('/')[2];
+                if (val.Contains("id=")) return val.Split("id=")[1];
             }
+
+            return "";
         }
 
         internal static void SearchListView(ListView listview, KeyEventArgs e, TextBox text)
@@ -153,9 +146,9 @@ namespace imgLoader
             e.SuppressKeyPress = true;
 
             foreach (ListViewItem item in from item in listview.Items.Cast<ListViewItem>()
-                where item.SubItems[1].Text.IndexOf(text.Text, StringComparison.OrdinalIgnoreCase) < 0
-                orderby item.Text
-                select item)
+                                          where item.SubItems[1].Text.IndexOf(text.Text, StringComparison.OrdinalIgnoreCase) < 0
+                                          orderby item.Text
+                                          select item)
             {
                 LvItem.Add(item);
                 item.Remove();

@@ -47,7 +47,7 @@ namespace imgLoader_CLI
                         Console.Write("Load info: ");
                         site = Core.LoadSite(link);
 
-                        if (site == null || !site.IsValidated()) { Console.Write(" Error: Failed to load\n"); continue; }
+                        if (site == null || !site.IsValidated()) { Console.Write("Error: Failed to load\n"); continue; }
                         Console.WriteLine($"{site.GetType().Name}:");
 
                         Console.Write("Count: ");
@@ -71,7 +71,7 @@ namespace imgLoader_CLI
                     }
                     catch
                     {
-                        Console.Write(" Error: Connection failed");
+                        Console.Write("Error: Connection failed\n");
                         continue;
                     }
 
@@ -80,6 +80,22 @@ namespace imgLoader_CLI
                         if (!Directory.Exists(route)) Directory.CreateDirectory(route);
                         else
                         {
+                            var routeTmp = $"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}";
+                            if (File.Exists(routeTmp))
+                            {
+                                var fileTmp = File.ReadAllText(routeTmp);
+                                if (fileTmp.Length != 0)
+                                {
+                                    var temp = int.Parse(fileTmp.Split('\n')[2]);
+                                    if (temp == imgList.Count)
+                                    {
+                                        Console.WriteLine("\nAlready exists. Download again? Y/N");
+                                        a: string result = Console.ReadLine().ToLower();
+                                        if (result == "n") continue;
+                                        if (result != "y") goto a;
+                                    }
+                                }
+                            }
                         }
                         Core.CreateInfo(route, Core.GetNumber(link), site);
                     }

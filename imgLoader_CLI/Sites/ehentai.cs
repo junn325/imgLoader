@@ -33,13 +33,22 @@ namespace imgLoader_CLI.Sites
 
         public Dictionary<string, string> GetImgUrls()
         {
-
+            return new Dictionary<string, string>();
         }
 
-        public string GetTitle();
+        public string GetTitle()
+        {
+            return "";
+        }
 
-        public string[] ReturnInfo();
+        public string[] ReturnInfo()
+        {
+            return new string[5];
+        }
 
-        public bool IsValidated();
+        public bool IsValidated()
+        {
+            return true;
+        }
     }
 }

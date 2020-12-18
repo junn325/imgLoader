@@ -19,7 +19,7 @@ namespace imgLoader_CLI
         private const string LOG_DIR = "ILLOG";
         private const string LOG_FILE = "ILLG";
 
-        private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", @"""", "<", ">", "/", "*" };
+        private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*" };
         private static readonly string[] DREPLACE = { "[", "]", ";", "-", "", "''", "[", "]", "", "" };
 
         internal static string Route = "";
@@ -88,21 +88,27 @@ namespace imgLoader_CLI
 
         internal static string GetNumber(string url)
         {
-            try
-            {
-                string val = url.Contains("//") ? url.Split("//")[1] : url;
+            var val = url.Contains("//") ? url.Split("//")[1] : url;
 
-                if (val.Contains("#")) val = val.Split('#')[0];
-                if (val.Split('/').Last().Length == 0) val = val.Split('/')[val.Split('/').Length - 3];    //nhentai
-                else val = val.Split('/').Last();                                                          //hitomi/hiyobi/pixiv
-                if (val.Contains(".html")) val = val.Split(".html")[0];                                    //hitomi
+            if (val.Contains("hitomi")) return val.Split('/')[2].Split(".html")[0];
 
-                return val;
-            }
-            catch
+            if (val.Contains("hiyobi"))
             {
-                return "";
+                if (val.Contains("#"))
+                {
+                    return val.Split('/')[2].Split('#')[0];
+                }
+                return val.Split('/')[2];
             }
+
+            if (val.Contains("nhentai")) return val.Split('/')[2];
+            if (val.Contains("pixiv"))
+            {
+                if (val.Contains("artworks")) return val.Split('/')[2];
+                if (val.Contains("id=")) return val.Split("id=")[1];
+            }
+
+            return "";
         }
 
         internal static ISite LoadSite(string link)
@@ -125,7 +131,5 @@ namespace imgLoader_CLI
 
             return null;
         }
-
-        //internal static 
     }
 }
