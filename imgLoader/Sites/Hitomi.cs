@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 
 namespace imgLoader.Sites
 {
-    internal class Hitomi : ISite
+    public class Hitomi : ISite
     {
-        internal static string[] Supplement = {
+        public static string[] Supplement = {
             "reader"
         };
 
-        internal static string Host = "hitomi.la";
+        public static string Host = "hitomi.la";
 
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] REPLACE = { "", "", "", "" };
@@ -132,7 +132,7 @@ namespace imgLoader.Sites
             return _number != null;
         }
 
-        internal static string Filter(string dirName)
+        public static string Filter(string dirName)
         {
             for (byte i = 0; i < FILTER.Length; i++)
             {

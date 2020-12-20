@@ -74,11 +74,11 @@ namespace imgLoader.Forms
             string[] supplement;
             FilterDele filt;
 
-            if (cbxSite.SelectedIndex == 0) cbxSite.SelectedIndex = 1;
+            //if (cbxSite.SelectedIndex == 0) cbxSite.SelectedIndex = 1;
 
             var tempi = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
-            var tempii = typeof(hiyobi).GetField("Supplement").GetValue(new object());
-            var tempiii = Type.GetType(tempi[1]).GetField("Supplement").GetValue(new object());
+            //var tempii = typeof(hiyobi).GetField("Supplement").GetValue(new object());
+            //var tempiii = Type.GetType(tempi[1]).GetField("Supplement").GetValue(new object());
             var tempiiii = cbxSite.SelectedIndex;
 
             var ttempi = Type.GetType(tempi[tempiiii]).GetField("Supplement").GetValue(new object());

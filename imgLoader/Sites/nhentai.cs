@@ -2,10 +2,8 @@
 
 namespace imgLoader.Sites
 {
-    internal class nhentai : ISite
-
+    public class nhentai : ISite
     {
-        
         public static string[] Supplement = { "g", "http://nhentai.net/g/" };
         public static string Host = "nhentai.net";
 
@@ -40,7 +38,7 @@ namespace imgLoader.Sites
             return new Dictionary<string, string>();
         }
 
-        internal static string Filter(string dirName)
+        public static string Filter(string dirName)
         {
             //for (byte i = 0; i < FILTER.Length; i++)
             //{
