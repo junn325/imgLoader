@@ -26,14 +26,17 @@ namespace imgLoader.Forms
 
         private void AddFromBookmark_Load(object sender, EventArgs e)
         {
-
             listView1.Columns[0].Width = Core.COLUMN_WIDTH;
 
             LoadFromBookmark();
-
         }
 
-        private void LoadFromBookmark()
+        public T CastObject<T>(object input)
+        {
+            return (T)input;
+        }
+
+        public void LoadFromBookmark()
         {
             string bookMark;
 
@@ -71,10 +74,14 @@ namespace imgLoader.Forms
             string[] supplement;
             FilterDele filt;
 
+            var tempi = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
+            var tempii = Type.GetType(tempi[0]).GetProperty("Supplement");
+
+
             switch (cbxSite.SelectedIndex)
             {
                 case 0:
-                    supplement = Hitomi.Supplement;
+                    supplement = Hitoablmi.Supplement;
                     host = Hitomi.Host;
                     filt = Hitomi.Filter;
 

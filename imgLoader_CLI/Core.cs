@@ -19,8 +19,8 @@ namespace imgLoader_CLI
         private const string LOG_DIR = "ILLOG";
         private const string LOG_FILE = "ILLG";
 
-        private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*" };
-        private static readonly string[] DREPLACE = { "[", "]", ";", "-", "", "''", "[", "]", "", "" };
+        private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
+        private static readonly string[] DREPLACE = { "[", "]", ";", "-", "", "''", "[", "]", "", "", ".." };
 
         internal static string Route = "";
         internal static bool HitomiAlways = true;
@@ -54,23 +54,23 @@ namespace imgLoader_CLI
             }).Start();
         }
 
-        internal static void CreateInfo(string baseRoute, string mNumber, ISite site)
+        internal static void CreateInfo(string infoRoute)
         {
-            string fileName = $"{baseRoute}\\{mNumber}.{site.GetType().Name.ToLower()}";
-            FileInfo file = new FileInfo(fileName);
+            if (!Directory.Exists(Path.GetDirectoryName(infoRoute))) throw new DirectoryNotFoundException();
 
-            if (file.Exists)
-            {
-                file.Attributes &= ~FileAttributes.Hidden;
-            }
-            using StreamWriter sw = new StreamWriter(new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
+            var file = new FileInfo(infoRoute);
+            var site = (ISite)Type.GetType(infoRoute.Split('.').Last());
+            if (site == null) throw new NullReferenceException("\"site\" is null.");
 
+            file.Attributes &= ~FileAttributes.Hidden;
+
+            using StreamWriter sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
             foreach (var item in site.ReturnInfo())
             {
                 sw.WriteLine(item);
             }
 
-            File.SetAttributes(fileName, FileAttributes.Hidden);
+            File.SetAttributes(infoRoute, FileAttributes.Hidden);
         }
 
         internal static string DirFilter(string dirName)

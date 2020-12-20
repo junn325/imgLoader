@@ -98,7 +98,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return _number != null;
+            return (_number != null);
         }
 
         private static string Filter(string dirName)

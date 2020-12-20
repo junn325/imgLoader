@@ -47,7 +47,7 @@ namespace imgLoader_CLI
                         Console.Write("Load info: ");
                         site = Core.LoadSite(link);
 
-                        if (site == null || !site.IsValidated()) { Console.Write("Error: Failed to load\n"); continue; }
+                        if (site?.IsValidated() != true) { Console.Write("Error: Failed to load\n"); continue; }
                         Console.WriteLine($"{site.GetType().Name}:");
 
                         Console.Write("Count: ");
@@ -77,13 +77,14 @@ namespace imgLoader_CLI
 
                     try
                     {
+                        var infoRoute = $"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}";
+
                         if (!Directory.Exists(route)) Directory.CreateDirectory(route);
                         else
                         {
-                            var routeTmp = $"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}";
-                            if (File.Exists(routeTmp))
+                            if (File.Exists(infoRoute))
                             {
-                                var fileTmp = File.ReadAllText(routeTmp);
+                                var fileTmp = File.ReadAllText(infoRoute);
                                 if (fileTmp.Length != 0)
                                 {
                                     var temp = int.Parse(fileTmp.Split('\n')[2]);
@@ -97,7 +98,7 @@ namespace imgLoader_CLI
                                 }
                             }
                         }
-                        Core.CreateInfo(route, Core.GetNumber(link), site);
+                        Core.CreateInfo(infoRoute);
                     }
                     catch (DirectoryNotFoundException)
                     {

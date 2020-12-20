@@ -86,7 +86,7 @@ namespace imgLoader_CLI
                         if (string.Compare(read, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
                         if (string.Compare(read, "r", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
                         if (string.Compare(read, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nToggle try download first from Hitomi.la : h\nCancel command: exit"); continue; }
-
+                        
                         var psr = new Processor();
                         psr.Initialize(new string[] { read });
                     }

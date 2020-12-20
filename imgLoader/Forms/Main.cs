@@ -407,10 +407,8 @@ namespace imgLoader.Forms
 
         private void Button3_Click(object sender, EventArgs e)
         {
-            //Trace.WriteLine(Core.GetNumber("hiyobi.me/reader/1574526#24-25"));
-            //Trace.WriteLine(Core.GetNumber("hitomi.la/reader/1038169.html#5"));
-            //Trace.WriteLine(Core.GetNumber("https://nhentai.net/g/169878/"));
-            //Trace.WriteLine(Core.GetNumber("www.pixiv.net/artworks/77832611"));
+            var temp = new AddFromBookmark();
+            temp.LoadFromBookmark();
             ;
         }
 
