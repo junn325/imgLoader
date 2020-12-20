@@ -75,13 +75,14 @@ namespace imgLoader.Forms
             FilterDele filt;
 
             var tempi = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
-            var tempii = Type.GetType(tempi[0]).GetProperty("Supplement");
+            var tempii = typeof(hiyobi).GetField("Supplement").GetValue(new object());
+            var tempiii = Type.GetType(tempi[1]).GetField("Supplement").GetValue(new object());
 
 
             switch (cbxSite.SelectedIndex)
             {
                 case 0:
-                    supplement = Hitoablmi.Supplement;
+                    supplement = Hitomi.Supplement;
                     host = Hitomi.Host;
                     filt = Hitomi.Filter;
 
