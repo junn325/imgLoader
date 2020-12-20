@@ -74,50 +74,27 @@ namespace imgLoader.Forms
             string[] supplement;
             FilterDele filt;
 
+            if (cbxSite.SelectedIndex == 0) cbxSite.SelectedIndex = 1;
+
             var tempi = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
             var tempii = typeof(hiyobi).GetField("Supplement").GetValue(new object());
             var tempiii = Type.GetType(tempi[1]).GetField("Supplement").GetValue(new object());
+            var tempiiii = cbxSite.SelectedIndex;
 
+            var ttempi = Type.GetType(tempi[tempiiii]).GetField("Supplement").GetValue(new object());
+            var ttempii = Type.GetType(tempi[tempiiii]).GetField("Host").GetValue(new object());
+            var ttempiii = Type.GetType(tempi[tempiiii]).GetMethod("Filter");
 
-            switch (cbxSite.SelectedIndex)
-            {
-                case 0:
-                    supplement = Hitomi.Supplement;
-                    host = Hitomi.Host;
-                    filt = Hitomi.Filter;
-
-                    break;
-
-                case 1:
-                    supplement = hiyobi.Supplement;
-                    host = hiyobi.Host;
-                    filt = hiyobi.Filter;
-
-                    break;
-
-                case 2:
-                    supplement = pixiv.Supplement;
-                    host = pixiv.Host;
-                    filt = pixiv.Filter;
-                    break;
-
-                case 3:
-                    supplement = nhentai.Supplement;
-                    host = nhentai.Host;
-                    filt = nhentai.Filter;
-                    break;
-
-                default:
-                    MessageBox.Show("필터 설정 오류");
-                    return;
-            }
+            supplement = ttempi as string[];
+            host = ttempii as string;
+            filt = Delegate.CreateDelegate(typeof(FilterDele), ttempiii) as FilterDele;
 
             short imgNum = 1;
 
             foreach (string item in bookMark.Split(@"""name"": """).Where(item => item.Contains(host) && item.Contains($"/{supplement[0]}/")).ToArray())
             {
                 var listitem = new ListViewItem(imgNum.ToString());
-                listitem.SubItems.Add(filt(item.Split('"')[0]));
+                listitem.SubItems.Add(filt(item.Split('"')[0]));          //다시돌려놓을것
 
                 string bUrl = item.Split(@"""url"": """)[1].Split('"')[0];
                 if (bUrl.Contains("#")) bUrl = bUrl.Split('#')[0];
