@@ -70,20 +70,12 @@ namespace imgLoader.Forms
                     return;
             }
 
-            string host;
-            string[] supplement;
-            FilterDele filt;
-
             var tempi = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
-
             var tempobj = new object();
-            var ttempi = Type.GetType(tempi[cbxSite.SelectedIndex])?.GetField("Supplement")?.GetValue(tempobj);
-            var ttempii = Type.GetType(tempi[cbxSite.SelectedIndex]).GetField("Host").GetValue(tempobj);
-            var ttempiii = Type.GetType(tempi[cbxSite.SelectedIndex]).GetMethod("Filter");
 
-            supplement = ttempi as string[];
-            host = ttempii as string;
-            filt = Delegate.CreateDelegate(typeof(FilterDele), ttempiii) as FilterDele;
+            var supplement = Type.GetType(tempi[cbxSite.SelectedIndex])?.GetField("Supplement")?.GetValue(tempobj) as string[];
+            var host = Type.GetType(tempi[cbxSite.SelectedIndex]).GetField("Host").GetValue(tempobj) as string;
+            var filt = Delegate.CreateDelegate(typeof(FilterDele), Type.GetType(tempi[cbxSite.SelectedIndex]).GetMethod("Filter")) as FilterDele;
 
             short imgNum = 1;
 
