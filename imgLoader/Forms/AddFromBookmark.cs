@@ -74,16 +74,12 @@ namespace imgLoader.Forms
             string[] supplement;
             FilterDele filt;
 
-            //if (cbxSite.SelectedIndex == 0) cbxSite.SelectedIndex = 1;
-
             var tempi = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
-            //var tempii = typeof(hiyobi).GetField("Supplement").GetValue(new object());
-            //var tempiii = Type.GetType(tempi[1]).GetField("Supplement").GetValue(new object());
-            var tempiiii = cbxSite.SelectedIndex;
 
-            var ttempi = Type.GetType(tempi[tempiiii]).GetField("Supplement").GetValue(new object());
-            var ttempii = Type.GetType(tempi[tempiiii]).GetField("Host").GetValue(new object());
-            var ttempiii = Type.GetType(tempi[tempiiii]).GetMethod("Filter");
+            var tempobj = new object();
+            var ttempi = Type.GetType(tempi[cbxSite.SelectedIndex])?.GetField("Supplement")?.GetValue(tempobj);
+            var ttempii = Type.GetType(tempi[cbxSite.SelectedIndex]).GetField("Host").GetValue(tempobj);
+            var ttempiii = Type.GetType(tempi[cbxSite.SelectedIndex]).GetMethod("Filter");
 
             supplement = ttempi as string[];
             host = ttempii as string;
