@@ -70,19 +70,19 @@ namespace imgLoader.Forms
                     return;
             }
 
-            var tempi = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
+            var sites = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
             var tempobj = new object();
 
-            var supplement = Type.GetType(tempi[cbxSite.SelectedIndex])?.GetField("Supplement")?.GetValue(tempobj) as string[];
-            var host = Type.GetType(tempi[cbxSite.SelectedIndex]).GetField("Host").GetValue(tempobj) as string;
-            var filt = Delegate.CreateDelegate(typeof(FilterDele), Type.GetType(tempi[cbxSite.SelectedIndex]).GetMethod("Filter")) as FilterDele;
+            var supplement = Type.GetType(sites[cbxSite.SelectedIndex])?.GetField("Supplement")?.GetValue(tempobj) as string[];
+            var host = Type.GetType(sites[cbxSite.SelectedIndex]).GetField("Host").GetValue(tempobj) as string;
+            var filt = Delegate.CreateDelegate(typeof(FilterDele), Type.GetType(sites[cbxSite.SelectedIndex]).GetMethod("Filter")) as FilterDele;
 
             short imgNum = 1;
 
             foreach (string item in bookMark.Split(@"""name"": """).Where(item => item.Contains(host) && item.Contains($"/{supplement[0]}/")).ToArray())
             {
                 var listitem = new ListViewItem(imgNum.ToString());
-                listitem.SubItems.Add(filt(item.Split('"')[0]));          //다시돌려놓을것
+                listitem.SubItems.Add(filt(item.Split('"')[0]));
 
                 string bUrl = item.Split(@"""url"": """)[1].Split('"')[0];
                 if (bUrl.Contains("#")) bUrl = bUrl.Split('#')[0];
