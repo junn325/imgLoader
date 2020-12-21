@@ -7,13 +7,13 @@ using System.Text.RegularExpressions;
 
 namespace imgLoader_CLI.Sites
 {
-    internal class Hitomi : ISite
+    public class Hitomi : ISite
     {
-        internal static string[] Supplement = {
+        public static string[] Supplement = {
             "reader"
         };
 
-        internal static string Host = "hitomi.la";
+        public static string Host = "hitomi.la";
 
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] REPLACE = { "", "", "", "" };
@@ -31,6 +31,10 @@ namespace imgLoader_CLI.Sites
             {
                 _source = wc.DownloadString($"https://ltn.hitomi.la/galleries/{mNumber}.js");
 
+                string temp = wc.DownloadString($"https://hitomi.la/galleries/{_number}.html");
+                string source = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
+                _artist = source.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
+
             }
             catch
             {
@@ -41,23 +45,8 @@ namespace imgLoader_CLI.Sites
 
         public string GetArtist()
         {
-            try
-            {
-                WebClient wc = new WebClient();
-                wc.Encoding = Encoding.UTF8;
-
-                string temp = wc.DownloadString($"https://hitomi.la/galleries/{_number}.html");
-                string source = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
-
-                _artist = source.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
-                return _artist;
-            }
-            catch
-            {
-                return "N/A";
-            }
+            return _artist;
         }
-
         public Dictionary<string, string> GetImgUrls()            //키: 이미지이름/값: 주소
         {
             string[] js = _source.Split('{');
@@ -132,7 +121,7 @@ namespace imgLoader_CLI.Sites
             return _number != null;
         }
 
-        internal static string Filter(string dirName)
+        public static string Filter(string dirName)
         {
             for (byte i = 0; i < FILTER.Length; i++)
             {

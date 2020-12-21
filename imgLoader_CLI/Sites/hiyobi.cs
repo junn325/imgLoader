@@ -101,7 +101,7 @@ namespace imgLoader_CLI.Sites
             return (_number != null);
         }
 
-        private static string Filter(string dirName)
+        public static string Filter(string dirName)
         {
             for (byte i = 0; i < FILTER.Length; i++)
             {

@@ -54,15 +54,13 @@ namespace imgLoader_CLI
             }).Start();
         }
 
-        internal static void CreateInfo(string infoRoute)
+        internal static void CreateInfo(string infoRoute, ISite site)
         {
             if (!Directory.Exists(Path.GetDirectoryName(infoRoute))) throw new DirectoryNotFoundException();
-
-            var file = new FileInfo(infoRoute);
-            var site = (ISite)Type.GetType(infoRoute.Split('.').Last());
             if (site == null) throw new NullReferenceException("\"site\" is null.");
 
-            file.Attributes &= ~FileAttributes.Hidden;
+            var file = new FileInfo(infoRoute);
+            if (file.Exists && file.Attributes.HasFlag(FileAttributes.Hidden)) file.Attributes &= ~FileAttributes.Hidden;
 
             using StreamWriter sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
             foreach (var item in site.ReturnInfo())

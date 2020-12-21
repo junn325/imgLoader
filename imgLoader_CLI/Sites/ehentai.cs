@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace imgLoader_CLI.Sites
 {
-    class ehentai : ISite
+    public class ehentai : ISite
     {
-        internal static string[] Supplement = {
+        public static string[] Supplement = {
             "g"
         };
 

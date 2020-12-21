@@ -98,15 +98,17 @@ namespace imgLoader_CLI
                                 }
                             }
                         }
-                        Core.CreateInfo(infoRoute);
+                        Core.CreateInfo(infoRoute, site);
                     }
                     catch (DirectoryNotFoundException)
                     {
-                        Console.Write(" Error: No such directory");
+                        Console.Write(" Error: No such directory\n");
+                        continue;
                     }
                     catch (FileNotFoundException)
                     {
-                        Console.Write(" Error: No such file");
+                        Console.Write(" Error: No such file\n");
+                        continue;
                     }
 
                     _done = 0;

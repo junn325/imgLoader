@@ -2,7 +2,7 @@
 
 namespace imgLoader_CLI.Sites
 {
-    internal class pixiv : ISite
+    public class pixiv : ISite
     {
         public static string[] Supplement = { "artworks" };
         public static string Host = "pixiv.net";
@@ -38,7 +38,7 @@ namespace imgLoader_CLI.Sites
             return new Dictionary<string, string>();
         }
 
-        internal static string Filter(string dirName)
+        public static string Filter(string dirName)
         {
             //for (byte i = 0; i < FILTER.Length; i++)
             //{
