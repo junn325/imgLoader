@@ -82,21 +82,10 @@ namespace imgLoader_CLI
                         if (!Directory.Exists(route)) Directory.CreateDirectory(route);
                         else
                         {
-                            if (File.Exists(infoRoute))
-                            {
-                                var fileTmp = File.ReadAllText(infoRoute);
-                                if (fileTmp.Length != 0)
-                                {
-                                    var temp = int.Parse(fileTmp.Split('\n')[2]);
-                                    if (temp == imgList.Count)
-                                    {
-                                        Console.WriteLine("\nAlready exists. Download again? Y/N");
-                                        a: string result = Console.ReadLine().ToLower();
-                                        if (result == "n") continue;
-                                        if (result != "y") goto a;
-                                    }
-                                }
-                            }
+                            Console.WriteLine("\nAlready exists. Download again? Y/N");
+                            a: string result = Console.ReadLine().ToLower();
+                            if (result == "n") continue;
+                            if (result != "y") goto a;
                         }
                         Core.CreateInfo(infoRoute, site);
                     }

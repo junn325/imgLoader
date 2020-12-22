@@ -15,8 +15,7 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] REPLACE = { "", "", "", "" };
 
         private readonly string _source;
-        private readonly string _number;
-        private string _artist;
+        private readonly string _artist;
 
         public Hitomi(string mNumber)
         {
@@ -27,16 +26,14 @@ namespace imgLoader_CLI.Sites
             {
                 _source = wc.DownloadString($"https://ltn.hitomi.la/galleries/{mNumber}.js");
 
-                string temp = wc.DownloadString($"https://hitomi.la/galleries/{_number}.html");
-                string source = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
-                _artist = source.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
-
+                string temp = wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html");
+                string srcArtist = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
+                _artist = srcArtist.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
             }
             catch
             {
-                return;
+                throw new Exception("failed to initiate");
             }
-            _number = mNumber;
         }
 
         public string GetArtist()
@@ -114,7 +111,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return _number != null;
+            return _artist != null;
         }
 
         public static string Filter(string dirName)

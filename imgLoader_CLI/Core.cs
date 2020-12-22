@@ -16,11 +16,11 @@ namespace imgLoader_CLI
         internal const string PROJECT_NAME = "imgLoader_CLI";
         internal const string TEMP_ROUTE   = "ILCTempRout";
 
-        private const string LOG_DIR = "ILLOG";
+        private const string LOG_DIR  = "ILLOG";
         private const string LOG_FILE = "ILLG";
 
-        private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
-        private static readonly string[] DREPLACE = { "[", "]", ";", "-", "", "''", "[", "]", "", "", ".." };
+        private static readonly string[] DFILTER  = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
+        private static readonly string[] DREPLACE = { "[", "]", "│", "：", "？", "″", "˂", "˃", "／", "∗", "…" };
 
         internal static string Route = "";
         internal static bool HitomiAlways = true;
