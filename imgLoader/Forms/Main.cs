@@ -438,7 +438,7 @@ namespace imgLoader.Forms
                 return;
             }
 
-            foreach (ListViewItem item in addBook.result)
+            foreach (ListViewItem item in addBook.GetResult())
             {
                 if (listView1.Items.ContainsKey(item.SubItems[2].Text)) continue;
 

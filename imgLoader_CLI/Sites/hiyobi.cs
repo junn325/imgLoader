@@ -6,8 +6,7 @@ namespace imgLoader_CLI.Sites
 {
     public class hiyobi : ISite
     {
-        public static string[] Supplement = { "reader" };
-        public static string Host = "hiyobi.me";
+        public const string Supplement = "hiyobi.me/reader/\\n\\";
 
         private static readonly string[] FILTER = { " - Hiyobi.me", " - hiyobi.me" };
         private static readonly string[] REPLACE = { "", "" };

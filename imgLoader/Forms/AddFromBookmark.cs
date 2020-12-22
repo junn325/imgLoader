@@ -7,21 +7,21 @@ using imgLoader.Sites;
 
 namespace imgLoader.Forms
 {
-
     public partial class AddFromBookmark : Form
     {
-       internal ListViewItem[] result;
-
+        private ListViewItem[] lvItem;
+        private ListViewItem[] result;
         private delegate string FilterDele(string dirName);
 
-        private ListViewItem[] lvItem;
+        string[][] supps = { Hitomi.Supplement, hiyobi.Supplement, pixiv.Supplement, nhentai.Supplement };
+        string[] hosts = { Hitomi.Host, hiyobi.Host, pixiv.Host, nhentai.Host };
+        FilterDele[] filts = { Hitomi.Filter, hiyobi.Filter, pixiv.Filter, nhentai.Filter };
 
         public AddFromBookmark()
         {
             InitializeComponent();
             cbxFilter.SelectedIndex = 0;
             cbxSite.SelectedIndex = 0;
-
         }
 
         private void AddFromBookmark_Load(object sender, EventArgs e)
@@ -31,9 +31,9 @@ namespace imgLoader.Forms
             LoadFromBookmark();
         }
 
-        public T CastObject<T>(object input)
+        public ListViewItem[] GetResult()
         {
-            return (T)input;
+            return result;
         }
 
         public void LoadFromBookmark()
@@ -47,22 +47,12 @@ namespace imgLoader.Forms
 
             switch (cbxFilter.SelectedIndex)
             {
-                case 0: //Chrome
+                case 0: //chrome
                     route = $@"{route.Split('\\')[0]}\{route.Split('\\')[1]}\{route.Split('\\')[2]}\{route.Split('\\')[3]}\Local\Google\Chrome\User Data\Default\Bookmarks";
-                    using (StreamReader sr = new StreamReader(route))
-                    {
-                        bookMark = sr.ReadToEnd();
-                    }
-
                     break;
 
                 case 1: //Edge
                     route = $@"{route.Split('\\')[0]}\{route.Split('\\')[1]}\{route.Split('\\')[2]}\{route.Split('\\')[3]}\Local\Microsoft\Edge\User Data\Default\Bookmarks";
-                    using (StreamReader sr = new StreamReader(route))
-                    {
-                        bookMark = sr.ReadToEnd();
-                    }
-
                     break;
 
                 default:
@@ -70,16 +60,17 @@ namespace imgLoader.Forms
                     return;
             }
 
-            var sites = new []{ "imgLoader.Sites.Hitomi", "imgLoader.Sites.hiyobi", "imgLoader.Sites.pixiv", "imgLoader.Sites.nhentai" };
-            var tempobj = new object();
+            using (StreamReader sr = new StreamReader(route))
+            {
+                bookMark = sr.ReadToEnd();
+            }
 
-            var supplement = Type.GetType(sites[cbxSite.SelectedIndex])?.GetField("Supplement")?.GetValue(tempobj) as string[];
-            var host = Type.GetType(sites[cbxSite.SelectedIndex]).GetField("Host").GetValue(tempobj) as string;
-            var filt = Delegate.CreateDelegate(typeof(FilterDele), Type.GetType(sites[cbxSite.SelectedIndex]).GetMethod("Filter")) as FilterDele;
-
+            var index = cbxSite.SelectedIndex;
+            var supplement = supps[index];
+            var filt = filts[index];
             short imgNum = 1;
 
-            foreach (string item in bookMark.Split(@"""name"": """).Where(item => item.Contains(host) && item.Contains($"/{supplement[0]}/")).ToArray())
+            foreach (string item in bookMark.Split(@"""name"": """).Where(item => item.Contains(hosts[index]) && item.Contains($"/{supplement[0]}/")).ToArray())
             {
                 var listitem = new ListViewItem(imgNum.ToString());
                 listitem.SubItems.Add(filt(item.Split('"')[0]));
@@ -89,7 +80,7 @@ namespace imgLoader.Forms
 
                 if (supplement.Length > 1) //supplement 추가시
                 {
-                    bUrl = $"{supplement[1]}{Core.GetNumber(bUrl)}";
+                    bUrl = supplement[1] + Core.GetNumber(bUrl);
                 }
 
                 listitem.SubItems.Add(bUrl);
@@ -127,10 +118,7 @@ namespace imgLoader.Forms
 
             for (var i = 0; i < listView1.Items.Count; i++)
             {
-                if (!listView1.Items[i].Checked)
-                {
-                    continue;
-                }
+                if (!listView1.Items[i].Checked) continue;
 
                 var item = (ListViewItem)listView1.Items[i].Clone();
                 item.Name = item.SubItems[2].Text;

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using System.Net;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace imgLoader.Sites
 {
     public class hiyobi : ISite
     {
-        public static string[] Supplement = { "reader" };
-        public static string Host = "hiyobi.me";
+        public static readonly string[] Supplement = { "reader" };
+        public const string Host = "hiyobi.me";
 
         private static readonly string[] FILTER = { " - Hiyobi.me", " - hiyobi.me" };
         private static readonly string[] REPLACE = { "", "" };
