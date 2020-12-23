@@ -26,7 +26,7 @@ namespace imgLoader_CLI
                 {
                     temp[i] = "";
                     if (!args[i].Contains('-')) temp[i] = args[i];
-                    if (string.Equals(args[i], "-nh", StringComparison.OrdinalIgnoreCase)) Core.HitomiAlways = false;
+                    //if (string.Equals(args[i], "-nh", StringComparison.OrdinalIgnoreCase)) Core.HitomiAlways = false;
                     if (string.Equals(args[i], "-r", StringComparison.OrdinalIgnoreCase))
                     {
                         if (Directory.Exists(args[i + 1])) { Core.Route = args[i + 1]; i++; }
@@ -45,7 +45,7 @@ namespace imgLoader_CLI
 
             if (args.Length == 0)
             {
-                Console.WriteLine($"(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}\n");
+                //Console.WriteLine($"(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}\n");
                 Console.WriteLine("\nType \'help\' for help, Input address to start download.");
             }
 
@@ -78,14 +78,14 @@ namespace imgLoader_CLI
                     }
                     else
                     {
-                        if (string.Compare(read, "h", StringComparison.OrdinalIgnoreCase) == 0)
-                        {
-                            Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\n(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}");
-                            continue;
-                        }
+                        //if (string.Compare(read, "h", StringComparison.OrdinalIgnoreCase) == 0)
+                        //{
+                        //    Core.HitomiAlways = !Core.HitomiAlways; Console.WriteLine($"\n(hiyobi)Download first from Hitomi.la: {(Core.HitomiAlways ? "on" : "off")}");
+                        //    continue;
+                        //}
                         if (string.Compare(read, "exit", StringComparison.OrdinalIgnoreCase) == 0) break;
                         if (string.Compare(read, "r", StringComparison.OrdinalIgnoreCase) == 0) { Core.Route = ""; continue; }
-                        if (string.Compare(read, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nToggle try download first from Hitomi.la : h\nCancel command: exit"); continue; }
+                        if (string.Compare(read, "help", StringComparison.OrdinalIgnoreCase) == 0) { Console.WriteLine("\nReset download path: r\nCancel command: exit"); continue; }
                         
                         var psr = new Processor();
                         psr.Initialize(new string[] { read });

@@ -23,7 +23,7 @@ namespace imgLoader_CLI
         private static readonly string[] DREPLACE = { "[", "]", "│", "：", "？", "″", "˂", "˃", "／", "∗", "…" };
 
         internal static string Route = "";
-        internal static bool HitomiAlways = true;
+        //internal static bool HitomiAlways = true;
 
         internal static void Log(string content)
         {
@@ -49,7 +49,7 @@ namespace imgLoader_CLI
                     }
                 }
 
-                using StreamWriter sw = new StreamWriter(file);
+                using var sw = new StreamWriter(file);
                 sw.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + content);
             }).Start();
         }
@@ -60,9 +60,9 @@ namespace imgLoader_CLI
             if (site == null) throw new NullReferenceException("\"site\" is null.");
 
             var file = new FileInfo(infoRoute);
-            if (file.Exists && file.Attributes.HasFlag(FileAttributes.Hidden)) file.Attributes &= ~FileAttributes.Hidden;
+            if (file.Exists && (file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
 
-            using StreamWriter sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
+            using var sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
             foreach (var item in site.ReturnInfo())
             {
                 sw.WriteLine(item);
@@ -116,13 +116,13 @@ namespace imgLoader_CLI
             if (mNumber.Length == 0) return null;
 
             if (link.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase)) return new nhentai(mNumber);
-            if (link.Contains("pixiv", StringComparison.OrdinalIgnoreCase)) return new pixiv(mNumber);
+            if (link.Contains("pixiv", StringComparison.OrdinalIgnoreCase))       return new pixiv(mNumber);
 
-            if (HitomiAlways)
-            {
-                var temp = new Hitomi(mNumber);
-                if (temp.IsValidated()) return temp;
-            }
+            //if (HitomiAlways)
+            //{
+            //    var temp = new Hitomi(mNumber);
+            //    if (temp.IsValidated()) return temp;
+            //}
 
             if (link.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase)) return new hiyobi(mNumber);
             if (link.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase)) return new Hitomi(mNumber);
