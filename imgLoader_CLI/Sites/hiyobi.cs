@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
@@ -14,7 +15,8 @@ namespace imgLoader_CLI.Sites
         private readonly string _src_cdn;
         private readonly string _src_api;
 
-        private readonly string _number;
+        public string Number { get; set; }
+
         private string _title;
         private string _artist;
 
@@ -31,9 +33,10 @@ namespace imgLoader_CLI.Sites
             }
             catch
             {
-                return;
+                throw new Exception("failed to initiate");
             }
-            _number = mNumber;
+
+            Number = mNumber;
         }
 
         public string GetArtist()
@@ -59,7 +62,7 @@ namespace imgLoader_CLI.Sites
                 if (!js[i].Contains("name")) continue;
 
                 string name = StrTools.GetStringValue(js[i], "name");
-                imgList.Add(name, $"http://cdn.hiyobi.me/data/{_number}/{name}");
+                imgList.Add(name, $"http://cdn.hiyobi.me/data/{Number}/{name}");
             }
 
             return imgList;
@@ -97,7 +100,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return (_number != null);
+            return (Number != null);
         }
 
         public static string Filter(string dirName)

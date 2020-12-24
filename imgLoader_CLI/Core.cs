@@ -129,5 +129,7 @@ namespace imgLoader_CLI
 
             return null;
         }
+
+        internal static string GetTitle(string artist, string title, string m)
     }
 }

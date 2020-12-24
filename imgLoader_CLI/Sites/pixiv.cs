@@ -52,14 +52,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            if (_number == null)
-            {
-                return false;
-            }
-
-            return true;
-
+            return _number != null;
         }
-
     }
 }

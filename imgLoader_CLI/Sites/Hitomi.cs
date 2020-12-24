@@ -10,6 +10,7 @@ namespace imgLoader_CLI.Sites
     public class Hitomi : ISite
     {
         public const string Supplement = "hitomi.la/reader/\\n\\.html";
+        public string Number { get; set; }
 
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] REPLACE = { "", "", "", "" };
@@ -29,6 +30,8 @@ namespace imgLoader_CLI.Sites
                 string temp = wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html");
                 string srcArtist = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
                 _artist = srcArtist.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
+
+                Number = mNumber;
             }
             catch
             {
@@ -137,7 +140,7 @@ namespace imgLoader_CLI.Sites
             }
 
             var frontendNum = 3;
-            const int parseBase = 16;                          //몇진수인지 표시
+            const int parseBase = 16;           //진수
 
             var regex = new Regex("[0-9a-f]\\/([0-9a-f]{2})\\/");
             var matches = regex.Match(url).Groups[1];

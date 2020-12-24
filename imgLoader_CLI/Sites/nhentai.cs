@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Text;
 
@@ -6,13 +7,13 @@ namespace imgLoader_CLI.Sites
 {
     public class nhentai : ISite
     {
-        public const string Supplement ="nhentai.net/g/\\n\\/";
+        public const string Supplement = "nhentai.net/g/\\n\\/";
 
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] REPLACE = { "", "", "", "" };
 
         private readonly string _source;
-        private readonly string _number;
+        public string Number { get; set; }
 
         private int _imgNum;
         private string _artist;
@@ -29,10 +30,10 @@ namespace imgLoader_CLI.Sites
             }
             catch
             {
-                return;
+                throw new Exception("failed to initiate");
             }
 
-            _number = StrTools.GetStringValue(_source,"media_id");
+            Number = StrTools.GetStringValue(_source, "media_id");
         }
 
         public string GetArtist()
@@ -91,7 +92,7 @@ namespace imgLoader_CLI.Sites
                         ext = "gif";
                         break;
                 }
-                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/{_number}/{i}.{ext}");
+                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/{Number}/{i}.{ext}");
             }
 
             return temp;
@@ -112,12 +113,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            if (_number == null)
-            {
-                return false;
-            }
-
-            return true;
+            return Number != null;
         }
     }
 }
