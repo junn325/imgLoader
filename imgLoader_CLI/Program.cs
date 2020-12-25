@@ -70,7 +70,7 @@ namespace imgLoader_CLI
                     var read = Console.ReadLine();
                     string[] temp;
 
-                    if (read.Contains(" "))
+                    if (read.Contains(" "))                      
                     {
                         temp = read.Split(" ");
                         var psr = new Processor();
