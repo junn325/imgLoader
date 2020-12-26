@@ -10,11 +10,11 @@ namespace TestSite
     {
         static void Main(string[] args)
         {
-            //var a = new StringLoader();
-            //a.Load("https://e-hentai.org/g/1806482/287828bb60/");
+            var a = new StringLoader();
+            a.Load("https://e-hentai.org/g/1806482/287828bb60/");
 
-            var temp = XmlHttpRequest("https://api.e-hentai.org/api.php");
-            ;
+            //var temp = XmlHttpRequest("https://api.e-hentai.org/api.php");
+            //;
         }
 
         static string XmlHttpRequest(string url)

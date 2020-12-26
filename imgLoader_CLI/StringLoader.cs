@@ -1,31 +1,31 @@
-﻿using System.IO;
-using System.Linq;
+﻿using System;
 using System.Net;
 using System.Text;
 
 namespace imgLoader_CLI
 {
-    class StringLoader
+    public class StringLoader
     {
-        public void Load(string url)
+        public string Load(string url)
         {
             var sb = new StringBuilder();
 
-            var req = WebRequest.Create(url) as HttpWebRequest;
-            var resp = req.GetResponse() as HttpWebResponse;
+            var req = WebRequest.Create(url);
 
-            using (var br = resp.GetResponseStream())
+            var resp = req.GetResponse();
+
+            using var br = resp.GetResponseStream();
+
+            int count;
+            byte[] buffer = new byte[1024];
+
+            do
             {
-                int count;
-                byte[] buffer = new byte[1024];
+                count = br.Read(buffer, 0, buffer.Length);
+                sb.Append(Encoding.UTF8.GetString(buffer, 0, count));
+            } while (count > 0);
 
-                using var fs = new FileStream("HTML\\" + ((url.Contains('?')) ? url.Split('/').Last().Split('?')[0] : url.Split('/').Last()), FileMode.Create, FileAccess.ReadWrite);
-                do
-                {
-                    count = br.Read(buffer, 0, buffer.Length);
-                    fs.Write(buffer, 0, count);
-                } while (count > 0);
-            }
+            return sb.ToString();
         }
     }
 }

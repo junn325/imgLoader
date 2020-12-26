@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using imgLoader_CLI.Sites;
 
 namespace imgLoader_CLI
 {
@@ -17,6 +18,8 @@ namespace imgLoader_CLI
     {
         private static void Main(string[] args)
         {
+            var test = new ehentai("1806482/287828bb60");
+            
             Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 
             if (args.Length != 0)
