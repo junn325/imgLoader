@@ -22,7 +22,8 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] REPLACE = { "", "", "", "" };
 
-        private readonly string _source;                                                                                                              
+        private readonly string _src_gall;
+        private readonly string _src_item;
         public string Gid { get; set; }
 
         private readonly string _label;
@@ -31,24 +32,22 @@ namespace imgLoader_CLI.Sites
         public ehentai(string mNumber)
         {
             var sr = new StringLoader();
-            var temp = sr.Load($"https://e-hentai.org/g/{mNumber}/");
+            _src_gall = sr.Load($"https://e-hentai.org/g/{mNumber}/");
 
-            var ttemp = new WebClient().DownloadString($"https://e-hentai.org/g/{mNumber}/");
+            var itemLink = _src_gall.Split("\"><img alt")[0].Split('\"').Last();
+            _src_item = sr.Load(itemLink);
 
-            Console.Write(temp);
-
-            //todo: 받은 내용으로 1페이지를 찾아 아래 변수를 받아와야함
-
-            var startPage = temp.Split("var startpage = ")[1].Split(';')[0];
-            var startKey = temp.Split("var startkey = \"")[1].Split("\";")[0];
-            var showKey = temp.Split("var showkey = \"")[1].Split("\";")[0];
-            var bUrl = temp.Split("var base_url = \"")[1].Split("\";")[0];
-            var apiUrl = temp.Split("var api_url = \"")[1].Split("\";")[0];
+            var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
+            var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
+            var showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
+            var bUrl = _src_item.Split("var base_url=\"")[1].Split("\";")[0];
+            var apiUrl = _src_item.Split("var api_url = \"")[1].Split("\";")[0];
 
             Gid = mNumber.Split('/')[0];
             _label = mNumber.Split('/')[1];
 
-            var reqReturn = XmlHttpRequest(Gid, startPage, startKey, showKey);
+            //var reqReturn = XmlHttpRequest(apiUrl, $"https://e-hentai.org/g/{mNumber}/", Gid, startPage, startKey, showKey);
+            var reqReturn = XmlHttpRequest("https://api.e-hentai.org/api.php", Gid, startPage, startKey, showKey);
             ;
         }
 
@@ -77,13 +76,15 @@ namespace imgLoader_CLI.Sites
             return false;
         }
 
-        private static string XmlHttpRequest(string gid, string page, string imgKey, string showKey)
+        private string XmlHttpRequest(string url, string gid, string page, string imgKey, string showKey)
         {
-            var url = "https://api.e-hentai.org/api.php";
-            //var gid = "1806482";
-            //var page = "3";
-            //var imgkey = "527e2155ce";
-            //var showkey = "u4bplqx9ktj";
+            //gid = "1806482";
+            //page = "3";
+            //imgKey = "527e2155ce";
+            //showKey = "ie9t3z99kvk";
+
+            //url = "https://api.e-hentai.org/api.php";
+
 
             string returnVal;
 
@@ -92,8 +93,8 @@ namespace imgLoader_CLI.Sites
             var rq = WebRequest.Create(url) as HttpWebRequest;
             if (rq == null) return null;
 
-            rq.Referer = url;
-            rq.UserAgent = "Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1";
+            rq.Referer = "https://e-hentai.org/s/527e2155ce/1806482-3";
+            rq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
             rq.Method = "POST";
             //rq.KeepAlive = true;
             rq.ContentLength = param.Length;

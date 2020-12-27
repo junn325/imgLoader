@@ -10,19 +10,19 @@ namespace TestSite
     {
         static void Main(string[] args)
         {
-            var a = new StringLoader();
-            a.Load("https://e-hentai.org/g/1806482/287828bb60/");
+            //var a = new StringLoader();
+            //a.Load("https://e-hentai.org/g/1806482/287828bb60/");
 
-            //var temp = XmlHttpRequest("https://api.e-hentai.org/api.php");
-            //;
+            var temp = XmlHttpRequest("https://api.e-hentai.org/api.php");
+            ;
         }
 
         static string XmlHttpRequest(string url)
         {
             var gid = "1806482";
-            var page = "3";
-            var imgkey = "527e2155ce";
-            var showkey = "u4bplqx9ktj";
+            var page = "4";
+            var imgkey = "5e915772c9";
+            var showkey = "29fdjvx9kva";
 
             string returnVal = null;
 
@@ -30,9 +30,9 @@ namespace TestSite
 
             var rq = WebRequest.Create(url) as HttpWebRequest;
             rq.Referer = url;
-            rq.UserAgent = "Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1";
+            rq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
             rq.Method = "POST";
-            //rq.KeepAlive = true;
+            rq.KeepAlive = true;
             rq.ContentLength = param.Length;
             rq.ContentType = "application/json";
 
