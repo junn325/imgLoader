@@ -80,14 +80,14 @@ namespace imgLoader_CLI.Sites
 
             info[0] = _title;
             info[1] = _artist ?? "N/A";
-            info[2] = _src_api.StrLen("hash").ToString();
+            info[2] = _src_cdn.StrLen("hash").ToString();
 
-            StringBuilder temp = new StringBuilder();
+            var temp = new StringBuilder();
             foreach (string item in StrTools.GetValue(_src_api, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
 
-                temp.Append(item.Split('}')[0] + '\n');
+                temp.Append(item.Split('}')[0]).Append('\n');
             }
 
             info[3] = temp.ToString().Trim();
