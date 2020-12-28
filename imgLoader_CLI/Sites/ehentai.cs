@@ -22,6 +22,9 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] REPLACE = { "", "", "", "" };
 
+        private const string _api_url = "https://api.e-hentai.org/api.php";
+        private const string _base_url = "https://e-hentai.org/";
+
         private readonly string _src_gall;
         private readonly string _src_item;
         public string Gid { get; set; }
@@ -40,14 +43,14 @@ namespace imgLoader_CLI.Sites
             var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
             var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
             var showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
-            var bUrl = _src_item.Split("var base_url=\"")[1].Split("\";")[0];
-            var apiUrl = _src_item.Split("var api_url = \"")[1].Split("\";")[0];
+
+            startPage = "258";
+            startKey = "605d6a0ea3";
 
             Gid = mNumber.Split('/')[0];
             _label = mNumber.Split('/')[1];
 
-            //var reqReturn = XmlHttpRequest(apiUrl, $"https://e-hentai.org/g/{mNumber}/", Gid, startPage, startKey, showKey);
-            var reqReturn = XmlHttpRequest("https://api.e-hentai.org/api.php", Gid, startPage, startKey, showKey);
+            var reqReturn = XmlHttpRequest(_api_url, Gid, startPage, startKey, showKey);
             ;
         }
 
