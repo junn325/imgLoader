@@ -11,14 +11,11 @@ namespace imgLoader_CLI
             var sb = new StringBuilder();
 
             var req = WebRequest.Create(url);
-
             var resp = req.GetResponse();
-
             using var br = resp.GetResponseStream();
 
             int count;
             byte[] buffer = new byte[1024];
-
             do
             {
                 count = br.Read(buffer, 0, buffer.Length);

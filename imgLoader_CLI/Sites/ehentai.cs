@@ -11,8 +11,6 @@ namespace imgLoader_CLI.Sites
     //content(Sources tab) : Ln22 in (index)
     //base_url = "https://e-hentai.org/"
     //api_url = "https://api.e-hentai.org/api.php"
-    //gid = first number
-    //token = second number
     //aipuid = 4855480 <<< ?
     //popbase = base_url + "gallerypopups.php?gid=1806482&t=287828bb60&act="
     public class ehentai : ISite
@@ -27,10 +25,13 @@ namespace imgLoader_CLI.Sites
 
         private readonly string _src_gall;
         private readonly string _src_item;
+        private readonly string _src_rtn;
+
         public string Gid { get; set; }
 
         private readonly string _label;
         private string _artist;
+        private string showKey;
 
         public ehentai(string mNumber)
         {
@@ -42,16 +43,12 @@ namespace imgLoader_CLI.Sites
 
             var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
             var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
-            var showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
-
-            startPage = "258";
-            startKey = "605d6a0ea3";
+            showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
 
             Gid = mNumber.Split('/')[0];
             _label = mNumber.Split('/')[1];
 
-            var reqReturn = XmlHttpRequest(_api_url, Gid, startPage, startKey, showKey);
-            ;
+            _src_rtn = XmlHttpRequest(_api_url, Gid, startPage, startKey, showKey);
         }
 
         public string GetArtist()
@@ -61,7 +58,32 @@ namespace imgLoader_CLI.Sites
 
         public Dictionary<string, string> GetImgUrls()
         {
-            return new Dictionary<string, string>();
+            var imgList = new Dictionary<string, string>();
+            var sb = new StringBuilder(_src_rtn);
+
+            string nextPage;
+            string nextKey;
+
+            while (sb.ToString().Split("\"p\":")[1].Split(',')[0] != sb.ToString().Split("return load_image(")[5].Split(',')[0])
+            {
+                var temp = sb.ToString().Split("\\\" src=\\")[1].Split("\\\" style=\\\"")[0];
+                imgList.Add(temp.Split('/').Last(), temp);
+
+                nextPage = sb.ToString().Split("return load_image(")[5].Split(')')[0].Split(", ")[0];
+                nextKey = sb.ToString().Split("return load_image(")[5].Split("')")[0].Split(", '")[1];
+                sb.Clear();
+                sb.Append(XmlHttpRequest(_api_url, Gid, nextPage, nextKey, showKey));
+            }
+
+            var tempp = new StringBuilder();
+
+            foreach (var i in imgList)
+            {
+                tempp.Append(i.Value).Append('\n');
+            }
+
+            File.WriteAllText($"{DateTime.Now.Ticks}.txt", tempp.ToString());
+            return imgList;
         }
 
         public string GetTitle()

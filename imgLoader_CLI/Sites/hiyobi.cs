@@ -29,7 +29,6 @@ namespace imgLoader_CLI.Sites
             {
                 _src_api = wc.DownloadString($"https://api.hiyobi.me/gallery/{mNumber}");
                 _src_cdn = wc.DownloadString($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
-
             }
             catch
             {
@@ -83,7 +82,7 @@ namespace imgLoader_CLI.Sites
             info[2] = _src_cdn.StrLen("hash").ToString();
 
             var temp = new StringBuilder();
-            foreach (string item in StrTools.GetValue(_src_api, "tags", '[', ']').Split('{'))
+            foreach (var item in StrTools.GetValue(_src_api, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
 

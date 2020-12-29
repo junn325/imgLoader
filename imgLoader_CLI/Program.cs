@@ -14,11 +14,14 @@ namespace imgLoader_CLI
     //todo: 작가, 태그 등으로 자동으로 폴더로 나눠주는 시스템
     //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
     //todo: e-hentai
+    //todo: 항상 위로 상태로 떠 있다가 인터넷 창에서 누르면 자동으로 해당 작품 다운로드 
+    //todo: 작가별 트리식 정렬
     internal static class Program
     {
         private static void Main(string[] args)
         {
-            //var test = new ehentai("1806482/287828bb60");
+            var test = new ehentai("1806482/287828bb60");
+            test.GetImgUrls();
             //var test1 = new ehentai("1810150/8c545adb44");
 
             Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
