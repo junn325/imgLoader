@@ -27,13 +27,12 @@ namespace imgLoader_CLI.Sites
             try
             {
                 _source = wc.DownloadString($"https://nhentai.net/api/gallery/{mNumber}");
+                Number = StrTools.GetStringValue(_source, "media_id");
             }
             catch
             {
                 throw new Exception("failed to initiate");
             }
-
-            Number = StrTools.GetStringValue(_source, "media_id");
         }
 
         public string GetArtist()

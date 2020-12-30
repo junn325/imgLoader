@@ -29,13 +29,13 @@ namespace imgLoader_CLI.Sites
             {
                 _src_api = wc.DownloadString($"https://api.hiyobi.me/gallery/{mNumber}");
                 _src_cdn = wc.DownloadString($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
+
+                Number = mNumber;
             }
             catch
             {
                 throw new Exception("failed to initiate");
             }
-
-            Number = mNumber;
         }
 
         public string GetArtist()

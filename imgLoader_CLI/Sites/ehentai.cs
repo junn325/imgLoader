@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -47,10 +48,9 @@ namespace imgLoader_CLI.Sites
                 var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
                 var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
                 showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
-
+                Gid = mNumber.Split('/')[0];
                 _src_rtn = XmlHttpRequest(_api_url, Gid, startPage, startKey, showKey);
 
-                Gid = mNumber.Split('/')[0];
                 _label = mNumber.Split('/')[1];
 
             }
@@ -70,28 +70,37 @@ namespace imgLoader_CLI.Sites
             var imgList = new Dictionary<string, string>();
             var sb = new StringBuilder(_src_rtn);
 
-            string nextPage;
-            string nextKey;
+            var strTemp = sb.ToString();
 
-            while (sb.ToString().Split("\"p\":")[1].Split(',')[0] != sb.ToString().Split("return load_image(")[5].Split(',')[0])
+            var sw = new Stopwatch();
+            sw.Start();
+            do
             {
-                var temp = sb.ToString().Split("\\\" src=\\")[1].Split("\\\" style=\\\"")[0];
+                var temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
                 imgList.Add(temp.Split('/').Last(), temp);
 
-                nextPage = sb.ToString().Split("return load_image(")[5].Split(')')[0].Split(", ")[0];
-                nextKey = sb.ToString().Split("return load_image(")[5].Split("')")[0].Split(", '")[1];
+                Debug.Write(sw.ElapsedMilliseconds);
+                Debug.Write("\n");
+                sw.Restart();
+
                 sb.Clear();
-                sb.Append(XmlHttpRequest(_api_url, Gid, nextPage, nextKey, showKey));
-            }
+                sb.Append(XmlHttpRequest(_api_url, Gid, strTemp.Split("return load_image(")[5].Split(')')[0].Split(", ")[0], strTemp.Split("return load_image(")[5].Split("')")[0].Split(", '")[1], showKey));
 
-            var tempp = new StringBuilder();
+                Debug.Write(sw.ElapsedMilliseconds);
+                Debug.Write("\n");
 
+                sw.Restart();
+
+                strTemp = sb.ToString();
+            } while (strTemp.Split("\"p\":")[1].Split(',')[0] != strTemp.Split("return load_image(")[5].Split(',')[0]);
+
+            sb.Clear();
             foreach (var i in imgList)
             {
-                tempp.Append(i.Value).Append('\n');
+                sb.Append(i.Value).Append('\n');
             }
 
-            File.WriteAllText($"{DateTime.Now.Ticks}.txt", tempp.ToString());
+            File.WriteAllText($"{DateTime.Now.Ticks}.txt", sb.ToString());
             return imgList;
         }
 
