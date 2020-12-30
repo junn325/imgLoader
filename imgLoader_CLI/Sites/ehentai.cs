@@ -1,19 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace imgLoader_CLI.Sites
 {
-    //content(Sources tab) : Ln22 in (index)
-    //base_url = "https://e-hentai.org/"
-    //api_url = "https://api.e-hentai.org/api.php"
-    //aipuid = 4855480 <<< ?
-    //popbase = base_url + "gallerypopups.php?gid=1806482&t=287828bb60&act="
     public class ehentai : ISite
     {
         public static string Supplement = "e-hentai.org/g/\\n\\/\\n\\/";
@@ -31,9 +24,9 @@ namespace imgLoader_CLI.Sites
         public string Gid { get; set; }
 
         private readonly string _label;
-        private string _artist;
-        private string _title;
-        private string showKey;
+        private readonly string _artist;
+        private readonly string _title;
+        private readonly string showKey;
 
         public ehentai(string mNumber)
         {
@@ -47,12 +40,15 @@ namespace imgLoader_CLI.Sites
 
                 var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
                 var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
+
                 showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
                 Gid = mNumber.Split('/')[0];
                 _src_rtn = XmlHttpRequest(_api_url, Gid, startPage, startKey, showKey);
 
                 _label = mNumber.Split('/')[1];
+                _title = _src_gall.Split("<title>")[1].Split("</title>")[0];
 
+                if (_title.Contains('[')) _artist = _title.Split('[')[1].Split(']')[0];
             }
             catch
             {
@@ -62,7 +58,7 @@ namespace imgLoader_CLI.Sites
 
         public string GetArtist()
         {
-            return "";
+            return _artist ?? "N/A";
         }
 
         public Dictionary<string, string> GetImgUrls()
@@ -72,24 +68,13 @@ namespace imgLoader_CLI.Sites
 
             var strTemp = sb.ToString();
 
-            var sw = new Stopwatch();
-            sw.Start();
             do
             {
                 var temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
-                imgList.Add(temp.Split('/').Last(), temp);
-
-                Debug.Write(sw.ElapsedMilliseconds);
-                Debug.Write("\n");
-                sw.Restart();
+                imgList.Add(temp.Split('/').Last(), temp.Replace("\\/","/"));
 
                 sb.Clear();
                 sb.Append(XmlHttpRequest(_api_url, Gid, strTemp.Split("return load_image(")[5].Split(')')[0].Split(", ")[0], strTemp.Split("return load_image(")[5].Split("')")[0].Split(", '")[1], showKey));
-
-                Debug.Write(sw.ElapsedMilliseconds);
-                Debug.Write("\n");
-
-                sw.Restart();
 
                 strTemp = sb.ToString();
             } while (strTemp.Split("\"p\":")[1].Split(',')[0] != strTemp.Split("return load_image(")[5].Split(',')[0]);
@@ -106,7 +91,6 @@ namespace imgLoader_CLI.Sites
 
         public string GetTitle()
         {
-            _title = _src_gall.Split("<title>")[1].Split("</title>")[0];
             return _title;
         }
 

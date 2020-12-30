@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading;
@@ -19,6 +20,9 @@ namespace imgLoader_CLI
 
         internal void Initialize(string[] url)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             Console.Write("\n");
 
             bool temp = false;
@@ -26,6 +30,8 @@ namespace imgLoader_CLI
             thrDownStart.Start();
 
             while (!temp) Thread.Sleep(Core.WAIT_TIME * 20);
+
+            Debug.Write(sw.ElapsedMilliseconds + "\n");
         }
 
         private void Process(string[] url)
@@ -54,13 +60,13 @@ namespace imgLoader_CLI
                         imgList = site.GetImgUrls();
                         Console.WriteLine($"{imgList.Count} images");
 
-                        Console.Write("Artist name: ");
-                        artist = site.GetArtist();
-                        Console.WriteLine($"{artist}");
-
                         Console.Write("Title: ");
                         title = site.GetTitle();
                         Console.WriteLine($"{title}");
+
+                        Console.Write("Artist name: ");
+                        artist = site.GetArtist();
+                        Console.WriteLine($"{artist}");
 
                         title = Core.DirFilter(title);
 
@@ -236,7 +242,7 @@ namespace imgLoader_CLI
             {
                 if (thrDownStart == null) return;
 
-                while (thrDownStart.ThreadState == ThreadState.Running)
+                while (thrDownStart.ThreadState == System.Threading.ThreadState.Running)
                 {
                     thrDownStart.Interrupt();
                     Thread.Sleep(Core.WAIT_TIME);

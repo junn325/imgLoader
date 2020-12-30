@@ -106,6 +106,8 @@ namespace imgLoader_CLI
                 if (val.Contains("id=")) return val.Split("id=")[1];
             }
 
+            if (val.Contains("e-hentai")) return val.Split("/g/")[1].Remove(val.Split("/g/")[1].Length - 1);
+
             return "";
         }
 
@@ -126,9 +128,9 @@ namespace imgLoader_CLI
 
             if (link.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase)) return new hiyobi(mNumber);
             if (link.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase)) return new Hitomi(mNumber);
+            if (link.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new ehentai(mNumber);
 
             return null;
         }
-
     }
 }
