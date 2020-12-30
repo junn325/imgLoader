@@ -15,8 +15,9 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] REPLACE = { "", "", "", "" };
 
-        private readonly string _source;
-        private readonly string _artist;
+        private readonly string _src_info;
+        private readonly string _src_gall;
+        private string _artist;
 
         public Hitomi(string mNumber)
         {
@@ -25,11 +26,10 @@ namespace imgLoader_CLI.Sites
 
             try
             {
-                _source = wc.DownloadString($"https://ltn.hitomi.la/galleries/{mNumber}.js");
+                _src_info = wc.DownloadString($"https://ltn.hitomi.la/galleries/{mNumber}.js");
 
-                string temp = wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html");
-                string srcArtist = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
-                _artist = srcArtist.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
+                var temp = wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html");
+                _src_gall = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
 
                 Number = mNumber;
             }
@@ -41,11 +41,12 @@ namespace imgLoader_CLI.Sites
 
         public string GetArtist()
         {
+            _artist = _src_gall.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
             return _artist;
         }
         public Dictionary<string, string> GetImgUrls()            //키: 이미지이름/값: 주소
         {
-            string[] js = _source.Split('{');
+            string[] js = _src_info.Split('{');
             var imgList = new Dictionary<string, string>();
 
             for (int i = 2; i < js.Length; i++)
@@ -87,19 +88,19 @@ namespace imgLoader_CLI.Sites
 
         public string GetTitle()
         {
-            return Filter(_source.Split("title\":\"")[1].Split('\"')[0]);
+            return Filter(_src_info.Split("title\":\"")[1].Split('\"')[0]);
         }
 
         public string[] ReturnInfo()
         {
             string[] info = new string[5];
 
-            info[0] = StrTools.GetStringValue(_source, "title");
+            info[0] = StrTools.GetStringValue(_src_info, "title");
             info[1] = _artist ?? "N/A";
-            info[2] = _source.StrLen("hash").ToString();
+            info[2] = _src_info.StrLen("hash").ToString();
 
             StringBuilder temp = new StringBuilder();
-            foreach (string item in StrTools.GetValue(_source, "tags", '[', ']').Split('{'))
+            foreach (string item in StrTools.GetValue(_src_info, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
 
@@ -107,7 +108,7 @@ namespace imgLoader_CLI.Sites
             }
 
             info[3] = temp.ToString().Trim();
-            info[4] = StrTools.GetStringValue(_source, "date");
+            info[4] = StrTools.GetStringValue(_src_info, "date");
 
             return info;
         }

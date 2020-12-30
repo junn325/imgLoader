@@ -31,24 +31,33 @@ namespace imgLoader_CLI.Sites
 
         private readonly string _label;
         private string _artist;
+        private string _title;
         private string showKey;
 
         public ehentai(string mNumber)
         {
-            var sr = new StringLoader();
-            _src_gall = sr.Load($"https://e-hentai.org/g/{mNumber}/");
+            try
+            {
+                var sr = new StringLoader();
+                _src_gall = sr.Load($"https://e-hentai.org/g/{mNumber}/");
 
-            var itemLink = _src_gall.Split("\"><img alt")[0].Split('\"').Last();
-            _src_item = sr.Load(itemLink);
+                var itemLink = _src_gall.Split("\"><img alt")[0].Split('\"').Last();
+                _src_item = sr.Load(itemLink);
 
-            var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
-            var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
-            showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
+                var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
+                var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
+                showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
 
-            Gid = mNumber.Split('/')[0];
-            _label = mNumber.Split('/')[1];
+                _src_rtn = XmlHttpRequest(_api_url, Gid, startPage, startKey, showKey);
 
-            _src_rtn = XmlHttpRequest(_api_url, Gid, startPage, startKey, showKey);
+                Gid = mNumber.Split('/')[0];
+                _label = mNumber.Split('/')[1];
+
+            }
+            catch
+            {
+                throw new Exception("failed to initiate");
+            }
         }
 
         public string GetArtist()
@@ -88,7 +97,8 @@ namespace imgLoader_CLI.Sites
 
         public string GetTitle()
         {
-            return "";
+            _title = _src_gall.Split("<title>")[1].Split("</title>")[0];
+            return _title;
         }
 
         public string[] ReturnInfo()
@@ -98,7 +108,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return false;
+            return _label != null;
         }
 
         private string XmlHttpRequest(string url, string gid, string page, string imgKey, string showKey)
