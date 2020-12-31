@@ -15,6 +15,7 @@ namespace imgLoader_CLI
     //todo: e-hentai
     //todo: 항상 위로 상태로 떠 있다가 인터넷 창에서 누르면 자동으로 해당 작품 다운로드 
     //todo: 작가별 트리식 정렬
+    //todo: 중복 작품 체크: 번호
     internal static class Program
     {
         private static void Main(string[] args)
