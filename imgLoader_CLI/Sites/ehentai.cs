@@ -21,29 +21,29 @@ namespace imgLoader_CLI.Sites
         private readonly string _src_item;
         private readonly string _src_rtn;
 
-        public string Gid { get; set; }
+        private readonly string _gid;
 
         private readonly string _label;
         private readonly string _artist;
         private readonly string _title;
-        private readonly string showKey;
+        private readonly string _showKey;
 
         public ehentai(string mNumber)
         {
             try
             {
                 var sr = new StringLoader();
-                _src_gall = sr.Load($"https://e-hentai.org/g/{mNumber}/");
 
+                _src_gall = sr.LoadAsync($"https://e-hentai.org/g/{mNumber}/").Result;
                 var itemLink = _src_gall.Split("\"><img alt")[0].Split('\"').Last();
-                _src_item = sr.Load(itemLink);
+                _src_item = sr.LoadAsync(itemLink).Result;
 
                 var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
                 var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
 
-                showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
-                Gid = mNumber.Split('/')[0];
-                _src_rtn = XmlHttpRequest(_api_url, Gid, startPage, startKey, showKey);
+                _showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
+                _gid = mNumber.Split('/')[0];
+                _src_rtn = XmlHttpRequest(_api_url, _gid, startPage, startKey, _showKey);
 
                 _label = mNumber.Split('/')[1];
                 _title = _src_gall.Split("<title>")[1].Split("</title>")[0];
@@ -74,7 +74,7 @@ namespace imgLoader_CLI.Sites
                 imgList.Add(temp.Split('/').Last(), temp.Replace("\\/","/"));
 
                 sb.Clear();
-                sb.Append(XmlHttpRequest(_api_url, Gid, strTemp.Split("return load_image(")[5].Split(')')[0].Split(", ")[0], strTemp.Split("return load_image(")[5].Split("')")[0].Split(", '")[1], showKey));
+                sb.Append(XmlHttpRequest(_api_url, _gid, strTemp.Split("return load_image(")[5].Split(')')[0].Split(", ")[0], strTemp.Split("return load_image(")[5].Split("')")[0].Split(", '")[1], _showKey));
 
                 strTemp = sb.ToString();
             } while (strTemp.Split("\"p\":")[1].Split(',')[0] != strTemp.Split("return load_image(")[5].Split(',')[0]);  //비동기실행 해보고 밴당하지 않는지 체크
