@@ -5,7 +5,7 @@ using System.Text;
 
 namespace imgLoader_CLI.Sites
 {
-    public class hiyobi : ISite
+    public class Hiyobi : ISite
     {
         public const string Supplement = "hiyobi.me/reader/\\n\\";
 
@@ -20,7 +20,7 @@ namespace imgLoader_CLI.Sites
         private string _title;
         private string _artist;
 
-        public hiyobi(string mNumber)
+        public Hiyobi(string mNumber)
         {
             var wc = new WebClient();
             wc.Encoding = Encoding.UTF8;

@@ -7,42 +7,30 @@ using System.Text;
 
 namespace imgLoader_CLI.Sites
 {
-    public class ehentai : ISite
+    public class EHentai : ISite
     {
         public static string Supplement = "e-hentai.org/g/\\n\\/\\n\\/";
-
-        private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] REPLACE = { "", "", "", "" };
 
         private const string _api_url = "https://api.e-hentai.org/api.php";
         private const string _base_url = "https://e-hentai.org/";
 
-        private readonly string _src_gall;
-        private readonly string _src_item;
-        private readonly string _src_rtn;
+        private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
+        private static readonly string[] REPLACE = { "", "", "", "" };
 
-        private readonly string _gid;
+        private readonly string _src_gall, _src_item, _src_rtn, _gid, _label, _artist, _title, _showKey;
 
-        private readonly string _label;
-        private readonly string _artist;
-        private readonly string _title;
-        private readonly string _showKey;
-
-        public ehentai(string mNumber)
+        public EHentai(string mNumber)
         {
             try
             {
-                var sr = new StringLoader();
-
-                _src_gall = sr.LoadAsync($"https://e-hentai.org/g/{mNumber}/").Result;
-                var itemLink = _src_gall.Split("\"><img alt")[0].Split('\"').Last();
-                _src_item = sr.LoadAsync(itemLink).Result;
+                _src_gall = StrLoad.LoadAsync($"https://e-hentai.org/g/{mNumber}/").Result;
+                _src_item = StrLoad.Load(_src_gall.Split("\"><img alt")[0].Split('\"').Last());
 
                 var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
-                var startKey = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
+                var startKey  = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
+                _showKey      = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
+                _gid          = mNumber.Split('/')[0];
 
-                _showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
-                _gid = mNumber.Split('/')[0];
                 _src_rtn = XmlHttpRequest(_api_url, _gid, startPage, startKey, _showKey);
 
                 _label = mNumber.Split('/')[1];

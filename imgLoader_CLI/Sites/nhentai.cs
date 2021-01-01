@@ -5,7 +5,7 @@ using System.Text;
 
 namespace imgLoader_CLI.Sites
 {
-    public class nhentai : ISite
+    public class NHentai : ISite
     {
         public const string Supplement = "nhentai.net/g/\\n\\/";
 
@@ -19,7 +19,7 @@ namespace imgLoader_CLI.Sites
         private string _artist;
         private string _title;
 
-        public nhentai(string mNumber)
+        public NHentai(string mNumber)
         {
             var wc = new WebClient();
             wc.Encoding = Encoding.UTF8;
