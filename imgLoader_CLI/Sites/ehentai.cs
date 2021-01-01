@@ -31,7 +31,7 @@ namespace imgLoader_CLI.Sites
                 _showKey      = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
                 _gid          = mNumber.Split('/')[0];
 
-                _src_rtn = XmlHttpRequest(_api_url, _gid, startPage, startKey, _showKey);
+                _src_rtn = XmlHttpRequest(_api_url, _gid, startPage, startKey, _showKey, "1");
 
                 _label = mNumber.Split('/')[1];
                 _title = _src_gall.Split("<title>")[1].Split("</title>")[0];
@@ -55,17 +55,22 @@ namespace imgLoader_CLI.Sites
             var sb = new StringBuilder(_src_rtn);
 
             var strTemp = sb.ToString();
+            string temp;
 
+            int cnt = 0;
             do
             {
-                var temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
+                cnt++;
+
+                temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
                 imgList.Add(temp.Split('/').Last(), temp.Replace("\\/","/"));
 
+                temp = strTemp.Split("return load_image(")[5];
                 sb.Clear();
-                sb.Append(XmlHttpRequest(_api_url, _gid, strTemp.Split("return load_image(")[5].Split(')')[0].Split(", ")[0], strTemp.Split("return load_image(")[5].Split("')")[0].Split(", '")[1], _showKey));
+                sb.Append(XmlHttpRequest(_api_url, _gid, temp.Split(')')[0].Split(", ")[0], temp.Split("')")[0].Split(", '")[1], _showKey, cnt.ToString()));
 
                 strTemp = sb.ToString();
-            } while (strTemp.Split("\"p\":")[1].Split(',')[0] != strTemp.Split("return load_image(")[5].Split(',')[0]);  //비동기실행 해보고 밴당하지 않는지 체크
+            } while (strTemp.Split("\"p\":")[1].Split(',')[0] != temp.Split(',')[0]);  //비동기실행 해보고 밴당하지 않는지 체크
 
             sb.Clear();
             foreach (var i in imgList)
@@ -92,49 +97,49 @@ namespace imgLoader_CLI.Sites
             return _label != null;
         }
 
-        private string XmlHttpRequest(string url, string gid, string page, string imgKey, string showKey)
+        private string XmlHttpRequest(string url, string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
-            //gid = "1806482";
-            //page = "3";
-            //imgKey = "527e2155ce";
-            //showKey = "ie9t3z99kvk";
-
-            //url = "https://api.e-hentai.org/api.php";
-
-
-            string returnVal;
-
-            var param = Encoding.UTF8.GetBytes($"{{\"method\":\"showpage\",\"gid\":{gid},\"page\":{page},\"imgkey\":\"{imgKey}\",\"showkey\":\"{showKey}\"}}");
-
-            var rq = WebRequest.Create(url) as HttpWebRequest;
-            if (rq == null) return null;
-
-            rq.Referer = "https://e-hentai.org/s/527e2155ce/1806482-3";
-            rq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
-            rq.Method = "POST";
-            //rq.KeepAlive = true;
-            rq.ContentLength = param.Length;
-            rq.ContentType = "application/json";
-
-            using (var s = rq.GetRequestStream())
+            HttpWebRequest rq = null;
+            WebResponse resp = null;
+            try
             {
-                s.Write(param, 0, param.Length);
-            }
+                string returnVal;
+                var param = Encoding.UTF8.GetBytes($"{{\"method\":\"showpage\",\"gid\":{gid},\"page\":{reqPage},\"imgkey\":\"{imgKey}\",\"showkey\":\"{showKey}\"}}");
 
-            var resp = rq.GetResponse() as HttpWebResponse;
-            if (resp == null) return null;
+                rq = WebRequest.CreateHttp(url);
+                rq.Referer = $"https://e-hentai.org/s/{imgKey}/{gid}-{pageNum}";
+                rq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
+                rq.Method = "POST";
+                rq.ContentLength = param.Length;
+                rq.ContentType = "application/json";
 
-            using (var s = resp.GetResponseStream())
-            {
-                using (var reader = new StreamReader(s))
+                using (var s = rq.GetRequestStream())
                 {
-                    returnVal = reader.ReadToEnd();
+                    s.Write(param, 0, param.Length);
                 }
+
+                resp = rq.GetResponse();
+                using (var s = resp.GetResponseStream())
+                {
+                    using (var reader = new StreamReader(s))
+                    {
+                        returnVal = reader.ReadToEnd();
+                    }
+                }
+
+                resp.Close();
+
+                return returnVal;
             }
-            resp.Close();
-
-            return returnVal;
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                rq?.Abort();
+                resp?.Close();
+            }
         }
-
     }
 }
