@@ -77,7 +77,7 @@ namespace imgLoader_CLI.Sites
                 sb.Append(XmlHttpRequest(_api_url, Gid, strTemp.Split("return load_image(")[5].Split(')')[0].Split(", ")[0], strTemp.Split("return load_image(")[5].Split("')")[0].Split(", '")[1], showKey));
 
                 strTemp = sb.ToString();
-            } while (strTemp.Split("\"p\":")[1].Split(',')[0] != strTemp.Split("return load_image(")[5].Split(',')[0]);
+            } while (strTemp.Split("\"p\":")[1].Split(',')[0] != strTemp.Split("return load_image(")[5].Split(',')[0]);  //비동기실행 해보고 밴당하지 않는지 체크
 
             sb.Clear();
             foreach (var i in imgList)
