@@ -1,4 +1,6 @@
-﻿using System;
+﻿using imgLoader_CLI.Sites;
+
+using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -20,8 +22,8 @@ namespace imgLoader_CLI
     {
         private static void Main(string[] args)
         {
-            //var test = new ehentai("1806482/287828bb60");
-            //test.GetImgUrls();
+            var test = new EHentai("1806482/287828bb60");
+            var tempp = test.GetImgUrls();
             //var test1 = new ehentai("1810150/8c545adb44");
 
             Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
