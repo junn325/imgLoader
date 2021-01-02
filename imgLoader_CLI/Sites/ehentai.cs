@@ -23,20 +23,20 @@ namespace imgLoader_CLI.Sites
         {
             try
             {
-                _src_gall = StrLoad.LoadAsync($"https://e-hentai.org/g/{mNumber}/").Result;
+                _src_gall = StrLoad.Load($"https://e-hentai.org/g/{mNumber}/");
                 _src_item = StrLoad.Load(_src_gall.Split("\"><img alt")[0].Split('\"').Last());
 
                 var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
                 var startKey  = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
                 _showKey      = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
-                _gid          = mNumber.Split('/')[0];
 
                 _src_rtn = XmlHttpRequest(_api_url, _gid, startPage, startKey, _showKey, "1");
 
-                _label = mNumber.Split('/')[1];
                 _title = _src_gall.Split("<title>")[1].Split("</title>")[0];
-
                 if (_title.Contains('[')) _artist = _title.Split('[')[1].Split(']')[0];
+
+                _gid = mNumber.Split('/')[0];
+                _label = mNumber.Split('/')[1];
             }
             catch
             {
@@ -57,17 +57,15 @@ namespace imgLoader_CLI.Sites
             var strTemp = sb.ToString();
             string temp;
 
-            int cnt = 0;
+            var cnt = 0;
             do
             {
-                cnt++;
-
-                temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
-                imgList.Add(temp.Split('/').Last(), temp.Replace("\\/","/"));
-
                 temp = strTemp.Split("return load_image(")[5];
                 sb.Clear();
-                sb.Append(XmlHttpRequest(_api_url, _gid, temp.Split(')')[0].Split(", ")[0], temp.Split("')")[0].Split(", '")[1], _showKey, cnt.ToString()));
+                sb.Append(XmlHttpRequest(_api_url, _gid, temp.Split(')')[0].Split(", ")[0], temp.Split("')")[0].Split(", '")[1], _showKey, (++cnt).ToString()));
+
+                temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
+                imgList.Add(temp.Split('/').Last(), temp.Replace("\\/", "/"));
 
                 strTemp = sb.ToString();
             } while (strTemp.Split("\"p\":")[1].Split(',')[0] != temp.Split(',')[0]);  //비동기실행 해보고 밴당하지 않는지 체크
@@ -126,7 +124,6 @@ namespace imgLoader_CLI.Sites
                         returnVal = reader.ReadToEnd();
                     }
                 }
-
                 resp.Close();
 
                 return returnVal;

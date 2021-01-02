@@ -2,7 +2,7 @@
 
 namespace imgLoader_CLI.Sites
 {
-    public class pixiv : ISite
+    public class Pixiv : ISite
     {
         public const string Supplement = "www.pixiv.net/artworks/\\n\\";
 
@@ -12,7 +12,7 @@ namespace imgLoader_CLI.Sites
         private readonly string _source;
         private readonly string _number;
 
-        public pixiv(string mNumber)
+        public Pixiv(string mNumber)
         {
         }
 
