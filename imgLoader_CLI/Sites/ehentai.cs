@@ -68,7 +68,6 @@ namespace imgLoader_CLI.Sites
                 imgList.Add(temp.Split('/').Last(), temp.Replace("\\/", "/"));
 
                 strTemp = sb.ToString();
-
             }
 
             sb.Clear();
