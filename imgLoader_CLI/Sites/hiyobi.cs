@@ -17,8 +17,8 @@ namespace imgLoader_CLI.Sites
 
         public string Number { get; set; }
 
-        private string _title;
-        private string _artist;
+        private readonly string _title;
+        private readonly string _artist;
 
         public Hiyobi(string mNumber)
         {
@@ -31,7 +31,10 @@ namespace imgLoader_CLI.Sites
                 _src_cdn = wc.DownloadString($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
 
                 Number = mNumber;
-            }
+
+                _title = StrTools.GetStringValue(_src_api, "title");
+                _artist = _src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists", '[').Contains("value") ? StrTools.GetStringValue(StrTools.GetValue(_src_api, "artists", '['), "value") : "N/A";
+            }                                                               
             catch
             {
                 throw new Exception("failed to initiate");
@@ -39,16 +42,8 @@ namespace imgLoader_CLI.Sites
         }
 
         public string GetArtist()
-        {
-            try
-            {
-                _artist = StrTools.GetStringValue(StrTools.GetValue(_src_api, "artists", '['), "value");
-                return _artist;
-            }
-            catch
-            {
-                return "N/A";
-            }
+        { 
+            return _artist ?? "N/A";
         }
 
         public Dictionary<string, string> GetImgUrls()
@@ -69,17 +64,16 @@ namespace imgLoader_CLI.Sites
 
         public string GetTitle()
         {
-            _title = StrTools.GetStringValue(_src_api, "title");
-            return _title;
+            return _title ?? throw new Exception("_title was Null");
         }
 
         public string[] ReturnInfo()
         {
             string[] info = new string[5];
 
-            info[0] = _title;
+            info[0] = _title ?? throw new Exception("_title was Null");
             info[1] = _artist ?? "N/A";
-            info[2] = _src_cdn.StrLen("hash").ToString();
+            info[2] = _src_cdn.StrLen("name").ToString();
 
             var temp = new StringBuilder();
             foreach (var item in StrTools.GetValue(_src_api, "tags", '[', ']').Split('{'))
@@ -99,7 +93,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return (Number != null);
+            return _artist != null;
         }
 
         public static string Filter(string dirName)

@@ -38,7 +38,6 @@ namespace imgLoader_CLI
         {
             try
             {
-                Thread thStop = new Thread(Stopping);
                 foreach (var link in url)
                 {
                     if (string.IsNullOrEmpty(link)) continue;
@@ -46,8 +45,10 @@ namespace imgLoader_CLI
                     ISite site;
                     Dictionary<string, string> imgList;
 
-                    string artist, title, route;
+                    var sw = new Stopwatch();
+                    sw.Start();
 
+                    string artist, title, route;
                     try
                     {
                         Console.Write("Load info: ");
@@ -74,6 +75,8 @@ namespace imgLoader_CLI
                             artist == "N/A"
                                 ? $@"{Core.Route}\{title}"
                                 : $@"{Core.Route}\{title} ({artist})";
+
+                        Debug.Write(sw.Elapsed.Ticks);
                     }
                     catch
                     {
@@ -133,7 +136,7 @@ namespace imgLoader_CLI
                     }
                 }
 
-                thStop.Start();
+                Stopping();
             }
             catch (ThreadInterruptedException) { }
         }
