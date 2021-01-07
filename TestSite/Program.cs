@@ -3,17 +3,50 @@ using System.IO;
 using System.Text.Json;
 using System.Net;
 using System.Text;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TestSite
 {
-    class Program
+    internal static class Program
     {
         static void Main(string[] args)
         {
-            //var a = new StringLoader();
-            //a.Load("https://e-hentai.org/g/1806482/287828bb60/");
+            var sw = new Stopwatch();
+            var sb = new StringBuilder();
+            var wc = new WebClient();
+            var temp = new Task<string>[50];
 
-            var temp = XmlHttpRequest("https://api.e-hentai.org/api.php");
+            const string url = "https://blog.naver.com/designpress2016/222179251416";
+            sw.Start();
+
+            for (int i = 0; i < 5; i++)
+            {
+                for (var j = 0; j < 50; j++)
+                {
+                    //sb.Append(StrLoad.Load(url));
+                    //sb.Append(wc.DownloadString(url));
+                    temp[j] = StrLoad.LoadAsync(url);
+                    Console.WriteLine(j);
+                }
+
+                foreach (var item in temp)
+                {
+                    sb.Append(item.Result);
+                }
+
+                File.AppendAllText("time.txt", sw.Elapsed.Ticks + "\n" + sb.ToString().Length + "\n\n");
+                Console.WriteLine(sb.ToString().Length);
+
+                Thread.Sleep(1000);
+                sb.Clear();
+                sw.Restart();
+            }
+
+            File.AppendAllText("time.txt", "\n");
+
+            sw.Stop();
             ;
         }
 
