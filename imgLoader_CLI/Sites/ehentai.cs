@@ -54,20 +54,45 @@ namespace imgLoader_CLI.Sites
 
         public Dictionary<string, string> GetImgUrls()
         {
+            const int partNum = 5;
+
             var imgList = new Dictionary<string, string>();
             var sb = new StringBuilder(_src_rtn);
-
             var strTemp = sb.ToString();
             string temp;
 
-            for (int i = 1; i < int.Parse(_src_rtn.Split(" \\/ <span>")[1].Split("<\\/span>")[0]) + 1; i++)        //todo: 5개씩 묶어서 돌려볼 것 페이지를 다운받으면 imgKey가 나옴
+            var imgCount = int.Parse(_src_rtn.Split(" \\/ <span>")[1].Split("<\\/span>")[0]);
+            var partCount = (imgCount / partNum) +  1;
+
+            var preSrcs = new Task<string>[partCount];
+            var tasks = new Task<string>[imgCount];
+
+            //for (int i = 0; i < partCount; i++)
+            //{
+            //    preSrcs[i] = StrLoad.LoadAsync($"https://e-hentai.org/s/f166ffe502/{_gall_id}-{i + 1}");
+            //}
+
+            //for (int i = 0; i < partCount; i++)
+            //{
+            //    temp = strTemp.Split("return load_image(")[5];
+            //    sb.Clear();
+            //    tasks[i] = XmlHttpRequest_Item(_api_url, _gall_id, temp.Split(')')[0].Split(", ")[0], temp.Split("')")[0].Split(", '")[1], _showKey, i.ToString());
+
+            //    temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
+            //    imgList.Add(temp.Split('/').Last(), temp.Replace("\\/", "/"));
+
+            //    strTemp = sb.ToString();
+            //}
+
+            for (int i = 1; i < imgCount + 1; i++)        //todo: 5개씩 묶어서 돌려볼 것 페이지를 다운받으면 imgKey가 나옴
             {
                 temp = strTemp.Split("return load_image(")[5];
                 sb.Clear();
                 sb.Append(XmlHttpRequest_Item(_api_url, _gall_id, temp.Split(')')[0].Split(", ")[0], temp.Split("')")[0].Split(", '")[1], _showKey, i.ToString()));
 
-                temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
+                temp = strTemp.Split("below.', '")[1].Split('\'')[0];
                 imgList.Add(temp.Split('/').Last(), temp.Replace("\\/", "/"));
+                //https://e-hentai.org/r/57609f51457efd7491b087fd68575a1829e63e09-201691-1280-1816-jpg/forumtoken/1806482-2/i_002.jpg
 
                 strTemp = sb.ToString();
             }
@@ -78,7 +103,7 @@ namespace imgLoader_CLI.Sites
                 sb.Append(i.Value).Append('\n');
             }
 
-            File.WriteAllText($"{DateTime.Now.Ticks}.txt", sb.ToString());
+            File.WriteAllText($"My_Url_ForumStatic\\{DateTime.Now.Ticks}.txt", sb.ToString());
             return imgList;
         }
 
@@ -114,6 +139,7 @@ namespace imgLoader_CLI.Sites
 
         private string XmlHttpRequest_Item(string url, string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
+
             HttpWebRequest rq = null;
             WebResponse resp = null;
             try
@@ -152,6 +178,51 @@ namespace imgLoader_CLI.Sites
                 rq?.Abort();
                 resp?.Close();
             }
+        }
+        private async Task<string> XmlHttpRequest_ItemAsync(string url, string gid, string reqPage, string imgKey, string showKey, string pageNum)
+        {
+            return await Task.Run(() => {
+
+                HttpWebRequest rq = null;
+                WebResponse resp = null;
+                try
+                {
+                    string returnVal;
+                    var param = Encoding.UTF8.GetBytes($"{{\"method\":\"showpage\",\"gid\":{gid},\"page\":{reqPage},\"imgkey\":\"{imgKey}\",\"showkey\":\"{showKey}\"}}");
+
+                    rq = WebRequest.CreateHttp(url);
+                    rq.Referer = $"https://e-hentai.org/s/{imgKey}/{gid}-{pageNum}";
+                    rq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
+                    rq.Method = "POST";
+                    rq.ContentLength = param.Length;
+                    rq.ContentType = "application/json";
+
+                    using (var s = rq.GetRequestStream())
+                    {
+                        s.Write(param, 0, param.Length);
+                    }
+
+                    resp = rq.GetResponse();
+                    using (var s = resp.GetResponseStream())
+                    {
+                        using var reader = new StreamReader(s);
+                        returnVal = reader.ReadToEnd();
+                    }
+                    resp.Close();
+
+                    return returnVal;
+                }
+                catch
+                {
+                    return null;
+                }
+                finally
+                {
+                    rq?.Abort();
+                    resp?.Close();
+                }
+
+            }).ConfigureAwait(false);
         }
         private string XmlHttpRequest_Data(string url, string gall_id, string gall_token)
         {
