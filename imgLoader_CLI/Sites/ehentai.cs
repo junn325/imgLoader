@@ -19,11 +19,14 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] REPLACE = { "", "", "", "" };
 
         private readonly string _src_gall, _src_item, _src_rtn, _src_data, _gall_id, _gall_token, _artist, _title, _showKey;
+        public string Number { get; }
 
         public EHentai(string mNumber)
         {
             try
             {
+                Number = mNumber;
+
                 _src_gall = StrLoad.Load($"https://e-hentai.org/g/{mNumber}/");
                 _src_item = StrLoad.Load(_src_gall.Split("\"><img alt")[0].Split('\"').Last());
 
@@ -54,56 +57,11 @@ namespace imgLoader_CLI.Sites
 
         public Dictionary<string, string> GetImgUrls()
         {
-            const int partNum = 5;
-
             var imgList = new Dictionary<string, string>();
-            var sb = new StringBuilder(_src_rtn);
-            var strTemp = sb.ToString();
-            string temp;
+            var pageCount = int.Parse(_src_gall.Split(" of ")[1].Split(" images")[0]);
+                 
+            //갤러리 메인 페이지에서 썸네일 클릭 시 실행 함수를 불러와볼것
 
-            var imgCount = int.Parse(_src_rtn.Split(" \\/ <span>")[1].Split("<\\/span>")[0]);
-            var partCount = (imgCount / partNum) +  1;
-
-            var preSrcs = new Task<string>[partCount];
-            var tasks = new Task<string>[imgCount];
-
-            //for (int i = 0; i < partCount; i++)
-            //{
-            //    preSrcs[i] = StrLoad.LoadAsync($"https://e-hentai.org/s/f166ffe502/{_gall_id}-{i + 1}");
-            //}
-
-            //for (int i = 0; i < partCount; i++)
-            //{
-            //    temp = strTemp.Split("return load_image(")[5];
-            //    sb.Clear();
-            //    tasks[i] = XmlHttpRequest_Item(_api_url, _gall_id, temp.Split(')')[0].Split(", ")[0], temp.Split("')")[0].Split(", '")[1], _showKey, i.ToString());
-
-            //    temp = strTemp.Split("\\\" src=\\\"")[1].Split("\\\" style=\\\"")[0];
-            //    imgList.Add(temp.Split('/').Last(), temp.Replace("\\/", "/"));
-
-            //    strTemp = sb.ToString();
-            //}
-
-            for (int i = 1; i < imgCount + 1; i++)        //todo: 5개씩 묶어서 돌려볼 것 페이지를 다운받으면 imgKey가 나옴
-            {
-                temp = strTemp.Split("return load_image(")[5];
-                sb.Clear();
-                sb.Append(XmlHttpRequest_Item(_api_url, _gall_id, temp.Split(')')[0].Split(", ")[0], temp.Split("')")[0].Split(", '")[1], _showKey, i.ToString()));
-
-                temp = strTemp.Split("below.', '")[1].Split('\'')[0];
-                imgList.Add(temp.Split('/').Last(), temp.Replace("\\/", "/"));
-                //https://e-hentai.org/r/57609f51457efd7491b087fd68575a1829e63e09-201691-1280-1816-jpg/forumtoken/1806482-2/i_002.jpg
-
-                strTemp = sb.ToString();
-            }
-
-            sb.Clear();
-            foreach (var i in imgList)
-            {
-                sb.Append(i.Value).Append('\n');
-            }
-
-            File.WriteAllText($"My_Url_ForumStatic\\{DateTime.Now.Ticks}.txt", sb.ToString());
             return imgList;
         }
 
@@ -124,7 +82,7 @@ namespace imgLoader_CLI.Sites
             {
                 if (item.Length == 0) continue;
 
-                temp.Append(item.Split('\"')[1] + '\n');
+                temp.Append(item.Split('\"')[1]).Append('\n');
             }
             info[3] = temp.ToString().Trim();
             info[4] = _src_gall.Split("<td class=\"gdt2\">")[1].Split("</td>")[0];

@@ -102,11 +102,11 @@ namespace imgLoader_CLI.Sites
             info[2] = _src_info.StrLen("hash").ToString();
 
             var temp = new StringBuilder();
-            foreach (string item in StrTools.GetValue(_src_info, "tags", '[', ']').Split('{'))
+            foreach (var item in StrTools.GetValue(_src_info, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
 
-                temp.Append(item.Split('}')[0] + '\n');
+                temp.Append(item.Split('}')[0]).Append('\n');
             }
 
             info[3] = temp.ToString().Trim();
