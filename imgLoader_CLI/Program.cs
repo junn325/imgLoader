@@ -23,8 +23,8 @@ namespace imgLoader_CLI
     {
         private static void Main(string[] args)
         {
-            var test = new EHentai("1806482/287828bb60");
-            var ttest = test.GetImgUrls();
+            //var test = new EHentai("1806482/287828bb60");
+            //var ttest = test.GetImgUrls();
             //var test1 = new ehentai("1810150/8c545adb44");
 
             Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
