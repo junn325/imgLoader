@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -30,10 +31,12 @@ namespace imgLoader_CLI.Sites
                 _src_gall = StrLoad.Load($"https://e-hentai.org/g/{mNumber}/");
                 _src_item = StrLoad.Load(_src_gall.Split("\"><img alt")[0].Split('\"').Last());
 
+                if (_src_gall == null || _src_item == null) throw new Exception();
+
                 var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
                 var startKey  = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
                 _showKey      = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
-
+                                                                                                                                                       
                 _gall_id = mNumber.Split('/')[0];
                 _gall_token = mNumber.Split('/')[1];
 
@@ -58,9 +61,30 @@ namespace imgLoader_CLI.Sites
         public Dictionary<string, string> GetImgUrls()
         {
             var imgList = new Dictionary<string, string>();
+
             var pageCount = int.Parse(_src_gall.Split(" of ")[1].Split(" images")[0]);
-                 
-            //갤러리 메인 페이지에서 썸네일 클릭 시 실행 함수를 불러와볼것
+            var pages = _src_gall.Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0];
+            var arrPage = new string[pageCount];
+
+            var sb = new StringBuilder(pages);
+            for (var i = 1; i < (pageCount / 40) + 1; i++)
+            {
+                sb.Append(StrLoad.Load($"https://e-hentai.org/g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
+            }
+
+            var temp = sb.ToString();
+            for (var i = 0; i < pageCount; i++)
+            {
+                arrPage[i] = temp.Split("<a href=\"")[i + 1].Split("\">")[0];
+            }
+
+            foreach (var item in arrPage)
+            {
+                var tempp = StrLoad.Load(item).Split("img\" src=\"")[1].Split('\"')[0];
+                Debug.Print("load complete.");
+
+                imgList.Add(tempp.Split('/').Last(), tempp);
+            }
 
             return imgList;
         }
