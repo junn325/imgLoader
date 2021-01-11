@@ -66,26 +66,7 @@ namespace imgLoader_CLI.Sites
             var pages = _src_gall.Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0];
             var arrPage = new string[pageCount];
 
-            var sb = new StringBuilder(pages);
-            for (var i = 1; i < (pageCount / 40) + 1; i++)
-            {
-                sb.Append(StrLoad.Load($"https://e-hentai.org/g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
-            }
-
-            var temp = sb.ToString();
-            for (var i = 0; i < pageCount; i++)
-            {
-                arrPage[i] = temp.Split("<a href=\"")[i + 1].Split("\">")[0];
-            }
-
-            foreach (var item in arrPage)
-            {
-                var tempp = StrLoad.Load(item).Split("img\" src=\"")[1].Split('\"')[0];
-                Debug.Print("load complete.");
-
-                imgList.Add(tempp.Split('/').Last(), tempp);
-            }
-
+   
             return imgList;
         }
 
