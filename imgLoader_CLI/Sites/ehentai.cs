@@ -11,7 +11,7 @@ namespace imgLoader_CLI.Sites
 {
     public class EHentai : ISite
     {
-        public static string Supplement = "e-hentai.org/g/\\n\\/\\n\\/";
+        public const string Supplement = "e-hentai.org/g/\\n\\/\\n\\/";
 
         private const string _api_url = "https://api.e-hentai.org/api.php";
         private const string _base_url = "https://e-hentai.org/";
@@ -20,6 +20,7 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] REPLACE = { "", "", "", "" };
 
         private readonly string _src_gall, _src_item, _src_rtn, _src_data, _gall_id, _gall_token, _artist, _title, _showKey;
+
         public string Number { get; }
 
         public EHentai(string mNumber)
@@ -66,7 +67,6 @@ namespace imgLoader_CLI.Sites
             var pages = _src_gall.Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0];
             var arrPage = new string[pageCount];
 
-   
             return imgList;
         }
 
