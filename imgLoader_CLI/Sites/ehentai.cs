@@ -64,7 +64,8 @@ namespace imgLoader_CLI.Sites
 
             var pageCount = int.Parse(_src_gall.Split(" of ")[1].Split(" images")[0]);
             var pages = _src_gall.Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0];
-            var arrPage = new string[pageCount];
+            var tasks = new Task<string>[pageCount];
+            var rtnVal = new string[pageCount];
 
             var sb = new StringBuilder(pages);
             for (var i = 1; i < (pageCount / 40) + 1; i++)
@@ -75,10 +76,15 @@ namespace imgLoader_CLI.Sites
             var temp = sb.ToString();
             for (var i = 0; i < pageCount; i++)
             {
-                arrPage[i] = temp.Split("<a href=\"")[i + 1].Split("\">")[0];
+                var url = temp.Split("<a href=\"")[i + 1].Split("\">")[0];
+                tasks[i] = XmlHttpRequest_ItemAsync(_api_url, _gall_id, (i + 1).ToString(), url.Split('/')[4], _showKey, (i + 1).ToString());
             }
 
-            //페이지 배열의 정보를 이용해서 비동기로 리퀘스트 돌려볼 것
+            for (int i = 0; i < pageCount; i++)
+            {
+                rtnVal[i] = tasks[i].Result;
+            }
+
             return imgList;
         }
 
@@ -114,7 +120,6 @@ namespace imgLoader_CLI.Sites
 
         private string XmlHttpRequest_Item(string url, string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
-
             HttpWebRequest rq = null;
             WebResponse resp = null;
             try
