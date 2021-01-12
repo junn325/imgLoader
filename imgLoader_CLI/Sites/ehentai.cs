@@ -30,14 +30,14 @@ namespace imgLoader_CLI.Sites
                 Number = mNumber;
 
                 _src_gall = StrLoad.Load($"https://e-hentai.org/g/{mNumber}/");
-                _src_item = StrLoad.Load(_src_gall.Split("\"><img alt")[0].Split('\"').Last());
+                _src_item = StrLoad.Load(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
 
                 if (_src_gall == null || _src_item == null) throw new Exception();
 
                 var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
                 var startKey  = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
                 _showKey      = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
-                                                                                                                                                       
+
                 _gall_id = mNumber.Split('/')[0];
                 _gall_token = mNumber.Split('/')[1];
 
@@ -46,7 +46,6 @@ namespace imgLoader_CLI.Sites
 
                 _title = StrTools.GetStringValue(_src_data,"title");
                 _artist = _src_data.Contains("artist") ? _src_data.Split("artist:")[1].Split('\"')[0] : "N/A";
-
             }
             catch
             {
@@ -67,6 +66,19 @@ namespace imgLoader_CLI.Sites
             var pages = _src_gall.Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0];
             var arrPage = new string[pageCount];
 
+            var sb = new StringBuilder(pages);
+            for (var i = 1; i < (pageCount / 40) + 1; i++)
+            {
+                sb.Append(StrLoad.Load($"https://e-hentai.org/g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
+            }
+
+            var temp = sb.ToString();
+            for (var i = 0; i < pageCount; i++)
+            {
+                arrPage[i] = temp.Split("<a href=\"")[i + 1].Split("\">")[0];
+            }
+
+            //페이지 배열의 정보를 이용해서 비동기로 리퀘스트 돌려볼 것
             return imgList;
         }
 
