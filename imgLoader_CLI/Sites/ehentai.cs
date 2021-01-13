@@ -80,9 +80,10 @@ namespace imgLoader_CLI.Sites
                 tasks[i] = XmlHttpRequest_ItemAsync(_api_url, _gall_id, (i + 1).ToString(), url.Split('/')[4], _showKey, (i + 1).ToString());
             }
 
-            for (int i = 0; i < pageCount; i++)
+            for (var i = 0; i < pageCount; i++)
             {
-                rtnVal[i] = tasks[i].Result;
+                var url = tasks[i].Result.Split("\"img\\\" src=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/");
+                imgList.Add(url.Split("/").Last(), url);
             }
 
             return imgList;
