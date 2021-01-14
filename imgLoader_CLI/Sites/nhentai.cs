@@ -74,9 +74,9 @@ namespace imgLoader_CLI.Sites
         {
             string ext;
             var temp = new Dictionary<string, string>();
-            _imgNum = int.Parse(StrTools.GetValue(_source,"num_pages"));
+            _imgNum = int.Parse(StrTools.GetValue(_source, "num_pages"));
 
-            for (int i = 1; i <= _imgNum; i++)
+            for (var i = 1; i <= _imgNum; i++)
             {
                 ext = StrTools.GetStringValue(StrTools.GetValue(_source, "pages", '[').Split('{')[i],"t");
                 switch (ext)

@@ -11,24 +11,15 @@ namespace TestSite
 {
     internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            var wc = new WebClient();
-            wc.Headers.Add("referer", "https://forums.e-hentai.org/");
-            wc.Headers.Add("user-agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Mobile Safari/537.36");
-            //wc.Headers.Add(":authority", "e-hentai.org");
-            //wc.Headers.Add(":method", "GET");
-            //wc.Headers.Add(":path", "r/1656fe0a7158c67e944db3d3cd8c7431fd091bf4-439514-1280-1816-jpg/forumtoken/1806482-1/cover.jpg");
-            wc.Headers.Add("accept", "image/avif,image/webp,image/apng,image/*,*/*;q=0.8");
-            wc.Headers.Add("accept-encoding", "gzip, deflate, br");
-            wc.Headers.Add("accept-language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7,ja;q=0.6");
-            wc.Headers.Add("cache-control", "no-cache");
-            wc.Headers.Add("cookie", "ipb_member_id=4855480; ipb_pass_hash=48c32f739d1a014ee5dfea321403a23a; sk=444ejl1m0w0bko8vxg3c0264gcfn; __cfduid=d5de58acf6df8562c39d22e0f745ac9331610549659; event=1610549977; ipb_session_id=32642861a3f1df9b0639bf3c92319757");
-            wc.Headers.Add("pragma", "no-cache");
-            wc.Headers.Add("scheme", "https");
+            var source = "</script>\r\n<div id=\"nb\" class=\"nosel\"><div><a class=\"nbw\" href=\"https://e-hentai.org/\">Front<span class=\"nbw1\"> Page</span></a></div><div><a href=\"https://e-hentai.org/watched\">Watched</a></div><div><a href=\"https://e-hentai.org/popular\">Popular</a></div><div><a href=\"https://e-hentai.org/torrents.php\">Torrents</a></div><div><a href=\"https://e-hentai.org/favorites.php\">Fav<span class=\"nbw1\">orite</span>s</a></div><div><a href=\"https://e-hentai.org/home.php\"><span class=\"nbw2\">My </span>Home</a></div><div><a href=\"https://upload.e-hentai.org/manage.php\"><span class=\"nbw2\">My </span>Uploads</a></div><div><a href=\"https://e-hentai.org/toplist.php\">Toplists</a></div><div><a href=\"https://e-hentai.org/bounty.php\">Bounties</a></div><div><a href=\"https://e-hentai.org/news.php\">News</a></div><div><a href=\"https://forums.e-hentai.org/\">Forums</a></div><div><a href=\"https://ehwiki.org/\">Wiki</a></div><div><a href=\"https://hentaiverse.org/\" onclick=\"popUp('https://hentaiverse.org/',1250,720); return false\">H<span class=\"nbw1\">entai</span>V<span class=\"nbw1\">erse</span></a></div></div><script async src=\"//adserver.juicyads.com/js/jads.js\"></script><ins id=\"265910\" data-width=\"728\" data-height=\"90\"></ins><script>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':265910});</script>\r\n<script type=\"text/javascript\">";
 
-
-            wc.DownloadFile("https://e-hentai.org/r/1656fe0a7158c67e944db3d3cd8c7431fd091bf4-439514-1280-1816-jpg/forumtoken/1806482-1/cover.jpg", "cover.jpg");
+            var temp = source.GetBetween("</script>", "<div>");
+            for (int i = 0; i < 100; i++)
+            {
+                  
+            }
         }
 
         static string XmlHttpRequest(string url)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -82,7 +81,7 @@ namespace imgLoader_CLI.Sites
 
             for (var i = 0; i < pageCount; i++)
             {
-                var url = tasks[i].Result.Split("\"img\\\" src=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/");
+                var url = StrTools.GetValue(tasks[i].Result, "i7").Split("<a href=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/").Replace("&amp;", "&");
                 imgList.Add(url.Split("/").Last(), url);
             }
 
