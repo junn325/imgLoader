@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -24,6 +25,8 @@ namespace imgLoader_CLI.Sites
 
         public EHentai(string mNumber)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             try
             {
                 Number = mNumber;
@@ -39,9 +42,24 @@ namespace imgLoader_CLI.Sites
 
                 _gall_id = mNumber.Split('/')[0];
                 _gall_token = mNumber.Split('/')[1];
+                Console.Write("etc. comp \t");
+                Console.Write($"{sw.Elapsed.Ticks}\n");
+                sw.Restart();
 
-                _src_rtn = XmlHttpRequest_Item(_api_url, _gall_id, startPage, startKey, _showKey, "1");
+                var temp = XmlHttpRequest_ItemAsync(_api_url, _gall_id, startPage, startKey, _showKey, "1");
+                Console.Write("_src_rtn start \t");
+                Console.Write($"{sw.Elapsed.Ticks}\n");
+                sw.Restart();
+
                 _src_data = XmlHttpRequest_Data(_api_url, _gall_id, _gall_token);
+                Console.Write("_src_data comp \t");
+                Console.Write($"{sw.Elapsed.Ticks}\n");
+                sw.Restart();
+
+                _src_rtn = temp.Result;
+                Console.Write("_src_rtn comp \t");
+                Console.Write($"{sw.Elapsed.Ticks}\n");
+                sw.Restart();
 
                 _title = StrTools.GetStringValue(_src_data,"title");
                 _artist = _src_data.Contains("artist") ? _src_data.Split("artist:")[1].Split('\"')[0] : "N/A";
@@ -81,10 +99,9 @@ namespace imgLoader_CLI.Sites
 
             for (var i = 0; i < pageCount; i++)
             {
-                var url = StrTools.GetValue(tasks[i].Result, "i7").Split("<a href=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/").Replace("&amp;", "&");
+                rtnVal[i] = tasks[i].Result; var url = tasks[i].Result.Split("\"img\\\" src=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/");
                 imgList.Add(url.Split("/").Last(), url);
             }
-
             return imgList;
         }
 

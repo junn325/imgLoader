@@ -86,7 +86,8 @@ namespace imgLoader_CLI
 
                     try
                     {
-                        var infoRoute = $"{route}\\{Core.GetNumber(link)}.{site.GetType().Name}";
+                        var temp = Core.GetNumber(link);
+                        var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{site.GetType().Name}";
 
                         if (!Directory.Exists(route)) Directory.CreateDirectory(route);
                         else
