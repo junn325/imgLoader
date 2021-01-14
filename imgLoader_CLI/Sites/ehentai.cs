@@ -19,49 +19,29 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] REPLACE = { "", "", "", "" };
 
-        private readonly string _src_gall, _src_item, _src_rtn, _src_data, _gall_id, _gall_token, _artist, _title, _showKey;
+        private readonly string _src_gall, _src_item, _src_data, _gall_id, _gall_token, _artist, _title, _showKey;
 
         public string Number { get; }
 
         public EHentai(string mNumber)
         {
-            var sw = new Stopwatch();
-            sw.Start();
             try
             {
                 Number = mNumber;
 
-                _src_gall = StrLoad.Load($"https://e-hentai.org/g/{mNumber}/");
+                _src_gall = StrLoad.Load($"{_base_url}g/{mNumber}/");
                 _src_item = StrLoad.Load(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
 
                 if (_src_gall == null || _src_item == null) throw new Exception();
 
-                var startPage = _src_item.Split("var startpage=")[1].Split(';')[0];
-                var startKey  = _src_item.Split("var startkey=\"")[1].Split("\";")[0];
-                _showKey      = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
+                _showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
 
                 _gall_id = mNumber.Split('/')[0];
                 _gall_token = mNumber.Split('/')[1];
-                Console.Write("etc. comp \t");
-                Console.Write($"{sw.Elapsed.Ticks}\n");
-                sw.Restart();
-
-                var temp = XmlHttpRequest_ItemAsync(_api_url, _gall_id, startPage, startKey, _showKey, "1");
-                Console.Write("_src_rtn start \t");
-                Console.Write($"{sw.Elapsed.Ticks}\n");
-                sw.Restart();
 
                 _src_data = XmlHttpRequest_Data(_api_url, _gall_id, _gall_token);
-                Console.Write("_src_data comp \t");
-                Console.Write($"{sw.Elapsed.Ticks}\n");
-                sw.Restart();
 
-                _src_rtn = temp.Result;
-                Console.Write("_src_rtn comp \t");
-                Console.Write($"{sw.Elapsed.Ticks}\n");
-                sw.Restart();
-
-                _title = StrTools.GetStringValue(_src_data,"title");
+                _title = StrTools.GetStringValue(_src_data, "title");
                 _artist = _src_data.Contains("artist") ? _src_data.Split("artist:")[1].Split('\"')[0] : "N/A";
             }
             catch
@@ -87,14 +67,14 @@ namespace imgLoader_CLI.Sites
             var sb = new StringBuilder(pages);
             for (var i = 1; i < (pageCount / 40) + 1; i++)
             {
-                sb.Append(StrLoad.Load($"https://e-hentai.org/g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
+                sb.Append(StrLoad.Load($"{_base_url}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
             }
 
             var temp = sb.ToString();
             for (var i = 0; i < pageCount; i++)
             {
                 var url = temp.Split("<a href=\"")[i + 1].Split("\">")[0];
-                tasks[i] = XmlHttpRequest_ItemAsync(_api_url, _gall_id, (i + 1).ToString(), url.Split('/')[4], _showKey, (i + 1).ToString());
+                tasks[i] = XmlHttpRequest_ItemAsync(_gall_id, (i + 1).ToString(), url.Split('/')[4], _showKey, (i + 1).ToString());
             }
 
             for (var i = 0; i < pageCount; i++)
@@ -135,6 +115,13 @@ namespace imgLoader_CLI.Sites
             return _artist != null;
         }
 
+        //public void Dispose()
+        //{
+        //    Number = null;
+        //    _src_gall = null; _src_item = null; _src_data = null; _gall_id = null; _gall_token = null; _artist = null; _title = null; _showKey = null;
+
+        //    GC.SuppressFinalize(this);
+        //}
         private string XmlHttpRequest_Item(string url, string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
             HttpWebRequest rq = null;
@@ -176,7 +163,7 @@ namespace imgLoader_CLI.Sites
                 resp?.Close();
             }
         }
-        private async Task<string> XmlHttpRequest_ItemAsync(string url, string gid, string reqPage, string imgKey, string showKey, string pageNum)
+        private async Task<string> XmlHttpRequest_ItemAsync(string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
             return await Task.Run(() => {
 
@@ -187,8 +174,8 @@ namespace imgLoader_CLI.Sites
                     string returnVal;
                     var param = Encoding.UTF8.GetBytes($"{{\"method\":\"showpage\",\"gid\":{gid},\"page\":{reqPage},\"imgkey\":\"{imgKey}\",\"showkey\":\"{showKey}\"}}");
 
-                    rq = WebRequest.CreateHttp(url);
-                    rq.Referer = $"https://e-hentai.org/s/{imgKey}/{gid}-{pageNum}";
+                    rq = WebRequest.CreateHttp(_api_url);
+                    rq.Referer = $"{_base_url}s/{imgKey}/{gid}-{pageNum}";
                     rq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
                     rq.Method = "POST";
                     rq.ContentLength = param.Length;

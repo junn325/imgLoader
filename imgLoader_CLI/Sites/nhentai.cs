@@ -16,8 +16,8 @@ namespace imgLoader_CLI.Sites
         public string Number { get; set; }
 
         private int _imgNum;
-        private string _artist;
-        private string _title;
+        private readonly string _artist;
+        private readonly string _title;
 
         public NHentai(string mNumber)
         {
@@ -28,6 +28,9 @@ namespace imgLoader_CLI.Sites
             {
                 _source = wc.DownloadString($"https://nhentai.net/api/gallery/{mNumber}");
                 Number = StrTools.GetStringValue(_source, "media_id");
+
+                _artist = StrTools.GetStringValue(_source, "artist\",\"name");
+                _title = StrTools.GetStringValue(_source, "pretty");
             }
             catch
             {
@@ -37,13 +40,11 @@ namespace imgLoader_CLI.Sites
 
         public string GetArtist()
         {
-            _artist = StrTools.GetStringValue(_source, "artist\",\"name");
             return _artist;
         }
 
         public string GetTitle()
         {
-            _title = StrTools.GetStringValue(_source, "pretty");
             return _title;
         }
 
@@ -112,7 +113,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return Number != null;
+            return _title != null;
         }
     }
 }

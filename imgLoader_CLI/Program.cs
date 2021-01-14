@@ -24,7 +24,6 @@ namespace imgLoader_CLI
     {
         private static void Main(string[] args)
         {
-            //var test = new EHentai("1806482/287828bb60");
             //var test = new Hitomi("1806482");
 
             //var ttest = test.GetImgUrls();
