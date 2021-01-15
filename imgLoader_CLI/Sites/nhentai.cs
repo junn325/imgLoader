@@ -56,12 +56,12 @@ namespace imgLoader_CLI.Sites
             info[1] = _artist ?? "N/A";
             info[2] = _imgNum.ToString();
 
-            StringBuilder temp = new StringBuilder();
-            temp.Append("tags: ");
-            foreach (string item in StrTools.GetValue(_source,"tags",'[',']').Split("\"type\":\"tag\",\"name\":\""))
+            var temp = new StringBuilder();
+            temp.Append("tags:");
+            foreach (var item in StrTools.GetValue(_source,"tags",'[',']').Split("\"type\":\"tag\",\"name\":\""))
             {
                 if (!item.Contains("tag")) continue;
-                temp.Append(item.Split('\"')[0]).Append(", ");
+                temp.Append(item.Split('\"')[0]).Append(";");
             }
             info[3] = temp.ToString().Trim();
 

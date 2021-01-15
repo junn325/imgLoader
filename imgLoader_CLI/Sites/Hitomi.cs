@@ -101,15 +101,25 @@ namespace imgLoader_CLI.Sites
             info[1] = _artist ?? "N/A";
             info[2] = _src_info.StrLen("hash").ToString();
 
-            var temp = new StringBuilder();
+            var sb = new StringBuilder();
+            sb.Append("tags:");
             foreach (var item in StrTools.GetValue(_src_info, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
+                var temp = item.Split('}')[0];
 
-                temp.Append(item.Split('}')[0]).Append('\n');
+                sb.Append(
+                        temp.Contains("female")
+                            ? (StrTools.GetValue(temp, "female") == "1")
+                                ? "female"
+                                : "male"
+                            : "tag"
+                        )
+                    .Append(':')
+                    .Append(StrTools.GetStringValue(item.Split('}')[0], "tag")).Append(';');
             }
 
-            info[3] = temp.ToString().Trim();
+            info[3] = sb.ToString().Trim();
             info[4] = StrTools.GetStringValue(_src_info, "date");
 
             return info;

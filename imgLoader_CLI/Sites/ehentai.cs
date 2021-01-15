@@ -97,14 +97,15 @@ namespace imgLoader_CLI.Sites
             info[1] = _artist ?? "N/A";
             info[2] = StrTools.GetStringValue(_src_data, "filecount");
 
-            var temp = new StringBuilder();
-            foreach (string item in StrTools.GetValue(_src_data, "tags", '[', ']').Split("\","))
+            var sb = new StringBuilder();
+            sb.Append("tags:");
+            foreach (var item in StrTools.GetValue(_src_data, "tags", '[', ']').Split("\","))
             {
                 if (item.Length == 0) continue;
 
-                temp.Append(item.Split('\"')[1]).Append('\n');
+                sb.Append(item.Split('\"')[1]).Append(';');
             }
-            info[3] = temp.ToString().Trim();
+            info[3] = sb.ToString().Trim();
             info[4] = _src_gall.Split("<td class=\"gdt2\">")[1].Split("</td>")[0];
 
             return info;

@@ -209,7 +209,7 @@ namespace imgLoader_CLI
                         Console.Write(":");
                         break;
                     case 100:
-                        Console.Write("|");
+                        Console.Write("::");
                         _separator = 0;
                         break;
                 }

@@ -75,19 +75,18 @@ namespace imgLoader_CLI.Sites
             info[1] = _artist ?? "N/A";
             info[2] = _src_cdn.StrLen("name").ToString();
 
-            var temp = new StringBuilder();
+            var sb = new StringBuilder();
+            sb.Append("tags:");
             foreach (var item in StrTools.GetValue(_src_api, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
-
-                temp.Append(item.Split('}')[0]).Append('\n');
+                sb.Append(StrTools.GetStringValue(item.Split('}')[0],"value")).Append(';');
             }
 
-            info[3] = temp.ToString().Trim();
-
+            info[3] = sb.ToString().Trim();
             if (!_src_api.Contains("date")) return info;
-
             info[4] = StrTools.GetStringValue(_src_api, "date");
+
             return info;
         }
 
