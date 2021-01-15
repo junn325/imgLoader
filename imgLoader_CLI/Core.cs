@@ -23,7 +23,6 @@ namespace imgLoader_CLI
         private static readonly string[] DREPLACE = { "[", "]", "│", "：", "？", "″", "˂", "˃", "／", "∗", "…" };
 
         internal static string Route = "";
-        //internal static bool HitomiAlways = true;
 
         internal static void Log(string content)
         {
@@ -88,24 +87,14 @@ namespace imgLoader_CLI
         {
             var val = url.Contains("//") ? url.Split("//")[1] : url;
 
-            if (val.Contains("hitomi")) return val.Split('/')[2].Split(".html")[0];
-
-            if (val.Contains("hiyobi"))
-            {
-                if (val.Contains("#"))
-                {
-                    return val.Split('/')[2].Split('#')[0];
-                }
-                return val.Split('/')[2];
-            }
-
+            if (val.Contains("hitomi")) return val.Contains("-") ? val.Split('-').Last().Split('.')[0] : val.Split('/')[2].Split(".html")[0];
+            if (val.Contains("hiyobi")) return val.Contains("#") ? val.Split('/')[2].Split('#')[0] : val.Split('/')[2];
             if (val.Contains("nhentai")) return val.Split('/')[2];
             if (val.Contains("pixiv"))
             {
                 if (val.Contains("artworks")) return val.Split('/')[2];
                 if (val.Contains("id=")) return val.Split("id=")[1];
             }
-
             if (val.Contains("e-hentai")) return val.Split("/g/")[1].Remove(val.Split("/g/")[1].Length - 1);
 
             return "";
@@ -113,7 +102,7 @@ namespace imgLoader_CLI
 
         internal static ISite LoadSite(string link)
         {
-            string mNumber = GetNumber(link);
+            var mNumber = GetNumber(link);
             if (mNumber.Length == 0) return null;
 
             if (link.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase))  return new NHentai(mNumber);
