@@ -9,6 +9,7 @@
     <Description />
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <AssemblyName>imgL</AssemblyName>
+    <StartupObject>imgLoader_CLI.Program</StartupObject>
   </PropertyGroup>
 
 </Project>

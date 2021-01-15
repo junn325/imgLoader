@@ -10,13 +10,13 @@ namespace imgLoader_CLI
 {
     internal class Processor
     {
-        private readonly Dictionary<string, string> failed = new Dictionary<string, string>();
-        private List<Task> tasks = new List<Task>();
+        private readonly Dictionary<string, string> _failed = new Dictionary<string, string>();
+        private List<Task> _tasks = new List<Task>();
+        private Thread _thrDownStart;
+
         private bool _stop;
-
-        private Thread thrDownStart;
-
         private int _done;
+        private byte _separator;
 
         internal void Initialize(string[] url)
         {
@@ -26,8 +26,8 @@ namespace imgLoader_CLI
             Console.Write("\n");
 
             bool temp = false;
-            thrDownStart = new Thread(() => { Process(url); temp = true; });
-            thrDownStart.Start();
+            _thrDownStart = new Thread(() => { Process(url); temp = true; });
+            _thrDownStart.Start();
 
             while (!temp) Thread.Sleep(Core.WAIT_TIME * 20);
 
@@ -112,18 +112,18 @@ namespace imgLoader_CLI
 
                     _done = 0;
 
-                    tasks = new List<Task>();
+                    _tasks = new List<Task>();
 
                     Console.Write("\n|");
                     AllocDown(route, imgList);
 
-                    while (_done < imgList.Count - failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
+                    while (_done < imgList.Count - _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
 
                     _done = 0;
 
                     var success = HandleFail(route);
-                    while (_done < failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
-                    foreach (var item in tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
+                    while (_done < _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
+                    foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
 
                     Core.Log($"Item:Complete: {link}");
                     if (success)
@@ -144,11 +144,11 @@ namespace imgLoader_CLI
 
         private void AllocDown(string route, Dictionary<string, string> urlList)
         {
-            failed.Clear();
+            _failed.Clear();
 
             foreach (var item in urlList)
             {
-                tasks.Add(Task.Factory.StartNew(() => ThrDownload(item.Value, route, item.Key)));
+                _tasks.Add(Task.Factory.StartNew(() => ThrDownload(item.Value, route, item.Key)));
             }
         }
 
@@ -174,12 +174,12 @@ namespace imgLoader_CLI
                 if (we.Response == null)
                 {
                     Core.Log($"Fail:NoResponse: {uri} {fileName}");
-                    failed.Add(fileName, uri);
+                    _failed.Add(fileName, uri);
                     return;
                 }
 
                 Core.Log($"Fail:{((HttpWebResponse)we.Response).StatusCode}: {uri} {fileName}");
-                failed.Add(fileName, uri);
+                _failed.Add(fileName, uri);
                 return;
             }
 
@@ -203,40 +203,52 @@ namespace imgLoader_CLI
 
             if (fileSize == resp.ContentLength)
             {
+                switch (_separator)
+                {
+                    case 50:
+                        Console.Write(":");
+                        break;
+                    case 100:
+                        Console.Write("|");
+                        _separator = 0;
+                        break;
+                }
+
                 Console.Write("■");
             }
             else
             {
-                failed.Add(fileName, uri);
+                _failed.Add(fileName, uri);
             }
 
             _done++;
+            _separator++;
             req.Abort();
             resp.Close();
         }
 
         private bool HandleFail(string route)
         {
-            if (failed.Count == 0) return true;
+            if (_failed.Count == 0) return true;
 
-            var failCopy = new Dictionary<string, string>(failed);
+            var failCopy = new Dictionary<string, string>(_failed);
 
             AllocDown(route, failCopy);
 
             int wait = Core.FAIL_RETRY * 60;
-            while (_done < failCopy.Count - failed.Count && wait != 0)
+            while (_done < failCopy.Count - _failed.Count && wait != 0)
             {
                 wait--;
                 Thread.Sleep(Core.WAIT_TIME);
             }
 
-            while (failed.Count != 0)
+            while (_failed.Count != 0)
             {
                 Thread.Sleep(Core.WAIT_TIME * 40);
                 HandleFail(route);
             }
 
-            failed.Clear();
+            _failed.Clear();
             return true;
         }
 
@@ -244,22 +256,22 @@ namespace imgLoader_CLI
         {
             new Thread(() =>
             {
-                if (thrDownStart == null) return;
+                if (_thrDownStart == null) return;
 
-                while (thrDownStart.ThreadState == System.Threading.ThreadState.Running)
+                while (_thrDownStart.ThreadState == System.Threading.ThreadState.Running)
                 {
-                    thrDownStart.Interrupt();
+                    _thrDownStart.Interrupt();
                     Thread.Sleep(Core.WAIT_TIME);
                 }
 
                 _stop = true;
 
-                foreach (var item in tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
+                foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
 
                 _stop = false;
 
-                failed.Clear();
-                tasks.Clear();
+                _failed.Clear();
+                _tasks.Clear();
             }).Start();
         }
     }
