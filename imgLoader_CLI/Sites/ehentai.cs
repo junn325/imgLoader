@@ -82,6 +82,7 @@ namespace imgLoader_CLI.Sites
                 rtnVal[i] = tasks[i].Result; var url = tasks[i].Result.Split("\"img\\\" src=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/");
                 imgList.Add(url.Split("/").Last(), url);
             }
+
             return imgList;
         }
 

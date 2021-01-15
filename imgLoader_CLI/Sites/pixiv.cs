@@ -37,19 +37,6 @@ namespace imgLoader_CLI.Sites
             return new Dictionary<string, string>();
         }
 
-        public static string Filter(string dirName)
-        {
-            //for (byte i = 0; i < FILTER.Length; i++)
-            //{
-            //    if (dirName.Contains(FILTER[i]))
-            //    {
-            //        dirName = dirName.Replace(FILTER[i], REPLACE[i]);
-            //    }
-            //}
-
-            return dirName;
-        }
-
         public bool IsValidated()
         {
             return _number != null;

@@ -12,8 +12,12 @@ using System.Windows.Forms;
 namespace imgLoader.Forms
 {
     //todo: 작업 표시줄에 프로그래스바 
-    //todo: avif 존재시 avif 다운로드
-    //todo: Sites, Tools.cs 제거하고 배포
+    //todo: numericupdown 같은것으로 작품별로 순위 매기는 시스템
+    //todo: 작가, 태그 등으로 자동으로 폴더로 나눠주는 시스템
+    //todo: 항상 위로 상태로 떠 있다가 인터넷 창에서 누르면 자동으로 해당 작품 다운로드 
+    //todo: 작가별 트리식 정렬
+    //todo: 작가/태그 분포, 주로 보는 작품 등 분석 기능
+
     public partial class Main : Form
     {
         internal const string InitString_Item  = "0개 항목";

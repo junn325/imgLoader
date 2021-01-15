@@ -130,19 +130,6 @@ namespace imgLoader_CLI.Sites
             return _artist != null;
         }
 
-        public static string Filter(string dirName)
-        {
-            for (byte i = 0; i < FILTER.Length; i++)
-            {
-                if (dirName.Contains(FILTER[i]))
-                {
-                    dirName = dirName.Replace(FILTER[i], REPLACE[i]);
-                }
-            }
-
-            return dirName;
-        }
-
         private string Subdomain_from_url(string url, string Base)
         {
             var retval = "a";

@@ -9,7 +9,7 @@ namespace imgLoader_CLI.Sites
     {
         public const string Supplement = "hiyobi.me/reader/\\n\\";
 
-        private static readonly string[] FILTER = { " - Hiyobi.me", " - hiyobi.me" };
+        private static readonly string[] Filter = { " - Hiyobi.me", " - hiyobi.me" };
         private static readonly string[] REPLACE = { "", "" };
 
         private readonly string _src_cdn;
@@ -93,19 +93,6 @@ namespace imgLoader_CLI.Sites
         public bool IsValidated()
         {
             return _artist != null;
-        }
-
-        public static string Filter(string dirName)
-        {
-            for (byte i = 0; i < FILTER.Length; i++)
-            {
-                if (dirName.Contains(FILTER[i]))
-                {
-                    dirName = dirName.Replace(FILTER[i], REPLACE[i]);
-                }
-            }
-
-            return dirName;
         }
     }
 }

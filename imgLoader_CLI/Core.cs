@@ -43,7 +43,7 @@ namespace imgLoader_CLI
                 {
                     try
                     {
-                        file= new FileStream(sb.ToString(), FileMode.Append, FileAccess.Write);
+                        file = new FileStream(sb.ToString(), FileMode.Append, FileAccess.Write);
                         temp = true;
                     }
                     catch
@@ -57,6 +57,18 @@ namespace imgLoader_CLI
                 sb.Append('[').Append(DateTime.Now.ToString("HH:mm:ss")).Append(']').Append(content);
                 sw.WriteLine(sb.ToString());
             }).Start();
+        }
+        public static string TitleFilter(string title, string[] filter, string[] replace)
+        {
+            for (byte i = 0; i < filter.Length; i++)
+            {
+                if (title.Contains(filter[i]))
+                {
+                    title = title.Replace(filter[i], replace[i]);
+                }
+            }
+
+            return title;
         }
 
         internal static void CreateInfo(string infoRoute, ISite site)
