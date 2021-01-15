@@ -27,19 +27,23 @@ namespace imgLoader_CLI
         internal static void Log(string content)
         {
             new Thread(() => {
-                if (!Directory.Exists(Path.GetTempPath() + @$"\{LOG_DIR}"))
+                var sb = new StringBuilder(Path.GetTempPath());
+                sb.Append('\\').Append(LOG_DIR);
+
+                if (!Directory.Exists(sb.ToString()))
                 {
-                    Directory.CreateDirectory(Path.GetTempPath() + @$"\{LOG_DIR}");
+                    Directory.CreateDirectory(sb.ToString());
                 }
 
                 var temp = false;
                 FileStream file = null;
+                sb.Append('\\').Append(LOG_FILE).Append('_').Append(DateTime.Now.ToString("yyyy-MM-dd")).Append(".txt");
 
                 while (!temp)
                 {
                     try
                     {
-                        file= new FileStream(Path.GetTempPath() + @$"\{LOG_DIR}\{LOG_FILE}_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append, FileAccess.Write);
+                        file= new FileStream(sb.ToString(), FileMode.Append, FileAccess.Write);
                         temp = true;
                     }
                     catch
@@ -49,7 +53,9 @@ namespace imgLoader_CLI
                 }
 
                 using var sw = new StreamWriter(file);
-                sw.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + content);
+                sb.Clear();
+                sb.Append('[').Append(DateTime.Now.ToString("HH:mm:ss")).Append(']').Append(content);
+                sw.WriteLine(sb.ToString());
             }).Start();
         }
 
