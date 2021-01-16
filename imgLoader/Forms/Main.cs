@@ -17,6 +17,7 @@ namespace imgLoader.Forms
     //todo: 항상 위로 상태로 떠 있다가 인터넷 창에서 누르면 자동으로 해당 작품 다운로드 
     //todo: 작가별 트리식 정렬
     //todo: 작가/태그 분포, 주로 보는 작품 등 분석 기능
+    //todo: 여러 폴더를 지정해 동시에 관리
 
     public partial class Main : Form
     {

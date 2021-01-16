@@ -217,8 +217,8 @@ namespace imgLoader_CLI
                 _failed.Add(fileName, uri);
             }
 
-            _done++;
             _separator++;
+            _done++;
             req.Abort();
             resp.Close();
         }

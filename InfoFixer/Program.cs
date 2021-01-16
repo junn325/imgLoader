@@ -91,7 +91,7 @@ namespace imgL_Fixer
             //if (!string.Equals(Console.ReadLine(), "Y", StringComparison.OrdinalIgnoreCase)) return;
 
             string link = null;
-            switch (infoFile.Split('/').Last().Split('.')[1])
+            switch (infoFile.Split('\\').Last().Split('.')[1])
             {
                 case "Hitomi":
                     link = $"https://hitomi.la/reader/{number}.html";
