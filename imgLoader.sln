@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "imgLoader_CLI", "imgLoader_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSite", "TestSite\TestSite.csproj", "{18ABA932-7506-48E1-9F0F-82F3A7F9062A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoFixer", "InfoFixer\InfoFixer.csproj", "{A9CC05CD-9E07-4515-B4F1-A7232DCEA99B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imgL_Fixer", "InfoFixer\imgL_Fixer.csproj", "{A9CC05CD-9E07-4515-B4F1-A7232DCEA99B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

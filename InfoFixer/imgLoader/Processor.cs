@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace imgLoader_CLI
+namespace imgL_Fixer.imgLoader
 {
     internal class Processor
     {
@@ -67,10 +67,7 @@ namespace imgLoader_CLI
 
                         title = Core.DirFilter(title);
 
-                        route =
-                            artist == "N/A"
-                                ? $@"{Core.Route}\{title}"
-                                : $@"{Core.Route}\{title} ({artist})";
+                        route = Core.Route;
 
                         Debug.Write(sw.Elapsed.Ticks);
                     }
@@ -85,14 +82,6 @@ namespace imgLoader_CLI
                         var temp = Core.GetNumber(link);
                         var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{site.GetType().Name}";
 
-                        if (!Directory.Exists(route)) Directory.CreateDirectory(route);
-                        else
-                        {
-                            Console.WriteLine("\nAlready exists. Download again? Y/N");
-                            a: string result = Console.ReadLine().ToLower();
-                            if (result == "n") continue;
-                            if (result != "y") goto a;
-                        }
                         Core.CreateInfo(infoRoute, site);
                     }
                     catch (DirectoryNotFoundException)
@@ -110,7 +99,7 @@ namespace imgLoader_CLI
 
                     _tasks = new List<Task>();
 
-                    Console.Write("\n[");
+                    Console.Write("\n|");
                     AllocDown(route, imgList);
 
                     while (_done < imgList.Count - _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
@@ -124,7 +113,7 @@ namespace imgLoader_CLI
                     Core.Log($"Item:Complete: {link}");
                     if (success)
                     {
-                        Console.Write("]\n");
+                        Console.Write("|\n");
                         Console.WriteLine("\n Download complete.\n");
                     }
                     else
@@ -205,7 +194,7 @@ namespace imgLoader_CLI
                         Console.Write(":");
                         break;
                     case 100:
-                        Console.Write("|");
+                        Console.Write("::");
                         _separator = 0;
                         break;
                 }

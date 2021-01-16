@@ -1,4 +1,4 @@
-﻿namespace imgLoader_CLI
+﻿namespace imgL_Fixer
 {
     internal static class StrTools
     {

@@ -2,9 +2,9 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using imgLoader_CLI;
+using imgL_Fixer.imgLoader;
 
-namespace InfoFixer
+namespace imgL_Fixer
 {
     class Program
     {
@@ -14,9 +14,20 @@ namespace InfoFixer
             Console.Write("Route: ");
             var route =  Console.ReadLine();
 
+            var a = 0;
+            foreach (var item in Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi")))
+            {
+                var temp = Directory.EnumerateFiles(item.Replace("\\" + item.Split('\\').Last(), ""), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi"));
+                if (temp.Count() == 1) continue;
+                FixAllFromNumber(item);
+                a++;
+
+                if (a == 319) 
+                    ;
+            }
         }
 
-        private void FixInfo(string route)
+        private static void FixInfo(string route)
         {
             foreach (var item in Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai")))
             {
@@ -66,11 +77,43 @@ namespace InfoFixer
                     {
                         continue;
                     }
-
-                    ;
                 }
             }
 
+        }
+
+        private static void FixAllFromNumber(string infoFile)
+        {
+            if (!int.TryParse(infoFile.Split('\\').Last().Split('.')[0], out var number)) return;
+            if (number < 5000) return;
+
+            Console.WriteLine($"\ntrying to fix {number}.");
+            //if (!string.Equals(Console.ReadLine(), "Y", StringComparison.OrdinalIgnoreCase)) return;
+
+            string link = null;
+            switch (infoFile.Split('/').Last().Split('.')[1])
+            {
+                case "Hitomi":
+                    link = $"https://hitomi.la/reader/{number}.html";
+                    break;
+
+                case "Hiyobi":
+                    link = $"https://hiyobi.me/reader/{number}";
+                    break;
+            }
+
+            if (string.IsNullOrEmpty(link)) return;
+
+            Core.Route = infoFile.Replace("\\" + infoFile.Split('\\').Last(), "");
+
+            foreach (var file in Directory.GetFiles(Core.Route))
+            {
+                File.Delete(file);
+                Console.WriteLine($"delete: {file}");
+            }
+
+            var psr = new Processor();
+            psr.Initialize(new string[] { link });
         }
     }
 }

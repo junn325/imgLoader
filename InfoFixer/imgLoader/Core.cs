@@ -1,12 +1,11 @@
-﻿using imgLoader_CLI.Sites;
-
-using System;
+﻿using System;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using imgL_Fixer.imgLoader.Sites;
 
-namespace imgLoader_CLI
+namespace imgL_Fixer.imgLoader
 {
     internal static class Core
     {
@@ -118,16 +117,16 @@ namespace imgLoader_CLI
             return "";
         }
 
-        internal static ISite LoadSite(string url)
+        internal static ISite LoadSite(string link)
         {
-            var mNumber = GetNumber(url);
+            var mNumber = GetNumber(link);
             if (mNumber.Length == 0) return null;
 
-            if (url.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase))  return new NHentai(mNumber);
-            if (url.Contains("pixiv", StringComparison.OrdinalIgnoreCase))        return new Pixiv(mNumber);
-            if (url.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase))  return new Hiyobi(mNumber);
-            if (url.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase))  return new Hitomi(mNumber);
-            if (url.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new EHentai(mNumber);
+            if (link.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase))  return new NHentai(mNumber);
+            if (link.Contains("pixiv", StringComparison.OrdinalIgnoreCase))        return new Pixiv(mNumber);
+            if (link.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase))  return new Hiyobi(mNumber);
+            if (link.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase))  return new Hitomi(mNumber);
+            if (link.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new EHentai(mNumber);
 
             return null;
         }
