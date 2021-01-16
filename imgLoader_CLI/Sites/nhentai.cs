@@ -61,7 +61,7 @@ namespace imgLoader_CLI.Sites
             foreach (var item in StrTools.GetValue(_source,"tags",'[',']').Split("\"type\":\"tag\",\"name\":\""))
             {
                 if (!item.Contains("tag")) continue;
-                temp.Append(item.Split('\"')[0]).Append(";");
+                temp.Append(item.Split('\"')[0]).Append(';');
             }
             info[3] = temp.ToString().Trim();
 

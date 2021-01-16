@@ -2,13 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using imgLoader_CLI.Searching;
 
 namespace imgLoader_CLI
 {
     //todo: 저장된 정보 읽어오는 함수 만들것
     //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
     //todo: 중복 작품 체크: 번호              
-
     internal static class Program
     {
         private static void Main(string[] args)
@@ -17,6 +17,9 @@ namespace imgLoader_CLI
 
             //var ttest = test.GetImgUrls();
             //var test1 = new ehentai("1810150/8c545adb44");
+            new Indexer("D:\\문서\\사진\\Saved Pictures\\고니\\manga\\").Index();
+            //new Indexer("D:\\test\\1").Index();
+
 
             Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 

@@ -12,7 +12,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "imgLoader_CLI", "imgLoader_CLI\imgLoader_CLI.csproj", "{D473DBBD-DEDD-4EDB-9AA9-B9138484EB43}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestSite", "TestSite\TestSite.csproj", "{18ABA932-7506-48E1-9F0F-82F3A7F9062A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestSite", "TestSite\TestSite.csproj", "{18ABA932-7506-48E1-9F0F-82F3A7F9062A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InfoFixer", "InfoFixer\InfoFixer.csproj", "{A9CC05CD-9E07-4515-B4F1-A7232DCEA99B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{18ABA932-7506-48E1-9F0F-82F3A7F9062A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18ABA932-7506-48E1-9F0F-82F3A7F9062A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18ABA932-7506-48E1-9F0F-82F3A7F9062A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9CC05CD-9E07-4515-B4F1-A7232DCEA99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9CC05CD-9E07-4515-B4F1-A7232DCEA99B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9CC05CD-9E07-4515-B4F1-A7232DCEA99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9CC05CD-9E07-4515-B4F1-A7232DCEA99B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
