@@ -52,7 +52,7 @@ namespace imgLoader_CLI
 
             if (args.Length == 0)
             {
-                Console.WriteLine("\nType \'help\' for help, Input address to start download.");
+                Console.WriteLine("\nType \'help\' for help, Input gallery address to start download.");
             }
 
             while (true)

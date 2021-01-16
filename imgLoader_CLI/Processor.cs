@@ -20,18 +20,14 @@ namespace imgLoader_CLI
 
         internal void Initialize(string[] url)
         {
-            var sw = new Stopwatch();
-            sw.Start();
+            Console.Write('\n');
 
-            Console.Write("\n");
+            //var temp = false;
+            //_thrDownStart = new Thread(() => { Process(url); temp = true; });
+            //_thrDownStart.Start();
 
-            bool temp = false;
-            _thrDownStart = new Thread(() => { Process(url); temp = true; });
-            _thrDownStart.Start();
-
-            while (!temp) Thread.Sleep(Core.WAIT_TIME * 20);
-
-            Debug.Write(sw.ElapsedMilliseconds + "\n");
+            //while (!temp) Thread.Sleep(Core.WAIT_TIME * 20);
+            Process(url);
         }
 
         private void Process(string[] url)

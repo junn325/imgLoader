@@ -12,8 +12,8 @@ namespace imgLoader_CLI.Sites
         public const string Supplement = "hitomi.la/reader/\\n\\.html";
         public string Number { get; }
 
-        private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] REPLACE = { "", "", "", "" };
+        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
+        private static readonly string[] Replace = { "", "", "", "" };
 
         private readonly string _src_info;
         private readonly string _artist;
@@ -31,10 +31,10 @@ namespace imgLoader_CLI.Sites
                 var temp = wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html");
                 var srcGall = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
 
-                Number = mNumber;
-
-                _title = Filter(_src_info.Split("title\":\"")[1].Split('\"')[0]);
+                _title = Core.TitleFilter(_src_info.Split("title\":\"")[1].Split('\"')[0], Filter, Replace);
                 _artist = srcGall.Contains("/artist/") ? srcGall.Split("/artist/")[1].Split("</a>")[0].Split(">")[1] : "N/A";
+
+                Number = mNumber;
             }
             catch
             {
@@ -127,7 +127,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return _artist != null;
+            return Number != null;
         }
 
         private string Subdomain_from_url(string url, string Base)

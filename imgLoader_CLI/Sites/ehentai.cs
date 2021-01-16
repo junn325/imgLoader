@@ -16,8 +16,8 @@ namespace imgLoader_CLI.Sites
         private const string _api_url = "https://api.e-hentai.org/api.php";
         private const string _base_url = "https://e-hentai.org/";
 
-        private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] REPLACE = { "", "", "", "" };
+        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
+        private static readonly string[] Replace = { "", "", "", "" };
 
         private readonly string _src_gall, _src_item, _src_data, _gall_id, _gall_token, _artist, _title, _showKey;
 
@@ -27,14 +27,10 @@ namespace imgLoader_CLI.Sites
         {
             try
             {
-                Number = mNumber;
-
                 _src_gall = StrLoad.Load($"{_base_url}g/{mNumber}/");
-                _src_item = StrLoad.Load(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
+                var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
 
-                if (_src_gall == null || _src_item == null) throw new Exception();
-
-                _showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
+                if (_src_gall == null) throw new Exception();
 
                 _gall_id = mNumber.Split('/')[0];
                 _gall_token = mNumber.Split('/')[1];
@@ -43,6 +39,12 @@ namespace imgLoader_CLI.Sites
 
                 _title = StrTools.GetStringValue(_src_data, "title");
                 _artist = _src_data.Contains("artist") ? _src_data.Split("artist:")[1].Split('\"')[0] : "N/A";
+
+                temp.Wait();
+                _src_item = temp.Result;
+                _showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
+
+                Number = mNumber;
             }
             catch
             {
@@ -114,7 +116,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return _artist != null;
+            return Number != null;
         }
 
         //public void Dispose()
@@ -124,48 +126,7 @@ namespace imgLoader_CLI.Sites
 
         //    GC.SuppressFinalize(this);
         //}
-        private string XmlHttpRequest_Item(string url, string gid, string reqPage, string imgKey, string showKey, string pageNum)
-        {
-            HttpWebRequest rq = null;
-            WebResponse resp = null;
-            try
-            {
-                string returnVal;
-                var param = Encoding.UTF8.GetBytes($"{{\"method\":\"showpage\",\"gid\":{gid},\"page\":{reqPage},\"imgkey\":\"{imgKey}\",\"showkey\":\"{showKey}\"}}");
-
-                rq = WebRequest.CreateHttp(url);
-                rq.Referer = $"https://e-hentai.org/s/{imgKey}/{gid}-{pageNum}";
-                rq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
-                rq.Method = "POST";
-                rq.ContentLength = param.Length;
-                rq.ContentType = "application/json";
-
-                using (var s = rq.GetRequestStream())
-                {
-                    s.Write(param, 0, param.Length);
-                }
-
-                resp = rq.GetResponse();
-                using (var s = resp.GetResponseStream())
-                {
-                    using var reader = new StreamReader(s);
-                    returnVal = reader.ReadToEnd();
-                }
-                resp.Close();
-
-                return returnVal;
-            }
-            catch
-            {
-                return null;
-            }
-            finally
-            {
-                rq?.Abort();
-                resp?.Close();
-            }
-        }
-        private async Task<string> XmlHttpRequest_ItemAsync(string gid, string reqPage, string imgKey, string showKey, string pageNum)
+        private static async Task<string> XmlHttpRequest_ItemAsync(string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
             return await Task.Run(() => {
 
@@ -210,7 +171,7 @@ namespace imgLoader_CLI.Sites
 
             }).ConfigureAwait(false);
         }
-        private string XmlHttpRequest_Data(string url, string gall_id, string gall_token)
+        private static string XmlHttpRequest_Data(string url, string gall_id, string gall_token)
         {
             HttpWebRequest rq = null;
             WebResponse resp = null;
