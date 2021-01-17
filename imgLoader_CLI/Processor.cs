@@ -11,7 +11,8 @@ namespace imgLoader_CLI
     internal class Processor
     {
         private readonly Dictionary<string, string> _failed = new Dictionary<string, string>();
-        private List<Task> _tasks = new List<Task>();
+
+        private List<Task> _tasks;
         //private Thread _thrDownStart;
 
         private bool _stop;
@@ -174,7 +175,7 @@ namespace imgLoader_CLI
                     return;
                 }
 
-                Core.Log($"Fail:{((HttpWebResponse)we.Response).StatusCode}: {uri} {fileName}");
+                Core.Log($"Fail:{(we.Response as HttpWebResponse).StatusCode}: {uri} {fileName}");
                 _failed.Add(fileName, uri);
                 return;
             }
@@ -260,13 +261,14 @@ namespace imgLoader_CLI
                 //    Thread.Sleep(Core.WAIT_TIME);
                 //}
 
+                _failed.Clear();
+
+                if (_tasks == null) return;
+
                 _stop = true;
-
                 foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
-
                 _stop = false;
 
-                _failed.Clear();
                 _tasks.Clear();
             }).Start();
         }

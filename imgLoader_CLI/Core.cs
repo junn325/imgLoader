@@ -30,10 +30,7 @@ namespace imgLoader_CLI
                 var sb = new StringBuilder(Path.GetTempPath());
                 sb.Append('\\').Append(LOG_DIR);
 
-                if (!Directory.Exists(sb.ToString()))
-                {
-                    Directory.CreateDirectory(sb.ToString());
-                }
+                if (!Directory.Exists(sb.ToString())) Directory.CreateDirectory(sb.ToString());
 
                 var temp = false;
                 FileStream file = null;
@@ -61,12 +58,8 @@ namespace imgLoader_CLI
         public static string TitleFilter(string title, string[] filter, string[] replace)
         {
             for (byte i = 0; i < filter.Length; i++)
-            {
                 if (title.Contains(filter[i]))
-                {
                     title = title.Replace(filter[i], replace[i]);
-                }
-            }
 
             return title;
         }
@@ -80,10 +73,7 @@ namespace imgLoader_CLI
             if (file.Exists && (file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
 
             using var sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
-            foreach (var item in site.ReturnInfo())
-            {
-                sw.WriteLine(item);
-            }
+            foreach (var item in site.ReturnInfo()) sw.WriteLine(item);
 
             File.SetAttributes(infoRoute, FileAttributes.Hidden);
         }
@@ -91,12 +81,8 @@ namespace imgLoader_CLI
         internal static string DirFilter(string dirName)
         {
             for (byte i = 0; i < DFILTER.Length; i++)
-            {
                 if (dirName.Contains(DFILTER[i]))
-                {
                     dirName = dirName.Replace(DFILTER[i], DREPLACE[i]);
-                }
-            }
 
             return dirName;
         }

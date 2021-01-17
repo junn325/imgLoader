@@ -20,12 +20,11 @@ namespace imgLoader_CLI
             new Indexer("D:\\문서\\사진\\Saved Pictures\\고니\\manga\\").Index();
             //new Indexer("D:\\test\\1").Index();
 
-
             Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 
             if (args.Length != 0)
             {
-                string[] temp = new string[args.Length];
+                var temp = new string[args.Length];
                 for (var i = 0; i < args.Length; i++)
                 {
                     temp[i] = "";
@@ -38,7 +37,7 @@ namespace imgLoader_CLI
                         }
                         else
                         {
-                            Console.WriteLine("\n No such directory\n"); 
+                            Console.WriteLine("\n No such directory\n");
                             return;
                         }
                     }
@@ -53,10 +52,7 @@ namespace imgLoader_CLI
 
             Console.WriteLine($"Current path: {Core.Route}\n");
 
-            if (args.Length == 0)
-            {
-                Console.WriteLine("\nType \'help\' for help, Input gallery address to start download.");
-            }
+            if (args.Length == 0) Console.WriteLine("\nType \'help\' for help, Input gallery address to start download.");
 
             while (true)
             {
