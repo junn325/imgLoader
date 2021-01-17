@@ -31,11 +31,7 @@ namespace imgLoader_CLI
         public static string Load(string url)
         {
             var sb = new StringBuilder();
-            var cookies = new CookieContainer();
-            //cookies.Add();
-
             var req = WebRequest.Create(url) as HttpWebRequest;
-            req.CookieContainer = cookies;
 
             var resp = req.GetResponse();
             using var br = resp.GetResponseStream();

@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using imgLoader_CLI.Searching;
+using imgLoader_CLI.Search;
 
 namespace imgLoader_CLI
 {
@@ -17,7 +17,7 @@ namespace imgLoader_CLI
 
             //var ttest = test.GetImgUrls();
             //var test1 = new ehentai("1810150/8c545adb44");
-            //new Indexer("D:\\문서\\사진\\Saved Pictures\\고니\\manga\\").Index();
+            new Indexer("D:\\문서\\사진\\Saved Pictures\\고니\\manga\\").Index();
             //new Indexer("D:\\test\\1").Index();
 
 

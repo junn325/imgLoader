@@ -12,7 +12,7 @@ namespace imgLoader_CLI
     {
         private readonly Dictionary<string, string> _failed = new Dictionary<string, string>();
         private List<Task> _tasks = new List<Task>();
-        private Thread _thrDownStart;
+        //private Thread _thrDownStart;
 
         private bool _stop;
         private int _done;
@@ -252,13 +252,13 @@ namespace imgLoader_CLI
         {
             new Thread(() =>
             {
-                if (_thrDownStart == null) return;
+                //if (_thrDownStart == null) return;
 
-                while (_thrDownStart.ThreadState == System.Threading.ThreadState.Running)
-                {
-                    _thrDownStart.Interrupt();
-                    Thread.Sleep(Core.WAIT_TIME);
-                }
+                //while (_thrDownStart.ThreadState == System.Threading.ThreadState.Running)
+                //{
+                //    _thrDownStart.Interrupt();
+                //    Thread.Sleep(Core.WAIT_TIME);
+                //}
 
                 _stop = true;
 

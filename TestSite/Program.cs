@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Net;
 using System.Text;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,13 +14,23 @@ namespace TestSite
     {
         private static void Main(string[] args)
         {
-            var source = "</script>\r\n<div id=\"nb\" class=\"nosel\"><div><a class=\"nbw\" href=\"https://e-hentai.org/\">Front<span class=\"nbw1\"> Page</span></a></div><div><a href=\"https://e-hentai.org/watched\">Watched</a></div><div><a href=\"https://e-hentai.org/popular\">Popular</a></div><div><a href=\"https://e-hentai.org/torrents.php\">Torrents</a></div><div><a href=\"https://e-hentai.org/favorites.php\">Fav<span class=\"nbw1\">orite</span>s</a></div><div><a href=\"https://e-hentai.org/home.php\"><span class=\"nbw2\">My </span>Home</a></div><div><a href=\"https://upload.e-hentai.org/manage.php\"><span class=\"nbw2\">My </span>Uploads</a></div><div><a href=\"https://e-hentai.org/toplist.php\">Toplists</a></div><div><a href=\"https://e-hentai.org/bounty.php\">Bounties</a></div><div><a href=\"https://e-hentai.org/news.php\">News</a></div><div><a href=\"https://forums.e-hentai.org/\">Forums</a></div><div><a href=\"https://ehwiki.org/\">Wiki</a></div><div><a href=\"https://hentaiverse.org/\" onclick=\"popUp('https://hentaiverse.org/',1250,720); return false\">H<span class=\"nbw1\">entai</span>V<span class=\"nbw1\">erse</span></a></div></div><script async src=\"//adserver.juicyads.com/js/jads.js\"></script><ins id=\"265910\" data-width=\"728\" data-height=\"90\"></ins><script>(adsbyjuicy = window.adsbyjuicy || []).push({'adzone':265910});</script>\r\n<script type=\"text/javascript\">";
+            var sw = new Stopwatch();
+            sw.Start();
 
-            var temp = source.GetBetween("</script>", "<div>");
-            for (int i = 0; i < 100; i++)
+            var sb = new StringBuilder();
+
+            var infos = Directory.EnumerateFiles("D:\\문서\\사진\\Saved Pictures\\고니\\manga", "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hitomi") || s.EndsWith(".Hiyobi") || s.EndsWith(".NHentai") || s.EndsWith("EHentai"));
+
+            var temp = infos.ToArray();
+            for (int i = 0; i < 10; i++)
             {
-                  
+                foreach (var info in infos)
+                {
+                    sb.Append(File.ReadAllText(info));
+                }
             }
+
+            Console.WriteLine(sw.Elapsed.Ticks);
         }
 
         static string XmlHttpRequest(string url)
