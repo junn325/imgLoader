@@ -9,6 +9,7 @@ namespace imgL_Fixer
     class Program
     {
         //페이지수 0인것도 수정할것
+        //todo: 작가명 제대로 안써진것들 수정
         private static void Main(string[] args)
         {
             Console.Write("Route: ");
