@@ -43,7 +43,7 @@
         }
 
         /// <summary>
-        ///  "{name}":(data(s)),
+        ///  "{name}":(data),
         /// </summary>
         public static string GetValue(string source, string name)
         {

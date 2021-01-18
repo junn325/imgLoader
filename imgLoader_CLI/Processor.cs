@@ -33,110 +33,106 @@ namespace imgLoader_CLI
 
         private void Process(string[] url)
         {
-            try
+            foreach (var link in url)
             {
-                foreach (var link in url)
+                if (string.IsNullOrEmpty(link)) continue;
+
+                ISite site;
+                Dictionary<string, string> imgList;
+
+                var sw = new Stopwatch();
+                sw.Start();
+
+                string artist, title, route;
+                try
                 {
-                    if (string.IsNullOrEmpty(link)) continue;
+                    Console.Write("Load info: ");
+                    site = Core.LoadSite(link);
 
-                    ISite site;
-                    Dictionary<string, string> imgList;
+                    if (site?.IsValidated() != true) { Console.Write("Error: Failed to load\n"); continue; }
+                    Console.WriteLine($"{site.GetType().Name}:");
 
-                    var sw = new Stopwatch();
-                    sw.Start();
+                    Console.Write("Count: ");
+                    imgList = site.GetImgUrls();
+                    Console.WriteLine($"{imgList.Count} images");
 
-                    string artist, title, route;
-                    try
-                    {
-                        Console.Write("Load info: ");
-                        site = Core.LoadSite(link);
+                    Console.Write("Title: ");
+                    title = site.GetTitle();
+                    Console.WriteLine($"{title}");
 
-                        if (site?.IsValidated() != true) { Console.Write("Error: Failed to load\n"); continue; }
-                        Console.WriteLine($"{site.GetType().Name}:");
+                    Console.Write("Artist name: ");
+                    artist = site.GetArtist();
+                    Console.WriteLine($"{artist}");
 
-                        Console.Write("Count: ");
-                        imgList = site.GetImgUrls();
-                        Console.WriteLine($"{imgList.Count} images");
+                    title = Core.DirFilter(title);
 
-                        Console.Write("Title: ");
-                        title = site.GetTitle();
-                        Console.WriteLine($"{title}");
+                    route =
+                        artist == "N/A"
+                            ? $@"{Core.Route}\{title}"
+                            : $@"{Core.Route}\{title} ({artist})";
 
-                        Console.Write("Artist name: ");
-                        artist = site.GetArtist();
-                        Console.WriteLine($"{artist}");
-
-                        title = Core.DirFilter(title);
-
-                        route =
-                            artist == "N/A"
-                                ? $@"{Core.Route}\{title}"
-                                : $@"{Core.Route}\{title} ({artist})";
-
-                        Debug.Write(sw.Elapsed.Ticks);
-                    }
-                    catch
-                    {
-                        Console.Write("Error: Connection failed\n");
-                        continue;
-                    }
-
-                    try
-                    {
-                        var temp = Core.GetNumber(link);
-                        var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{site.GetType().Name}";
-
-                        if (!Directory.Exists(route)) Directory.CreateDirectory(route);
-                        else
-                        {
-                            Console.WriteLine("\nAlready exists. Download again? Y/N");
-                            a: string result = Console.ReadLine().ToLower();
-                            if (result == "n") continue;
-                            if (result != "y") goto a;
-                        }
-                        Core.CreateInfo(infoRoute, site);
-                    }
-                    catch (DirectoryNotFoundException)
-                    {
-                        Console.Write(" Error: No such directory\n");
-                        continue;
-                    }
-                    catch (FileNotFoundException)
-                    {
-                        Console.Write(" Error: No such file\n");
-                        continue;
-                    }
-
-                    _done = 0;
-
-                    _tasks = new List<Task>();
-
-                    Console.Write("\n[");
-                    AllocDown(route, imgList);
-
-                    while (_done < imgList.Count - _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
-
-                    _done = 0;
-
-                    var success = HandleFail(route);
-                    while (_done < _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
-                    foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
-
-                    Core.Log($"Item:Complete: {link}");
-                    if (success)
-                    {
-                        Console.Write("]\n");
-                        Console.WriteLine("\n Download complete.\n");
-                    }
-                    else
-                    {
-                        Console.Write("\n Download failed.\n");
-                    }
+                    Debug.Write(sw.Elapsed.Ticks);
+                }
+                catch
+                {
+                    Console.Write("Error: Connection failed\n");
+                    continue;
                 }
 
-                Stopping();
+                try
+                {
+                    var temp = Core.GetNumber(link);
+                    var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{site.GetType().Name}";
+
+                    if (!Directory.Exists(route)) Directory.CreateDirectory(route);
+                    else
+                    {
+                        Console.WriteLine("\nAlready exists. Download again? Y/N");
+                        a: string result = Console.ReadLine().ToLower();
+                        if (result == "n") continue;
+                        if (result != "y") goto a;
+                    }
+                    Core.CreateInfo(infoRoute, site);
+                }
+                catch (DirectoryNotFoundException)
+                {
+                    Console.Write(" Error: No such directory\n");
+                    continue;
+                }
+                catch (FileNotFoundException)
+                {
+                    Console.Write(" Error: No such file\n");
+                    continue;
+                }
+
+                _done = 0;
+
+                _tasks = new List<Task>();
+
+                Console.Write("\n[");
+                AllocDown(route, imgList);
+
+                while (_done < imgList.Count - _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
+
+                _done = 0;
+
+                var success = HandleFail(route);
+                while (_done < _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
+                foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
+
+                Core.Log($"Item:Complete: {link}");
+                if (success)
+                {
+                    Console.Write("]\n");
+                    Console.WriteLine("\n Download complete.\n");
+                }
+                else
+                {
+                    Console.Write("\n Download failed.\n");
+                }
             }
-            catch (ThreadInterruptedException) { }
+
+            Stopping();
         }
 
         private void AllocDown(string route, Dictionary<string, string> urlList)

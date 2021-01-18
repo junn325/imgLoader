@@ -13,7 +13,8 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] REPLACE = { "", "", "", "" };
 
         private readonly string _source;
-        public string Number { get; set; }
+        public string Number { get; }
+        public string HitomiNumber { get; }
 
         private int _imgNum;
         private readonly string _artist;
@@ -27,10 +28,12 @@ namespace imgLoader_CLI.Sites
             try
             {
                 _source = wc.DownloadString($"https://nhentai.net/api/gallery/{mNumber}");
-                Number = StrTools.GetStringValue(_source, "media_id");
 
                 _artist = StrTools.GetStringValue(_source, "artist\",\"name");
                 _title = StrTools.GetStringValue(_source, "pretty");
+
+                HitomiNumber = StrTools.GetStringValue(_source, "media_id");
+                Number = mNumber;
             }
             catch
             {
@@ -100,7 +103,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return _title != null;
+            return Number != null;
         }
     }
 }

@@ -30,11 +30,20 @@ namespace imgLoader_CLI.Sites
                 _src_api = wc.DownloadString($"https://api.hiyobi.me/gallery/{mNumber}");
                 _src_cdn = wc.DownloadString($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
 
-                Number = mNumber;
-
                 _title = StrTools.GetStringValue(_src_api, "title");
-                _artist = _src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists", '[').Contains("value") ? StrTools.GetStringValue(StrTools.GetValue(_src_api, "artists", '['), "value") : "N/A";
-            }                                                               
+                _artist =
+                    _src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists").Contains("value")
+                        ? StrTools.GetStringValue(StrTools.GetValue(_src_api, "artists"), "value")
+                        : "";
+                _artist +=
+                    _src_api.Contains("groups") && StrTools.GetValue(_src_api, "groups").Contains("value")
+                        ? "(" + StrTools.GetStringValue(StrTools.GetValue(_src_api, "groups"), "value") + ")"
+                        : "";
+
+                if (_artist.Length == 0) _artist = "N/A";
+
+                Number = mNumber;
+            }
             catch
             {
                 throw new Exception("failed to initiate");
@@ -92,7 +101,7 @@ namespace imgLoader_CLI.Sites
 
         public bool IsValidated()
         {
-            return _artist != null;
+            return Number != null;
         }
     }
 }
