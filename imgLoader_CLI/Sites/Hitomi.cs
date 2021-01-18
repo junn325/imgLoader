@@ -27,7 +27,6 @@ namespace imgLoader_CLI.Sites
             try
             {
                 _src_info = wc.DownloadString($"https://ltn.hitomi.la/galleries/{mNumber}.js");
-
                 var temp = wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html");
                 var srcGall = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
 

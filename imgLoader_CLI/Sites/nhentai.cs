@@ -13,12 +13,13 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] REPLACE = { "", "", "", "" };
 
         private readonly string _source;
+        private readonly string _artist;
+        private readonly string _title;
+
         public string Number { get; }
         public string HitomiNumber { get; }
 
         private int _imgNum;
-        private readonly string _artist;
-        private readonly string _title;
 
         public NHentai(string mNumber)
         {
@@ -61,7 +62,7 @@ namespace imgLoader_CLI.Sites
 
             var temp = new StringBuilder();
             temp.Append("tags:");
-            foreach (var item in StrTools.GetValue(_source,"tags",'[',']').Split("\"type\":\"tag\",\"name\":\""))
+            foreach (var item in StrTools.GetValue(_source, "tags", '[', ']').Split("\"type\":\"tag\",\"name\":\""))
             {
                 if (!item.Contains("tag")) continue;
                 temp.Append(item.Split('\"')[0]).Append(';');
@@ -82,7 +83,7 @@ namespace imgLoader_CLI.Sites
 
             for (var i = 1; i <= _imgNum; i++)
             {
-                ext = StrTools.GetStringValue(StrTools.GetValue(_source, "pages", '[').Split('{')[i],"t");
+                ext = StrTools.GetStringValue(StrTools.GetValue(_source, "pages").Split('{')[i],"t");
                 switch (ext)
                 {
                     case "j":

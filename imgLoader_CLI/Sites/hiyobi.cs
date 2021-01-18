@@ -37,7 +37,7 @@ namespace imgLoader_CLI.Sites
                         : "";
                 _artist +=
                     _src_api.Contains("groups") && StrTools.GetValue(_src_api, "groups").Contains("value")
-                        ? "(" + StrTools.GetStringValue(StrTools.GetValue(_src_api, "groups"), "value") + ")"
+                        ? " (" + StrTools.GetStringValue(StrTools.GetValue(_src_api, "groups"), "value") + ")"
                         : "";
 
                 if (_artist.Length == 0) _artist = "N/A";
