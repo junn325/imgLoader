@@ -19,9 +19,11 @@ namespace imgLoader_CLI.Sites
 
         private readonly string _title;
         private readonly string _artist;
+        private readonly string _group;
 
         public Hiyobi(string mNumber)
         {
+            var sb = new StringBuilder();
             var wc = new WebClient();
             wc.Encoding = Encoding.UTF8;
 
@@ -31,16 +33,37 @@ namespace imgLoader_CLI.Sites
                 _src_cdn = wc.DownloadString($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
 
                 _title = StrTools.GetStringValue(_src_api, "title");
-                _artist =
-                    _src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists").Contains("value")
-                        ? StrTools.GetStringValue(StrTools.GetValue(_src_api, "artists"), "value")
-                        : "";
-                _artist +=
-                    _src_api.Contains("groups") && StrTools.GetValue(_src_api, "groups").Contains("value")
-                        ? " (" + StrTools.GetStringValue(StrTools.GetValue(_src_api, "groups"), "value") + ")"
-                        : "";
 
-                if (_artist.Length == 0) _artist = "N/A";
+                if (_src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists").Contains("value"))
+                {
+                    var temp = StrTools.GetValue(_src_api, "artists").Split("value\":\"");
+
+                    for (var i = 1; i < temp.Length; i++)
+                    {
+                        sb.Append(temp[i]).Append(';');
+                    }
+                    _artist = sb.ToString();
+                }
+
+                sb.Clear();
+
+                if (_src_api.Contains("groups") && StrTools.GetValue(_src_api, "groups").Contains("value"))
+                {
+                    var temp = StrTools.GetValue(_src_api, "groups").Split("value\":\"");
+
+                    for (int i = 1; i < temp.Length; i++)
+                    {
+                        sb.Append(temp[i]).Append(';');
+                    }
+                    _group = sb.ToString();
+                }
+
+                _artist =
+                    _artist.Length == 0
+                        ? _group.Length == 0
+                            ? "N/A"
+                            : _group
+                        : _artist;
 
                 Number = mNumber;
             }

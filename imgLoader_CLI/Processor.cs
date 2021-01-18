@@ -61,7 +61,11 @@ namespace imgLoader_CLI
                     Console.WriteLine($"{title}");
 
                     Console.Write("Artist name: ");
-                    artist = site.GetArtist();
+                    artist =
+                        site.GetArtist() != "N/A"
+                            ? site.GetArtist().Split(';')[0]
+                            : "N/A";
+
                     Console.WriteLine($"{artist}");
 
                     title = Core.DirFilter(title);

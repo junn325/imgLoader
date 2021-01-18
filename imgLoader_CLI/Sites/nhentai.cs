@@ -9,8 +9,8 @@ namespace imgLoader_CLI.Sites
     {
         public const string Supplement = "nhentai.net/g/\\n\\/";
 
-        private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] REPLACE = { "", "", "", "" };
+        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
+        private static readonly string[] Replace = { "", "", "", "" };
 
         private readonly string _source;
         private readonly string _artist;
@@ -30,7 +30,14 @@ namespace imgLoader_CLI.Sites
             {
                 _source = wc.DownloadString($"https://nhentai.net/api/gallery/{mNumber}");
 
-                _artist = StrTools.GetStringValue(_source, "artist\",\"name");
+                var sb = new StringBuilder();
+                for (var i = 1; i < _source.Split("artist\",\"name\":\"").Length; i++)
+                {
+                    sb.Append(_source.Split("artist\",\"name\":\"")[i].Split('"')[0]).Append(';');
+                }
+
+                _artist = sb.ToString();
+
                 _title = StrTools.GetStringValue(_source, "pretty");
 
                 HitomiNumber = StrTools.GetStringValue(_source, "media_id");
