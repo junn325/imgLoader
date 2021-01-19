@@ -100,7 +100,7 @@ namespace imgLoader_CLI.Sites
             var info = new string[5];
 
             info[0] = _title;
-            info[1] = _artist;
+            info[1] = $"{_artist}|{_group}";
             info[2] = _src_info.StrLen("hash").ToString();
 
             var sb = new StringBuilder();

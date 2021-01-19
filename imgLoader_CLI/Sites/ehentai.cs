@@ -102,7 +102,7 @@ namespace imgLoader_CLI.Sites
         {
             var info = new string[5];
             info[0] = _title ?? throw new Exception("_title was Null");
-            info[1] = _artist ?? "N/A";
+            info[1] = $"{_artist}|{_group}";
             info[2] = StrTools.GetStringValue(_src_data, "filecount");
 
             var sb = new StringBuilder();
