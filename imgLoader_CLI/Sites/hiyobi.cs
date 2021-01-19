@@ -30,9 +30,9 @@ namespace imgLoader_CLI.Sites
 
                 if (_src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists").Contains("value"))
                 {
-                    var temp = StrTools.GetValue(_src_api, "artists").Split("value\":\"");
+                    var temp = _src_api.Split("artists\":[")[1].Split(']')[0].Split("\"value\":\"");
 
-                    for (var i = 1; i < temp.Length; i++) sb.Append(temp[i]).Append(';');
+                    for (var i = 1; i < temp.Length; i++) sb.Append(temp[i].Split('"')[0]).Append(';');
                     _artist = sb.ToString();
                 }
 
@@ -40,9 +40,9 @@ namespace imgLoader_CLI.Sites
 
                 if (_src_api.Contains("groups") && StrTools.GetValue(_src_api, "groups").Contains("value"))
                 {
-                    var temp = StrTools.GetValue(_src_api, "groups").Split("value\":\"");
+                    var temp = _src_api.Split("groups\":[")[1].Split(']')[0].Split("\"value\":\"");
 
-                    for (var i = 1; i < temp.Length; i++) sb.Append(temp[i]).Append(';');
+                    for (var i = 1; i < temp.Length; i++) sb.Append(temp[i].Split('"')[0]).Append(';');
                     _group = sb.ToString();
                 }
 
