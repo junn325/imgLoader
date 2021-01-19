@@ -12,20 +12,14 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] Filter = { " - Hiyobi.me", " - hiyobi.me" };
         private static readonly string[] REPLACE = { "", "" };
 
-        private readonly string _src_cdn;
-        private readonly string _src_api;
-
         public string Number { get; set; }
 
-        private readonly string _title;
-        private readonly string _artist;
-        private readonly string _group;
+        private readonly string _src_cdn, _src_api, _title, _artist, _group;
 
         public Hiyobi(string mNumber)
         {
             var sb = new StringBuilder();
-            var wc = new WebClient();
-            wc.Encoding = Encoding.UTF8;
+            var wc = new WebClient {Encoding = Encoding.UTF8};
 
             try
             {
@@ -38,10 +32,7 @@ namespace imgLoader_CLI.Sites
                 {
                     var temp = StrTools.GetValue(_src_api, "artists").Split("value\":\"");
 
-                    for (var i = 1; i < temp.Length; i++)
-                    {
-                        sb.Append(temp[i]).Append(';');
-                    }
+                    for (var i = 1; i < temp.Length; i++) sb.Append(temp[i]).Append(';');
                     _artist = sb.ToString();
                 }
 
@@ -51,19 +42,9 @@ namespace imgLoader_CLI.Sites
                 {
                     var temp = StrTools.GetValue(_src_api, "groups").Split("value\":\"");
 
-                    for (int i = 1; i < temp.Length; i++)
-                    {
-                        sb.Append(temp[i]).Append(';');
-                    }
+                    for (var i = 1; i < temp.Length; i++) sb.Append(temp[i]).Append(';');
                     _group = sb.ToString();
                 }
-
-                _artist =
-                    _artist.Length == 0
-                        ? _group.Length == 0
-                            ? "N/A"
-                            : _group
-                        : _artist;
 
                 Number = mNumber;
             }
@@ -74,8 +55,8 @@ namespace imgLoader_CLI.Sites
         }
 
         public string GetArtist()
-        { 
-            return _artist ?? "N/A";
+        {
+            return $"{_artist}|{_group}";
         }
 
         public Dictionary<string, string> GetImgUrls()

@@ -12,10 +12,7 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] Replace = { "", "", "", "" };
 
-        private readonly string _source;
-        private readonly string _artist;
-        private readonly string _title;
-
+        private readonly string _source, _artist, _group, _title;
         public string Number { get; }
         public string HitomiNumber { get; }
 
@@ -31,11 +28,11 @@ namespace imgLoader_CLI.Sites
                 _source = wc.DownloadString($"https://nhentai.net/api/gallery/{mNumber}");
 
                 var sb = new StringBuilder();
-                for (var i = 1; i < _source.Split("artist\",\"name\":\"").Length; i++)
-                {
-                    sb.Append(_source.Split("artist\",\"name\":\"")[i].Split('"')[0]).Append(';');
-                }
+                for (var i = 1; i < _source.Split("group\",\"name\":\"").Length; i++) sb.Append(_source.Split("group\",\"name\":\"")[i].Split('"')[0]).Append(';');
+                _group = sb.ToString();
+                sb.Clear();
 
+                for (var i = 1; i < _source.Split("artist\",\"name\":\"").Length; i++) sb.Append(_source.Split("artist\",\"name\":\"")[i].Split('"')[0]).Append(';');
                 _artist = sb.ToString();
 
                 _title = StrTools.GetStringValue(_source, "pretty");
@@ -51,7 +48,7 @@ namespace imgLoader_CLI.Sites
 
         public string GetArtist()
         {
-            return _artist;
+            return $"{_artist}|{_group}";
         }
 
         public string GetTitle()

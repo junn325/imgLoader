@@ -19,7 +19,7 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] Replace = { "", "", "", "" };
 
-        private readonly string _src_gall, _src_item, _src_data, _gall_id, _gall_token, _artist, _title, _showKey;
+        private readonly string _src_gall, _src_item, _src_data, _gall_id, _gall_token, _artist, _group, _title, _showKey;
 
         public string Number { get; }
 
@@ -27,6 +27,8 @@ namespace imgLoader_CLI.Sites
         {
             try
             {
+                var sb = new StringBuilder();
+
                 _src_gall = StrLoad.Load($"{_base_url}g/{mNumber}/");
                 var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
 
@@ -38,7 +40,13 @@ namespace imgLoader_CLI.Sites
                 _src_data = XmlHttpRequest_Data(_api_url, _gall_id, _gall_token);
 
                 _title = StrTools.GetStringValue(_src_data, "title");
-                _artist = _src_data.Contains("artist") ? _src_data.Split("artist:")[1].Split('\"')[0] : "N/A";
+
+                for (var i = 1; i < _src_data.StrLen("group") + 1; i++) sb.Append(_src_data.Split("group:")[i].Split('"')[0]).Append(';');
+                _group = sb.ToString();
+                sb.Clear();
+
+                for (var i = 1; i < _src_data.StrLen("artist") + 1; i++) sb.Append(_src_data.Split("artist:")[i].Split('"')[0]).Append(';');
+                _artist = sb.ToString();
 
                 temp.Wait();
                 _src_item = temp.Result;
@@ -54,7 +62,7 @@ namespace imgLoader_CLI.Sites
 
         public string GetArtist()
         {
-            return _artist ?? "N/A";
+            return $"{_artist}|{_group}";
         }
 
         public Dictionary<string, string> GetImgUrls()
@@ -67,10 +75,7 @@ namespace imgLoader_CLI.Sites
             var rtnVal = new string[pageCount];
 
             var sb = new StringBuilder(pages);
-            for (var i = 1; i < (pageCount / 40) + 1; i++)
-            {
-                sb.Append(StrLoad.Load($"{_base_url}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
-            }
+            for (var i = 1; i < (pageCount / 40) + 1; i++) sb.Append(StrLoad.Load($"{_base_url}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
 
             var temp = sb.ToString();
             for (var i = 0; i < pageCount; i++)
