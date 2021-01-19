@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,7 +51,7 @@ namespace imgLoader_CLI
                     site = Core.LoadSite(link);
 
                     if (site?.IsValidated() != true) { Console.Write("Error: Failed to load\n"); continue; }
-                    Console.WriteLine($"{site.GetType().Name}:");
+                    Console.WriteLine($"{site.GetType().Name}");
 
                     Console.Write("Count: ");
                     imgList = site.GetImgUrls();
@@ -60,11 +61,36 @@ namespace imgLoader_CLI
                     title = site.GetTitle();
                     Console.WriteLine($"{title}");
 
-                    Console.Write("Artist name: ");
-                    artist =
-                        site.GetArtist() != "N/A"
-                            ? site.GetArtist().Split(';')[0]
-                            : "N/A";
+                    Console.Write("Artist: ");
+
+                    artist = "N/A";
+
+                    if (site.GetArtist() != "|")
+                    {
+                        if (site.GetArtist().Split('|')[0] != string.Empty)
+                        {
+                            var sb = new StringBuilder();
+                            foreach (var s in site.GetArtist().Split('|')[0].Split(';'))
+                            {
+                                if (s?.Length == 0) continue;
+                                sb.Append(s).Append(", ");
+                            }
+                            artist = sb.ToString().Substring(0, sb.Length - 2);
+
+                            sb.Clear();
+
+                            foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
+                            {
+                                if (s?.Length == 0) continue;
+                                sb.Append(s).Append(", ");
+                            }
+                            artist = $"{artist} ({sb.ToString().Substring(0, sb.Length - 2)})";
+                        }
+                        else
+                        {
+                            artist = site.GetArtist().Split('|')[1];
+                        }
+                    }
 
                     Console.WriteLine($"{artist}");
 
