@@ -43,7 +43,12 @@ namespace imgLoader_CLI
                     Console.Write("Load info: ");
                     site = Core.LoadSite(link);
 
-                    if (site?.IsValidated() != true) { Console.Write("Error: Failed to load\n"); continue; }
+                    if (site?.IsValidated() != true)
+                    {
+                        Console.Write("Error: Failed to load\n"); 
+                        continue;
+                    }
+
                     Console.WriteLine($"{site.GetType().Name}");
 
                     Console.Write("Count: ");
@@ -57,12 +62,12 @@ namespace imgLoader_CLI
                     Console.Write("Artist: ");
 
                     artist = "N/A";
+                    var sb = new StringBuilder();
 
                     if (site.GetArtist() != "|")
                     {
                         if (site.GetArtist().Split('|')[0] != string.Empty)
                         {
-                            var sb = new StringBuilder();
                             foreach (var s in site.GetArtist().Split('|')[0].Split(';'))
                             {
                                 if (s?.Length == 0) continue;
@@ -77,11 +82,21 @@ namespace imgLoader_CLI
                                 if (s?.Length == 0) continue;
                                 sb.Append(s).Append(", ");
                             }
-                            artist = $"{artist} ({sb.ToString().Substring(0, sb.Length - 2)})";
+
+                            artist =
+                                sb.Length != 0
+                                    ? $"{artist} ({sb.ToString().Substring(0, sb.Length - 2)})"
+                                    : artist;
                         }
                         else
                         {
-                            artist = site.GetArtist().Split('|')[1];
+                            foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
+                            {
+                                if (s?.Length == 0) continue;
+                                sb.Append(s).Append(", ");
+                            }
+
+                            artist = sb.ToString().Substring(0, sb.Length - 2);
                         }
                     }
 
@@ -135,13 +150,13 @@ namespace imgLoader_CLI
                 Console.Write("\n[");
                 AllocDown(route, imgList);
 
-                while (_done < imgList.Count - _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
+                while (_done < imgList.Count - _failed.Count) Thread.Sleep(Core.WaitTime * 2);
 
                 _done = 0;
 
                 var success = HandleFail(route);
-                while (_done < _failed.Count) Thread.Sleep(Core.WAIT_TIME * 2);
-                foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
+                while (_done < _failed.Count) Thread.Sleep(Core.WaitTime * 2);
+                foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WaitTime);
 
                 Core.Log($"Item:Complete: {link}");
                 if (success)
@@ -251,16 +266,16 @@ namespace imgLoader_CLI
 
             AllocDown(route, failCopy);
 
-            int wait = Core.FAIL_RETRY * 60;
+            int wait = Core.FailRetry * 60;
             while (_done < failCopy.Count - _failed.Count && wait != 0)
             {
                 wait--;
-                Thread.Sleep(Core.WAIT_TIME);
+                Thread.Sleep(Core.WaitTime);
             }
 
             while (_failed.Count != 0)
             {
-                Thread.Sleep(Core.WAIT_TIME * 40);
+                Thread.Sleep(Core.WaitTime * 40);
                 HandleFail(route);
             }
 
@@ -277,7 +292,7 @@ namespace imgLoader_CLI
                 if (_tasks == null) return;
 
                 _stop = true;
-                foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
+                foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WaitTime);
                 _stop = false;
 
                 _tasks.Clear();

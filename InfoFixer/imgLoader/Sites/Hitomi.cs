@@ -15,24 +15,26 @@ namespace imgL_Fixer.imgLoader.Sites
         private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] Replace = { "", "", "", "" };
 
-        private readonly string _src_info;
-        private readonly string _artist;
-        private readonly string _title;
+        private readonly string _src_info, _artist, _group, _title;
 
         public Hitomi(string mNumber)
         {
-            var wc = new WebClient();
-            wc.Encoding = Encoding.UTF8;
+            var wc = new WebClient {Encoding = Encoding.UTF8};
+            var sb = new StringBuilder();
 
             try
             {
-                _src_info = wc.DownloadString($"https://ltn.hitomi.la/galleries/{mNumber}.js");
+                var temp = StrLoad.LoadAsync($"https://ltn.hitomi.la/galleries/{mNumber}.js");
+                var srcGall = wc.DownloadString(wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
 
-                var temp = wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html");
-                var srcGall = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
+                _src_info = temp.Result;
+                _title =_src_info.Split("title\":\"")[1].Split('\"')[0];
 
-                _title = Core.TitleFilter(_src_info.Split("title\":\"")[1].Split('\"')[0], Filter, Replace);
-                _artist = srcGall.Contains("/artist/") ? srcGall.Split("/artist/")[1].Split("</a>")[0].Split(">")[1] : "N/A";
+                for (var i = 1; i < srcGall.StrLen("/group/") + 1; i++) sb.Append(srcGall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
+                _group = sb.ToString();
+                sb.Clear();
+                for (var i = 1; i < srcGall.StrLen("/artist/") + 1; i++) sb.Append(srcGall.Split("/artist/")[i].Split("</a>")[0].Split(">")[1]);
+                _artist = sb.ToString();
 
                 Number = mNumber;
             }
@@ -44,7 +46,7 @@ namespace imgL_Fixer.imgLoader.Sites
 
         public string GetArtist()
         {
-            return _artist ?? "N/A";
+            return $"{_artist}|{_group}";
         }
         public Dictionary<string, string> GetImgUrls()            //키: 이미지이름/값: 주소
         {
@@ -90,15 +92,15 @@ namespace imgL_Fixer.imgLoader.Sites
 
         public string GetTitle()
         {
-            return _title ?? throw new Exception("_title was Null");
+            return _title;
         }
 
         public string[] ReturnInfo()
         {
             var info = new string[5];
 
-            info[0] = _title ?? throw new Exception("_title was Null");
-            info[1] = _artist ?? "N/A";
+            info[0] = _title;
+            info[1] = $"{_artist}|{_group}";
             info[2] = _src_info.StrLen("hash").ToString();
 
             var sb = new StringBuilder();

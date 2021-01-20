@@ -12,29 +12,42 @@ namespace imgL_Fixer.imgLoader.Sites
         private static readonly string[] Filter = { " - Hiyobi.me", " - hiyobi.me" };
         private static readonly string[] REPLACE = { "", "" };
 
-        private readonly string _src_cdn;
-        private readonly string _src_api;
-
         public string Number { get; set; }
 
-        private readonly string _title;
-        private readonly string _artist;
+        private readonly string _src_cdn, _src_api, _title, _artist, _group;
 
         public Hiyobi(string mNumber)
         {
-            var wc = new WebClient();
-            wc.Encoding = Encoding.UTF8;
+            var sb = new StringBuilder();
+            var wc = new WebClient {Encoding = Encoding.UTF8};
 
             try
             {
                 _src_api = wc.DownloadString($"https://api.hiyobi.me/gallery/{mNumber}");
                 _src_cdn = wc.DownloadString($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
 
-                Number = mNumber;
-
                 _title = StrTools.GetStringValue(_src_api, "title");
-                _artist = _src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists", '[').Contains("value") ? StrTools.GetStringValue(StrTools.GetValue(_src_api, "artists", '['), "value") : "N/A";
-            }                                                               
+
+                if (_src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists").Contains("value"))
+                {
+                    var temp = _src_api.Split("artists\":[")[1].Split(']')[0].Split("\"value\":\"");
+
+                    for (var i = 1; i < temp.Length; i++) sb.Append(temp[i].Split('"')[0]).Append(';');
+                    _artist = sb.ToString();
+                }
+
+                sb.Clear();
+
+                if (_src_api.Contains("groups") && StrTools.GetValue(_src_api, "groups").Contains("value"))
+                {
+                    var temp = _src_api.Split("groups\":[")[1].Split(']')[0].Split("\"value\":\"");
+
+                    for (var i = 1; i < temp.Length; i++) sb.Append(temp[i].Split('"')[0]).Append(';');
+                    _group = sb.ToString();
+                }
+
+                Number = mNumber;
+            }
             catch
             {
                 throw new Exception("failed to initiate");
@@ -42,8 +55,8 @@ namespace imgL_Fixer.imgLoader.Sites
         }
 
         public string GetArtist()
-        { 
-            return _artist ?? "N/A";
+        {
+            return $"{_artist}|{_group}";
         }
 
         public Dictionary<string, string> GetImgUrls()
@@ -72,7 +85,7 @@ namespace imgL_Fixer.imgLoader.Sites
             string[] info = new string[5];
 
             info[0] = _title ?? throw new Exception("_title was Null");
-            info[1] = _artist ?? "N/A";
+            info[1] = $"{_artist}|{_group}";
             info[2] = _src_cdn.StrLen("name").ToString();
 
             var sb = new StringBuilder();
@@ -92,7 +105,7 @@ namespace imgL_Fixer.imgLoader.Sites
 
         public bool IsValidated()
         {
-            return _artist != null;
+            return Number != null;
         }
     }
 }

@@ -12,45 +12,58 @@ namespace imgL_Fixer
         //todo: 작가명 제대로 안써진것들 수정
         private static void Main(string[] args)
         {
-            Console.Write("Route: ");
-            var route =  Console.ReadLine();
+            //Console.Write("Route: ");
+            //var route =  Console.ReadLine();
 
-            var a = 0;
-            foreach (var item in Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi")))
-            {
-                var temp = Directory.EnumerateFiles(item.Replace("\\" + item.Split('\\').Last(), ""), "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi"));
-                if (temp.Count() == 1) continue;
-                FixAllFromNumber(item);
-                a++;
+            FixInfo("D:\\문서\\사진\\Saved Pictures\\고니\\manga - 복사본");
 
-                if (a == 319) 
-                    ;
-            }
         }
 
         private static void FixInfo(string route)
         {
             foreach (var item in Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai")))
             {
-                var temp = File.ReadAllText(item).Split('\n');
+                var text = File.ReadAllText(item);
+                if (text.Length == 0)
+                {
+                    Console.WriteLine($"Empty info: {item}");
+                    continue;
+                }
+                if (text.Contains(';')) continue;
+
+                var temp = text.Split('\n');
                 var sb = new StringBuilder();
+                for (var i = 0; i < 3; i++)
+                {
+                    sb.Append(temp[i]).Append('\n');
+                }
+
+                sb.Append("tags:");
+
                 for (var i = 3; i < temp.Length; i++)
                 {
+                    if (temp[i].Contains(';')) continue;
                     if (!temp[i].Contains(':')) continue;
                     if (temp[i].Contains("tags: ")) temp[i] = temp[i].Replace("tags: ", "tags:");
+                    if (!temp[i].Contains('"') && !temp[i].Contains("female") && !temp[i].Contains("male") && !temp[i].Contains("artist") && !temp[i].Contains("tag"))
+                    {
+                        sb.Append('\n').Append(temp[i]);
+                        break;
+                    }
 
                     try
                     {
-                        switch (item.Split('.')[1])
+                        switch (item.Split('.').Last())
                         {
                             case "Hiyobi":
-                                sb.Append(StrTools.GetStringValue(item.Split('}')[0], "value")).Append(';');
+                                if (!temp[i].Contains("value")) goto hitomi;
+                                sb.Append(StrTools.GetStringValue(temp[i], "value")).Append(';');
                                 break;
 
                             case "Hitomi":
-                                sb.Append(
-                                        temp.Contains("female")
-                                            ? (StrTools.GetValue(temp[i], "female") == "1")
+                                hitomi: sb.Append(
+                                         temp[i].Contains("female")
+                                            ? (StrTools.GetValue(temp[i], "female") == "1" || StrTools.GetValue(temp[i], "female") == "\"1\"")
                                                 ? "female"
                                                 : "male"
                                             : "tag"
@@ -70,15 +83,19 @@ namespace imgL_Fixer
                                 }
                                 break;
                         }
-
-                        temp[i] = sb.ToString();
-                        sb.Clear();
                     }
                     catch
                     {
                         continue;
                     }
                 }
+
+                if (sb.ToString()[^1] == '\n' || sb.ToString()[^1] == '\r')
+                    sb.Remove(sb.Length - 1, 1);
+
+                File.Delete(item);
+                File.WriteAllText(item, sb.ToString());
+                ;
             }
 
         }

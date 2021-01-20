@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using imgLoader_CLI.Search;
 
 namespace imgLoader_CLI
 {
@@ -17,10 +16,9 @@ namespace imgLoader_CLI
 
             //var ttest = test.GetImgUrls();
             //var test1 = new ehentai("1810150/8c545adb44");
-            //new Indexer("D:\\문서\\사진\\Saved Pictures\\고니\\manga\\").Index();
             //new Indexer("D:\\test\\1").Index();
 
-            Console.WriteLine($"\n\n{Core.PROJECT_NAME} {Assembly.GetExecutingAssembly().GetName().Version}\n");
+            Console.WriteLine($"\n\n{Core.ProjectName} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 
             if (args.Length != 0)
             {
@@ -45,9 +43,9 @@ namespace imgLoader_CLI
                 args = temp.ToArray();
             }
 
-            if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
+            if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.TempRoute}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt")))
             {
-                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
+                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt");
             }
 
             Console.WriteLine($"Current path: {Core.Route}\n");
@@ -63,13 +61,13 @@ namespace imgLoader_CLI
                     var path = Console.ReadLine();
                     if (string.Equals(path, "exit", StringComparison.OrdinalIgnoreCase))
                     {
-                        Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
+                        Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt");
                         continue;
                     }
                     if (Directory.Exists(path))
                     {
                         Core.Route = path;
-                        File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", path);
+                        File.WriteAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt", path);
                     }
                     else
                     {
@@ -93,15 +91,21 @@ namespace imgLoader_CLI
                     else
                     {
                         if (string.Equals(read, "exit", StringComparison.OrdinalIgnoreCase)) break;
-                        if (string.Equals(read, "r", StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(read, "resetpath", StringComparison.OrdinalIgnoreCase))
                         {
                             Core.Route = "";
                             continue;
                         }
 
+                        if (string.Equals(read, "search", StringComparison.OrdinalIgnoreCase))
+                        {
+
+                        }
+
+
                         if (string.Equals(read, "help", StringComparison.OrdinalIgnoreCase))
                         {
-                            Console.WriteLine("\nReset download path: r\nCancel command: exit");
+                            Console.WriteLine("\nReset download path: \t\tResetPath\nCancel command: \t\tExit"); //\nSearch from indexed infos: \tSearch
                             continue;
                         }
 
