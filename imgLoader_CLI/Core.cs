@@ -138,5 +138,27 @@ namespace imgLoader_CLI
 
             return infos;
         }
+        internal static void Search(Dictionary<string, string> index, string search, string route)
+        {
+            var searchResult = new Dictionary<string, string>(index);
+            foreach (var item in index)
+            {
+                foreach (var srch in search.Split(','))
+                {
+                    if (!item.Value.Contains(srch, StringComparison.OrdinalIgnoreCase))
+                    {
+                        searchResult.Remove(item.Key);
+                    }
+                }
+            }
+
+            foreach (var item in searchResult)
+            {
+                Console.WriteLine(item.Key.Replace(route, "%BaseDir%").Replace($"\\{item.Key.Split('\\').Last()}", "").Insert(10, " "));
+            }
+
+            Console.WriteLine($"{searchResult.Count} results");
+            Console.WriteLine(new string('=', 100));
+        }
     }
 }

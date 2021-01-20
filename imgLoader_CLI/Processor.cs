@@ -298,5 +298,6 @@ namespace imgLoader_CLI
                 _tasks.Clear();
             }).Start();
         }
+
     }
 }

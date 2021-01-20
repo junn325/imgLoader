@@ -17,7 +17,7 @@ namespace imgLoader_CLI
             //var ttest = test.GetImgUrls();
             //var test1 = new ehentai("1810150/8c545adb44");
             //new Indexer("D:\\test\\1").Index();
-
+            
             Console.WriteLine($"\n\n{Core.ProjectName} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 
             if (args.Length != 0)
@@ -99,9 +99,18 @@ namespace imgLoader_CLI
 
                         if (string.Equals(read, "search", StringComparison.OrdinalIgnoreCase))
                         {
+                            var index = Core.Index(Core.Route);
+                            while (true)
+                            {
+                                Console.Write("\nSearch: ");
 
+                                var temp = Console.ReadLine();
+                                if (string.Equals(temp, "exit", StringComparison.OrdinalIgnoreCase)) break;
+
+                                Core.Search(index, temp, Core.Route);
+                            }
+                            continue;
                         }
-
 
                         if (string.Equals(read, "help", StringComparison.OrdinalIgnoreCase))
                         {
