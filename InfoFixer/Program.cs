@@ -12,11 +12,11 @@ namespace imgL_Fixer
         //todo: 작가명 제대로 안써진것들 수정
         private static void Main(string[] args)
         {
-            //Console.Write("Route: ");
-            //var route =  Console.ReadLine();
+            Console.Write("Route: ");
+            var route = Console.ReadLine();
 
-            FixInfo("D:\\문서\\사진\\Saved Pictures\\고니\\manga - 복사본");
-
+            ScanforNoInfo(route);
+            FixInfo(route);
         }
 
         private static void FixInfo(string route)
@@ -94,8 +94,8 @@ namespace imgL_Fixer
                     sb.Remove(sb.Length - 1, 1);
 
                 File.Delete(item);
+                Console.WriteLine($"Deleted: {item}");
                 File.WriteAllText(item, sb.ToString());
-                ;
             }
 
         }
@@ -132,6 +132,17 @@ namespace imgL_Fixer
 
             var psr = new Processor();
             psr.Initialize(new string[] { link });
+        }
+
+        private static void ScanforNoInfo(string route)
+        {
+            foreach (var item in Directory.GetDirectories(route))
+            {
+                if (!Directory.EnumerateFiles(item, "*.*", SearchOption.AllDirectories).Any(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai")))
+                {
+                    Console.WriteLine(item);
+                }
+            }
         }
     }
 }

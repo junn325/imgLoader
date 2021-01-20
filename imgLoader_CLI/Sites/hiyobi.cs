@@ -23,6 +23,7 @@ namespace imgLoader_CLI.Sites
 
             try
             {
+                // 썸네일 https://cdn.hiyobi.me/tn/(갤러리id).(확장자)
                 _src_api = wc.DownloadString($"https://api.hiyobi.me/gallery/{mNumber}");
                 _src_cdn = wc.DownloadString($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
 
@@ -97,7 +98,7 @@ namespace imgLoader_CLI.Sites
             }
 
             info[3] = sb.ToString().Trim();
-            if (!_src_api.Contains("date")) return info;
+            if (!_src_api.Contains("\"date\"")) return info;
             info[4] = StrTools.GetStringValue(_src_api, "date");
 
             return info;

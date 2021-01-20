@@ -173,7 +173,6 @@ namespace imgLoader_CLI.Sites
                     rq?.Abort();
                     resp?.Close();
                 }
-
             }).ConfigureAwait(false);
         }
         private static string XmlHttpRequest_Data(string url, string gall_id, string gall_token)

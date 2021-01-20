@@ -122,7 +122,7 @@ namespace imgLoader_CLI.Sites
             }
 
             info[3] = sb.ToString().Trim();
-            info[4] = StrTools.GetStringValue(_src_info, "date");
+            info[4] = StrTools.GetStringValue(_src_info, "\"date\"");
 
             return info;
         }
