@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -47,6 +48,10 @@ namespace imgLoader_CLI
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt");
             }
+
+#if DEBUG
+            Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+#endif
 
             Console.WriteLine($"Current path: {Core.Route}\n");
 

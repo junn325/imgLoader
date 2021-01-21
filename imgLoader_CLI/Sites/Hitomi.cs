@@ -28,7 +28,9 @@ namespace imgLoader_CLI.Sites
                 var srcGall = wc.DownloadString(wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
 
                 _src_info = temp.Result;
-                _title =_src_info.Split("title\":\"")[1].Split('\"')[0];
+                if (_src_info == null) return;
+
+                _title = _src_info.Split("title\":\"")[1].Split('\"')[0];
 
                 for (var i = 1; i < srcGall.StrLen("/group/") + 1; i++) sb.Append(srcGall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
                 _group = sb.ToString();
@@ -37,6 +39,10 @@ namespace imgLoader_CLI.Sites
                 _artist = sb.ToString();
 
                 Number = mNumber;
+            }
+            catch (WebException ex)
+            {
+                if (ex.Message.Contains("404")) return;
             }
             catch
             {
@@ -122,7 +128,8 @@ namespace imgLoader_CLI.Sites
             }
 
             info[3] = sb.ToString().Trim();
-            info[4] = StrTools.GetStringValue(_src_info, "\"date\"");
+            if (!_src_info.Contains("\"date\"")) return info;
+            info[4] = StrTools.GetStringValue(_src_info, "date");
 
             return info;
         }

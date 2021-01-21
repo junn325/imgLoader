@@ -101,7 +101,7 @@ namespace imgLoader_CLI
                 if (val.Contains("artworks")) return val.Split('/')[2];
                 if (val.Contains("id=")) return val.Split("id=")[1];
             }
-            if (val.Contains("e-hentai")) return val.Split("/g/")[1].Remove(val.Split("/g/")[1].Length - 1);
+            if (val.Contains("e-hentai") || val.Contains("exhentai")) return val.Split("/g/")[1].Remove(val.Split("/g/")[1].Length - 1);
 
             return "";
         }
@@ -116,6 +116,13 @@ namespace imgLoader_CLI
             if (url.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase))  return new Hiyobi(mNumber);
             if (url.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase))  return new Hitomi(mNumber);
             if (url.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new EHentai(mNumber);
+            if (url.Contains("exhentai.org", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("\nThis program may not possible to download from exhentai.org.");
+                var temp = new Hitomi(mNumber.Contains('/') ? mNumber.Split('/')[0] : mNumber);
+                //var tempp = 
+                if (temp.IsValidated()) return temp;
+            }
 
             return null;
         }

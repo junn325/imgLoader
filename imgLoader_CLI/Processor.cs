@@ -109,7 +109,6 @@ namespace imgLoader_CLI
                             ? $@"{Core.Route}\{title}"
                             : $@"{Core.Route}\{title} ({artist})";
 
-                    Debug.Write(sw.Elapsed.Ticks);
                 }
                 catch
                 {
@@ -168,8 +167,8 @@ namespace imgLoader_CLI
                 {
                     Console.Write("\n Download failed.\n");
                 }
+                Debug.Write(sw.Elapsed.Ticks);
             }
-
             Stopping();
         }
 
