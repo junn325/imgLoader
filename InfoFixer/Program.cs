@@ -8,7 +8,6 @@ namespace imgL_Fixer
 {
     class Program
     {
-        //페이지수 0인것도 수정할것
         //todo: 작가명 제대로 안써진것들 수정
         private static void Main(string[] args)
         {
@@ -16,7 +15,6 @@ namespace imgL_Fixer
             var route = Console.ReadLine();
 
             ScanforNoInfo(route);
-            FixInfo(route);
         }
 
         private static void FixInfo(string route)
@@ -96,6 +94,7 @@ namespace imgL_Fixer
                 File.Delete(item);
                 Console.WriteLine($"Deleted: {item}");
                 File.WriteAllText(item, sb.ToString());
+                File.SetAttributes(item, FileAttributes.Hidden);
             }
 
         }

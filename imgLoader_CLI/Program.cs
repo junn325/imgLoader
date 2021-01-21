@@ -91,7 +91,7 @@ namespace imgLoader_CLI
                     else
                     {
                         if (string.Equals(read, "exit", StringComparison.OrdinalIgnoreCase)) break;
-                        if (string.Equals(read, "resetpath", StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(read, "path", StringComparison.OrdinalIgnoreCase))
                         {
                             Core.Route = "";
                             continue;
@@ -114,7 +114,7 @@ namespace imgLoader_CLI
 
                         if (string.Equals(read, "help", StringComparison.OrdinalIgnoreCase))
                         {
-                            Console.WriteLine("\nReset download path: \t\tResetPath\nCancel command: \t\tExit"); //\nSearch from indexed infos: \tSearch
+                            Console.WriteLine("\nReset download path: \t\tPath\nSearch from infos: \tSearch\nCancel command: \t\tExit"); //\nSearch from indexed infos: \tSearch
                             continue;
                         }
 
