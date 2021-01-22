@@ -58,7 +58,7 @@ namespace imgLoader_CLI.Sites
 
         public string[] ReturnInfo()
         {
-            string[] info = new string[5];
+            var info = new string[5];
 
             info[0] = _title;
             info[1] = $"{_artist}|{_group}";

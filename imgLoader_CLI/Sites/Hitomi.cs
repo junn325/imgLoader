@@ -35,6 +35,7 @@ namespace imgLoader_CLI.Sites
                 for (var i = 1; i < srcGall.StrLen("/group/") + 1; i++) sb.Append(srcGall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
                 _group = sb.ToString();
                 sb.Clear();
+
                 for (var i = 1; i < srcGall.StrLen("/artist/") + 1; i++) sb.Append(srcGall.Split("/artist/")[i].Split("</a>")[0].Split(">")[1]);
                 _artist = sb.ToString();
 
@@ -56,41 +57,47 @@ namespace imgLoader_CLI.Sites
         }
         public Dictionary<string, string> GetImgUrls()            //키: 이미지이름/값: 주소
         {
-            string[] js = _src_info.Split('{');
+            var js = _src_info.Split('{');
             var imgList = new Dictionary<string, string>();
 
-            for (int i = 2; i < js.Length; i++)
+            for (var i = 2; i < js.Length; i++)
             {
-                string Base = "";
+                var @base = "";
                 if (!js[i].Contains("hash")) continue;
-                string hash = StrTools.GetStringValue(js[i], "hash");
-                string name = StrTools.GetStringValue(js[i], "name");
-                string type;
 
+                var hash = StrTools.GetStringValue(js[i], "hash");
+                var name = StrTools.GetStringValue(js[i], "name");
+
+                string type;
                 if (js[i].Contains("haswebp\":1")) type = "webp";
                 else if (js[i].Contains("hasavif\":1")) type = "avif";
                 else
                 {
                     type = "images";
-                    Base = "b";
+                    @base = "b";
                 }
 
                 string ext;
-                if (type == "webp")
+                switch (type)
                 {
-                    ext = "webp";
-                    name = $"{name.Split('.')[0]}.webp";
-                }
-                else if (type == "avif")
-                {
-                    ext = "avif";
-                    name = $"{name.Split('.')[0]}.avif";
-                }
-                else ext = name.Split('.')[1];
+                    case "webp":
+                        ext = "webp";
+                        name = $"{name.Split('.')[0]}.webp";
+                        break;
 
-                string last = Regex.Replace(hash, "^.*(..)(.)$", "$2/$1/" + hash);
+                    case "avif":
+                        ext = "avif";
+                        name = $"{name.Split('.')[0]}.avif";
+                        break;
 
-                imgList.Add(name, $"https://{Subdomain_from_url(last, Base)}.hitomi.la/{type}/{last}.{ext}");
+                    default:
+                        ext = name.Split('.')[1];
+                        break;
+                }
+
+                var last = Regex.Replace(hash, "^.*(..)(.)$", "$2/$1/" + hash);
+
+                imgList.Add(name, $"https://{Subdomain_from_url(last, @base)}.hitomi.la/{type}/{last}.{ext}");
             }
 
             return imgList;
@@ -139,42 +146,22 @@ namespace imgLoader_CLI.Sites
             return Number != null;
         }
 
-        private string Subdomain_from_url(string url, string Base)
+        private string Subdomain_from_url(string url, string @base)
         {
             var retval = "a";
-
-            if (Base.Length != 0)
-            {
-                retval = Base;
-            }
-
             var frontendNum = 3;
-            const int parseBase = 16;           //진수
-
+            const int parseBase = 16;
             var regex = new Regex("[0-9a-f]\\/([0-9a-f]{2})\\/");
             var matches = regex.Match(url).Groups[1];
 
-            if (matches.Length == 0)
-            {
-                return "a";
-            }
+            if (@base.Length != 0) retval = @base;
+            if (matches.Length == 0) return "a";
 
-            if (!int.TryParse(matches.ToString(), NumberStyles.HexNumber, null, out _))
-            {
-                return retval;
-            }
+            if (!int.TryParse(matches.ToString(), NumberStyles.HexNumber, null, out _)) return retval;
 
-            int g = Convert.ToInt32(matches.ToString(), parseBase);
-
-            if (g < 0x30)
-            {
-                frontendNum = 2;
-            }
-
-            if (g < 0x09)
-            {
-                g = 1;
-            }
+            var g = Convert.ToInt32(matches.ToString(), parseBase);
+            if (g < 0x30) frontendNum = 2;
+            if (g < 0x09) g = 1;
 
             return (char)(97 + (g % frontendNum)) + retval;
         }

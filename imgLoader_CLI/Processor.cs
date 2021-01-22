@@ -171,10 +171,7 @@ namespace imgLoader_CLI
             _failed.Clear();
 
             var i = 0;
-            foreach (var item in urlList)
-            {
-                _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(item.Value, route, item.Key));
-            }
+            foreach (var item in urlList) _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(item.Value, route, item.Key));
         }
 
         private void ThrDownload(string uri, string route, string fileName)
@@ -213,7 +210,7 @@ namespace imgLoader_CLI
             using (var br = resp.GetResponseStream())
             {
                 int count;
-                byte[] buff = new byte[1024];
+                var buff = new byte[1024];
 
                 using var fs = new FileStream($"{route}\\{fileName}", FileMode.Create);
                 do

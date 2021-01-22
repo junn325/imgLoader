@@ -62,14 +62,14 @@ namespace imgLoader_CLI.Sites
 
         public Dictionary<string, string> GetImgUrls()
         {
-            string[] js = _src_cdn.Split('{');
+            var js = _src_cdn.Split('{');
             var imgList = new Dictionary<string, string>();
 
-            for (int i = 1; i < js.Length; i++)
+            for (var i = 1; i < js.Length; i++)
             {
                 if (!js[i].Contains("name")) continue;
 
-                string name = StrTools.GetStringValue(js[i], "name");
+                var name = StrTools.GetStringValue(js[i], "name");
                 imgList.Add(name, $"http://cdn.hiyobi.me/data/{Number}/{name}");
             }
 
@@ -78,14 +78,14 @@ namespace imgLoader_CLI.Sites
 
         public string GetTitle()
         {
-            return _title ?? throw new Exception("_title was Null");
+            return _title;
         }
 
         public string[] ReturnInfo()
         {
-            string[] info = new string[5];
+            var info = new string[5];
 
-            info[0] = _title ?? throw new Exception("_title was Null");
+            info[0] = _title;
             info[1] = $"{_artist}|{_group}";
             info[2] = _src_cdn.StrLen("name").ToString();
 
@@ -99,6 +99,7 @@ namespace imgLoader_CLI.Sites
 
             info[3] = sb.ToString().Trim();
             if (!_src_api.Contains("\"date\"")) return info;
+
             info[4] = StrTools.GetStringValue(_src_api, "date");
 
             return info;

@@ -19,7 +19,7 @@ namespace imgLoader_CLI.Sites
         private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
         private static readonly string[] Replace = { "", "", "", "" };
 
-        private readonly string _src_gall, _src_item, _src_data, _gall_id, _gall_token, _artist, _group, _title, _showKey;
+        private readonly string _src_gall, _src_data, _gall_id, _artist, _group, _title, _showKey;
 
         public string Number { get; }
 
@@ -35,9 +35,9 @@ namespace imgLoader_CLI.Sites
                 if (_src_gall == null) throw new Exception();
 
                 _gall_id = mNumber.Split('/')[0];
-                _gall_token = mNumber.Split('/')[1];
+                var gallToken = mNumber.Split('/')[1];
 
-                _src_data = XmlHttpRequest_Data(_api_url, _gall_id, _gall_token);
+                _src_data = XmlHttpRequest_Data(_api_url, _gall_id, gallToken);
 
                 _title = StrTools.GetStringValue(_src_data, "title");
 
@@ -49,8 +49,8 @@ namespace imgLoader_CLI.Sites
                 _artist = sb.ToString();
 
                 temp.Wait();
-                _src_item = temp.Result;
-                _showKey = _src_item.Split("var showkey=\"")[1].Split("\";")[0];
+                var srcItem = temp.Result;
+                _showKey = srcItem.Split("var showkey=\"")[1].Split("\";")[0];
 
                 Number = mNumber;
             }
@@ -124,13 +124,6 @@ namespace imgLoader_CLI.Sites
             return Number != null;
         }
 
-        //public void Dispose()
-        //{
-        //    Number = null;
-        //    _src_gall = null; _src_item = null; _src_data = null; _gall_id = null; _gall_token = null; _artist = null; _title = null; _showKey = null;
-
-        //    GC.SuppressFinalize(this);
-        //}
         private static async Task<string> XmlHttpRequest_ItemAsync(string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
             return await Task.Run(() => {
