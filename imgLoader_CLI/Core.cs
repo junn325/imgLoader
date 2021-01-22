@@ -12,8 +12,6 @@ namespace imgLoader_CLI
 {
     internal static class Core
     {
-        internal const byte FailRetry = 10;
-
         internal const string ProjectName = "imgLoader_CLI";
         internal const string TempRoute   = "ILCTempRout";
 

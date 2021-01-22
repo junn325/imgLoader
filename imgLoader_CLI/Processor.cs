@@ -50,15 +50,15 @@ namespace imgLoader_CLI
 
                     Console.WriteLine($"{site.GetType().Name}");
 
-                    Console.Write("Count: ");
+                    Console.Write("Count:\t");
                     imgList = site.GetImgUrls();
                     Console.WriteLine($"{imgList.Count} images");
 
-                    Console.Write("Title: ");
+                    Console.Write("Title:\t");
                     title = site.GetTitle();
                     Console.WriteLine($"{title}");
 
-                    Console.Write("Artist: ");
+                    Console.Write("Artist:\t");
 
                     artist = "N/A";
                     var sb = new StringBuilder();
