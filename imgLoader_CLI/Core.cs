@@ -12,7 +12,6 @@ namespace imgLoader_CLI
 {
     internal static class Core
     {
-        internal const byte WaitTime  = 25;
         internal const byte FailRetry = 10;
 
         internal const string ProjectName = "imgLoader_CLI";
@@ -118,7 +117,7 @@ namespace imgLoader_CLI
             if (url.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new EHentai(mNumber);
             if (url.Contains("exhentai.org", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("\nThis program may not possible to download from exhentai.org.");
+                Console.WriteLine("\nThis program may not possible to download from exhentai.org. Trying to download from Hitomi.la...");
                 var temp = new Hitomi(mNumber.Contains('/') ? mNumber.Split('/')[0] : mNumber);
                 //var tempp = 
                 if (temp.IsValidated()) return temp;

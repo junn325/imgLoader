@@ -13,10 +13,9 @@ namespace imgLoader_CLI
     {
         private readonly Dictionary<string, string> _failed = new Dictionary<string, string>();
 
-        private List<Task> _tasks;
+        private Task[] _tasks;
 
         private bool _stop;
-        private int _done;
         private byte _separator;
 
         internal void Initialize(string[] url)
@@ -79,7 +78,7 @@ namespace imgLoader_CLI
 
                             foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
                             {
-                                if (s?.Length == 0) continue;
+                                if (s.Length == 0) continue;
                                 sb.Append(s).Append(", ");
                             }
 
@@ -92,7 +91,7 @@ namespace imgLoader_CLI
                         {
                             foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
                             {
-                                if (s?.Length == 0) continue;
+                                if (s.Length == 0) continue;
                                 sb.Append(s).Append(", ");
                             }
 
@@ -125,7 +124,7 @@ namespace imgLoader_CLI
                     else
                     {
                         Console.WriteLine("\nAlready exists. Download again? Y/N");
-                        a: string result = Console.ReadLine().ToLower();
+                        a: var result = Console.ReadLine()?.ToLower();
                         if (result == "n") continue;
                         if (result != "y") goto a;
                     }
@@ -142,20 +141,15 @@ namespace imgLoader_CLI
                     continue;
                 }
 
-                _done = 0;
 
-                _tasks = new List<Task>();
+                _tasks = new Task[imgList.Count];
 
                 Console.Write("\n[");
                 AllocDown(route, imgList);
 
-                while (_done < imgList.Count - _failed.Count) Thread.Sleep(Core.WaitTime * 2);
-
-                _done = 0;
+                foreach (var task in _tasks) task.Wait();
 
                 var success = HandleFail(route);
-                while (_done < _failed.Count) Thread.Sleep(Core.WaitTime * 2);
-                foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WaitTime);
 
                 Core.Log($"Item:Complete: {link}");
                 if (success)
@@ -176,9 +170,10 @@ namespace imgLoader_CLI
         {
             _failed.Clear();
 
+            var i = 0;
             foreach (var item in urlList)
             {
-                _tasks.Add(Task.Factory.StartNew(() => ThrDownload(item.Value, route, item.Key)));
+                _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(item.Value, route, item.Key));
             }
         }
 
@@ -252,7 +247,6 @@ namespace imgLoader_CLI
             }
 
             _separator++;
-            _done++;
             req.Abort();
             resp.Close();
         }
@@ -262,23 +256,14 @@ namespace imgLoader_CLI
             if (_failed.Count == 0) return true;
 
             var failCopy = new Dictionary<string, string>(_failed);
-
             AllocDown(route, failCopy);
 
-            int wait = Core.FailRetry * 60;
-            while (_done < failCopy.Count - _failed.Count && wait != 0)
-            {
-                wait--;
-                Thread.Sleep(Core.WaitTime);
-            }
+            foreach (var task in _tasks) task.Wait();
 
-            while (_failed.Count != 0)
-            {
-                Thread.Sleep(Core.WaitTime * 40);
-                HandleFail(route);
-            }
+            if (_failed.Count != 0) HandleFail(route);
 
             _failed.Clear();
+
             return true;
         }
 
@@ -291,10 +276,10 @@ namespace imgLoader_CLI
                 if (_tasks == null) return;
 
                 _stop = true;
-                foreach (var item in _tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WaitTime);
+                foreach (var task in _tasks) task.Wait();
                 _stop = false;
 
-                _tasks.Clear();
+                _tasks = null;
             }).Start();
         }
 
