@@ -1,205 +1,170 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 using imgLoader.Sites;
 
 namespace imgLoader
 {
     internal static class Core
     {
-        internal const byte COLUMN_WIDTH = 45;
-        internal const byte WAIT_TIME    = 25; //밀리세컨드
-        internal const byte FAIL_RETRY   = 10;
+        internal const string ProjectName = "imgLoader_CLI";
+        internal const string TempRoute   = "ILCTempRout";
 
-        internal const string PROJECT_NAME = "imgLoader";
-        internal const string TEMP_ROUTE   = "ILTempRout";
+        private const string LogDir  = "ILLOG";
+        private const string LogFile = "ILLG";
 
-        private const string LOG_DIR = "ILLOG";
-        private const string LOG_FILE = "ILLG";
+        private static readonly string[] DFilter  = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
+        private static readonly string[] DReplace = { "[", "]", "│", "：", "？", "″", "˂", "˃", "／", "∗", "…" };
 
-        private static readonly string[] DFILTER = { "(", ")", "|", ":", "?", @"""", "<", ">", "/", "*" };
-        private static readonly string[] DREPLACE = { "[", "]", ";", "-", "", "''", "[", "]", "", "" };
-        internal static List<string> prevAddress = new List<string>(5);
-
-        private static readonly List<ListViewItem> LvItem = new List<ListViewItem>();
+        internal const byte ColumnWidth = 45;
+        internal static List<string> PrevAddress = new List<string>(5);
 
         internal static string Route = "";
 
         internal static void Log(string content)
         {
             new Thread(() => {
-                if (!Directory.Exists(Path.GetTempPath() + @$"\{LOG_DIR}"))
-                {
-                    Directory.CreateDirectory(Path.GetTempPath() + @$"\{LOG_DIR}");
-                }
+                var sb = new StringBuilder(Path.GetTempPath());
+                sb.Append('\\').Append(LogDir);
+
+                if (!Directory.Exists(sb.ToString())) Directory.CreateDirectory(sb.ToString());
 
                 var temp = false;
                 FileStream file = null;
+                sb.Append('\\').Append(LogFile).Append('_').Append(DateTime.Now.ToString("yyyy-MM-dd")).Append(".txt");
 
                 while (!temp)
                 {
                     try
                     {
-                        file = new FileStream(Path.GetTempPath() + @$"\{LOG_DIR}\{LOG_FILE}_" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt", FileMode.Append, FileAccess.Write);
+                        file = new FileStream(sb.ToString(), FileMode.Append, FileAccess.Write);
                         temp = true;
                     }
                     catch
                     {
                         temp = false;
                     }
-
-                    Thread.Sleep(WAIT_TIME);
                 }
 
-                using StreamWriter sw = new StreamWriter(file);
-                sw.WriteLine("[" + DateTime.Now.ToString("HH:mm:ss") + "] " + content);
+                using var sw = new StreamWriter(file);
+                sb.Clear();
+                sb.Append('[').Append(DateTime.Now.ToString("HH:mm:ss")).Append(']').Append(content);
+                sw.WriteLine(sb.ToString());
             }).Start();
         }
 
-        internal static void CreateInfo(string baseRoute, string mNumber, ISite site)
+        internal static void CreateInfo(string infoRoute, ISite site)
         {
-            string fileName = $"{baseRoute}\\{mNumber}.{site.GetType().Name.ToLower()}";
-            FileInfo file = new FileInfo(fileName);
+            if (!Directory.Exists(Path.GetDirectoryName(infoRoute))) throw new DirectoryNotFoundException();
+            if (site == null) throw new NullReferenceException("\"site\" is null.");
 
-            if (file.Exists)                                                                        //총 이미지 장수 넣기
+            var file = new FileInfo(infoRoute);
+            if (file.Exists && (file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
+
+            using var sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
+            var info = site.ReturnInfo();
+            for (var i = 0; i < info.Length; i++)
             {
-                file.Attributes &= ~FileAttributes.Hidden;
-            }
-            using StreamWriter sw = new StreamWriter(new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
-
-            foreach (var item in site.ReturnInfo())
-            {
-                sw.WriteLine(item);
+                sw.Write(
+                    i != info.Length - 1
+                        ? info[i] + '\n'
+                        : info[i]
+                        );
             }
 
-            File.SetAttributes(fileName, FileAttributes.Hidden);
+            File.SetAttributes(infoRoute, FileAttributes.Hidden);
         }
 
         internal static string DirFilter(string dirName)
         {
-            for (byte i = 0; i < DFILTER.Length; i++)
-            {
-                if (dirName.Contains(DFILTER[i]))
-                {
-                    dirName = dirName.Replace(DFILTER[i], DREPLACE[i]);
-                }
-            }
+            for (byte i = 0; i < DFilter.Length; i++)
+                if (dirName.Contains(DFilter[i]))
+                    dirName = dirName.Replace(DFilter[i], DReplace[i]);
 
             return dirName;
-        }
-        internal static void ControlLock(List<Control> econtrol)
-        {
-            foreach (var item in econtrol)
-            {
-                item.Enabled = false;
-            }
-        }
-
-        internal static void ControlUnlock(List<Control> econtrol)
-        {
-            foreach (var item in econtrol)
-            {
-                if (item.InvokeRequired)
-                {
-                    item.BeginInvoke(new Action(() => item.Enabled = true));
-                }
-                else
-                {
-                    item.Enabled = true;
-                }
-            }
         }
 
         internal static string GetNumber(string url)
         {
             var val = url.Contains("//") ? url.Split("//")[1] : url;
 
-            if (val.Contains("hitomi")) return val.Split('/')[2].Split(".html")[0];
-
-            if (val.Contains("hiyobi"))
-            {
-                if (val.Contains("#"))
-                {
-                    return val.Split('/')[2].Split('#')[0];
-                }
-                return val.Split('/')[2];
-            }
-
+            if (val.Contains("hitomi")) return val.Contains("-") ? val.Split('-').Last().Split('.')[0] : val.Split('/')[2].Split(".html")[0];
+            if (val.Contains("hiyobi")) return val.Contains("#") ? val.Split('/')[2].Split('#')[0] : val.Split('/')[2];
             if (val.Contains("nhentai")) return val.Split('/')[2];
             if (val.Contains("pixiv"))
             {
                 if (val.Contains("artworks")) return val.Split('/')[2];
                 if (val.Contains("id=")) return val.Split("id=")[1];
             }
+            if (val.Contains("e-hentai") || val.Contains("exhentai")) return val.Split("/g/")[1].Remove(val.Split("/g/")[1].Length - 1);
 
             return "";
         }
 
-        internal static void SearchListView(ListView listview, KeyEventArgs e, TextBox text)
+        internal static ISite LoadSite(string url)
         {
-            if (e.KeyCode != Keys.Enter) return;
-            e.SuppressKeyPress = true;
-
-            foreach (ListViewItem item in from item in listview.Items.Cast<ListViewItem>()
-                                          where item.SubItems[1].Text.IndexOf(text.Text, StringComparison.OrdinalIgnoreCase) < 0
-                                          orderby item.Text
-                                          select item)
-            {
-                LvItem.Add(item);
-                item.Remove();
-            }
-        }
-
-        internal static void RestoreSearch(ListView listview, TextBox textbox)
-        {
-            if (LvItem == null) return;
-            if (textbox.TextLength > 0) return;
-
-            foreach (ListViewItem item in LvItem)
-            {
-                listview.Items.Add(item);
-            }
-
-            listview.ListViewItemSorter = new ListViewItemComparer();
-            listview.Sort();
-        }
-
-        internal static ISite LoadSite(string link)
-        {
-            string mNumber = GetNumber(link);
-
+            var mNumber = GetNumber(url);
             if (mNumber.Length == 0) return null;
 
-            if (link.Contains("hiyobi.me")) return new hiyobi(mNumber);
-            if (link.Contains("hitomi.la")) return new Hitomi(mNumber);
-            if (link.Contains("pixiv")) return new pixiv(mNumber);
-            if (link.Contains("nhentai.net")) return new nhentai(mNumber);
+            if (url.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase))  return new NHentai(mNumber);
+            if (url.Contains("pixiv", StringComparison.OrdinalIgnoreCase))        return new Pixiv(mNumber);
+            if (url.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase))  return new Hiyobi(mNumber);
+            if (url.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase))  return new Hitomi(mNumber);
+            if (url.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new EHentai(mNumber);
+            if (url.Contains("exhentai.org", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("\nThis program may not possible to download from exhentai.org. Trying to download from Hitomi.la...");
+                var temp = new Hitomi(mNumber.Contains('/') ? mNumber.Split('/')[0] : mNumber);
+                //var tempp = 
+                if (temp.IsValidated()) return temp;
+            }
 
             return null;
         }
-    }
 
-    internal class ListViewItemComparer : IComparer
-    {
-        private readonly int _col;
-        public ListViewItemComparer()
+        internal static Dictionary<string, string> Index(string route)
         {
-            _col = 0;
+            var infoFiles = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories)
+                .Where(s => s.EndsWith(".Hitomi") || s.EndsWith(".Hiyobi") || s.EndsWith(".NHentai") || s.EndsWith("EHentai")).ToArray();
+
+            var infos = new Dictionary<string, string>(infoFiles.Length);
+            var tasks = new Task[infoFiles.Length];
+
+            for (var i = 0; i < infoFiles.Length; i++)
+            {
+                var info = infoFiles[i];
+                tasks[i] = Task.Factory.StartNew(() => infos.Add(info, File.ReadAllText(info)));
+            }
+
+            foreach (var t in tasks) t.Wait();
+
+            return infos;
         }
-        public ListViewItemComparer(int column)
+        internal static void Search(Dictionary<string, string> index, string search, string route)
         {
-            _col = column;
-        }
-        public int Compare(object x, object y)
-        {
-            //return String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
-            return (int.Parse(((ListViewItem)x).Text) > int.Parse(((ListViewItem)y).Text)) ? 1 : -1;
+            var searchResult = new Dictionary<string, string>(index);
+            foreach (var item in index)
+            {
+                foreach (var srch in search.Split(','))
+                {
+                    if (!item.Value.Contains(srch, StringComparison.OrdinalIgnoreCase))
+                    {
+                        searchResult.Remove(item.Key);
+                    }
+                }
+            }
+
+            foreach (var item in searchResult)
+            {
+                Console.WriteLine(item.Key.Replace(route, "%BaseDir%").Replace($"\\{item.Key.Split('\\').Last()}", "").Insert(10, " "));
+            }
+
+            Console.WriteLine($"{searchResult.Count} results");
+            Console.WriteLine(new string('=', 100));
         }
     }
-
 }

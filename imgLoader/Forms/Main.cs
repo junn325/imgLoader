@@ -44,13 +44,13 @@ namespace imgLoader.Forms
 
         private void Main_Load(object sender, EventArgs e)
         {
-            Text = Core.PROJECT_NAME;
+            Text = Core.ProjectName;
 
-            listView1.Columns[0].Width = Core.COLUMN_WIDTH;
+            listView1.Columns[0].Width = Core.ColumnWidth;
 
-            if (File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt")))
+            if (File.Exists($"{Path.GetTempPath()}{Core.TempRoute}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt")))
             {
-                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt");
+                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt");
             }
         }
 
@@ -255,26 +255,6 @@ namespace imgLoader.Forms
             _done++;
         }
 
-        private void HandleFail(string route)
-        {
-            if (failed.Count == 0) return;
-
-            int cnt = Core.FAIL_RETRY;
-            var failCopy = new Dictionary<string, string>(failed);
-
-            AllocDown(route, failCopy);
-
-            while (_done < failCopy.Count - failed.Count) Thread.Sleep(Core.WAIT_TIME);
-
-            while (failed.Count != 0 && cnt > 0)
-            {
-                cnt--;
-                HandleFail(route);
-            }
-
-            failed.Clear();
-        }
-
         private void Stopping()
         {
             new Thread(() =>
@@ -370,7 +350,7 @@ namespace imgLoader.Forms
             if (e.KeyCode == Keys.Enter)
             {
                 string address = textBox1.Text, title;
-                Core.prevAddress.Add(address);
+                Core.PrevAddress.Add(address);
 
                 textBox1.Text = "";
                 e.SuppressKeyPress = true;
@@ -406,8 +386,8 @@ namespace imgLoader.Forms
             }
             else if (e.KeyCode == Keys.Up)
             {
-                if (Core.prevAddress.Count == 0) return;
-                textBox1.Text = Core.prevAddress[^1];
+                if (Core.PrevAddress.Count == 0) return;
+                textBox1.Text = Core.PrevAddress[^1];
             }
         }
 

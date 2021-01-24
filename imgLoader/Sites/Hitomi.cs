@@ -9,92 +9,95 @@ namespace imgLoader.Sites
 {
     public class Hitomi : ISite
     {
-        public static string[] Supplement = {
-            "reader"
-        };
+        public const string Supplement = "hitomi.la/reader/\\n\\.html";
+        public string Number { get; }
 
-        public static string Host = "hitomi.la";
+        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
+        private static readonly string[] Replace = { "", "", "", "" };
 
-        private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] REPLACE = { "", "", "", "" };
-
-        private readonly string _source;
-        private readonly string _number;
-        private string _artist;
+        private readonly string _src_info, _artist, _group, _title;
 
         public Hitomi(string mNumber)
         {
-            var wc = new WebClient();
-            wc.Encoding = Encoding.UTF8;
+            var wc = new WebClient {Encoding = Encoding.UTF8};
+            var sb = new StringBuilder();
 
             try
             {
-                _source = wc.DownloadString($"https://ltn.hitomi.la/galleries/{mNumber}.js");
+                var temp = StrLoad.LoadAsync($"https://ltn.hitomi.la/galleries/{mNumber}.js");
+                var srcGall = wc.DownloadString(wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
 
+                _src_info = temp.Result;
+                if (_src_info == null) return;
+
+                _title = _src_info.Split("title\":\"")[1].Split('\"')[0];
+
+                for (var i = 1; i < srcGall.StrLen("/group/") + 1; i++) sb.Append(srcGall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
+                _group = sb.ToString();
+                sb.Clear();
+
+                for (var i = 1; i < srcGall.StrLen("/artist/") + 1; i++) sb.Append(srcGall.Split("/artist/")[i].Split("</a>")[0].Split(">")[1]);
+                _artist = sb.ToString();
+
+                Number = mNumber;
             }
-            catch (Exception ex)
+            catch (WebException ex)
             {
-                return;
+                if (ex.Message.Contains("404")) return;
             }
-            _number = mNumber;
+            catch
+            {
+                throw new Exception("failed to initiate");
+            }
         }
 
         public string GetArtist()
         {
-            try
-            {
-                WebClient wc = new WebClient();
-                wc.Encoding = Encoding.UTF8;
-
-                string temp = wc.DownloadString($"https://hitomi.la/galleries/{_number}.html");
-                string source = wc.DownloadString(temp.Split("window.location.href = \"")[1].Split('\"')[0]);
-
-                _artist = source.Split("/artist/")[1].Split("</a>")[0].Split(">")[1];
-                return _artist;
-            }
-            catch (Exception ex)
-            {
-                return "N/A";
-            }
+            return $"{_artist}|{_group}";
         }
-
         public Dictionary<string, string> GetImgUrls()            //키: 이미지이름/값: 주소
         {
-            string[] js = _source.Split('{');
+            var js = _src_info.Split('{');
             var imgList = new Dictionary<string, string>();
 
-            for (int i = 2; i < js.Length - 1; i++)
+            for (var i = 2; i < js.Length; i++)
             {
-                string Base = "";
+                var @base = "";
                 if (!js[i].Contains("hash")) continue;
-                string hash = StrTools.GetStringValue(js[i], "hash");
-                string name = StrTools.GetStringValue(js[i], "name");
-                string type;
 
+                var hash = StrTools.GetStringValue(js[i], "hash");
+                var name = StrTools.GetStringValue(js[i], "name");
+
+                string type;
                 if (js[i].Contains("haswebp\":1")) type = "webp";
                 else if (js[i].Contains("hasavif\":1")) type = "avif";
                 else
                 {
                     type = "images";
-                    Base = "b";
+                    @base = "b";
                 }
 
                 string ext;
-                if (type == "webp")
+                switch (type)
                 {
-                    ext = "webp";
-                    name = $"{name.Split('.')[0]}.webp";
-                }
-                else if (type == "avif")
-                {
-                    ext = "avif";
-                    name = $"{name.Split('.')[0]}.avif";
-                }
-                else ext = name.Split('.')[1];
+                    case "webp":
+                        ext = "webp";
+                        name = $"{name.Split('.')[0]}.webp";
+                        break;
 
-                string last = Regex.Replace(hash, "^.*(..)(.)$", "$2/$1/" + hash);
+                    case "avif":
+                        ext = "avif";
+                        name = $"{name.Split('.')[0]}.avif";
+                        break;
 
-                imgList.Add(name, $"https://{Subdomain_from_url(last, Base)}.hitomi.la/{type}/{last}.{ext}");
+                    default:
+                        ext = name.Split('.')[1];
+                        break;
+                }
+
+                var last = Regex.Replace(hash, "^.*(..)(.)$", "$2/$1/" + hash);
+
+                imgList.Add(name, $"https://{Subdomain_from_url(last, @base)}.hitomi.la/{type}/{last}.{ext}");
             }
 
             return imgList;
@@ -102,85 +105,63 @@ namespace imgLoader.Sites
 
         public string GetTitle()
         {
-            return Filter(_source.Split("title\":\"")[1].Split('\"')[0]);
+            return _title;
         }
 
         public string[] ReturnInfo()
         {
-            string[] info = new string[5];
+            var info = new string[5];
 
-            info[0] = StrTools.GetStringValue(_source, "title");
-            info[1] = _artist ?? "N/A";
-            info[2] = _source.StrLen("hash").ToString();
+            info[0] = _title;
+            info[1] = $"{_artist}|{_group}";
+            info[2] = _src_info.StrLen("hash").ToString();
 
-            StringBuilder temp = new StringBuilder();
-            foreach (string item in StrTools.GetStringValue(_source, "tags", '[', ']').Split('{'))
+            var sb = new StringBuilder();
+            sb.Append("tags:");
+            foreach (var item in StrTools.GetValue(_src_info, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
+                var temp = item.Split('}')[0];
 
-                temp.Append(item.Split('}')[0] + '\n');
+                sb.Append(
+                        temp.Contains("female")
+                            ? (StrTools.GetValue(temp, "female") == "1")
+                                ? "female"
+                                : "male"
+                            : "tag"
+                        )
+                    .Append(':')
+                    .Append(StrTools.GetStringValue(item.Split('}')[0], "tag")).Append(';');
             }
 
-            info[3] = temp.ToString().Trim();
-            info[4] = StrTools.GetStringValue(_source, "date");
+            info[3] = sb.ToString().Trim();
+            if (!_src_info.Contains("\"date\"")) return info;
+            info[4] = StrTools.GetStringValue(_src_info, "date");
 
             return info;
         }
 
         public bool IsValidated()
         {
-            return _number != null;
+            return Number != null;
         }
 
-        public static string Filter(string dirName)
-        {
-            for (byte i = 0; i < FILTER.Length; i++)
-            {
-                if (dirName.Contains(FILTER[i]))
-                {
-                    dirName = dirName.Replace(FILTER[i], REPLACE[i]);
-                }
-            }
-
-            return dirName;
-        }
-
-        private string Subdomain_from_url(string url, string Base)
+        private string Subdomain_from_url(string url, string @base)
         {
             var retval = "a";
-
-            if (Base.Length != 0)
-            {
-                retval = Base;
-            }
-
             var frontendNum = 3;
-            const int parseBase = 16;                          //몇진수인지 표시
-
+            const int parseBase = 16;
             var regex = new Regex("[0-9a-f]\\/([0-9a-f]{2})\\/");
             var matches = regex.Match(url).Groups[1];
 
-            if (matches.Length == 0)
-            {
-                return "a";
-            }
+            if (@base.Length != 0) retval = @base;
+            if (matches.Length == 0) return "a";
 
-            if (!int.TryParse(matches.ToString(), NumberStyles.HexNumber, null, out _))
-            {
-                return retval;
-            }
+            if (!int.TryParse(matches.ToString(), NumberStyles.HexNumber, null, out _)) return retval;
 
-            int g = Convert.ToInt32(matches.ToString(), parseBase);
-
-            if (g < 0x30)
-            {
-                frontendNum = 2;
-            }
-
-            if (g < 0x09)
-            {
-                g = 1;
-            }
+            var g = Convert.ToInt32(matches.ToString(), parseBase);
+            if (g < 0x30) frontendNum = 2;
+            if (g < 0x09) g = 1;
 
             return (char)(97 + (g % frontendNum)) + retval;
         }

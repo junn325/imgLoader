@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace imgLoader
+﻿namespace imgLoader
 {
     internal static class StrTools
     {
@@ -17,24 +15,36 @@ namespace imgLoader
         /// </summary>
         public static int StrLen(this string input, string find)
         {
-            return input.Split(new string[] { find }, StringSplitOptions.None).Length - 1;
+            return input.Split(find).Length - 1;
         }
 
+        /// <summary>
+        ///  "{name}":"(data)"
+        /// </summary>
         public static string GetStringValue(string source, string name)
         {
             return source.Split($"\"{name}\":\"")[1].Split('\"')[0];
         }
 
-        public static string GetStringValue(string source, string name, char separator)
+        /// <summary>
+        ///  "{name}":{separator}(data){separator}
+        /// </summary>
+        public static string GetValue(string source, string name, char separator)
         {
             return source.Split($"\"{name}\":{separator}")[1].Split(separator)[0];
         }
 
-        public static string GetStringValue(string source, string name, char firstSeparator, char lastSeparator)
+        /// <summary>
+        ///  "{name}":{fSeparator}(data){lSeparator}
+        /// </summary>
+        public static string GetValue(string source, string name, char firstSeparator, char lastSeparator)
         {
             return source.Split($"\"{name}\":{firstSeparator}")[1].Split(lastSeparator)[0];
         }
 
+        /// <summary>
+        ///  "{name}":(data),
+        /// </summary>
         public static string GetValue(string source, string name)
         {
             return source.Split($"\"{name}\":")[1].Split(',')[0];
