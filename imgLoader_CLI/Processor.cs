@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -44,7 +45,7 @@ namespace imgLoader_CLI
 
                     if (site?.IsValidated() != true)
                     {
-                        Console.Write("Error: Failed to load\n"); 
+                        Console.Write("Error: Failed to load\n");
                         continue;
                     }
 
@@ -65,11 +66,11 @@ namespace imgLoader_CLI
 
                     if (site.GetArtist() != "|")
                     {
-                        if (site.GetArtist().Split('|')[0] != string.Empty)
+                        if (!string.Equals(site.GetArtist().Split('|')[0], "", StringComparison.OrdinalIgnoreCase))
                         {
                             foreach (var s in site.GetArtist().Split('|')[0].Split(';'))
                             {
-                                if (s?.Length == 0) continue;
+                                if (s.Length == 0) continue;
                                 sb.Append(s).Append(", ");
                             }
                             artist = sb.ToString().Substring(0, sb.Length - 2);
@@ -107,7 +108,6 @@ namespace imgLoader_CLI
                         artist == "N/A"
                             ? $@"{Core.Route}\{title}"
                             : $@"{Core.Route}\{title} ({artist})";
-
                 }
                 catch
                 {
@@ -161,7 +161,7 @@ namespace imgLoader_CLI
                 {
                     Console.Write("\n Download failed.\n");
                 }
-                Debug.Write(sw.Elapsed.Ticks);
+                Debug.Write("\n\n" + sw.Elapsed.Ticks + "\n");
             }
             Stopping();
         }
@@ -184,6 +184,7 @@ namespace imgLoader_CLI
             var req = WebRequest.Create(uri) as HttpWebRequest;
             HttpWebResponse resp;
 
+            if (req == null) return;
             req.Referer = $"https://{new Uri(uri).Host}";
             req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36";
 
@@ -200,12 +201,18 @@ namespace imgLoader_CLI
                     return;
                 }
 
-                Core.Log($"Fail:{(we.Response as HttpWebResponse).StatusCode}: {uri} {fileName}");
+                Core.Log($"Fail:{((HttpWebResponse)we.Response).StatusCode}: {uri} {fileName}");
                 _failed.Add(fileName, uri);
                 return;
             }
 
             long fileSize;
+
+            if (resp == null)
+            {
+                _failed.Add(fileName, uri);
+                return;
+            }
 
             using (var br = resp.GetResponseStream())
             {
@@ -217,7 +224,6 @@ namespace imgLoader_CLI
                 {
                     count = br.Read(buff, 0, buff.Length);
                     fs.Write(buff, 0, count);
-
                 } while (count > 0);
 
                 fileSize = fs.Length;
@@ -225,6 +231,9 @@ namespace imgLoader_CLI
 
             if (fileSize == resp.ContentLength)
             {
+                _separator++;
+                Console.Write("■");
+
                 switch (_separator)
                 {
                     case 50:
@@ -235,15 +244,12 @@ namespace imgLoader_CLI
                         _separator = 0;
                         break;
                 }
-
-                Console.Write("■");
             }
             else
             {
                 _failed.Add(fileName, uri);
             }
 
-            _separator++;
             req.Abort();
             resp.Close();
         }

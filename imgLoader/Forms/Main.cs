@@ -18,7 +18,8 @@ namespace imgLoader.Forms
     //todo: 작가별 트리식 정렬
     //todo: 작가/태그 분포, 주로 보는 작품 등 분석 기능
     //todo: 여러 폴더를 지정해 동시에 관리
-                                       //todo: 특정 이미지 숨기기(삭제x)
+    //todo: 특정 이미지 숨기기(삭제x)
+    //todo: 아무 값 없는 분류(그냥 빨주노초파남보) 분류 기능
     public partial class Main : Form
     {
         internal const string InitString_Item  = "0개 항목";
