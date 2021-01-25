@@ -63,7 +63,6 @@ namespace imgLoader.Forms
                 progAll.Invoke(new Action(() => progAll.Style = ProgressBarStyle.Marquee));
 
                 Thread thStop = new Thread(Stopping);
-                long millisec = sw.ElapsedMilliseconds;
 
                 foreach (var link in url)
                 {
@@ -79,26 +78,20 @@ namespace imgLoader.Forms
                         //todo: AddUrl에서 이미 로드했으므로 ListViewItem에서 모든 정보를 받아와 진행할 것
                         //todo: column이 없는 SubItem에 추가하여 숨겨진 정보로 처리할 것
 
-                        Trace.WriteLine($"BeforeNewSite: {sw.ElapsedMilliseconds - millisec}ms");
-                        millisec = sw.ElapsedMilliseconds;
-
                         site = Core.LoadSite(link.Value);
                         if (site?.IsValidated() != true) { MessageBox.Show("오류: 로드 실패"); return; }
 
-                        Trace.WriteLine($"BeforeGetList: {sw.ElapsedMilliseconds - millisec}ms"); millisec = sw.ElapsedMilliseconds;
 
                         toolStrip_lblStatus.Text = "이미지 리스트 추출";
                         progAll.Invoke(new Action(() => progAll.Value = 0));
                         toolStrip_lblTotalNum.Text = $"{ushort.Parse(toolStrip_lblTotalNum.Text.Split('/')[0]) + 1}/{url.Count}";
                         imgList = site.GetImgUrls();
-                        Trace.WriteLine($"GetImgUrls: {sw.ElapsedMilliseconds - millisec}ms"); millisec = sw.ElapsedMilliseconds;
 
                         progAll.Invoke(new Action(() => progAll.Maximum = imgList.Count));
                         toolStrip_lblItemNum.Text = $"0/{imgList.Count}";
 
                         toolStrip_lblStatus.Text = "작가명 추출";
                         artist = site.GetArtist();
-                        Trace.WriteLine($"GetArtist: {sw.ElapsedMilliseconds - millisec}ms"); millisec = sw.ElapsedMilliseconds;
 
                         if (!Properties.Settings.Default.bookTitle)
                         {
@@ -109,7 +102,6 @@ namespace imgLoader.Forms
                         {
                             title = link.Key;
                         }
-                        Trace.WriteLine($"GetTitle: {sw.ElapsedMilliseconds - millisec}ms"); millisec = sw.ElapsedMilliseconds;
 
                         route =
                             artist == "N/A"

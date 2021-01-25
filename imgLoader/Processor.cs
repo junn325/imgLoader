@@ -14,155 +14,294 @@ namespace imgLoader
         private readonly Dictionary<string, string> _failed = new Dictionary<string, string>();
 
         private Task[] _tasks;
+        private ISite _site;
+
+        private Dictionary<string, string> _imgList;
 
         private bool _stop;
         private byte _separator;
+       
+        private string _url, _artist, _title, _route;
 
-        internal void Initialize(string[] url)
+
+        internal string Initialize(string url)
         {
-            Console.Write('\n');
-            Process(url);
+            if (string.IsNullOrEmpty(url)) return "urlNull";
+
+            _url = url;
+
+            Process(_url);
+
+            Stopping();
+            return null;
         }
 
-        private void Process(string[] url)
+        private string Load()
         {
-            foreach (var link in url)
+            try
             {
-                if (string.IsNullOrEmpty(link)) continue;
+                _site = Core.LoadSite(_url);
 
-                ISite site;
-                Dictionary<string, string> imgList;
-
-                var sw = new Stopwatch();
-                sw.Start();
-
-                string artist, title, route;
-                try
+                if (_site?.IsValidated() != true)
                 {
-                    Console.Write("Load info: ");
-                    site = Core.LoadSite(link);
+                    return "FailLoad";
+                }
 
-                    if (site?.IsValidated() != true)
+                _imgList = _site.GetImgUrls();
+                _title = _site.GetTitle();
+                _artist = "N/A";
+
+                return null;
+            }
+            catch
+            {
+                return "ConnectionFail";
+            }
+        }
+
+        private void GetArtist()
+        {
+            var sb = new StringBuilder();
+
+            if (_site.GetArtist() != "|")
+            {
+                if (_site.GetArtist().Split('|')[0].Length != 0)
+                {
+                    foreach (var s in _site.GetArtist().Split('|')[0].Split(';'))
                     {
-                        Console.Write("Error: Failed to load\n");
-                        continue;
+                        if (s.Length == 0) continue;
+                        sb.Append(s).Append(", ");
+                    }
+                    _artist = sb.ToString().Substring(0, sb.Length - 2);
+
+                    sb.Clear();
+
+                    foreach (var s in _site.GetArtist().Split('|')[1].Split(';'))
+                    {
+                        if (s.Length == 0) continue;
+                        sb.Append(s).Append(", ");
                     }
 
-                    Console.WriteLine($"{site.GetType().Name}");
-
-                    Console.Write("Count:\t");
-                    imgList = site.GetImgUrls();
-                    Console.WriteLine($"{imgList.Count} images");
-
-                    Console.Write("Title:\t");
-                    title = site.GetTitle();
-                    Console.WriteLine($"{title}");
-
-                    Console.Write("Artist:\t");
-
-                    artist = "N/A";
-                    var sb = new StringBuilder();
-
-                    if (site.GetArtist() != "|")
-                    {
-                        if (!string.Equals(site.GetArtist().Split('|')[0], "", StringComparison.OrdinalIgnoreCase))
-                        {
-                            foreach (var s in site.GetArtist().Split('|')[0].Split(';'))
-                            {
-                                if (s.Length == 0) continue;
-                                sb.Append(s).Append(", ");
-                            }
-                            artist = sb.ToString().Substring(0, sb.Length - 2);
-
-                            sb.Clear();
-
-                            foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
-                            {
-                                if (s.Length == 0) continue;
-                                sb.Append(s).Append(", ");
-                            }
-
-                            artist =
-                                sb.Length != 0
-                                    ? $"{artist} ({sb.ToString().Substring(0, sb.Length - 2)})"
-                                    : artist;
-                        }
-                        else
-                        {
-                            foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
-                            {
-                                if (s.Length == 0) continue;
-                                sb.Append(s).Append(", ");
-                            }
-
-                            artist = sb.ToString().Substring(0, sb.Length - 2);
-                        }
-                    }
-
-                    Console.WriteLine($"{artist}");
-
-                    title = Core.DirFilter(title);
-
-                    route =
-                        artist == "N/A"
-                            ? $@"{Core.Route}\{title}"
-                            : $@"{Core.Route}\{title} ({artist})";
-                }
-                catch
-                {
-                    Console.Write("Error: Connection failed\n");
-                    continue;
-                }
-
-                try
-                {
-                    var temp = Core.GetNumber(link);
-                    var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{site.GetType().Name}";
-
-                    if (!Directory.Exists(route)) Directory.CreateDirectory(route);
-                    else
-                    {
-                        Console.WriteLine("\nAlready exists. Download again? Y/N");
-                        a: var result = Console.ReadLine()?.ToLower();
-                        if (result == "n") continue;
-                        if (result != "y") goto a;
-                    }
-                    Core.CreateInfo(infoRoute, site);
-                }
-                catch (DirectoryNotFoundException)
-                {
-                    Console.Write(" Error: No such directory\n");
-                    continue;
-                }
-                catch (FileNotFoundException)
-                {
-                    Console.Write(" Error: No such file\n");
-                    continue;
-                }
-
-
-                _tasks = new Task[imgList.Count];
-
-                Console.Write("\n[");
-                AllocDown(route, imgList);
-
-                foreach (var task in _tasks) task.Wait();
-
-                var success = HandleFail(route);
-
-                Core.Log($"Item:Complete: {link}");
-                if (success)
-                {
-                    Console.Write("]\n");
-                    Console.WriteLine("\n Download complete.\n");
+                    _artist =
+                        sb.Length != 0
+                            ? $"{_artist} ({sb.ToString().Substring(0, sb.Length - 2)})"
+                            : _artist;
                 }
                 else
                 {
-                    Console.Write("\n Download failed.\n");
+                    foreach (var s in _site.GetArtist().Split('|')[1].Split(';'))
+                    {
+                        if (s.Length == 0) continue;
+                        sb.Append(s).Append(", ");
+                    }
+
+                    _artist = sb.ToString().Substring(0, sb.Length - 2);
                 }
-                Debug.Write("\n\n" + sw.Elapsed.Ticks + "\n");
             }
+        }
+
+        private void GetTitle()
+        {
+            _title = Core.DirFilter(_title);
+        }
+
+        private void GetRoute()
+        {
+            _route =
+                _artist == "N/A"
+                    ? $@"{Core.Route}\{_title}"
+                    : $@"{Core.Route}\{_title} ({_artist})";
+        }
+
+        private string CreateInfo()
+        {
+            try
+            {
+                var temp = Core.GetNumber(_url);
+                var infoRoute = $"{_route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{_site.GetType().Name}";
+
+                if (!Directory.Exists(_route))
+                {
+                    Directory.CreateDirectory(_route);
+                }
+                else
+                {
+                    Console.WriteLine("\nAlready exists. Download again? Y/N");
+                    a: var result = Console.ReadLine()?.ToLower();
+                    if (result == "n") return null;
+                    if (result != "y") goto a;
+                }
+                Core.CreateInfo(infoRoute, _site);
+
+                return null;
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return "NoDir";
+            }
+            catch (FileNotFoundException)
+            {
+                return "NoFile";
+            }
+        }
+
+        private void AllocTask()
+        {
+            _tasks = new Task[_imgList.Count];
+
+            Console.Write("\n[");
+            AllocDown(_route, _imgList);
+
+            foreach (var task in _tasks) task.Wait();
+
+            var success = HandleFail(_route);
+
+            Core.Log($"Item:Complete: {_url}");
+            if (success)
+            {
+                Console.Write("]\n");
+                Console.WriteLine("\n Download complete.\n");
+            }
+            else
+            {
+                Console.Write("\n Download failed.\n");
+            }
+        }
+
+        private string Process(string url)
+        {
+            ISite site;
+            Dictionary<string, string> imgList;
+
+            var sw = new Stopwatch();
+            sw.Start();
+
+            string artist, title, route;
+            try
+            {
+                Console.Write("Load info: ");
+                site = Core.LoadSite(url);
+
+                if (site?.IsValidated() != true)
+                {
+                    return "FailLoad";
+                }
+
+                Console.WriteLine($"{site.GetType().Name}");
+
+                Console.Write("Count:\t");
+                imgList = site.GetImgUrls();
+                Console.WriteLine($"{imgList.Count} images");
+
+                Console.Write("Title:\t");
+                title = site.GetTitle();
+                Console.WriteLine($"{title}");
+
+                Console.Write("Artist:\t");
+
+                artist = "N/A";
+                var sb = new StringBuilder();
+
+                if (site.GetArtist() != "|")
+                {
+                    if (site.GetArtist().Split('|')[0].Length != 0)
+                    {
+                        foreach (var s in site.GetArtist().Split('|')[0].Split(';'))
+                        {
+                            if (s.Length == 0) continue;
+                            sb.Append(s).Append(", ");
+                        }
+                        artist = sb.ToString().Substring(0, sb.Length - 2);
+
+                        sb.Clear();
+
+                        foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
+                        {
+                            if (s.Length == 0) continue;
+                            sb.Append(s).Append(", ");
+                        }
+
+                        artist =
+                            sb.Length != 0
+                                ? $"{artist} ({sb.ToString().Substring(0, sb.Length - 2)})"
+                                : artist;
+                    }
+                    else
+                    {
+                        foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
+                        {
+                            if (s.Length == 0) continue;
+                            sb.Append(s).Append(", ");
+                        }
+
+                        artist = sb.ToString().Substring(0, sb.Length - 2);
+                    }
+                }
+
+                Console.WriteLine($"{artist}");
+
+                title = Core.DirFilter(title);
+
+                route =
+                    artist == "N/A"
+                        ? $@"{Core.Route}\{title}"
+                        : $@"{Core.Route}\{title} ({artist})";
+            }
+            catch
+            {
+                return "ConnectionFail";
+            }
+
+            try
+            {
+                var temp = Core.GetNumber(url);
+                var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{site.GetType().Name}";
+
+                if (!Directory.Exists(route))
+                {
+                    Directory.CreateDirectory(route);
+                }
+                else
+                {
+                    Console.WriteLine("\nAlready exists. Download again? Y/N");
+                    a: var result = Console.ReadLine()?.ToLower();
+                    if (result == "n") return null;
+                    if (result != "y") goto a;
+                }
+                Core.CreateInfo(infoRoute, site);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return "NoDir";
+            }
+            catch (FileNotFoundException)
+            {
+                return "NoFile";
+            }
+
+            _tasks = new Task[imgList.Count];
+
+            Console.Write("\n[");
+            AllocDown(route, imgList);
+
+            foreach (var task in _tasks) task.Wait();
+
+            var success = HandleFail(route);
+
+            Core.Log($"Item:Complete: {url}");
+            if (success)
+            {
+                Console.Write("]\n");
+                Console.WriteLine("\n Download complete.\n");
+            }
+            else
+            {
+                Console.Write("\n Download failed.\n");
+            }
+            Debug.Write("\n\n" + sw.Elapsed.Ticks + "\n");
             Stopping();
+
+            return null;
         }
 
         private void AllocDown(string route, Dictionary<string, string> urlList)
