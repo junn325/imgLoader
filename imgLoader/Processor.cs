@@ -55,7 +55,7 @@ namespace imgLoader
                 {
                     return "FailLoad";
                 }
-
+                
                 _imgList = _site.GetImgUrls();
                 _title = _site.GetTitle();
                 _artist = "N/A";
@@ -296,6 +296,5 @@ namespace imgLoader
                 _tasks = null;
             }).Start();
         }
-
     }
 }

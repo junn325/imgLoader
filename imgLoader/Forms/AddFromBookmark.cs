@@ -13,9 +13,9 @@ namespace imgLoader.Forms
         private ListViewItem[] result;
         private delegate string FilterDele(string dirName);
 
-        string[][] supps = { Hitomi.Supplement, hiyobi.Supplement, pixiv.Supplement, nhentai.Supplement };
-        string[] hosts = { Hitomi.Host, hiyobi.Host, pixiv.Host, nhentai.Host };
-        FilterDele[] filts = { Hitomi.Filter, hiyobi.Filter, pixiv.Filter, nhentai.Filter };
+        //string[][] supps = { Hitomi.Supplement, hiyobi.Supplement, pixiv.Supplement, nhentai.Supplement };
+        string[] hosts = { "hitomi.la", "hiyobi.me", "pixiv.net", "nhentai.net" };
+        //FilterDele[] filts = { Hitomi.Filter, hiyobi.Filter, pixiv.Filter, nhentai.Filter };
 
         public AddFromBookmark()
         {
@@ -66,22 +66,22 @@ namespace imgLoader.Forms
             }
 
             var index = cbxSite.SelectedIndex;
-            var supplement = supps[index];
-            var filt = filts[index];
+            //var supplement = supps[index];
+            //var filt = filts[index];
             short imgNum = 1;
 
-            foreach (string item in bookMark.Split(@"""name"": """).Where(item => item.Contains(hosts[index]) && item.Contains($"/{supplement[0]}/")).ToArray())
+            foreach (var item in bookMark.Split(@"""name"": """).Where(item => item.Contains(hosts[index])).ToArray())
             {
                 var listitem = new ListViewItem(imgNum.ToString());
-                listitem.SubItems.Add(filt(item.Split('"')[0]));
+                listitem.SubItems.Add(item.Split('"')[0]);
 
-                string bUrl = item.Split(@"""url"": """)[1].Split('"')[0];
+                var bUrl = item.Split(@"""url"": """)[1].Split('"')[0];
                 if (bUrl.Contains("#")) bUrl = bUrl.Split('#')[0];
 
-                if (supplement.Length > 1) //supplement 추가시
-                {
-                    bUrl = supplement[1] + Core.GetNumber(bUrl);
-                }
+                //if (supplement.Length > 1) //supplement 추가시
+                //{
+                //    bUrl = supplement[1] + Core.GetNumber(bUrl);
+                //}
 
                 listitem.SubItems.Add(bUrl);
 
@@ -158,12 +158,12 @@ namespace imgLoader.Forms
 
         private void TextBox1_TextChanged(object sender, EventArgs e)
         {
-            Core.RestoreSearch(listView1,textBox1);
+            //Core.RestoreSearch(listView1,textBox1);
         }
 
         private void TextBox1_KeyDown(object sender, KeyEventArgs e)
         {
-            Core.SearchListView(listView1, e, textBox1);
+            //Core.SearchListView(listView1, e, textBox1);
         }
 
         private void ContextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)

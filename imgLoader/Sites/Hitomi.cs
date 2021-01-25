@@ -9,14 +9,9 @@ namespace imgLoader.Sites
 {
     public class Hitomi : ISite
     {
-        public const string Supplement = "hitomi.la/reader/\\n\\.html";
         public string Number { get; }
 
-        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] Replace = { "", "", "", "" };
-
         private readonly string _src_info, _artist, _group, _title;
-
         public Hitomi(string mNumber)
         {
             var wc = new WebClient {Encoding = Encoding.UTF8};

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -13,22 +14,25 @@ namespace imgLoader
     internal static class Core
     {
         internal const string ProjectName = "imgLoader_CLI";
-        internal const string TempRoute   = "ILCTempRout";
+        internal const string TempRoute = "ILCTempRout";
 
-        private const string LogDir  = "ILLOG";
+        private const string LogDir = "ILLOG";
         private const string LogFile = "ILLG";
 
-        private static readonly string[] DFilter  = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
-        private static readonly string[] DReplace = { "[", "]", "│", "：", "？", "″", "˂", "˃", "／", "∗", "…" };
+        private static readonly string[] DFilter = {"(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..."};
+        private static readonly string[] DReplace = {"[", "]", "│", "：", "？", "″", "˂", "˃", "／", "∗", "…"};
 
         internal const byte ColumnWidth = 45;
         internal static List<string> PrevAddress = new List<string>(5);
+
+        private static readonly List<ListViewItem> LvItem = new List<ListViewItem>();
 
         internal static string Route = "";
 
         internal static void Log(string content)
         {
-            new Thread(() => {
+            new Thread(() =>
+            {
                 var sb = new StringBuilder(Path.GetTempPath());
                 sb.Append('\\').Append(LogDir);
 
@@ -74,7 +78,7 @@ namespace imgLoader
                     i != info.Length - 1
                         ? info[i] + '\n'
                         : info[i]
-                        );
+                );
             }
 
             File.SetAttributes(infoRoute, FileAttributes.Hidden);
@@ -101,6 +105,7 @@ namespace imgLoader
                 if (val.Contains("artworks")) return val.Split('/')[2];
                 if (val.Contains("id=")) return val.Split("id=")[1];
             }
+
             if (val.Contains("e-hentai") || val.Contains("exhentai")) return val.Split("/g/")[1].Remove(val.Split("/g/")[1].Length - 1);
 
             return "";
@@ -111,10 +116,10 @@ namespace imgLoader
             var mNumber = GetNumber(url);
             if (mNumber.Length == 0) return null;
 
-            if (url.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase))  return new NHentai(mNumber);
-            if (url.Contains("pixiv", StringComparison.OrdinalIgnoreCase))        return new Pixiv(mNumber);
-            if (url.Contains("hiyobi.me"  , StringComparison.OrdinalIgnoreCase))  return new Hiyobi(mNumber);
-            if (url.Contains("hitomi.la"  , StringComparison.OrdinalIgnoreCase))  return new Hitomi(mNumber);
+            if (url.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase)) return new NHentai(mNumber);
+            if (url.Contains("pixiv", StringComparison.OrdinalIgnoreCase)) return new Pixiv(mNumber);
+            if (url.Contains("hiyobi.me", StringComparison.OrdinalIgnoreCase)) return new Hiyobi(mNumber);
+            if (url.Contains("hitomi.la", StringComparison.OrdinalIgnoreCase)) return new Hitomi(mNumber);
             if (url.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new EHentai(mNumber);
             if (url.Contains("exhentai.org", StringComparison.OrdinalIgnoreCase))
             {
@@ -145,6 +150,7 @@ namespace imgLoader
 
             return infos;
         }
+
         internal static void Search(Dictionary<string, string> index, string search, string route)
         {
             var searchResult = new Dictionary<string, string>(index);
@@ -173,7 +179,7 @@ namespace imgLoader
             if (e.KeyCode != Keys.Enter) return;
             e.SuppressKeyPress = true;
 
-            foreach (var item in from item in listview.Items.Cast<ListViewItem>()
+            foreach (ListViewItem item in from item in listview.Items.Cast<ListViewItem>()
                 where item.SubItems[1].Text.IndexOf(text.Text, StringComparison.OrdinalIgnoreCase) < 0
                 orderby item.Text
                 select item)
@@ -188,7 +194,7 @@ namespace imgLoader
             if (LvItem == null) return;
             if (textbox.TextLength > 0) return;
 
-            foreach (var item in LvItem)
+            foreach (ListViewItem item in LvItem)
             {
                 listview.Items.Add(item);
             }
@@ -197,5 +203,48 @@ namespace imgLoader
             listview.Sort();
         }
 
+        internal static void ControlLock(List<Control> econtrol)
+        {
+            foreach (var item in econtrol)
+            {
+                item.Enabled = false;
+            }
+        }
+
+        internal static void ControlUnlock(List<Control> econtrol)
+        {
+            foreach (var item in econtrol)
+            {
+                if (item.InvokeRequired)
+                {
+                    item.BeginInvoke(new Action(() => item.Enabled = true));
+                }
+                else
+                {
+                    item.Enabled = true;
+                }
+            }
+        }
+
+        internal class ListViewItemComparer : IComparer
+        {
+            private readonly int _col;
+
+            public ListViewItemComparer()
+            {
+                _col = 0;
+            }
+
+            public ListViewItemComparer(int column)
+            {
+                _col = column;
+            }
+
+            public int Compare(object x, object y)
+            {
+                //return String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+                return (int.Parse(((ListViewItem)x).Text) > int.Parse(((ListViewItem)y).Text)) ? 1 : -1;
+            }
+        }
     }
 }

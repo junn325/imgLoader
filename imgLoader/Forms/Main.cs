@@ -54,7 +54,7 @@ namespace imgLoader.Forms
             }
         }
 
-        private void Process(Dictionary<string,string> url)
+        private void Process(Dictionary<string, string> url)
         {
             try
             {
@@ -156,7 +156,7 @@ namespace imgLoader.Forms
 
                 thStop.Start();
             }
-            catch (ThreadInterruptedException) {}
+            catch (ThreadInterruptedException) { }
         }
 
         private void AllocDown(string route, Dictionary<string, string> urlList)
@@ -247,51 +247,51 @@ namespace imgLoader.Forms
             _done++;
         }
 
-        private void Stopping()
-        {
-            new Thread(() =>
-              {
-                  if (thrDownStart == null) return;
+        //private void Stopping()
+        //{
+        //    new Thread(() =>
+        //      {
+        //          if (thrDownStart == null) return;
 
-                  toolStrip_lblStatus.Text = "중지중";
+        //          toolStrip_lblStatus.Text = "중지중";
 
-                  while (thrDownStart.ThreadState == System.Threading.ThreadState.Running)
-                  {
-                      thrDownStart.Interrupt();
-                      Thread.Sleep(Core.WAIT_TIME);
-                  }
+        //          while (thrDownStart.ThreadState == System.Threading.ThreadState.Running)
+        //          {
+        //              thrDownStart.Interrupt();
+        //              Thread.Sleep(Core.WAIT_TIME);
+        //          }
 
-                  _stop = true;
+        //          _stop = true;
 
-                  foreach (var item in tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
+        //          foreach (var item in tasks) while (item.Status != TaskStatus.RanToCompletion) Thread.Sleep(Core.WAIT_TIME);
 
-                  _stop = false;
+        //          _stop = false;
 
-                  failed.Clear();
-                  tasks.Clear();
+        //          failed.Clear();
+        //          tasks.Clear();
 
-                  btnStop.Invoke(new Action(() => btnStop.Enabled = false));
+        //          btnStop.Invoke(new Action(() => btnStop.Enabled = false));
 
-                  toolStrip_lblNum.Text = InitString_Item.Replace("0", listView1.Items.Count.ToString());
-                  toolStrip_lblItemNum.Text = InitString_NUM;
-                  toolStrip_lblTotalNum.Text = InitString_NUM;
+        //          toolStrip_lblNum.Text = InitString_Item.Replace("0", listView1.Items.Count.ToString());
+        //          toolStrip_lblItemNum.Text = InitString_NUM;
+        //          toolStrip_lblTotalNum.Text = InitString_NUM;
 
-                  toolStrip_lblStatus.Text = "";
+        //          toolStrip_lblStatus.Text = "";
 
-                  progAll.Invoke(new Action(() => progAll.Value = 0));
-                  progAll.Invoke(new Action(() => progAll.Style = ProgressBarStyle.Continuous));
+        //          progAll.Invoke(new Action(() => progAll.Value = 0));
+        //          progAll.Invoke(new Action(() => progAll.Style = ProgressBarStyle.Continuous));
 
-                  Core.ControlUnlock(new List<Control> { listView1, checkBox1, textBox1, btnStart });
+        //          Core.ControlUnlock(new List<Control> { listView1, checkBox1, textBox1, btnStart });
 
-              }).Start();
-        }
+        //      }).Start();
+        //}
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
             btnStop.Enabled = true;
             Core.ControlLock(new List<Control> { listView1, checkBox1, textBox1, btnStart });
 
-            var itm = new Dictionary<string,string>();
+            var itm = new Dictionary<string, string>();
             progAll.Value = 0;
 
             foreach (ListViewItem item in listView1.CheckedItems)
@@ -302,20 +302,20 @@ namespace imgLoader.Forms
             if (itm.Count == 0)
             {
                 MessageBox.Show("다운로드할 항목이 없습니다.");
-                Stopping();
+                //Stopping();
                 return;
             }
 
             if (!Directory.Exists(Core.Route))
             {
                 MessageBox.Show("존재하지 않는 경로입니다.");
-                Stopping();
+                //Stopping();
                 return;
             }
 
             toolStrip_lblTotalNum.Text = "0/*";
 
-            thrDownStart = new Thread(() => Process(itm)) { Name = "스레드" };
+            //thrDownStart = new Thread(() => Process(itm)) { Name = "스레드" };
             thrDownStart.Start();
         }
 
@@ -329,7 +329,7 @@ namespace imgLoader.Forms
 
         private void Button2_Click_1(object sender, EventArgs e)
         {
-            Stopping();
+            //Processor.Stopping();
         }
 
         private void TextBox1_Click(object sender, EventArgs e)

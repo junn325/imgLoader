@@ -10,13 +10,8 @@ namespace imgLoader.Sites
 {
     public class EHentai : ISite
     {
-        public const string Supplement = "e-hentai.org/g/\\n\\/\\n\\/";
-
         private const string _api_url = "https://api.e-hentai.org/api.php";
         private const string _base_url = "https://e-hentai.org/";
-
-        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] Replace = { "", "", "", "" };
 
         private readonly string _src_gall, _src_data, _gall_id, _artist, _group, _title, _showKey;
 

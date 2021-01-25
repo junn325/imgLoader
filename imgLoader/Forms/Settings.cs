@@ -48,14 +48,14 @@ namespace imgLoader.Forms
 
             Core.Route = txtRoute.Text;
 
-            if (File.Exists($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt"))
+            if (File.Exists($"{Path.GetTempPath()}{Core.TempRoute}.txt"))
             {
-                if (File.ReadAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt") != Core.Route)
+                if (File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt") != Core.Route)
                 {
-                    File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", Core.Route);
+                    File.WriteAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt", Core.Route);
                 }
             }
-            else File.WriteAllText($"{Path.GetTempPath()}{Core.TEMP_ROUTE}.txt", Core.Route);
+            else File.WriteAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt", Core.Route);
 
 
             Properties.Settings.Default.reDownload = chkExist.Checked;

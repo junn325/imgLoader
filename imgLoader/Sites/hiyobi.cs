@@ -7,11 +7,6 @@ namespace imgLoader.Sites
 {
     public class Hiyobi : ISite
     {
-        public const string Supplement = "hiyobi.me/reader/\\n\\";
-
-        private static readonly string[] Filter = { " - Hiyobi.me", " - hiyobi.me" };
-        private static readonly string[] REPLACE = { "", "" };
-
         public string Number { get; set; }
 
         private readonly string _src_cdn, _src_api, _title, _artist, _group;
