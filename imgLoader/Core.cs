@@ -13,8 +13,8 @@ namespace imgLoader
 {
     internal static class Core
     {
-        internal const string ProjectName = "imgLoader_CLI";
-        internal const string TempRoute = "ILCTempRout";
+        internal const string ProjectName = "imgLoader";
+        internal const string TempRoute = "ILTempRout";
 
         private const string LogDir = "ILLOG";
         private const string LogFile = "ILLG";

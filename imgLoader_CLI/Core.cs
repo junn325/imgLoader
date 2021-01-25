@@ -15,8 +15,8 @@ namespace imgLoader_CLI
         internal const string ProjectName = "imgLoader_CLI";
         internal const string TempRoute   = "ILCTempRout";
 
-        private const string LogDir  = "ILLOG";
-        private const string LogFile = "ILLG";
+        private const string LogDir  = "ILCLOG";
+        private const string LogFile = "ILCLG";
 
         private static readonly string[] DFilter  = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "[", "]", "│", "：", "？", "″", "˂", "˃", "／", "∗", "…" };
