@@ -26,11 +26,20 @@ namespace imgLoader
 
         internal string Initialize(string url)
         {
+            string error;
             if (string.IsNullOrEmpty(url)) return "urlNull";
-
             _url = url;
 
-            Process(_url);
+            error = Load();
+            if (error != null) return "fail";
+            GetArtist();
+            GetTitle();
+            GetRoute();
+            error = CreateInfo();
+            if (error != null) return "fail";
+
+            AllocTask();
+            //Process(_url);
 
             Stopping();
             return null;

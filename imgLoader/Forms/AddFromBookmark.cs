@@ -26,7 +26,7 @@ namespace imgLoader.Forms
 
         private void AddFromBookmark_Load(object sender, EventArgs e)
         {
-            listView1.Columns[0].Width = Core.COLUMN_WIDTH;
+            listView1.Columns[0].Width = Core.ColumnWidth;
 
             LoadFromBookmark();
         }
