@@ -230,5 +230,11 @@ namespace imgLoader.Forms
             menuItem_LinkCp.Enabled = listView1.SelectedItems.Count != 0;
             menuItem_Remove.Enabled = listView1.SelectedItems.Count != 0;
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var f = new Form1();
+            f.Show();
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿
-namespace imgLoader
+namespace imgLoader.LoaderList
 {
     partial class LoaderList
     {

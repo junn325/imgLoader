@@ -1,7 +1,7 @@
 ﻿
-namespace imgLoader
+namespace imgLoader.LoaderList
 {
-    partial class loaderItem
+    partial class LoaderItem
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,8 +29,16 @@ namespace imgLoader
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // LoaderItem
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Name = "LoaderItem";
+            this.Size = new System.Drawing.Size(440, 55);
+            this.ResumeLayout(false);
+
         }
 
         #endregion

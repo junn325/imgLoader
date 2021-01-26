@@ -56,6 +56,7 @@ namespace imgLoader.Forms
             this.toolStrip_lblTotalNum = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip_lblItemNum = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStrip_lblStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.button1 = new System.Windows.Forms.Button();
             this.contextMenuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -284,12 +285,23 @@ namespace imgLoader.Forms
             this.toolStrip_lblStatus.Name = "toolStrip_lblStatus";
             this.toolStrip_lblStatus.Size = new System.Drawing.Size(0, 17);
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(335, 344);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 41;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.WhiteSmoke;
             this.ClientSize = new System.Drawing.Size(809, 395);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.progAll);
@@ -339,6 +351,7 @@ namespace imgLoader.Forms
         private ToolStripStatusLabel toolStrip_lblNum;
         private ToolStripStatusLabel toolStrip_lblStatus;
         private ProgressBar progAll;
+        private Button button1;
     }
 }
 
