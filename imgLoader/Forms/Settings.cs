@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
-using Microsoft.WindowsAPICodePack.Dialogs;
+//using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace imgLoader.Forms
 {
@@ -24,18 +24,18 @@ namespace imgLoader.Forms
 
         private void txtRoute_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog
-            {
-                DefaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                IsFolderPicker = true,
-                RestoreDirectory = true
-            };
+            //CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            //{
+            //    DefaultDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+            //    IsFolderPicker = true,
+            //    RestoreDirectory = true
+            //};
 
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                Core.Route = dialog.FileName;
-                txtRoute.Text = Core.Route;
-            }
+            //if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            //{
+            //    Core.Route = dialog.FileName;
+            //    txtRoute.Text = Core.Route;
+            //}
         }
 
         private void txtRoute_Click(object sender, EventArgs e)

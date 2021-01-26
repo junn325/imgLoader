@@ -45,10 +45,11 @@ namespace imgLoader.Forms
             // 
             // loaderList1
             // 
+            this.loaderList1.AutoScroll = true;
             this.loaderList1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.loaderList1.Location = new System.Drawing.Point(217, 108);
+            this.loaderList1.Location = new System.Drawing.Point(83, 108);
             this.loaderList1.Name = "loaderList1";
-            this.loaderList1.Size = new System.Drawing.Size(386, 160);
+            this.loaderList1.Size = new System.Drawing.Size(673, 160);
             this.loaderList1.TabIndex = 2;
             // 
             // Form1

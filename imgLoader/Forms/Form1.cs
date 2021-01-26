@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using imgLoader.LoaderList;
 
 namespace imgLoader.Forms
 {
@@ -17,12 +18,10 @@ namespace imgLoader.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var p = new PictureBox();
-            p.Size = new Size(50, 20);
-            p.Location = new Point(5, 5);
-            p.BackColor = Color.Red;
+            var item = new LoaderItem();
 
-            loaderList1.Controls.Add(p);
+            loaderList1.Controls.Add(item);
+            loaderList1.AutoScrollOffset = new Point(item.Left, item.Bottom);
         }
     }
 }
