@@ -36,6 +36,8 @@ namespace imgLoader.LoaderList
             //this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             //this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Name = "LoaderList";
+            this.AutoScroll = true;
+            this.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.WrapContents = false;
             //this.Size = new System.Drawing.Size(509, 147);
             this.ResumeLayout(false);

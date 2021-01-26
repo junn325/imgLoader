@@ -31,10 +31,10 @@ namespace imgLoader.LoaderList
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
+            this.siteName = new System.Windows.Forms.Label();
+            this.imgCount = new System.Windows.Forms.Label();
+            this.title = new System.Windows.Forms.Label();
+            this.author = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -55,51 +55,51 @@ namespace imgLoader.LoaderList
             this.label2.TabIndex = 0;
             this.label2.Text = "작가 :";
             // 
-            // label3
+            // siteName
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(58, 30);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(42, 15);
-            this.label3.TabIndex = 0;
-            this.label3.Text = "Hiyobi";
+            this.siteName.AutoSize = true;
+            this.siteName.Location = new System.Drawing.Point(58, 30);
+            this.siteName.Name = "siteName";
+            this.siteName.Size = new System.Drawing.Size(42, 15);
+            this.siteName.TabIndex = 0;
+            this.siteName.Text = "Hiyobi";
             // 
-            // label4
+            // imgCount
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(106, 30);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(33, 15);
-            this.label4.TabIndex = 0;
-            this.label4.Text = "69장";
+            this.imgCount.AutoSize = true;
+            this.imgCount.Location = new System.Drawing.Point(106, 30);
+            this.imgCount.Name = "imgCount";
+            this.imgCount.Size = new System.Drawing.Size(33, 15);
+            this.imgCount.TabIndex = 0;
+            this.imgCount.Text = "69장";
             // 
-            // label5
+            // title
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(100, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(39, 15);
-            this.label5.TabIndex = 1;
-            this.label5.Text = "label5";
+            this.title.AutoSize = true;
+            this.title.Location = new System.Drawing.Point(100, 0);
+            this.title.Name = "title";
+            this.title.Size = new System.Drawing.Size(39, 15);
+            this.title.TabIndex = 1;
+            this.title.Text = "label5";
             // 
-            // label6
+            // author
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(100, 15);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(39, 15);
-            this.label6.TabIndex = 1;
-            this.label6.Text = "label5";
+            this.author.AutoSize = true;
+            this.author.Location = new System.Drawing.Point(100, 15);
+            this.author.Name = "author";
+            this.author.Size = new System.Drawing.Size(39, 15);
+            this.author.TabIndex = 1;
+            this.author.Text = "label5";
             // 
             // LoaderItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.author);
+            this.Controls.Add(this.title);
+            this.Controls.Add(this.imgCount);
+            this.Controls.Add(this.siteName);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.DoubleBuffered = true;
@@ -114,9 +114,9 @@ namespace imgLoader.LoaderList
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label siteName;
+        private System.Windows.Forms.Label imgCount;
+        private System.Windows.Forms.Label title;
+        private System.Windows.Forms.Label author;
     }
 }

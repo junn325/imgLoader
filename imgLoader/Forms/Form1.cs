@@ -21,7 +21,7 @@ namespace imgLoader.Forms
             var item = new LoaderItem();
 
             loaderList1.Controls.Add(item);
-            loaderList1.AutoScrollOffset = new Point(item.Left, item.Bottom);
+            //loaderList1.AutoScrollOffset = new Point(item.Left, item.Bottom);
         }
     }
 }
