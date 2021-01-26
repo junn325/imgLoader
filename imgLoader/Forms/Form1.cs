@@ -19,9 +19,10 @@ namespace imgLoader.Forms
         {
             var p = new PictureBox();
             p.Size = new Size(50, 20);
+            p.Location = new Point(5, 5);
             p.BackColor = Color.Red;
 
-            flowLayoutPanel1.Controls.Add(new PictureBox());
+            loaderList1.Controls.Add(p);
         }
     }
 }

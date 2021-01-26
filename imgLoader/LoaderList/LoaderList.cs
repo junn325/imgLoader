@@ -2,7 +2,7 @@
 
 namespace imgLoader.LoaderList
 {
-    public partial class LoaderList : UserControl
+    public partial class LoaderList : FlowLayoutPanel
     {
         public LoaderList()
         {

@@ -29,16 +29,9 @@ namespace imgLoader.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.button1 = new System.Windows.Forms.Button();
+            this.loaderList1 = new imgLoader.LoaderList.LoaderList();
             this.SuspendLayout();
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(193, 115);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(414, 171);
-            this.flowLayoutPanel1.TabIndex = 0;
             // 
             // button1
             // 
@@ -50,13 +43,21 @@ namespace imgLoader.Forms
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // loaderList1
+            // 
+            this.loaderList1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.loaderList1.Location = new System.Drawing.Point(217, 108);
+            this.loaderList1.Name = "loaderList1";
+            this.loaderList1.Size = new System.Drawing.Size(386, 160);
+            this.loaderList1.TabIndex = 2;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.loaderList1);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
@@ -64,8 +65,7 @@ namespace imgLoader.Forms
         }
 
         #endregion
-
-        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button button1;
+        private LoaderList.LoaderList loaderList1;
     }
 }
