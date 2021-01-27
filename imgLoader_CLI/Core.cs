@@ -145,24 +145,22 @@ namespace imgLoader_CLI
         internal static void Search(Dictionary<string, string> index, string search, string route)
         {
             var searchResult = new Dictionary<string, string>(index);
-            foreach (var item in index)
+            foreach (var (key, value) in index)
             {
                 foreach (var srch in search.Split(','))
                 {
-                    if (!item.Value.Contains(srch, StringComparison.OrdinalIgnoreCase))
+                    if (!value.Contains(srch, StringComparison.OrdinalIgnoreCase))
                     {
-                        searchResult.Remove(item.Key);
+                        searchResult.Remove(key);
                     }
                 }
             }
 
-            foreach (var item in searchResult)
-            {
-                Console.WriteLine(item.Key.Replace(route, "%BaseDir%").Replace($"\\{item.Key.Split('\\').Last()}", "").Insert(10, " "));
-            }
+            foreach (var item in searchResult) Console.WriteLine(item.Key.Replace(route, "%BaseDir%").Replace($"\\{item.Key.Split('\\').Last()}", "").Insert(10, " "));
 
             Console.WriteLine($"{searchResult.Count} results");
             Console.WriteLine(new string('=', 100));
         }
+
     }
 }

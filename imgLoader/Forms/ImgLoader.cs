@@ -23,16 +23,23 @@ namespace imgLoader.Forms
 
         private void ImgLoader_Load(object sender, EventArgs e)
         {
-            foreach (var VARIABLE in Directory.GetFiles(""))
+            const string route = "D:\\문서\\사진\\Saved Pictures\\고니\\manga";
+
+            var index = Core.Index(route);
+            foreach (var (path, info) in index)
             {
-                
+                var file = info.Split('\n');
+                var lItem = new LoaderItem { Title = file[0], Author = file[1], SiteName = path.Split('.').Last(), ImgCount = file[2], Route = path };
+                loaderList1.Controls.Add(lItem);
             }
+
+            label1.Text = $"item: {loaderList1.Controls.Count}개";
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             var sites = new string[] {"hiyobi", "Hitomi", "nhentai", "e-hentai"};
-            var lItem = new LoaderItem { Title = $"{i++}번째 항목", Author = ((char)(i * 10)).ToString(), SiteName = sites[i % 4], ImgCount = (i * 100).ToString() };
+            var lItem = new LoaderItem { Title = $"{i++}번째 항목", Author = ((char)(i * 10)).ToString(), SiteName = sites[i % 4], ImgCount = i.ToString() };
             loaderList1.Controls.Add(lItem);
         }
 

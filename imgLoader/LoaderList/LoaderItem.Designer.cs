@@ -85,6 +85,7 @@ namespace imgLoader.LoaderList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.White;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.route);
             this.Controls.Add(this.author);
@@ -93,7 +94,7 @@ namespace imgLoader.LoaderList
             this.Controls.Add(this.siteName);
             this.DoubleBuffered = true;
             this.Name = "LoaderItem";
-            this.Size = new System.Drawing.Size(514, 53);
+            this.Size = new System.Drawing.Size(854, 53);
             this.ResumeLayout(false);
             this.PerformLayout();
 

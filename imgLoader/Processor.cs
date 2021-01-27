@@ -161,7 +161,7 @@ namespace imgLoader
             Console.Write("\n[");
             AllocDown(_route, _imgList);
 
-            foreach (var task in _tasks) task.Wait();
+            Task.WaitAll(_tasks);
 
             var success = HandleFail(_route);
 
@@ -272,7 +272,7 @@ namespace imgLoader
             var failCopy = new Dictionary<string, string>(_failed);
             AllocDown(route, failCopy);
 
-            foreach (var task in _tasks) task.Wait();
+            Task.WaitAll(_tasks);
 
             if (_failed.Count != 0) HandleFail(route);
 
@@ -290,7 +290,7 @@ namespace imgLoader
                 if (_tasks == null) return;
 
                 _stop = true;
-                foreach (var task in _tasks) task.Wait();
+                Task.WaitAll(_tasks);
                 _stop = false;
 
                 _tasks = null;

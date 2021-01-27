@@ -48,9 +48,9 @@ namespace imgLoader.Forms
 
             listView1.Columns[0].Width = Core.ColumnWidth;
 
-            if (File.Exists($"{Path.GetTempPath()}{Core.TempRoute}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt")))
+            if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
-                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.TempRoute}.txt");
+                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
             }
         }
 

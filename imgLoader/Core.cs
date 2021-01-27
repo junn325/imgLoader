@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,13 +15,14 @@ namespace imgLoader
     internal static class Core
     {
         internal const string ProjectName = "imgLoader";
-        internal const string TempRoute = "ILTempRout";
+        internal const string RouteFile = "ILTempRout";
+        internal const string IndexFile = "ILIdx";
 
         private const string LogDir = "ILLOG";
         private const string LogFile = "ILLG";
 
         private static readonly string[] DFilter = {"(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..."};
-        private static readonly string[] DReplace = {"[", "]", "│", "：", "？", "″", "˂", "˃", "／", "∗", "…"};
+        private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…"};
 
         internal const byte ColumnWidth = 45;
         internal static List<string> PrevAddress = new List<string>(5);
@@ -134,19 +136,62 @@ namespace imgLoader
 
         internal static Dictionary<string, string> Index(string route)
         {
+            const string countSeparator = "/**/";
+            const string itemSeparator = "-**-";
+
+            var count = 0;
+            var sb = new StringBuilder();
+            string file = null;
+            Dictionary<string, string> infos;
+
+            if (File.Exists($"{Path.GetTempPath()}{IndexFile}.txt"))
+            {
+                file = File.ReadAllText($"{Path.GetTempPath()}{IndexFile}.txt");
+                if (file.Length != 0 || file.Contains("/**/"))
+                {
+                    count = int.Parse(file.Split(countSeparator)[0]);
+                }
+            }
+
             var infoFiles = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories)
                 .Where(s => s.EndsWith(".Hitomi") || s.EndsWith(".Hiyobi") || s.EndsWith(".NHentai") || s.EndsWith("EHentai")).ToArray();
 
-            var infos = new Dictionary<string, string>(infoFiles.Length);
+            if (file != null && infoFiles.Length == count)
+            {
+                var content = file.Split(countSeparator)[1];
+                infos = new Dictionary<string, string>(count);
+                foreach (var s in content.Split(itemSeparator))
+                {
+                    if (s.Length == 0) continue;
+                    infos.Add(s.Split('`')[0], s.Split('`')[1]);
+                }
+
+                return infos;
+            }
+
+            infos = new Dictionary<string, string>(infoFiles.Length);
             var tasks = new Task[infoFiles.Length];
 
             for (var i = 0; i < infoFiles.Length; i++)
             {
-                var info = infoFiles[i];
-                tasks[i] = Task.Factory.StartNew(() => infos.Add(info, File.ReadAllText(info)));
+                var infoRoute = infoFiles[i];
+                tasks[i] = Task.Factory.StartNew(() =>
+                {
+                    lock (sb)
+                    {
+                        var info = File.ReadAllText(infoRoute);
+                        infos.Add(infoRoute, info);
+                        sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
+                        if (sb.Length != sb.Replace("\0", string.Empty).Length)
+                            Debug.Write($"*/*/*/*/*{infoRoute}, {info}");
+                    }
+                });
             }
 
-            foreach (var t in tasks) t.Wait();
+            Task.WaitAll(tasks);
+
+            File.WriteAllText($"{Path.GetTempPath()}{IndexFile}.txt", $"{infos.Count}{countSeparator}{sb}", Encoding.UTF8);
+            Debug.Write(sb);
 
             return infos;
         }
@@ -154,13 +199,13 @@ namespace imgLoader
         internal static void Search(Dictionary<string, string> index, string search, string route)
         {
             var searchResult = new Dictionary<string, string>(index);
-            foreach (var item in index)
+            foreach (var (key, value) in index)
             {
                 foreach (var srch in search.Split(','))
                 {
-                    if (!item.Value.Contains(srch, StringComparison.OrdinalIgnoreCase))
+                    if (!value.Contains(srch, StringComparison.OrdinalIgnoreCase))
                     {
-                        searchResult.Remove(item.Key);
+                        searchResult.Remove(key);
                     }
                 }
             }
@@ -226,25 +271,27 @@ namespace imgLoader
             }
         }
 
-        internal class ListViewItemComparer : IComparer
+    }
+    internal class ListViewItemComparer : IComparer
+    {
+        private readonly int _col;
+
+        public ListViewItemComparer()
         {
-            private readonly int _col;
+            _col = 0;
+        }
 
-            public ListViewItemComparer()
-            {
-                _col = 0;
-            }
+        public ListViewItemComparer(int column)
+        {
+            _col = column;
+        }
 
-            public ListViewItemComparer(int column)
-            {
-                _col = column;
-            }
-
-            public int Compare(object x, object y)
-            {
-                //return String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
-                return (int.Parse(((ListViewItem)x).Text) > int.Parse(((ListViewItem)y).Text)) ? 1 : -1;
-            }
+        public int Compare(object x, object y)
+        {
+            //return String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
+            if (x == null || y == null) throw new NullReferenceException("x or y was Null.");
+            return (int.Parse(((ListViewItem)x).Text) > int.Parse(((ListViewItem)y).Text)) ? 1 : -1;
         }
     }
+
 }
