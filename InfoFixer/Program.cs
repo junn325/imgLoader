@@ -14,12 +14,13 @@ namespace imgL_Fixer
             Console.Write("Route: ");
             var route = Console.ReadLine();
 
-            ScanforNoInfo(route);
+            FixInfo_LineBreak(route);
         }
 
-        private static void FixInfo(string route)
+        private static void FixInfo_LineBreak(string route)
         {
-            foreach (var item in Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai")))
+            var tp = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai"));
+            foreach (var item in tp)
             {
                 var text = File.ReadAllText(item);
                 if (text.Length == 0)
@@ -27,69 +28,17 @@ namespace imgL_Fixer
                     Console.WriteLine($"Empty info: {item}");
                     continue;
                 }
-                if (text.Contains(';')) continue;
+                //if (text.Contains(';')) continue;
 
-                var temp = text.Split('\n');
-                var sb = new StringBuilder();
-                for (var i = 0; i < 3; i++)
-                {
-                    sb.Append(temp[i]).Append('\n');
-                }
+                var sb = new StringBuilder(text);
+                if (text.StrLen("\n") == 3) sb.Append('\n');
+                sb.Replace("\r\n", "\n");
 
-                sb.Append("tags:");
 
-                for (var i = 3; i < temp.Length; i++)
-                {
-                    if (temp[i].Contains(';')) continue;
-                    if (!temp[i].Contains(':')) continue;
-                    if (temp[i].Contains("tags: ")) temp[i] = temp[i].Replace("tags: ", "tags:");
-                    if (!temp[i].Contains('"') && !temp[i].Contains("female") && !temp[i].Contains("male") && !temp[i].Contains("artist") && !temp[i].Contains("tag"))
-                    {
-                        sb.Append('\n').Append(temp[i]);
-                        break;
-                    }
-
-                    try
-                    {
-                        switch (item.Split('.').Last())
-                        {
-                            case "Hiyobi":
-                                if (!temp[i].Contains("value")) goto hitomi;
-                                sb.Append(StrTools.GetStringValue(temp[i], "value")).Append(';');
-                                break;
-
-                            case "Hitomi":
-                                hitomi: sb.Append(
-                                         temp[i].Contains("female")
-                                            ? (StrTools.GetValue(temp[i], "female") == "1" || StrTools.GetValue(temp[i], "female") == "\"1\"")
-                                                ? "female"
-                                                : "male"
-                                            : "tag"
-                                    )
-                                    .Append(':')
-                                    .Append(StrTools.GetStringValue(temp[i], "tag")).Append(';');
-                                break;
-
-                            case "EHentai":
-                                sb.Append(temp[i]).Append(';');
-                                break;
-
-                            case "NHentai":
-                                foreach (var s in temp[i].Split(", "))
-                                {
-                                    sb.Append(s).Append(';');
-                                }
-                                break;
-                        }
-                    }
-                    catch
-                    {
-                        continue;
-                    }
-                }
-
-                if (sb.ToString()[^1] == '\n' || sb.ToString()[^1] == '\r')
+                if ((sb.ToString()[^1] == '\n' || sb.ToString()[^1] == '\r') && (sb.ToString()[^2] == '\n' || sb.ToString()[^2] == '\r'))
                     sb.Remove(sb.Length - 1, 1);
+
+                if (sb.ToString() == text) continue;
 
                 File.Delete(item);
                 Console.WriteLine($"Deleted: {item}");
@@ -142,6 +91,101 @@ namespace imgL_Fixer
                     Console.WriteLine(item);
                 }
             }
+        }
+
+        private static void FixInfo_Tag(string route)
+        {
+            var tp = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai"));
+            foreach (var item in tp)
+            {
+                var text = File.ReadAllText(item);
+                if (text.Length == 0)
+                {
+                    Console.WriteLine($"Empty info: {item}");
+                    continue;
+                }
+                //if (text.Contains(';')) continue;
+
+                var temp = text.Split('\n');
+                var sb = new StringBuilder();
+                for (var i = 0; i < 3; i++)
+                {
+                    sb.Append(temp[i]).Append('\n');
+                }
+
+                sb.Append("tags:");
+
+                for (var i = 3; i < temp.Length; i++)
+                {
+                    //if (temp[i].Contains(';')) continue;
+                    if (!temp[i].Contains(':')) continue;
+                    if (temp[i].Contains("tags: ")) temp[i] = temp[i].Replace("tags: ", "tags:");
+                    if (!temp[i].Contains('"') && !temp[i].Contains("female") && !temp[i].Contains("male") && !temp[i].Contains("artist") && !temp[i].Contains("tag"))
+                    {
+                        sb.Append('\n').Append(temp[i]);
+                        break;
+                    }
+
+                    if (temp[i].Contains('\r'))
+                        temp[i] = temp[i].Remove(temp[i].IndexOf('\r'));
+
+                    try
+                    {
+                        switch (item.Split('.').Last())
+                        {
+                            case "Hiyobi":
+                                if (!temp[i].Contains("value")) goto hitomi;
+                                sb.Append(StrTools.GetStringValue(temp[i], "value")).Append(';');
+                                break;
+
+                            case "Hitomi":
+                            hitomi: if (!temp[i].Contains("\"tag\"")) continue;
+                                sb.Append(
+                                        temp[i].Contains("female")
+                                           ? (StrTools.GetValue(temp[i], "female") == "1" || StrTools.GetValue(temp[i], "female") == "\"1\"")
+                                               ? "female"
+                                               : "male"
+                                           : "tag"
+                                   )
+                                   .Append(':')
+                                   .Append(StrTools.GetStringValue(temp[i], "tag")).Append(';');
+                                break;
+
+                            case "EHentai":
+                                sb.Append(temp[i]).Append(';');
+                                break;
+
+                            case "NHentai":
+                                foreach (var s in temp[i].Split(", "))
+                                {
+                                    sb.Append(s).Append(';');
+                                }
+                                break;
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+
+                if (sb.ToString()[^1] == '\n' || sb.ToString()[^1] == '\r')
+                    sb.Remove(sb.Length - 1, 1);
+
+                if (sb.ToString() != text)
+                {
+                    File.Delete(item);
+                    Console.WriteLine($"Deleted: {item}");
+                    File.WriteAllText(item, sb.ToString());
+                    File.SetAttributes(item, FileAttributes.Hidden);
+                }
+                else
+                {
+                    Console.WriteLine($"{item}: no changes");
+                }
+            }
+
+
         }
     }
 }

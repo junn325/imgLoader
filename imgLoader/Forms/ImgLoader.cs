@@ -28,8 +28,15 @@ namespace imgLoader.Forms
             var index = Core.Index(route);
             foreach (var (path, info) in index)
             {
-                var file = info.Split('\n');
-                var lItem = new LoaderItem { Title = file[0], Author = file[1], SiteName = path.Split('.').Last(), ImgCount = file[2], Route = path };
+                var file = info.Split("\n");
+                var lItem = new LoaderItem
+                {
+                    Title = file[0],
+                    Author = file[1],
+                    SiteName = path.Split('.').Last(),
+                    ImgCount = file[2],
+                    Route = path
+                };
                 loaderList1.Controls.Add(lItem);
             }
 

@@ -20,7 +20,7 @@ namespace imgLoader.LoaderList
         public string ImgCount
         {
             get => imgCount.Text;
-            set => imgCount.Text = value + "장";
+            set => imgCount.Text = (value + "장");
         }
 
         public string SiteName
