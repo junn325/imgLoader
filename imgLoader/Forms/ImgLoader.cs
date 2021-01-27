@@ -26,6 +26,7 @@ namespace imgLoader.Forms
             const string route = "D:\\문서\\사진\\Saved Pictures\\고니\\manga";
 
             var index = Core.Index(route);
+            loaderList1.SuspendLayout();
             foreach (var (path, info) in index)
             {
                 var file = info.Split("\n");
@@ -39,6 +40,7 @@ namespace imgLoader.Forms
                 };
                 loaderList1.Controls.Add(lItem);
             }
+            loaderList1.ResumeLayout();
 
             label1.Text = $"item: {loaderList1.Controls.Count}개";
         }
@@ -54,6 +56,10 @@ namespace imgLoader.Forms
         {
             var temp = new Form1();
             temp.Show();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
         }
     }
 }

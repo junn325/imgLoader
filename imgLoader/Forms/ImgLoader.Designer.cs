@@ -44,6 +44,7 @@ namespace imgLoader.Forms
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.loaderList1.AutoScroll = true;
+            this.loaderList1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.loaderList1.Controls.Add(this.tmp);
             this.loaderList1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.loaderList1.Location = new System.Drawing.Point(12, 61);
@@ -62,7 +63,7 @@ namespace imgLoader.Forms
             this.tmp.Name = "tmp";
             this.tmp.Route = "(경로)";
             this.tmp.SiteName = "hiyobi";
-            this.tmp.Size = new System.Drawing.Size(854, 53);
+            this.tmp.Size = new System.Drawing.Size(619, 53);
             this.tmp.TabIndex = 0;
             this.tmp.Title = "테스트";
             // 
@@ -74,6 +75,7 @@ namespace imgLoader.Forms
             this.button1.TabIndex = 1;
             this.button1.Text = "button1";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // button2
             // 
