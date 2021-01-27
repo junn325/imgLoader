@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace imgLoader.Forms
 {
@@ -22,13 +23,16 @@ namespace imgLoader.Forms
 
         private void ImgLoader_Load(object sender, EventArgs e)
         {
-
+            foreach (var VARIABLE in Directory.GetFiles(""))
+            {
+                
+            }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
             var sites = new string[] {"hiyobi", "Hitomi", "nhentai", "e-hentai"};
-            var lItem = new LoaderItem { Title = $"{i++}번째 항목", Author = ((char)(i * 10)).ToString(), SiteName = sites[i % 4], ImgCount = i.ToString() };
+            var lItem = new LoaderItem { Title = $"{i++}번째 항목", Author = ((char)(i * 10)).ToString(), SiteName = sites[i % 4], ImgCount = (i * 100).ToString() };
             loaderList1.Controls.Add(lItem);
         }
 

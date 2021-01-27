@@ -43,6 +43,13 @@ namespace imgLoader.Forms
             this.loaderList1.Size = new System.Drawing.Size(776, 310);
             this.loaderList1.TabIndex = 0;
             this.loaderList1.WrapContents = false;
+            var tmp = new imgLoader.LoaderList.LoaderItem();
+            tmp.Title = "테스트";
+            tmp.Author = "imgL";
+            tmp.SiteName = "hiyobi";
+            tmp.ImgCount = "9999";
+
+            this.loaderList1.Controls.Add(tmp);
             // 
             // button1
             // 

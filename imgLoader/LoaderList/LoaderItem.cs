@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace imgLoader.LoaderList
 {
@@ -28,9 +29,20 @@ namespace imgLoader.LoaderList
             set => siteName.Text = value;
         }
 
+        public string Route
+        {
+            get => route.Text;
+            set => route.Text = value;
+        }
+
         public LoaderItem()
         {
             InitializeComponent();
         }
+
+        //private void imgCount_SizeChanged(object sender, System.EventArgs e)
+        //{
+        //    route.Left = imgCount.Right + 4;
+        //}
     }
 }

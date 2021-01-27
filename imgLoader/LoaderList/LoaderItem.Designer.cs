@@ -29,36 +29,17 @@ namespace imgLoader.LoaderList
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.siteName = new System.Windows.Forms.Label();
             this.imgCount = new System.Windows.Forms.Label();
             this.title = new System.Windows.Forms.Label();
             this.author = new System.Windows.Forms.Label();
+            this.route = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(58, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "제목 :";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(58, 15);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 15);
-            this.label2.TabIndex = 0;
-            this.label2.Text = "작가 :";
             // 
             // siteName
             // 
             this.siteName.AutoSize = true;
-            this.siteName.Location = new System.Drawing.Point(58, 30);
+            this.siteName.Location = new System.Drawing.Point(6, 34);
             this.siteName.Name = "siteName";
             this.siteName.Size = new System.Drawing.Size(42, 15);
             this.siteName.TabIndex = 0;
@@ -67,7 +48,7 @@ namespace imgLoader.LoaderList
             // imgCount
             // 
             this.imgCount.AutoSize = true;
-            this.imgCount.Location = new System.Drawing.Point(106, 30);
+            this.imgCount.Location = new System.Drawing.Point(55, 34);
             this.imgCount.Name = "imgCount";
             this.imgCount.Size = new System.Drawing.Size(33, 15);
             this.imgCount.TabIndex = 0;
@@ -76,47 +57,53 @@ namespace imgLoader.LoaderList
             // title
             // 
             this.title.AutoSize = true;
-            this.title.Location = new System.Drawing.Point(100, 0);
+            this.title.Location = new System.Drawing.Point(6, 4);
             this.title.Name = "title";
             this.title.Size = new System.Drawing.Size(39, 15);
             this.title.TabIndex = 1;
-            this.title.Text = "label5";
+            this.title.Text = "(제목)";
             // 
             // author
             // 
             this.author.AutoSize = true;
-            this.author.Location = new System.Drawing.Point(100, 15);
+            this.author.Location = new System.Drawing.Point(6, 19);
             this.author.Name = "author";
             this.author.Size = new System.Drawing.Size(39, 15);
             this.author.TabIndex = 1;
-            this.author.Text = "label5";
+            this.author.Text = "(작가)";
+            // 
+            // route
+            // 
+            this.route.AutoSize = true;
+            this.route.Location = new System.Drawing.Point(98, 34);
+            this.route.Name = "route";
+            this.route.Size = new System.Drawing.Size(39, 15);
+            this.route.TabIndex = 2;
+            this.route.Text = "(경로)";
             // 
             // LoaderItem
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.route);
             this.Controls.Add(this.author);
             this.Controls.Add(this.title);
             this.Controls.Add(this.imgCount);
             this.Controls.Add(this.siteName);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
             this.DoubleBuffered = true;
             this.Name = "LoaderItem";
-            this.Size = new System.Drawing.Size(438, 53);
+            this.Size = new System.Drawing.Size(514, 53);
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label siteName;
         private System.Windows.Forms.Label imgCount;
         private System.Windows.Forms.Label title;
         private System.Windows.Forms.Label author;
+        private System.Windows.Forms.Label route;
     }
 }
