@@ -7,6 +7,22 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
+        <Border  BorderBrush="Black" BorderThickness="2" Margin="10,32,10,70">
+            <ScrollViewer x:Name="MyScrollViewer" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <local:LoaderList Height="auto" Width="{Binding ElementName=MyScrollViewer, Path=ViewportWidth}" Background="White">
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                    <local:LoaderItem Width="696" Margin="5,5,5,5"/>
+                </local:LoaderList>
+            </ScrollViewer>
+        </Border>
 
+        <Button Content="Button" HorizontalAlignment="Left" Margin="617,381,0,0" VerticalAlignment="Top" Height="27" Width="95"/>
     </Grid>
 </Window>
