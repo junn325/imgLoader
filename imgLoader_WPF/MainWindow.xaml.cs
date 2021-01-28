@@ -29,5 +29,19 @@ namespace imgLoader_WPF
         private void Button_Click(object sender, RoutedEventArgs e)
         {
         }
+
+        private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            foreach (UIElement child in LList.Children)
+            {
+                if (child.DependencyObjectType.Name == "Grid") continue;
+                ((LoaderItem)child).Width = System.Windows.SystemParameters.WorkArea.Width;
+            }
+
+        }
     }
 }

@@ -48,6 +48,12 @@ namespace imgLoader_WPF
             set => route.Content = value;
         }
 
+        //public string Size
+        //{
+        //    get => this.Height
+        //    set => route.Content = value;
+        //}
+
         public LoaderItem()
         {
             InitializeComponent();
