@@ -18,6 +18,36 @@ namespace imgLoader_WPF
     /// </summary>
     public partial class LoaderItem : UserControl
     {
+        public string Title
+        {
+            get => title.Content.ToString();
+            set => title.Content = value;
+        }
+
+        public string Author
+        {
+            get => author.Content.ToString();
+            set => author.Content = value;
+        }
+
+        public string ImgCount
+        {
+            get => imgCount.Content.ToString();
+            set => imgCount.Content = value + "장";
+        }
+
+        public string SiteName
+        {
+            get => siteName.Content.ToString();
+            set => siteName.Content = value;
+        }
+
+        public string Route
+        {
+            get => route.Content.ToString();
+            set => route.Content = value;
+        }
+
         public LoaderItem()
         {
             InitializeComponent();
