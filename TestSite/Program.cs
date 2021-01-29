@@ -14,24 +14,24 @@ namespace TestSite
     {
         private static void Main(string[] args)
         {
-            var sw = new Stopwatch();
-            var route = "D:\\문서\\사진\\Saved Pictures\\고니\\manga\\Lingua Franca!! (akatsuki myuuto)\\958567.Hiyobi";
-            string test;
-            sw.Start();
+            Console.WriteLine(Calculator.div(17.0, 2.0));
+        }
+    }
 
-            for (int j = 0; j < 20; j++)
-            {
-                for (var i = 0; i < 1000; i++)
-                {
-                    //using var sr = File.OpenText(route);
-                    //test = sr.ReadToEnd();
+    static class Calculator
+    {
+        public static int Sum(int a, int b)
+        {
+            return a + b;
+        }
 
-                    test = File.ReadAllText(route);
-                }
-                Console.WriteLine(sw.Elapsed.Ticks);
-                sw.Restart();
-            }
-
+        public static int Minus(int a, int b)
+        {
+            return a - b;
+        }
+        public static double div(double a, double b)
+        {
+            return a / b;
         }
 
     }
