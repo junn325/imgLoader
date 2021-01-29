@@ -58,5 +58,30 @@ namespace imgLoader_WPF
         {
             InitializeComponent();
         }
+
+        public LoaderItem(string title, string author, string count, string site, string route)
+        {
+            InitializeComponent();
+
+            Title = title;
+            Author = author;
+            ImgCount = count;
+            SiteName = site;
+            Route = route;
+
+            this.Width = 696;
+        }
+        public LoaderItem(string title, string author, string count, string site, string route, double width)
+        {
+            InitializeComponent();
+
+            Title = title;
+            Author = author;
+            ImgCount = count;
+            SiteName = site;
+            Route = route;
+
+            this.Width = width;
+        }
     }
 }

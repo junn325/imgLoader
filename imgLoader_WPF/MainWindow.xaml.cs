@@ -20,6 +20,7 @@ namespace imgLoader_WPF
     /// </summary>
     public partial class MainWindow : Window
     {
+        int i = 0;
 
         public MainWindow()
         {
@@ -28,6 +29,8 @@ namespace imgLoader_WPF
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test");
+            LList.Children.Add(item);
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)

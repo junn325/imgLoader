@@ -13,13 +13,6 @@
                     <local:LoaderItem Width="696" Title="ImgLoader_WPF" Author="imgL" SiteName="Hiyobi" ImgCount="1.28" Route="C:\test" />
                     <local:LoaderItem Width="696"/>
                     <local:LoaderItem Width="696"/>
-                    <local:LoaderItem Width="696"/>
-                    <local:LoaderItem Width="696"/>
-                    <local:LoaderItem Width="696"/>
-                    <local:LoaderItem Width="696"/>
-                    <local:LoaderItem Width="696"/>
-                    <local:LoaderItem Width="696"/>
-
                 </local:LoaderList>
             </ScrollViewer>
         </Border>
