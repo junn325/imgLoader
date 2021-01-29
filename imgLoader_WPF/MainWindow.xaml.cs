@@ -35,6 +35,27 @@ namespace imgLoader_WPF
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            const string route = "D:\\문서\\사진\\Saved Pictures\\고니\\manga";
+
+            var index = Core.Index(route);
+            loaderList1.SuspendLayout();
+            foreach (var (path, info) in index)
+            {
+                var file = info.Split("\n");
+                var lItem = new LoaderItem
+                {
+                    Title = file[0],
+                    Author = file[1],
+                    SiteName = path.Split('.').Last(),
+                    ImgCount = file[2],
+                    Route = path
+                };
+                loaderList1.Controls.Add(lItem);
+            }
+            loaderList1.ResumeLayout();
+
+            label1.Text = $"item: {loaderList1.Controls.Count}개";
+
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
