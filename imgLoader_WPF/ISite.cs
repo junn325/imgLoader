@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace imgLoader
+namespace imgLoader_WPF
 {
     interface ISite
     {

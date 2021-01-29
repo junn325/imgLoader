@@ -1,4 +1,4 @@
-﻿namespace imgLoader
+﻿namespace imgLoader_WPF
 {
     internal static class StrTools
     {

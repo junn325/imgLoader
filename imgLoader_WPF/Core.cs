@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using imgLoader.Sites;
+using System.Windows.Controls;
+using System.Windows.Input;
+using imgLoader_WPF.Sites;
 
-namespace imgLoader
+namespace imgLoader_WPF
 {
     internal static class Core
     {
@@ -219,57 +220,7 @@ namespace imgLoader
             Console.WriteLine(new string('=', 100));
         }
 
-        internal static void SearchListView(ListView listview, KeyEventArgs e, TextBox text)
-        {
-            if (e.KeyCode != Keys.Enter) return;
-            e.SuppressKeyPress = true;
 
-            foreach (ListViewItem item in from item in listview.Items.Cast<ListViewItem>()
-                where item.SubItems[1].Text.IndexOf(text.Text, StringComparison.OrdinalIgnoreCase) < 0
-                orderby item.Text
-                select item)
-            {
-                LvItem.Add(item);
-                item.Remove();
-            }
-        }
-
-        internal static void RestoreSearch(ListView listview, TextBox textbox)
-        {
-            if (LvItem == null) return;
-            if (textbox.TextLength > 0) return;
-
-            foreach (ListViewItem item in LvItem)
-            {
-                listview.Items.Add(item);
-            }
-
-            listview.ListViewItemSorter = new ListViewItemComparer();
-            listview.Sort();
-        }
-
-        internal static void ControlLock(List<Control> econtrol)
-        {
-            foreach (var item in econtrol)
-            {
-                item.Enabled = false;
-            }
-        }
-
-        internal static void ControlUnlock(List<Control> econtrol)
-        {
-            foreach (var item in econtrol)
-            {
-                if (item.InvokeRequired)
-                {
-                    item.BeginInvoke(new Action(() => item.Enabled = true));
-                }
-                else
-                {
-                    item.Enabled = true;
-                }
-            }
-        }
 
     }
     internal class ListViewItemComparer : IComparer
@@ -290,7 +241,7 @@ namespace imgLoader
         {
             //return String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
             if (x == null || y == null) throw new NullReferenceException("x or y was Null.");
-            return (int.Parse(((ListViewItem)x).Text) > int.Parse(((ListViewItem)y).Text)) ? 1 : -1;
+            return (int.Parse(((ListViewItem)x).Content.ToString()) > int.Parse(((ListViewItem)y).Content.ToString())) ? 1 : -1;
         }
     }
 

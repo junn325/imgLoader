@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 
-namespace imgLoader
+namespace imgLoader_WPF
 {
     public static class StrLoad
     {

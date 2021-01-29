@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using imgLoader_WPF.LoaderList;
 
-namespace imgLoader_WPF
+namespace imgLoader_WPF.Forms
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -38,24 +27,24 @@ namespace imgLoader_WPF
             const string route = "D:\\문서\\사진\\Saved Pictures\\고니\\manga";
 
             var index = Core.Index(route);
-            loaderList1.SuspendLayout();
-            foreach (var (path, info) in index)
+
+            using (var d = Dispatcher.DisableProcessing())
             {
-                var file = info.Split("\n");
-                var lItem = new LoaderItem
+                foreach (var (path, info) in index)
                 {
-                    Title = file[0],
-                    Author = file[1],
-                    SiteName = path.Split('.').Last(),
-                    ImgCount = file[2],
-                    Route = path
-                };
-                loaderList1.Controls.Add(lItem);
+                    var file = info.Split("\n");
+                    var lItem = new LoaderItem
+                    {
+                        Title = file[0],
+                        Author = file[1],
+                        SiteName = path.Split('.').Last(),
+                        ImgCount = file[2],
+                        Route = path
+                    };
+                    LList.Children.Add(lItem);
+                }
+
             }
-            loaderList1.ResumeLayout();
-
-            label1.Text = $"item: {loaderList1.Controls.Count}개";
-
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
