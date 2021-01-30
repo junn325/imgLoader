@@ -126,7 +126,7 @@ namespace imgLoader_WPF
             try
             {
                 var temp = Core.GetNumber(_url);
-                var infoRoute = $"{_route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{_site.GetType().Name}";
+                var infoRoute = $"{_route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{Core.InfoExt}";
 
                 if (!Directory.Exists(_route))
                 {

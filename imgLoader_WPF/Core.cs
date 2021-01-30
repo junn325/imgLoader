@@ -19,8 +19,10 @@ namespace imgLoader_WPF
         internal const string RouteFile = "ILTempRout";
         internal const string IndexFile = "ILIdx";
 
-        private const string LogDir = "ILLOG";
-        private const string LogFile = "ILLG";
+        internal const string LogDir = "ILLOG";
+        internal const string LogFile = "ILLG";
+
+        internal const string InfoExt = "ilif";
 
         private static readonly string[] DFilter = {"(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..."};
         private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…"};
