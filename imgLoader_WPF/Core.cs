@@ -77,6 +77,7 @@ namespace imgLoader_WPF
 
             using var sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
             var info = site.ReturnInfo();
+
             for (var i = 0; i < info.Length; i++)
             {
                 sw.Write(
