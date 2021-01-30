@@ -11,10 +11,28 @@ namespace imgL_Fixer
         //todo: 작가명 제대로 안써진것들 수정
         private static void Main(string[] args)
         {
-            Console.Write("Route: ");
-            var route = Console.ReadLine();
+            const string temp = "D:\\문서\\사진\\Saved Pictures\\고니\\manga";
 
-            FixInfo_LineBreak(route);
+            Console.Write("File(s): " + temp);
+            var key = Console.ReadKey();
+
+            string route;
+            if (key.Key == ConsoleKey.Enter)
+            {
+                route = temp;
+            }
+            else
+            {
+                Console.Clear();
+                Console.Write("File(s): ");
+                route = Console.ReadLine();
+            }
+
+            Console.Write("Route: ");
+            //var route = Console.ReadLine();
+
+            //FixInfo_LineBreak(route);
+            FixInfo_Ext_Only(route);
         }
 
         private static void FixInfo_LineBreak(string route)
@@ -186,6 +204,52 @@ namespace imgL_Fixer
             }
 
 
+        }
+
+        private static void FixInfo_Ext_N_Content(string route)
+        {
+            var tp = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai"));
+            var sb = new StringBuilder();
+            var sb1 = new StringBuilder();
+
+            string[] infos;
+            foreach (var info in tp)
+            {
+                infos = new string[6];
+                var temp = File.ReadAllText(info).Split('\n');
+
+                infos[0] = info.Split('.').Last();
+                for (int i = 1; i < 5; i++) infos[i] = temp[i - 1];
+
+                Console.WriteLine($"Deleted: {info}");
+                sb.Append("Deleted: ").Append(info).Append('\n');
+                File.Delete(info);
+
+                var infoRoute = $"{route}\\{info.Split('\\').Last().Split('.')[0]}.ilif";
+                using var sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
+
+                for (var i = 0; i < infos.Length; i++)
+                {
+                    sw.Write(
+                        i != infos.Length - 1
+                            ? infos[i] + '\n'
+                            : infos[i]
+                    );
+                }
+
+                File.SetAttributes(info, FileAttributes.Hidden);
+            }
+            File.WriteAllText($"{DateTime.Now.Ticks}.txt", sb.ToString());
+        }
+
+        private static void FixInfo_Ext_Only(string route)
+        {
+            var tp = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai"));
+
+            foreach (var path in tp)
+            {
+                File.Move(path, $"{route}\\{path.Split('\\')[^2]}\\{path.Split('\\').Last().Split('.')[0]}.ilif");
+            }
         }
     }
 }

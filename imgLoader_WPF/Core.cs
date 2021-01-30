@@ -150,8 +150,10 @@ namespace imgLoader_WPF
             //var infoFiles = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories)
             //    .Where(s => s.EndsWith(".Hitomi") || s.EndsWith(".Hiyobi") || s.EndsWith(".NHentai") || s.EndsWith("EHentai")).ToArray();
 
-            var infoFiles = AppendArray(AppendArray(Directory.GetFiles(route, "*.Hitomi", SearchOption.AllDirectories), Directory.GetFiles(route, "*.Hiyobi", SearchOption.AllDirectories)),
-                AppendArray(Directory.GetFiles(route, "*.NHentai", SearchOption.AllDirectories), Directory.GetFiles(route, "*.EHentai", SearchOption.AllDirectories)));
+            //var infoFiles = AppendArray(AppendArray(Directory.GetFiles(route, "*.Hitomi", SearchOption.AllDirectories), Directory.GetFiles(route, "*.Hiyobi", SearchOption.AllDirectories)),
+            //    AppendArray(Directory.GetFiles(route, "*.NHentai", SearchOption.AllDirectories), Directory.GetFiles(route, "*.EHentai", SearchOption.AllDirectories)));
+
+            var infoFiles = Directory.GetFiles(route, $"*.{InfoExt}", SearchOption.AllDirectories);
 
             if (File.Exists($"{tempPath}{IndexFile}.txt"))
             {

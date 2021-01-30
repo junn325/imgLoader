@@ -38,7 +38,7 @@ namespace imgLoader_WPF.Windows
             foreach (var (path, info) in index)
             {
                 var file = info.Split("\n");
-                var lItem = new LoaderItem(file[0], file[1], file[2], path.Split('.').Last(), path, LList.Width);
+                var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, LList.Width);
                 LList.Children.Add(lItem);
             }
             Debug.WriteLine(sw.Elapsed.Ticks);

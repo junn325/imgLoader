@@ -23,6 +23,9 @@
         /// </summary>
         public static string GetStringValue(string source, string name)
         {
+            source = source.Replace("\\\"", "\"");
+            source = source.Replace("\\{", "{");
+            source = source.Replace("\\}", "}");
             return source.Split($"\"{name}\":\"")[1].Split('\"')[0];
         }
 
