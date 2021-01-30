@@ -78,11 +78,12 @@ namespace imgLoader_WPF.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[5];
+            var info = new string[6];
 
-            info[0] = _title;
-            info[1] = $"{_artist}|{_group}";
-            info[2] = _src_cdn.StrLen("name").ToString();
+            info[0] = "Hiyobi";
+            info[1] = _title;
+            info[2] = $"{_artist}|{_group}";
+            info[3] = _src_cdn.StrLen("name").ToString();
 
             var sb = new StringBuilder();
             sb.Append("tags:");
@@ -92,10 +93,10 @@ namespace imgLoader_WPF.Sites
                 sb.Append(StrTools.GetStringValue(item.Split('}')[0],"value")).Append(';');
             }
 
-            info[3] = sb.ToString().Trim();
+            info[4] = sb.ToString().Trim();
             if (!_src_api.Contains("\"date\"")) return info;
 
-            info[4] = StrTools.GetStringValue(_src_api, "date");
+            info[5] = StrTools.GetStringValue(_src_api, "date");
 
             return info;
         }

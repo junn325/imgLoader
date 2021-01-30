@@ -105,11 +105,12 @@ namespace imgLoader_WPF.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[5];
+            var info = new string[6];
 
-            info[0] = _title;
-            info[1] = $"{_artist}|{_group}";
-            info[2] = _src_info.StrLen("hash").ToString();
+            info[0] = "Hitomi";
+            info[1] = _title;
+            info[2] = $"{_artist}|{_group}";
+            info[3] = _src_info.StrLen("hash").ToString();
 
             var sb = new StringBuilder();
             sb.Append("tags:");
@@ -129,9 +130,9 @@ namespace imgLoader_WPF.Sites
                     .Append(StrTools.GetStringValue(item.Split('}')[0], "tag")).Append(';');
             }
 
-            info[3] = sb.ToString().Trim();
+            info[4] = sb.ToString().Trim();
             if (!_src_info.Contains("\"date\"")) return info;
-            info[4] = StrTools.GetStringValue(_src_info, "date");
+            info[5] = StrTools.GetStringValue(_src_info, "date");
 
             return info;
         }

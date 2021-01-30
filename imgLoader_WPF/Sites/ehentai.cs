@@ -94,10 +94,11 @@ namespace imgLoader_WPF.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[5];
-            info[0] = _title ?? throw new Exception("_title was Null");
-            info[1] = $"{_artist}|{_group}";
-            info[2] = StrTools.GetStringValue(_src_data, "filecount");
+            var info = new string[6];
+            info[0] = "EHentai";
+            info[1] = _title ?? throw new Exception("_title was Null");
+            info[2] = $"{_artist}|{_group}";
+            info[3] = StrTools.GetStringValue(_src_data, "filecount");
 
             var sb = new StringBuilder();
             sb.Append("tags:");
@@ -107,8 +108,8 @@ namespace imgLoader_WPF.Sites
 
                 sb.Append(item.Split('\"')[1]).Append(';');
             }
-            info[3] = sb.ToString().Trim();
-            info[4] = _src_gall.Split("<td class=\"gdt2\">")[1].Split("</td>")[0];
+            info[4] = sb.ToString().Trim();
+            info[5] = _src_gall.Split("<td class=\"gdt2\">")[1].Split("</td>")[0];
 
             return info;
         }

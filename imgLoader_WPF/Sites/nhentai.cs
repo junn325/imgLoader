@@ -53,11 +53,12 @@ namespace imgLoader_WPF.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[5];
+            var info = new string[6];
 
-            info[0] = _title;
-            info[1] = $"{_artist}|{_group}";
-            info[2] = _imgNum.ToString();
+            info[0] = "NHentai";
+            info[1] = _title;
+            info[2] = $"{_artist}|{_group}";
+            info[3] = _imgNum.ToString();
 
             var temp = new StringBuilder();
             temp.Append("tags:");
@@ -66,10 +67,10 @@ namespace imgLoader_WPF.Sites
                 if (!item.Contains("tag")) continue;
                 temp.Append(item.Split('\"')[0]).Append(';');
             }
-            info[3] = temp.ToString().Trim();
+            info[4] = temp.ToString().Trim();
 
             if (!_source.Contains("datetime")) return info;
-            info[4] = _source.Split("datetime=\"")[1].Split('\"')[0];
+            info[5] = _source.Split("datetime=\"")[1].Split('\"')[0];
 
             return info;
         }
