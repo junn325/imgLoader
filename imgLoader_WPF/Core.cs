@@ -140,9 +140,6 @@ namespace imgLoader_WPF
 
         internal static Dictionary<string, string> Index(string route)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             const string countSeparator = "/**/";
             const string itemSeparator = "-**-";
             var tempPath = Path.GetTempPath();

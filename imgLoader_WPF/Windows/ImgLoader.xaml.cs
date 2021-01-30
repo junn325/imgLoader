@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
+using System.Collections.Generic;
 using imgLoader_WPF.LoaderList;
 
 namespace imgLoader_WPF.Windows
@@ -10,7 +12,8 @@ namespace imgLoader_WPF.Windows
     /// </summary>
     public partial class MainWindow : Window
     {
-        int i = 0;
+        private Dictionary<string, string> index;
+        int i;
 
         public MainWindow()
         {
@@ -27,12 +30,7 @@ namespace imgLoader_WPF.Windows
         {
             const string route = "D:\\문서\\사진\\Saved Pictures\\고니\\manga";
 
-            var sw = new Stopwatch();
-            sw.Start();
-
-            var index = Core.Index(route);
-            Debug.WriteLine(sw.Elapsed.Ticks);
-            sw.Restart();
+            index = Core.Index(route);
 
             //using var d = Dispatcher.DisableProcessing();
             foreach (var (path, info) in index)
@@ -41,17 +39,22 @@ namespace imgLoader_WPF.Windows
                 var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, LList.Width);
                 LList.Children.Add(lItem);
             }
-            Debug.WriteLine(sw.Elapsed.Ticks);
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            foreach (UIElement child in LList.Children)
-            {
-                if (child.DependencyObjectType.Name == "Grid") continue;
-                ((LoaderItem)child).Width = System.Windows.SystemParameters.WorkArea.Width;
-            }
+            //foreach (UIElement child in LList.Children)
+            //{
+            //    if (child.DependencyObjectType.Name == "Grid") continue;
+            //    ((LoaderItem)child).Width = System.Windows.SystemParameters.WorkArea.Width;
+            //}
 
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var temp = (index.Keys.ToArray()[(int)(index.Keys.ToArray().Length / (((double)DateTime.Now.Ticks) % 10))]);
+            Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last())));
         }
     }
 }
