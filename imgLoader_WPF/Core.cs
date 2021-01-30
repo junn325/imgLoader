@@ -137,40 +137,30 @@ namespace imgLoader_WPF
 
         internal static Dictionary<string, string> Index(string route)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             const string countSeparator = "/**/";
             const string itemSeparator = "-**-";
+            var tempPath = Path.GetTempPath();
 
-            var count = 0;
+            //var infoFiles = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories)
+            //    .Where(s => s.EndsWith(".Hitomi") || s.EndsWith(".Hiyobi") || s.EndsWith(".NHentai") || s.EndsWith("EHentai")).ToArray();
+
+            var infoFiles = AppendArray(AppendArray(Directory.GetFiles(route, "*.Hitomi", SearchOption.AllDirectories), Directory.GetFiles(route, "*.Hiyobi", SearchOption.AllDirectories)),
+                AppendArray(Directory.GetFiles(route, "*.NHentai", SearchOption.AllDirectories), Directory.GetFiles(route, "*.EHentai", SearchOption.AllDirectories)));
+
+            if (File.Exists($"{tempPath}{IndexFile}.txt"))
+            {
+                var file = File.ReadAllText($"{tempPath}{IndexFile}.txt");
+                if (file.Length != 0 && file.Contains("/**/") && int.Parse(file.Split(countSeparator)[0]) == infoFiles.Length)
+                {
+                    return file.Split(countSeparator)[1].Split(itemSeparator).Where(s => s.Length != 0).ToDictionary(s => s.Split('`')[0], s => s.Split('`')[1]);
+                }
+            }
+
             var sb = new StringBuilder();
-            string file = null;
-            Dictionary<string, string> infos;
-
-            if (File.Exists($"{Path.GetTempPath()}{IndexFile}.txt"))
-            {
-                file = File.ReadAllText($"{Path.GetTempPath()}{IndexFile}.txt");
-                if (file.Length != 0 || file.Contains("/**/"))
-                {
-                    count = int.Parse(file.Split(countSeparator)[0]);
-                }
-            }
-
-            var infoFiles = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories)
-                .Where(s => s.EndsWith(".Hitomi") || s.EndsWith(".Hiyobi") || s.EndsWith(".NHentai") || s.EndsWith("EHentai")).ToArray();
-
-            if (file != null && infoFiles.Length == count)
-            {
-                var content = file.Split(countSeparator)[1];
-                infos = new Dictionary<string, string>(count);
-                foreach (var s in content.Split(itemSeparator))
-                {
-                    if (s.Length == 0) continue;
-                    infos.Add(s.Split('`')[0], s.Split('`')[1]);
-                }
-
-                return infos;
-            }
-
-            infos = new Dictionary<string, string>(infoFiles.Length);
+            var infos = new Dictionary<string, string>(infoFiles.Length);
             var tasks = new Task[infoFiles.Length];
 
             for (var i = 0; i < infoFiles.Length; i++)
@@ -183,16 +173,13 @@ namespace imgLoader_WPF
                         var info = File.ReadAllText(infoRoute);
                         infos.Add(infoRoute, info);
                         sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
-                        if (sb.Length != sb.Replace("\0", string.Empty).Length)
-                            Debug.Write($"*/*/*/*/*{infoRoute}, {info}");
                     }
                 });
             }
 
             Task.WaitAll(tasks);
 
-            File.WriteAllText($"{Path.GetTempPath()}{IndexFile}.txt", $"{infos.Count}{countSeparator}{sb}", Encoding.UTF8);
-            Debug.Write(sb);
+            File.WriteAllText($"{tempPath}{IndexFile}.txt", $"{infos.Count}{countSeparator}{sb}", Encoding.UTF8);
 
             return infos;
         }
@@ -220,8 +207,22 @@ namespace imgLoader_WPF
             Console.WriteLine(new string('=', 100));
         }
 
+        internal static T[] AppendArray<T>(T[] a, T[] b)
+        {
+            var temp = new T[a.Length + b.Length];
 
+            for (var i = 0; i < a.Length; i++)
+            {
+                temp[i] = a[i];
+            }
 
+            for (var i = 0; i < b.Length; i++)
+            {
+                temp[i + a.Length] = b[i];
+            }
+
+            return temp;
+        }
     }
     internal class ListViewItemComparer : IComparer
     {

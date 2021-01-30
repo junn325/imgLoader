@@ -1,8 +1,9 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using imgLoader_WPF.LoaderList;
 
-namespace imgLoader_WPF.Forms
+namespace imgLoader_WPF.Windows
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -26,25 +27,21 @@ namespace imgLoader_WPF.Forms
         {
             const string route = "D:\\문서\\사진\\Saved Pictures\\고니\\manga";
 
+            var sw = new Stopwatch();
+            sw.Start();
+
             var index = Core.Index(route);
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
-            using (var d = Dispatcher.DisableProcessing())
+            //using var d = Dispatcher.DisableProcessing();
+            foreach (var (path, info) in index)
             {
-                foreach (var (path, info) in index)
-                {
-                    var file = info.Split("\n");
-                    var lItem = new LoaderItem
-                    {
-                        Title = file[0],
-                        Author = file[1],
-                        SiteName = path.Split('.').Last(),
-                        ImgCount = file[2],
-                        Route = path
-                    };
-                    LList.Children.Add(lItem);
-                }
-
+                var file = info.Split("\n");
+                var lItem = new LoaderItem(file[0], file[1], file[2], path.Split('.').Last(), path, LList.Width);
+                LList.Children.Add(lItem);
             }
+            Debug.WriteLine(sw.Elapsed.Ticks);
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)

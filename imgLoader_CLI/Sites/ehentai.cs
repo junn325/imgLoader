@@ -34,7 +34,7 @@ namespace imgLoader_CLI.Sites
 
                 if (_src_gall == null) throw new Exception();
 
-                _gall_id = mNumber.Split('/')[0];
+                _gall_id = mNumber.Split('/')[0]; https://hiyobi.me/reader/1208040
                 var gallToken = mNumber.Split('/')[1];
 
                 _src_data = XmlHttpRequest_Data(_api_url, _gall_id, gallToken);
