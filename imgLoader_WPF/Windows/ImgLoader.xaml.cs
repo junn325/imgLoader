@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using imgLoader_WPF.LoaderList;
@@ -31,12 +32,21 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            const string route = "D:\\문서\\사진\\Saved Pictures\\고니\\manga";
+            if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
+            {
+                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
+            }
 
-            index = Core.Index(route);
+#if DEBUG
+            //Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+#endif
 
             new Thread(() =>
             {
+                index = Core.Index(Core.Route);
+
+                if (index == null) return;
+
                 foreach (var (path, info) in index)
                 {
                     var file = info.Split("\n");
@@ -49,6 +59,8 @@ namespace imgLoader_WPF.Windows
                 }
 
             }).Start();
+
+            ;
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
