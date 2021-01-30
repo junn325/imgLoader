@@ -3,7 +3,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using imgLoader_WPF.LoaderList;
+using System.Threading;
 
 namespace imgLoader_WPF.Windows
 {
@@ -32,13 +35,20 @@ namespace imgLoader_WPF.Windows
 
             index = Core.Index(route);
 
-            //using var d = Dispatcher.DisableProcessing();
-            foreach (var (path, info) in index)
+            new Thread(() =>
             {
-                var file = info.Split("\n");
-                var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, LList.Width);
-                LList.Children.Add(lItem);
-            }
+                foreach (var (path, info) in index)
+                {
+                    var file = info.Split("\n");
+                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
+                    {
+                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, LList.Width);
+                        LList.Children.Add(lItem);
+
+                    }));
+                }
+
+            }).Start();
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -53,8 +63,8 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var temp = (index.Keys.ToArray()[(int)(index.Keys.ToArray().Length / (((double)DateTime.Now.Ticks) % 10))]);
-            Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last())));
+            var temp = index.Keys.ToArray()[new Random().Next(0, index.Count)];
+            Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
         }
     }
 }
