@@ -32,7 +32,7 @@ namespace imgL_Fixer
             //var route = Console.ReadLine();
 
             //FixInfo_LineBreak(route);
-            FixInfo_Ext_Only(route);
+            FixInfo_Ext_N_Content(route);
         }
 
         private static void FixInfo_LineBreak(string route)
@@ -225,7 +225,7 @@ namespace imgL_Fixer
                 sb.Append("Deleted: ").Append(info).Append('\n');
                 File.Delete(info);
 
-                var infoRoute = $"{route}\\{info.Split('\\').Last().Split('.')[0]}.ilif";
+                var infoRoute = info.Replace(info.Split('.').Last(), "ilif");
                 using var sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
 
                 for (var i = 0; i < infos.Length; i++)
@@ -237,7 +237,7 @@ namespace imgL_Fixer
                     );
                 }
 
-                File.SetAttributes(info, FileAttributes.Hidden);
+                File.SetAttributes(infoRoute, FileAttributes.Hidden);
             }
             File.WriteAllText($"{DateTime.Now.Ticks}.txt", sb.ToString());
         }
