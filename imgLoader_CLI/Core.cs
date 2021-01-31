@@ -126,8 +126,7 @@ namespace imgLoader_CLI
 
         internal static Dictionary<string, string> Index(string route)
         {
-            var infoFiles = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories)
-                .Where(s => s.EndsWith(".Hitomi") || s.EndsWith(".Hiyobi") || s.EndsWith(".NHentai") || s.EndsWith("EHentai")).ToArray();
+            var infoFiles = Directory.EnumerateFiles(route, "*.ilif", SearchOption.AllDirectories).ToArray();
 
             var infos = new Dictionary<string, string>(infoFiles.Length);
             var tasks = new Task[infoFiles.Length];
