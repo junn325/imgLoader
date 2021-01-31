@@ -50,7 +50,6 @@ namespace imgLoader_CLI
                     }
 
                     Console.WriteLine($"{site.GetType().Name}");
-
                     Console.Write("Count:\t");
                     imgList = site.GetImgUrls();
                     Console.WriteLine($"{imgList.Count} images");

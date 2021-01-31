@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -13,11 +15,11 @@ using System.Windows.Shapes;
 namespace imgLoader_WPF.Windows
 {
     /// <summary>
-    /// Interaction logic for SetRoute.xaml
+    /// Interaction logic for Settings.xaml
     /// </summary>
-    public partial class SetRoute : Window
+    public partial class Settings : Window
     {
-        public SetRoute()
+        public Settings()
         {
             InitializeComponent();
         }

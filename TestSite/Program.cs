@@ -12,27 +12,25 @@ namespace TestSite
 {
     internal static class Program
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine(Calculator.div(17.0, 2.0));
+            var b = 동호(302, 704);
+        }
+        static string 동호(int family, int name)
+        {
+            return "이름은 " + family + name + " 입니다.";
+
+
         }
     }
-
-    static class Calculator
+    
+    public class person
     {
-        public static int Sum(int a, int b)
+        public void 김창규()
         {
-            return a + b;
-        }
 
-        public static int Minus(int a, int b)
-        {
-            return a - b;
         }
-        public static double div(double a, double b)
-        {
-            return a / b;
-        }
-
     }
 }
+
+
