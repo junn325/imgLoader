@@ -10,136 +10,127 @@ namespace imgLoader_WPF
 {
     internal class Processor
     {
-        private readonly Dictionary<string, string> _failed = new Dictionary<string, string>();
+        private readonly Dictionary<string, string> _failed = new();
 
         private Task[] _tasks;
-        private ISite _site;
-
-        private Dictionary<string, string> _imgList;
 
         private bool _stop;
         private byte _separator;
-       
-        private string _url, _artist, _title, _route;
 
-
-        internal string Initialize(string url)
+        public Processor(string url)
         {
-            string error;
-            if (string.IsNullOrEmpty(url)) return "urlNull";
-            _url = url;
+            if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
 
-            error = Load();
-            if (error != null) return "fail";
-            GetArtist();
-            GetTitle();
-            GetRoute();
-            error = CreateInfo();
-            if (error != null) return "fail";
+            var site = Load(url);
+            var route = GetRoute(GetArtist(site), GetTitle(site.GetTitle()));
 
-            AllocTask();
-            //Process(_url);
+            if (CreateInfo(url, route, site) != null) throw new Exception("Failed to Initialize: Processor");
 
+            AllocTask(route, site.GetImgUrls());
             Stopping();
-            return null;
         }
 
-        private string Load()
+        private static ISite Load(string url)
         {
             try
             {
-                _site = Core.LoadSite(_url);
+                var site = Core.LoadSite(url);
 
-                if (_site?.IsValidated() != true)
-                {
-                    return "FailLoad";
-                }
-                
-                _imgList = _site.GetImgUrls();
-                _title = _site.GetTitle();
-                _artist = "N/A";
-
-                return null;
+                return site?.IsValidated() != true
+                            ? null
+                            : site;
             }
             catch
             {
-                return "ConnectionFail";
+                return null;
             }
         }
 
-        private void GetArtist()
+        private static string GetArtist(ISite site)
         {
             var sb = new StringBuilder();
+            string temp;
 
-            if (_site.GetArtist() != "|")
+            if (site.GetArtist() == "|") return null;
+            if (site.GetArtist().Split('|')[0].Length != 0)
             {
-                if (_site.GetArtist().Split('|')[0].Length != 0)
+                foreach (var s in site.GetArtist().Split('|')[0].Split(';'))
                 {
-                    foreach (var s in _site.GetArtist().Split('|')[0].Split(';'))
-                    {
-                        if (s.Length == 0) continue;
-                        sb.Append(s).Append(", ");
-                    }
-                    _artist = sb.ToString().Substring(0, sb.Length - 2);
-
-                    sb.Clear();
-
-                    foreach (var s in _site.GetArtist().Split('|')[1].Split(';'))
-                    {
-                        if (s.Length == 0) continue;
-                        sb.Append(s).Append(", ");
-                    }
-
-                    _artist =
-                        sb.Length != 0
-                            ? $"{_artist} ({sb.ToString().Substring(0, sb.Length - 2)})"
-                            : _artist;
+                    if (s.Length == 0) continue;
+                    sb.Append(s).Append(", ");
                 }
-                else
+                temp = sb.ToString().Substring(0, sb.Length - 2);
+
+                sb.Clear();
+
+                foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
                 {
-                    foreach (var s in _site.GetArtist().Split('|')[1].Split(';'))
-                    {
-                        if (s.Length == 0) continue;
-                        sb.Append(s).Append(", ");
-                    }
-
-                    _artist = sb.ToString().Substring(0, sb.Length - 2);
+                    if (s.Length == 0) continue;
+                    sb.Append(s).Append(", ");
                 }
+
+                temp =
+                    sb.Length != 0
+                        ? $"{temp} ({sb.ToString().Substring(0, sb.Length - 2)})"
+                        : temp;
             }
+            else
+            {
+                foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
+                {
+                    if (s.Length == 0) continue;
+                    sb.Append(s).Append(", ");
+                }
+
+                temp = sb.ToString().Substring(0, sb.Length - 2);
+            }
+
+            return temp;
         }
 
-        private void GetTitle()
+        private static string GetTitle(string title)
         {
-            _title = Core.DirFilter(_title);
+            var temp = Core.DirFilter(title);
+
+            return Encoding.Unicode.GetByteCount(temp) > 255
+                        ? temp.Substring(0, 85)
+                        : temp;
         }
 
-        private void GetRoute()
+        private static string GetRoute(string artist, string title)
         {
-            _route =
-                _artist == "N/A"
-                    ? $@"{Core.Route}\{_title}"
-                    : $@"{Core.Route}\{_title} ({_artist})";
+            var temp =
+                artist == "N/A"
+                    ? $"{title}"
+                    : $"{title} ({artist})";
+
+            temp =
+                Encoding.Unicode.GetByteCount(artist + title + Core.Route) + 4 > 4096 || Encoding.Unicode.GetByteCount(artist + title) + 3 > 255
+                    ? temp.Replace(title, title.Substring(0, 80) + "...")
+                    : temp;
+
+            return $@"{Core.Route}\{temp}";
         }
 
-        private string CreateInfo()
+        private static string CreateInfo(string url, string route, ISite site)
         {
             try
             {
-                var temp = Core.GetNumber(_url);
-                var infoRoute = $"{_route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{Core.InfoExt}";
+                var temp = Core.GetNumber(url);
+                var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{Core.InfoExt}";
 
-                if (!Directory.Exists(_route))
+                if (!Directory.Exists(route))
                 {
-                    Directory.CreateDirectory(_route);
+                    Directory.CreateDirectory(route);
                 }
                 else
                 {
                     Console.WriteLine("\nAlready exists. Download again? Y/N");
-                    a: var result = Console.ReadLine()?.ToLower();
+                a: var result = Console.ReadLine()?.ToLower();
                     if (result == "n") return null;
                     if (result != "y") goto a;
                 }
-                Core.CreateInfo(infoRoute, _site);
+                Core.CreateInfo(infoRoute, site);
 
                 return null;
             }
@@ -153,18 +144,18 @@ namespace imgLoader_WPF
             }
         }
 
-        private void AllocTask()
+        private void AllocTask(string route, Dictionary<string, string> imgList)
         {
-            _tasks = new Task[_imgList.Count];
+            _tasks = new Task[imgList.Count];
 
             Console.Write("\n[");
-            AllocDown(_route, _imgList);
+            AllocDown(route, imgList);
 
             Task.WaitAll(_tasks);
 
-            var success = HandleFail(_route);
+            var success = HandleFail(route);
 
-            Core.Log($"Item:Complete: {_url}");
+            Core.Log($"Item:Complete: {route}");
             if (success)
             {
                 Console.Write("]\n");
@@ -181,7 +172,7 @@ namespace imgLoader_WPF
             _failed.Clear();
 
             var i = 0;
-            foreach (var item in urlList) _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(item.Value, route, item.Key));
+            foreach (var (key, value) in urlList) _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(value, route, key));
         }
 
         private void ThrDownload(string uri, string route, string fileName)
