@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:imgLoader_WPF.Windows"
         mc:Ignorable="d"
-        Title="SetRoute" Height="89" Width="618">
+        Title="SetRoute" Height="95" Width="618">
+
+    <!--<Canvas>
+        <TextBox Text="TextBox" TextWrapping="Wrap" Width="540" Height="18" Canvas.Left="39" Canvas.Top="15"/>
+    </Canvas>-->
+
     <Grid>
-        <TextBox HorizontalAlignment="Center" Text="TextBox" TextWrapping="Wrap" Width="540" Height="18" VerticalAlignment="Center"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+            <RowDefinition Height="25*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="40*"/>
+            <ColumnDefinition Width="110*"/>
+            <ColumnDefinition Width="150*"/>
+            <ColumnDefinition Width="150*"/>
+            <ColumnDefinition Width="150*"/>
+        </Grid.ColumnDefinitions>
+
+        <TextBox Text="경로를 직접 입력하거나 더블클릭하여 선택하세요." Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Margin="0,0,40,0"/>
     </Grid>
+
 </Window>

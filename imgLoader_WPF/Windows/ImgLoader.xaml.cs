@@ -36,6 +36,10 @@ namespace imgLoader_WPF.Windows
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
             }
+            else
+            {
+                
+            }
 
 #if DEBUG
             //Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
