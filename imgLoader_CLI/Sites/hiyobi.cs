@@ -27,7 +27,8 @@ namespace imgLoader_CLI.Sites
                 _src_api = wc.DownloadString($"https://api.hiyobi.me/gallery/{mNumber}");
                 _src_cdn = wc.DownloadString($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
 
-                _title = StrTools.GetStringValue(_src_api, "title");
+                if (_src_api.Contains("\\")) _src_api = _src_api.Replace("\\", "");
+                _title = _src_api.Split("title\":\"")[1].Split("\",")[0];
 
                 if (_src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists").Contains("value"))
                 {

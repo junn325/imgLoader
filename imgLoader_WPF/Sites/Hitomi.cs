@@ -23,8 +23,10 @@ namespace imgLoader_WPF.Sites
                 var srcGall = wc.DownloadString(wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
 
                 _src_info = temp.Result;
+
                 if (_src_info == null) return;
 
+                if (_src_info.Contains("\\")) _src_info = _src_info.Replace("\\", "");
                 _title = _src_info.Split("title\":\"")[1].Split('\"')[0];
 
                 for (var i = 1; i < srcGall.StrLen("/group/") + 1; i++) sb.Append(srcGall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
