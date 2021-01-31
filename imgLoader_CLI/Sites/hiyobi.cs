@@ -7,11 +7,6 @@ namespace imgLoader_CLI.Sites
 {
     public class Hiyobi : ISite
     {
-        public const string Supplement = "hiyobi.me/reader/\\n\\";
-
-        private static readonly string[] Filter = { " - Hiyobi.me", " - hiyobi.me" };
-        private static readonly string[] REPLACE = { "", "" };
-
         public string Number { get; set; }
 
         private readonly string _src_cdn, _src_api, _title, _artist, _group;
@@ -84,11 +79,12 @@ namespace imgLoader_CLI.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[5];
+            var info = new string[6];
 
-            info[0] = _title;
-            info[1] = $"{_artist}|{_group}";
-            info[2] = _src_cdn.StrLen("name").ToString();
+            info[0] = "Hiyobi";
+            info[1] = _title;
+            info[2] = $"{_artist}|{_group}";
+            info[3] = _src_cdn.StrLen("name").ToString();
 
             var sb = new StringBuilder();
             sb.Append("tags:");
@@ -98,10 +94,10 @@ namespace imgLoader_CLI.Sites
                 sb.Append(StrTools.GetStringValue(item.Split('}')[0],"value")).Append(';');
             }
 
-            info[3] = sb.ToString().Trim();
+            info[4] = sb.ToString().Trim();
             if (!_src_api.Contains("\"date\"")) return info;
 
-            info[4] = StrTools.GetStringValue(_src_api, "date");
+            info[5] = StrTools.GetStringValue(_src_api, "date");
 
             return info;
         }

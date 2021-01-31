@@ -117,7 +117,7 @@ namespace imgLoader_CLI
                 try
                 {
                     var temp = Core.GetNumber(link);
-                    var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{site.GetType().Name}";
+                    var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.ilif";
 
                     if (!Directory.Exists(route)) Directory.CreateDirectory(route);
                     else

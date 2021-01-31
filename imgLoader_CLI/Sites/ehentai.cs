@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,13 +10,8 @@ namespace imgLoader_CLI.Sites
 {
     public class EHentai : ISite
     {
-        public const string Supplement = "e-hentai.org/g/\\n\\/\\n\\/";
-
         private const string _api_url = "https://api.e-hentai.org/api.php";
         private const string _base_url = "https://e-hentai.org/";
-
-        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] Replace = { "", "", "", "" };
 
         private readonly string _src_gall, _src_data, _gall_id, _artist, _group, _title, _showKey;
 
@@ -34,7 +28,7 @@ namespace imgLoader_CLI.Sites
 
                 if (_src_gall == null) throw new Exception();
 
-                _gall_id = mNumber.Split('/')[0]; https://hiyobi.me/reader/1208040
+                _gall_id = mNumber.Split('/')[0];
                 var gallToken = mNumber.Split('/')[1];
 
                 _src_data = XmlHttpRequest_Data(_api_url, _gall_id, gallToken);
@@ -100,10 +94,11 @@ namespace imgLoader_CLI.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[5];
-            info[0] = _title ?? throw new Exception("_title was Null");
-            info[1] = $"{_artist}|{_group}";
-            info[2] = StrTools.GetStringValue(_src_data, "filecount");
+            var info = new string[6];
+            info[0] = "EHentai";
+            info[1] = _title ?? throw new Exception("_title was Null");
+            info[2] = $"{_artist}|{_group}";
+            info[3] = StrTools.GetStringValue(_src_data, "filecount");
 
             var sb = new StringBuilder();
             sb.Append("tags:");
@@ -113,8 +108,8 @@ namespace imgLoader_CLI.Sites
 
                 sb.Append(item.Split('\"')[1]).Append(';');
             }
-            info[3] = sb.ToString().Trim();
-            info[4] = _src_gall.Split("<td class=\"gdt2\">")[1].Split("</td>")[0];
+            info[4] = sb.ToString().Trim();
+            info[5] = _src_gall.Split("<td class=\"gdt2\">")[1].Split("</td>")[0];
 
             return info;
         }

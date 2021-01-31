@@ -4,10 +4,6 @@ namespace imgLoader_CLI.Sites
 {
     public class Pixiv : ISite
     {
-        public const string Supplement = "www.pixiv.net/artworks/\\n\\";
-
-        private static readonly string[] FILTER = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] REPLACE = { "", "", "", "" };
 
         private readonly string _source;
         private readonly string _number;

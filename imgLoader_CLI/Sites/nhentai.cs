@@ -7,11 +7,6 @@ namespace imgLoader_CLI.Sites
 {
     public class NHentai : ISite
     {
-        public const string Supplement = "nhentai.net/g/\\n\\/";
-
-        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] Replace = { "", "", "", "" };
-
         private readonly string _source, _artist, _group, _title;
         public string Number { get; }
         public string HitomiNumber { get; }
@@ -58,11 +53,12 @@ namespace imgLoader_CLI.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[5];
+            var info = new string[6];
 
-            info[0] = _title;
-            info[1] = $"{_artist}|{_group}";
-            info[2] = _imgNum.ToString();
+            info[0] = "NHentai";
+            info[1] = _title;
+            info[2] = $"{_artist}|{_group}";
+            info[3] = _imgNum.ToString();
 
             var temp = new StringBuilder();
             temp.Append("tags:");
@@ -71,10 +67,10 @@ namespace imgLoader_CLI.Sites
                 if (!item.Contains("tag")) continue;
                 temp.Append(item.Split('\"')[0]).Append(';');
             }
-            info[3] = temp.ToString().Trim();
+            info[4] = temp.ToString().Trim();
 
             if (!_source.Contains("datetime")) return info;
-            info[4] = _source.Split("datetime=\"")[1].Split('\"')[0];
+            info[5] = _source.Split("datetime=\"")[1].Split('\"')[0];
 
             return info;
         }

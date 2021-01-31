@@ -9,14 +9,9 @@ namespace imgLoader_CLI.Sites
 {
     public class Hitomi : ISite
     {
-        public const string Supplement = "hitomi.la/reader/\\n\\.html";
         public string Number { get; }
 
-        private static readonly string[] Filter = { " - Read Online", " - hentai doujinshi", "  Hitomi.la", " | Hitomi.la" };
-        private static readonly string[] Replace = { "", "", "", "" };
-
         private readonly string _src_info, _artist, _group, _title;
-
         public Hitomi(string mNumber)
         {
             var wc = new WebClient {Encoding = Encoding.UTF8};
@@ -28,10 +23,11 @@ namespace imgLoader_CLI.Sites
                 var srcGall = wc.DownloadString(wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
 
                 _src_info = temp.Result;
+
                 if (_src_info == null) return;
 
-                if (_src_info.Contains("\\")) _src_info =_src_info.Replace("\\", "");
-                _title = _src_info.Split("title\":\"")[1].Split("\"}")[0];
+                if (_src_info.Contains("\\")) _src_info = _src_info.Replace("\\", "");
+                _title = _src_info.Split("title\":\"")[1].Split('\"')[0];
 
                 for (var i = 1; i < srcGall.StrLen("/group/") + 1; i++) sb.Append(srcGall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
                 _group = sb.ToString();
@@ -111,11 +107,12 @@ namespace imgLoader_CLI.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[5];
+            var info = new string[6];
 
-            info[0] = _title;
-            info[1] = $"{_artist}|{_group}";
-            info[2] = _src_info.StrLen("hash").ToString();
+            info[0] = "Hitomi";
+            info[1] = _title;
+            info[2] = $"{_artist}|{_group}";
+            info[3] = _src_info.StrLen("hash").ToString();
 
             var sb = new StringBuilder();
             sb.Append("tags:");
@@ -135,9 +132,9 @@ namespace imgLoader_CLI.Sites
                     .Append(StrTools.GetStringValue(item.Split('}')[0], "tag")).Append(';');
             }
 
-            info[3] = sb.ToString().Trim();
+            info[4] = sb.ToString().Trim();
             if (!_src_info.Contains("\"date\"")) return info;
-            info[4] = StrTools.GetStringValue(_src_info, "date");
+            info[5] = StrTools.GetStringValue(_src_info, "date");
 
             return info;
         }
