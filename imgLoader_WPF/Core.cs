@@ -228,26 +228,5 @@ namespace imgLoader_WPF
             return temp;
         }
     }
-    internal class ListViewItemComparer : IComparer
-    {
-        private readonly int _col;
-
-        public ListViewItemComparer()
-        {
-            _col = 0;
-        }
-
-        public ListViewItemComparer(int column)
-        {
-            _col = column;
-        }
-
-        public int Compare(object x, object y)
-        {
-            //return String.Compare(((ListViewItem)x).SubItems[col].Text, ((ListViewItem)y).SubItems[col].Text);
-            if (x == null || y == null) throw new NullReferenceException("x or y was Null.");
-            return (int.Parse(((ListViewItem)x).Content.ToString()) > int.Parse(((ListViewItem)y).Content.ToString())) ? 1 : -1;
-        }
-    }
 
 }

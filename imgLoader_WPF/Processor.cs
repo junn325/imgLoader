@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace imgLoader_WPF
 {
@@ -17,16 +18,37 @@ namespace imgLoader_WPF
         private bool _stop;
         private byte _separator;
 
+        internal string Route { get; }
+        internal string Artist { get; }
+        internal string Title { get; }
+        internal string[] Info { get; }
+        internal Dictionary<string, string> ImgUrl { get; }
+        internal ISite Site { get; }
+
         public Processor(string url)
         {
             if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
 
-            var site = Load(url);
-            var route = GetRoute(GetArtist(site), GetTitle(site.GetTitle()));
+            Site = Load(url);
+            ImgUrl = Site.GetImgUrls();
 
-            if (CreateInfo(url, route, site) != null) throw new Exception("Failed to Initialize: Processor");
+            Artist = GetArtist(Site);
+            Title = GetTitle(Site.GetTitle());
+            Route = GetRoute(Artist, Title);
+            Info = Site.ReturnInfo();
 
-            AllocTask(route, site.GetImgUrls());
+            var temp = CreateInfo(url, Route, Site);
+            if (temp != null)
+            {
+                if (temp == "cancel") return;
+
+                throw new Exception("Failed to Initialize: Processor");
+            }
+        }
+
+        internal void Load()
+        {
+            AllocTask(Route, ImgUrl);
             Stopping();
         }
 
@@ -125,10 +147,13 @@ namespace imgLoader_WPF
                 }
                 else
                 {
-                    Console.WriteLine("\nAlready exists. Download again? Y/N");
-                a: var result = Console.ReadLine()?.ToLower();
-                    if (result == "n") return null;
-                    if (result != "y") goto a;
+                    //    Console.WriteLine("\nAlready exists. Download again? Y/N");
+                    //a: var result = Console.ReadLine()?.ToLower();
+                    //if (result == "n") return null;
+                    //if (result != "y") goto a;
+
+                    var result = MessageBox.Show("Already exists. Download again?", "Confirm", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.No) return "cancel";
                 }
                 Core.CreateInfo(infoRoute, site);
 

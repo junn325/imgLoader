@@ -87,5 +87,20 @@ namespace imgLoader_WPF.Windows
             //winSetting = new Settings();
             winSetting.Show();
         }
+
+        private void TxtUrl_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key != System.Windows.Input.Key.Enter) return;
+            if (TxtUrl.Text.Length == 0) return;
+
+            var url = TxtUrl.Text;
+
+            var proc = new Processor(url);
+
+            var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, proc.Route, LList.Width);
+            LList.Children.Add(lItem);
+
+            //proc.Load();
+        }
     }
 }
