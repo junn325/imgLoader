@@ -1,12 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Text.Json;
-using System.Net;
-using System.Text;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿
+using System;
 
 namespace TestSite
 {
@@ -14,23 +7,48 @@ namespace TestSite
     {
         public static void Main(string[] args)
         {
-            var b = 동호(302, 704);
+            int a = 5;
+            int b = 12;
+
+           Console.WriteLine($"{a}+{b}의 값은: {Sum(a, b)} 입니다.");
+           Console.WriteLine($"{a}-{b}의 값은: {Minus(a, b)} 입니다.");
+           Console.WriteLine($"{a}*{b}의 값은: {Multiple(a, b)} 입니다.");
+           Console.WriteLine($"{a}/{b}의 값은: {Divide(a, b)} 입니다.");
         }
-        static string 동호(int family, int name)
+
+        private static int Sum(int firstNumber, int secondNumber)
         {
-            return "이름은 " + family + name + " 입니다.";
+            int result;
+            result = firstNumber + secondNumber;
 
-
+            return result;
         }
-    }
-    
-    public class person
-    {
-        public void 김창규()
+
+        private static int Minus(int firstNumber, int secondNumber)
         {
+            int result;
+            result = firstNumber - secondNumber;
 
+            return result;
         }
+
+        private static double Divide(int firstNumber, int secondNumber)
+        {
+            double result;
+            result = (double)firstNumber / secondNumber;
+
+            return result;
+        }
+
+        private static int Multiple(int firstNumber, int secondNumber)
+        {
+            int result;
+            result = firstNumber * secondNumber;
+
+            return result;
+        }
+
+
     }
 }
-
 

@@ -17,6 +17,7 @@ namespace imgLoader_WPF.Windows
     public partial class MainWindow : Window
     {
         private Dictionary<string, string> index;
+        private Settings winSetting = new Settings();
         int i;
 
         public MainWindow()
@@ -38,12 +39,14 @@ namespace imgLoader_WPF.Windows
             }
             else
             {
-                
+                winSetting.Show();
             }
 
 #if DEBUG
-            //Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+            Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
 #endif
+
+            this.Title = Core.Route;
 
             new Thread(() =>
             {
@@ -58,13 +61,9 @@ namespace imgLoader_WPF.Windows
                     {
                         var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, LList.Width);
                         LList.Children.Add(lItem);
-
                     }));
                 }
-
             }).Start();
-
-            ;
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -81,6 +80,12 @@ namespace imgLoader_WPF.Windows
         {
             var temp = index.Keys.ToArray()[new Random().Next(0, index.Count)];
             Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            //winSetting = new Settings();
+            winSetting.Show();
         }
     }
 }

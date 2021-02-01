@@ -6,19 +6,17 @@
         xmlns:local="clr-namespace:imgLoader_WPF"
         xmlns:loaderList="clr-namespace:imgLoader_WPF.LoaderList"
         mc:Ignorable="d"
-        Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" SizeChanged="ImgLoader_WPF_SizeChanged">
+        Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" SizeChanged="ImgLoader_WPF_SizeChanged" WindowStartupLocation="CenterScreen">
     <Grid>
         <Border  BorderBrush="Black" BorderThickness="2" Margin="10,32,10,70">
             <ScrollViewer x:Name="MyScrollViewer" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <loaderList:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=MyScrollViewer, Path=ViewportWidth}" Background="White">
-                    <loaderList:LoaderItem Width="696" Title="ImgLoader_WPF" Author="imgL" SiteName="Hiyobi" ImgCount="1.28" Route="C:\test" />
-                    <loaderList:LoaderItem Width="696"/>
-                    <loaderList:LoaderItem Width="696"/>
                 </loaderList:LoaderList>
             </ScrollViewer>
         </Border>
 
-        <Button Content="Button" HorizontalAlignment="Left" Margin="617,381,0,0" VerticalAlignment="Top" Height="27" Width="95" Click="Button_Click"/>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="504,381,0,0" VerticalAlignment="Top" Height="27" Width="95" Click="Button_Click_1"/>
+        <Button Content="테스트용 아이템 추가" HorizontalAlignment="Left" Margin="615,381,0,0" VerticalAlignment="Top" Height="27" Width="95" Click="Button_Click"/>
+        <Button Content="랜덤" HorizontalAlignment="Left" Margin="504,381,0,0" VerticalAlignment="Top" Height="27" Width="95" Click="Button_Click_1"/>
+        <Button Content="설정" HorizontalAlignment="Left" Margin="390,381,0,0" VerticalAlignment="Top" Height="27" Width="95" Click="Button_Click_2"/>
     </Grid>
 </Window>
