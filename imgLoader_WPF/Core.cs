@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections;
+﻿using imgLoader_WPF.Sites;
+
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows.Input;
-using imgLoader_WPF.Sites;
+using System.Windows;
 
 namespace imgLoader_WPF
 {
@@ -27,10 +26,10 @@ namespace imgLoader_WPF
         private static readonly string[] DFilter = {"(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..."};
         private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…"};
 
-        internal const byte ColumnWidth = 45;
-        internal static List<string> PrevAddress = new List<string>(5);
+        //internal const byte ColumnWidth = 45;
+        //internal static List<string> PrevAddress = new List<string>(5);
 
-        private static readonly List<ListViewItem> LvItem = new List<ListViewItem>();
+        //private static readonly List<ListViewItem> LvItem = new List<ListViewItem>();
 
         internal static string Route = "";
 
@@ -90,6 +89,54 @@ namespace imgLoader_WPF
             File.SetAttributes(infoRoute, FileAttributes.Hidden);
         }
 
+        private static void InfoEncrypt(string path, string[] info)
+        {
+            var stream = new FileStream(path, FileMode.Create);
+            var writer = new BinaryWriter(stream);
+
+            try
+            {
+                foreach (var s in info)
+                {
+                    if (s == null)
+                    {
+                        writer.Write('\0');
+                        continue;
+                    }
+
+                    writer.Write(StringCipher.Encrypt(s + "\n"));
+                }
+            }
+            finally
+            {
+                writer.Close();
+                stream.Close();
+            }
+        }
+
+        private static void InfoDecrypt(string path)
+        {
+            var stream = new FileStream(path, FileMode.Open);
+            var reader = new BinaryReader(stream);
+
+            try
+            {
+                var sb = new StringBuilder();
+
+                do
+                {
+                    sb.Append(StringCipher.Decrypt(reader.ReadString()));
+                } while (reader.PeekChar() != -1);
+
+                MessageBox.Show(sb.ToString());
+            }
+            finally
+            {
+                reader.Close();
+                stream.Close();
+            }
+        }
+
         internal static string DirFilter(string dirName)
         {
             for (byte i = 0; i < DFilter.Length; i++)
@@ -144,14 +191,8 @@ namespace imgLoader_WPF
 
             const string countSeparator = "/**/";
             const string itemSeparator = "-**-";
+
             var tempPath = Path.GetTempPath();
-
-            //var infoFiles = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories)
-            //    .Where(s => s.EndsWith(".Hitomi") || s.EndsWith(".Hiyobi") || s.EndsWith(".NHentai") || s.EndsWith("EHentai")).ToArray();
-
-            //var infoFiles = AppendArray(AppendArray(Directory.GetFiles(route, "*.Hitomi", SearchOption.AllDirectories), Directory.GetFiles(route, "*.Hiyobi", SearchOption.AllDirectories)),
-            //    AppendArray(Directory.GetFiles(route, "*.NHentai", SearchOption.AllDirectories), Directory.GetFiles(route, "*.EHentai", SearchOption.AllDirectories)));
-
             var infoFiles = Directory.GetFiles(route, $"*.{InfoExt}", SearchOption.AllDirectories);
 
             if (File.Exists($"{tempPath}{IndexFile}.txt"))
@@ -228,5 +269,4 @@ namespace imgLoader_WPF
             return temp;
         }
     }
-
 }

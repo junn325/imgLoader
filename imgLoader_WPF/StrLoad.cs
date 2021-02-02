@@ -8,25 +8,7 @@ namespace imgLoader_WPF
     {
         public static async Task<string> LoadAsync(string url)
         {
-            return await Task.Run(() =>
-            {
-                var sb = new StringBuilder();
-                var req = WebRequest.Create(url);
-                var resp = req.GetResponse();
-                if (resp == null) return null;
-
-                using var br = resp.GetResponseStream();
-
-                int count;
-                var buffer = new byte[1024];
-                do
-                {
-                    count = br.Read(buffer, 0, buffer.Length);
-                    sb.Append(Encoding.UTF8.GetString(buffer, 0, count));
-                } while (count > 0);
-
-                return sb.ToString();
-            }).ConfigureAwait(false);
+            return await Task.Run(() => Load(url)).ConfigureAwait(false);
         }
 
         public static string Load(string url)

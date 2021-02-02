@@ -38,9 +38,9 @@ namespace imgLoader_WPF
             Info = Site.ReturnInfo();
 
             var temp = CreateInfo(url, Route, Site);
-            if (temp != null)
+            if (temp != Error.End)
             {
-                if (temp == "cancel") return;
+                if (temp == Error.Cancel) return;
 
                 throw new Exception("Failed to Initialize: Processor");
             }
@@ -134,7 +134,7 @@ namespace imgLoader_WPF
             return $@"{Core.Route}\{temp}";
         }
 
-        private static string CreateInfo(string url, string route, ISite site)
+        private static Error CreateInfo(string url, string route, ISite site)
         {
             try
             {
@@ -153,19 +153,19 @@ namespace imgLoader_WPF
                     //if (result != "y") goto a;
 
                     var result = MessageBox.Show("Already exists. Download again?", "Confirm", MessageBoxButton.YesNo);
-                    if (result == MessageBoxResult.No) return "cancel";
+                    if (result == MessageBoxResult.No) return Error.Cancel;
                 }
                 Core.CreateInfo(infoRoute, site);
 
-                return null;
+                return Error.End;
             }
             catch (DirectoryNotFoundException)
             {
-                return "NoDir";
+                return Error.NoDir;
             }
             catch (FileNotFoundException)
             {
-                return "NoFile";
+                return Error.NoFile;
             }
         }
 
@@ -310,6 +310,14 @@ namespace imgLoader_WPF
 
                 _tasks = null;
             }).Start();
+        }
+
+        private enum Error
+        {
+            End,
+            Cancel,
+            NoDir,
+            NoFile
         }
     }
 }

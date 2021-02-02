@@ -1,16 +1,19 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows;
+﻿using imgLoader_WPF.LoaderList;
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Threading;
-using imgLoader_WPF.LoaderList;
+using System.Linq;
+using System.Text;
 using System.Threading;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace imgLoader_WPF.Windows
 {
+    //todo: 이미 본것을 표시 (프로그램 실행 시 초기화)
+    //todo: 서로 다른 작품 자동 연결 표시
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -45,7 +48,7 @@ namespace imgLoader_WPF.Windows
 #if DEBUG
             Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
 #endif
-
+            ;
             this.Title = Core.Route;
 
             new Thread(() =>
@@ -102,5 +105,14 @@ namespace imgLoader_WPF.Windows
 
             //proc.Load();
         }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void Button_Click_4(object sender, RoutedEventArgs e)
+        {
+        }
+
     }
 }
