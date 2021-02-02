@@ -118,5 +118,12 @@ namespace imgLoader_WPF.Windows
         {
         }
 
+        private void TxtUrl_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
+
+            TxtUrl.SelectAll();
+
+        }
     }
 }

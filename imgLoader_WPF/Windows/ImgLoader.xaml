@@ -20,7 +20,7 @@
         <Button Content="랜덤" HorizontalAlignment="Right" Margin="0,0,115,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_1"/>
         <Button Content="설정" HorizontalAlignment="Right" Margin="0,0,220,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_2"/>
 
-        <TextBox x:Name="TxtUrl" HorizontalAlignment="Stretch" Height="19" Margin="10,10,10,0" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="TxtUrl_KeyUp"/>
+        <TextBox x:Name="TxtUrl" HorizontalAlignment="Stretch" Height="19" Margin="10,10,10,0" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="TxtUrl_KeyUp" PreviewMouseUp="TxtUrl_PreviewMouseUp"/>
         <Button Content="직렬 출력" HorizontalAlignment="Right" Margin="0,0,320,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_3"/>
         <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,420,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_4"/>
     </Grid>
