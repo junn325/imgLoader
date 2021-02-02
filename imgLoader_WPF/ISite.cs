@@ -4,6 +4,8 @@ namespace imgLoader_WPF
 {
     interface ISite
     {
+        public string Number { get; }
+
         string GetArtist();
 
         Dictionary<string, string> GetImgUrls();

@@ -24,6 +24,7 @@ namespace imgLoader_WPF
         internal string[] Info { get; }
         internal Dictionary<string, string> ImgUrl { get; }
         internal ISite Site { get; }
+        internal bool IsValidated { get; }
 
         public Processor(string url)
         {
@@ -32,12 +33,16 @@ namespace imgLoader_WPF
             Site = Load(url);
             ImgUrl = Site.GetImgUrls();
 
+            IsValidated = Site.IsValidated();
+
+            if (!IsValidated) return;
+
             Artist = GetArtist(Site);
             Title = GetTitle(Site.GetTitle());
-            Route = GetRoute(Artist, Title);
+            Route = Getpath(Artist, Title);
             Info = Site.ReturnInfo();
 
-            var temp = CreateInfo(url, Route, Site);
+            var temp = CreateInfo(url);
             if (temp != Error.End)
             {
                 if (temp == Error.Cancel) return;
@@ -119,7 +124,7 @@ namespace imgLoader_WPF
                         : temp;
         }
 
-        private static string GetRoute(string artist, string title)
+        private static string Getpath(string artist, string title)
         {
             var temp =
                 artist == "N/A"
@@ -132,30 +137,21 @@ namespace imgLoader_WPF
                     : temp;
 
             return $@"{Core.Route}\{temp}";
-        }
+        }       //returns folder name
 
-        private static Error CreateInfo(string url, string route, ISite site)
+        private Error CreateInfo(string url)
         {
             try
             {
                 var temp = Core.GetNumber(url);
-                var infoRoute = $"{route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{Core.InfoExt}";
+                var infopath = $"{Route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{Core.InfoExt}";
 
-                if (!Directory.Exists(route))
+                if (!CheckDupl())
                 {
-                    Directory.CreateDirectory(route);
+                    Directory.CreateDirectory(Route);
                 }
-                else
-                {
-                    //    Console.WriteLine("\nAlready exists. Download again? Y/N");
-                    //a: var result = Console.ReadLine()?.ToLower();
-                    //if (result == "n") return null;
-                    //if (result != "y") goto a;
 
-                    var result = MessageBox.Show("Already exists. Download again?", "Confirm", MessageBoxButton.YesNo);
-                    if (result == MessageBoxResult.No) return Error.Cancel;
-                }
-                Core.CreateInfo(infoRoute, site);
+                Core.CreateInfo(infopath, Site);
 
                 return Error.End;
             }
@@ -169,18 +165,29 @@ namespace imgLoader_WPF
             }
         }
 
-        private void AllocTask(string route, Dictionary<string, string> imgList)
+        internal bool CheckDupl()
+        {
+            if (!Directory.Exists(Route)) return false;
+
+            if (ImgUrl.Count.ToString() == File.ReadAllText($"{Route}\\{Site.Number}.ilif").Split('\n')[3])
+            {
+                return true;
+            }
+
+            return false;
+        }
+        private void AllocTask(string path, Dictionary<string, string> imgList)
         {
             _tasks = new Task[imgList.Count];
 
             Console.Write("\n[");
-            AllocDown(route, imgList);
+            AllocDown(path, imgList);
 
             Task.WaitAll(_tasks);
 
-            var success = HandleFail(route);
+            var success = HandleFail(path);
 
-            Core.Log($"Item:Complete: {route}");
+            Core.Log($"Item:Complete: {path}");
             if (success)
             {
                 Console.Write("]\n");
@@ -192,15 +199,15 @@ namespace imgLoader_WPF
             }
         }
 
-        private void AllocDown(string route, Dictionary<string, string> urlList)
+        private void AllocDown(string path, Dictionary<string, string> urlList)
         {
             _failed.Clear();
 
             var i = 0;
-            foreach (var (key, value) in urlList) _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(value, route, key));
+            foreach (var (key, value) in urlList) _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(value, path, key));
         }
 
-        private void ThrDownload(string uri, string route, string fileName)
+        private void ThrDownload(string uri, string path, string fileName)
         {
             if (_stop)
             {
@@ -245,7 +252,7 @@ namespace imgLoader_WPF
                 int count;
                 var buff = new byte[1024];
 
-                using var fs = new FileStream($"{route}\\{fileName}", FileMode.Create);
+                using var fs = new FileStream($"{path}\\{fileName}", FileMode.Create);
                 do
                 {
                     count = br.Read(buff, 0, buff.Length);
@@ -280,16 +287,16 @@ namespace imgLoader_WPF
             resp.Close();
         }
 
-        private bool HandleFail(string route)
+        private bool HandleFail(string path)
         {
             if (_failed.Count == 0) return true;
 
             var failCopy = new Dictionary<string, string>(_failed);
-            AllocDown(route, failCopy);
+            AllocDown(path, failCopy);
 
             Task.WaitAll(_tasks);
 
-            if (_failed.Count != 0) HandleFail(route);
+            if (_failed.Count != 0) HandleFail(path);
 
             _failed.Clear();
 

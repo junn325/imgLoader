@@ -7,6 +7,7 @@ namespace imgLoader_WPF.Sites
 
         private readonly string _source;
         private readonly string _number;
+        public string Number { get; }
 
         public Pixiv(string mNumber)
         {
