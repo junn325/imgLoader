@@ -20,6 +20,9 @@ namespace imgLoader_CLI
             //var test1 = new ehentai("1810150/8c545adb44");
             //new Indexer("D:\\test\\1").Index();
 
+            //var temddp = new WebClient().DownloadString("https://hitomi.la/manga/fuhou-nyuukokusha-s-%ED%95%9C%EA%B5%AD%EC%96%B4-1581315.html");
+
+
             Console.WriteLine($"\n\n{Core.ProjectName} {Assembly.GetExecutingAssembly().GetName().Version}\n");
 
             if (args.Length != 0)
