@@ -5,7 +5,6 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace imgLoader_WPF
 {
@@ -33,9 +32,7 @@ namespace imgLoader_WPF
             Site = Load(url);
             ImgUrl = Site.GetImgUrls();
 
-            IsValidated = Site.IsValidated();
-
-            if (!IsValidated) return;
+            if (!Site.IsValidated()) return;
 
             Artist = GetArtist(Site);
             Title = GetTitle(Site.GetTitle());
@@ -43,12 +40,15 @@ namespace imgLoader_WPF
             Info = Site.ReturnInfo();
 
             var temp = CreateInfo(url);
+
             if (temp != Error.End)
             {
                 if (temp == Error.Cancel) return;
 
                 throw new Exception("Failed to Initialize: Processor");
             }
+
+            IsValidated = Site.IsValidated();
         }
 
         internal void Load()
@@ -176,6 +176,7 @@ namespace imgLoader_WPF
 
             return false;
         }
+
         private void AllocTask(string path, Dictionary<string, string> imgList)
         {
             _tasks = new Task[imgList.Count];

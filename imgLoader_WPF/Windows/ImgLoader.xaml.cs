@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace imgLoader_WPF.Windows
 {
@@ -100,11 +101,15 @@ namespace imgLoader_WPF.Windows
 
             var proc = new Processor(url);
 
+            if (proc.CheckDupl())
+            {
+                MessageBox.Show("Already Exists.");
+                return;
+            }
+
             if (!proc.IsValidated) return;
 
-            if (proc.CheckDupl()) return;
-
-            var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, proc.Route, Core.GetNumber(url), LList.Width);
+            var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, Core.GetDirectoryFromFile(proc.Route), Core.GetNumber(url), LList.Width);
             LList.Children.Add(lItem);
 
             //proc.Load();
@@ -121,9 +126,7 @@ namespace imgLoader_WPF.Windows
         private void TxtUrl_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
-
-            TxtUrl.SelectAll();
-
+            if (TxtUrl.Text == "주소 입력 후 Enter 키로 다운로드 시작") TxtUrl.Text = "";
         }
     }
 }

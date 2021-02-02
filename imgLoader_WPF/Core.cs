@@ -268,5 +268,10 @@ namespace imgLoader_WPF
 
             return temp;
         }
+
+        internal static string GetDirectoryFromFile(string path)
+        {
+            return path.Substring(0, path.IndexOf(path.Split('\\').Last(), StringComparison.Ordinal));
+        }
     }
 }
