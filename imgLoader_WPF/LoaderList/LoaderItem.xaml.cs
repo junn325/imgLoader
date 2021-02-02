@@ -1,11 +1,9 @@
-﻿using System.Windows.Controls;
-
-namespace imgLoader_WPF.LoaderList
+﻿namespace imgLoader_WPF.LoaderList
 {
     /// <summary>
     /// Interaction logic for LoaderItem.xaml
     /// </summary>
-    public partial class LoaderItem : UserControl
+    public partial class LoaderItem
     {
         public string Title
         {
@@ -37,6 +35,12 @@ namespace imgLoader_WPF.LoaderList
             set => route.Content = value;
         }
 
+        public string Number
+        {
+            get => number.Content.ToString();
+            set => number.Content = value;
+        }
+
         //public string Size
         //{
         //    get => this.Height
@@ -48,7 +52,7 @@ namespace imgLoader_WPF.LoaderList
             InitializeComponent();
         }
 
-        public LoaderItem(string title, string author, string count, string site, string route)
+        public LoaderItem(LoaderList sender, string title, string author, string count, string site, string route, string number)
         {
             InitializeComponent();
 
@@ -57,10 +61,11 @@ namespace imgLoader_WPF.LoaderList
             ImgCount = count;
             SiteName = site;
             Route = route;
+            Number = number;
 
-            this.Width = 696;
+            //this.Width = sender.Width;
         }
-        public LoaderItem(string title, string author, string count, string site, string route, double width)
+        public LoaderItem(string title, string author, string count, string site, string route, string number, double width)
         {
             InitializeComponent();
 
@@ -69,8 +74,9 @@ namespace imgLoader_WPF.LoaderList
             ImgCount = count;
             SiteName = site;
             Route = route;
+            Number = number;
 
-            this.Width = width;
+            //this.Width = width;
         }
     }
 }

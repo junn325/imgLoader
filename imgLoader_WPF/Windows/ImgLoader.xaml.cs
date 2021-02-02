@@ -13,14 +13,14 @@ using System.Windows.Threading;
 namespace imgLoader_WPF.Windows
 {
     //todo: 이미 본것을 표시 (프로그램 실행 시 초기화)
-    //todo: 서로 다른 작품 자동 연결 표시
+    //todo: 서로 다른 작품 자동 연결
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
         private Dictionary<string, string> index;
-        private Settings winSetting = new Settings();
+        private readonly Settings winSetting = new();
         int i;
 
         public MainWindow()
@@ -30,7 +30,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test");
+            var item = new LoaderItem(LList, $"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000");
             LList.Children.Add(item);
         }
 
@@ -48,7 +48,7 @@ namespace imgLoader_WPF.Windows
 #if DEBUG
             Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
 #endif
-            ;
+
             this.Title = Core.Route;
 
             new Thread(() =>
@@ -62,7 +62,7 @@ namespace imgLoader_WPF.Windows
                     var file = info.Split("\n");
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
                     {
-                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, LList.Width);
+                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], LList.Width);
                         LList.Children.Add(lItem);
                     }));
                 }
@@ -100,7 +100,11 @@ namespace imgLoader_WPF.Windows
 
             var proc = new Processor(url);
 
-            var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, proc.Route, LList.Width);
+            if (!proc.IsValidated) return;
+
+            if (proc.CheckDupl()) return;
+
+            var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, proc.Route, Core.GetNumber(url), LList.Width);
             LList.Children.Add(lItem);
 
             //proc.Load();
