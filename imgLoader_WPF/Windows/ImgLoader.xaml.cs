@@ -9,7 +9,6 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
-using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace imgLoader_WPF.Windows
 {
@@ -37,6 +36,7 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
@@ -99,20 +99,24 @@ namespace imgLoader_WPF.Windows
 
             var url = TxtUrl.Text;
 
-            var proc = new Processor(url);
-
-            if (proc.CheckDupl())
+            new Thread(() =>
             {
-                MessageBox.Show("Already Exists.");
-                return;
-            }
+                var proc = new Processor(url);
 
-            if (!proc.IsValidated) return;
+                if (proc.CheckDupl())
+                {
+                    MessageBox.Show("Already Exists.");
+                    return;
+                }
 
-            var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, Core.GetDirectoryFromFile(proc.Route), Core.GetNumber(url), LList.Width);
-            LList.Children.Add(lItem);
+                if (!proc.IsValidated) return;
 
-            //proc.Load();
+                // processor 객체에 LoaderItem 객체를 매개변수로 넘기는 방식 시도해볼것
+                var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, Core.GetDirectoryFromFile(proc.Route), Core.GetNumber(url), LList.Width);
+                LList.Children.Add(lItem);
+
+                //proc.Load();
+            }).Start();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

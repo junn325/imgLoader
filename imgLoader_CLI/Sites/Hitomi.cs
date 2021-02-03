@@ -20,8 +20,8 @@ namespace imgLoader_CLI.Sites
             try
             {
                 var temp = StrLoad.LoadAsync($"https://ltn.hitomi.la/galleries/{mNumber}.js");
-                _src_gall = wc.DownloadString(wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
 
+                _src_gall = wc.DownloadString(wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
                 _src_info = temp.Result;
 
                 if (_src_info == null) return;

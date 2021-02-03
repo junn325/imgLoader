@@ -187,8 +187,6 @@ namespace imgLoader_WPF
 
         internal static Dictionary<string, string> Index(string route)
         {
-            if (route.Length == 0) return null;
-
             const string countSeparator = "/**/";
             const string itemSeparator = "-**-";
 
