@@ -5,6 +5,9 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
+using imgLoader_WPF.LoaderList;
+
 
 namespace imgLoader_WPF
 {
@@ -15,9 +18,10 @@ namespace imgLoader_WPF
         private Task[] _tasks;
 
         private bool _stop;
-        private byte _separator;
+        private readonly LoaderItem _item;
 
         internal string Route { get; }
+        internal string Url { get; }
         internal string Artist { get; }
         internal string Title { get; }
         internal string[] Info { get; }
@@ -50,9 +54,55 @@ namespace imgLoader_WPF
 
             IsValidated = Site.IsValidated();
         }
+        public Processor(string url, LoaderItem item)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
+                Url = url;
+
+                Site = Load(url);
+                ImgUrl = Site.GetImgUrls();
+
+                Artist = GetArtist(Site);
+                Title = GetTitle(Site.GetTitle());
+                Route = Getpath(Artist, Title);
+                Info = Site.ReturnInfo();
+
+                item.Dispatcher.Invoke(() =>
+                {
+                    item.ImgCount = ImgUrl.Count.ToString();
+
+                    item.Author = Artist;
+                    item.Title = Title;
+                    item.Route = Route;
+                    item.SiteName = Site.GetType().Name;
+                    item.Number = Core.GetNumber(url);
+                });
+
+                if (!Site.IsValidated()) return;
+
+                _item = item;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Failed to Initialize: Processor: {ex.StackTrace}");
+            }
+
+            IsValidated = Site.IsValidated();
+        }
 
         internal void Load()
         {
+            var temp = CreateInfo(Url);
+
+            if (temp != Error.End)
+            {
+                if (temp == Error.Cancel) return;
+
+                throw new Exception("Failed to Load: Processor.Load()");
+            }
+
             AllocTask(Route, ImgUrl);
             Stopping();
         }
@@ -150,6 +200,10 @@ namespace imgLoader_WPF
                 {
                     Directory.CreateDirectory(Route);
                 }
+                else
+                {
+                    MessageBox.Show("Test");
+                }
 
                 Core.CreateInfo(infopath, Site);
 
@@ -180,6 +234,8 @@ namespace imgLoader_WPF
         private void AllocTask(string path, Dictionary<string, string> imgList)
         {
             _tasks = new Task[imgList.Count];
+
+            _item.Dispatcher.Invoke(() => _item.progBar.Maximum = imgList.Count);
 
             Console.Write("\n[");
             AllocDown(path, imgList);
@@ -265,19 +321,7 @@ namespace imgLoader_WPF
 
             if (fileSize == resp.ContentLength)
             {
-                _separator++;
-                Console.Write("■");
-
-                switch (_separator)
-                {
-                    case 50:
-                        Console.Write(":");
-                        break;
-                    case 100:
-                        Console.Write("|");
-                        _separator = 0;
-                        break;
-                }
+                _item.Dispatcher.Invoke(() => _item.progBar.Value++);
             }
             else
             {

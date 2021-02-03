@@ -30,7 +30,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var item = new LoaderItem(LList, $"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000");
+            var item = new LoaderItem( $"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000");
             LList.Children.Add(item);
         }
 
@@ -52,7 +52,7 @@ namespace imgLoader_WPF.Windows
 
             this.Title = Core.Route;
 
-            new Thread(() =>
+            var temp = new Thread(() =>
             {
                 index = Core.Index(Core.Route);
 
@@ -60,14 +60,18 @@ namespace imgLoader_WPF.Windows
 
                 foreach (var (path, info) in index)
                 {
+                    if (string.IsNullOrEmpty(info)) continue;
                     var file = info.Split("\n");
-                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
+                    LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
                     {
                         var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], LList.Width);
                         LList.Children.Add(lItem);
                     }));
                 }
-            }).Start();
+            });
+
+            temp.Name = "리스트_로드";
+            temp.Start();
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -98,10 +102,11 @@ namespace imgLoader_WPF.Windows
             if (TxtUrl.Text.Length == 0) return;
 
             var url = TxtUrl.Text;
+            var lItem = new LoaderItem();
 
-            new Thread(() =>
+            var temp = new Thread(() =>
             {
-                var proc = new Processor(url);
+                var proc = new Processor(url, lItem);
 
                 if (proc.CheckDupl())
                 {
@@ -112,11 +117,15 @@ namespace imgLoader_WPF.Windows
                 if (!proc.IsValidated) return;
 
                 // processor 객체에 LoaderItem 객체를 매개변수로 넘기는 방식 시도해볼것
-                var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, Core.GetDirectoryFromFile(proc.Route), Core.GetNumber(url), LList.Width);
-                LList.Children.Add(lItem);
+                //var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, Core.GetDirectoryFromFile(proc.Route), Core.GetNumber(url), LList.Width);
 
-                //proc.Load();
-            }).Start();
+                LList.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => LList.Children.Add(lItem)));
+                proc.Load();
+            });
+
+            temp.Name = "객체추가";
+            temp.SetApartmentState(ApartmentState.STA);
+            temp.Start();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

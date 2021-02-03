@@ -1,4 +1,5 @@
-﻿namespace imgLoader_WPF.LoaderList
+﻿
+namespace imgLoader_WPF.LoaderList
 {
     /// <summary>
     /// Interaction logic for LoaderItem.xaml
@@ -40,19 +41,25 @@
             get => number.Content.ToString();
             set => number.Content = value;
         }
+        
+        public double Progress
+        {
+            get => progBar.Value;
+            set => progBar.Value = value;
+        }
 
         //public string Size
         //{
         //    get => this.Height
         //    set => route.Content = value;
         //}
-
+        
         public LoaderItem()
         {
             InitializeComponent();
         }
 
-        public LoaderItem(LoaderList sender, string title, string author, string count, string site, string route, string number)
+        public LoaderItem(string title, string author, string count, string site, string route, string number)
         {
             InitializeComponent();
 
