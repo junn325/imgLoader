@@ -40,6 +40,17 @@ namespace imgLoader_WPF.LoaderList
             set => number.Content = value;
         }
 
+        public int CurrentCount
+        {
+            get => _curCnt;
+            set
+            {
+                _curCnt = value;
+                ProgLbl.Content = $"{value}/{ImgCount}";
+            }
+        }
+
+        private int _curCnt;
         #endregion
 
         //private readonly Stopwatch sw = new Stopwatch();

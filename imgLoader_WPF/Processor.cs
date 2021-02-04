@@ -60,7 +60,7 @@ namespace imgLoader_WPF
             {
                 if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
 
-                item.Dispatcher.Invoke(() => item.progBar.Visibility = Visibility.Visible);
+                item.Dispatcher.Invoke(() => item.ProgPanel.Visibility = Visibility.Visible);
 
                 Url = url;
 
@@ -238,7 +238,7 @@ namespace imgLoader_WPF
         {
             _tasks = new Task[imgList.Count];
 
-            _item.Dispatcher.Invoke(() => _item.progBar.Maximum = imgList.Count);
+            _item.Dispatcher.Invoke(() => _item.ProgBar.Maximum = imgList.Count);
 
             Console.Write("\n[");
             AllocDown(path, imgList);
@@ -253,7 +253,7 @@ namespace imgLoader_WPF
                 Console.Write("]\n");
                 Console.WriteLine("\n Download complete.\n");
 
-                _item.Dispatcher.Invoke(() => _item.progBar.Visibility = Visibility.Hidden);
+                _item.Dispatcher.Invoke(() => _item.ProgPanel.Visibility = Visibility.Hidden);
 
             }
             else
@@ -327,7 +327,8 @@ namespace imgLoader_WPF
 
             if (fileSize == resp.ContentLength)
             {
-                _item.Dispatcher.Invoke(() => _item.progBar.Value++);
+                _item.Dispatcher.Invoke(() => _item.ProgBar.Value++);
+                _item.Dispatcher.Invoke(() => _item.CurrentCount++);
             }
             else
             {

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -44,8 +45,7 @@ namespace imgLoader_WPF.Windows
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
-        {
-
+        { 
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");

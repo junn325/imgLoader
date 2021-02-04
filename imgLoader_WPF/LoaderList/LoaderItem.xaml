@@ -12,9 +12,9 @@
             <Separator/>
             <MenuItem Header="목록에서만 제거" Click="RemoveOnlyList_Click"/>
             <Separator/>
-            <MenuItem Header="3"/>
-            <MenuItem Header="4"/>
-            <MenuItem Header="수정"/>
+            <MenuItem Header="취소"/>
+            <MenuItem Header="일시중지"/>
+            <MenuItem Header="재개"/>
             <Separator/>
             <MenuItem Header="탐색기에서 열기" Click="Open_Click"/>
         </ContextMenu>
@@ -32,13 +32,18 @@
                 <ColumnDefinition Width="45"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
+
             <Label x:Name="title" x:FieldModifier="private" Content="(제목)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0" Grid.ColumnSpan="3" />
             <Label x:Name="number" x:FieldModifier="private" Content="(번호)" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0"/>
             <Label x:Name="author" x:FieldModifier="private" Content="(작가)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0"/>
             <Label x:Name="siteName" x:FieldModifier="private" Content="Hiyobi" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0"/>
             <Label x:Name="imgCount" x:FieldModifier="private" Content="9999장" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0"/>
             <Label x:Name="route" x:FieldModifier="private" Content="(경로)" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" Padding="0"/>
-            <ProgressBar x:Name="progBar" Grid.Column="2" HorizontalAlignment="Left" Height="5" Margin="10,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="409" Value="0" Orientation="Horizontal" Visibility="Hidden"/>
+
+            <DockPanel x:Name="ProgPanel" Grid.Row="1" Grid.Column="2" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <ProgressBar x:Name="ProgBar" HorizontalAlignment="Left" Height="5" Margin="10,0,0,0" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Width="370" Value="0" Orientation="Horizontal" />
+                <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="0,0,5,0"/>
+            </DockPanel>
         </Grid>
     </Border>
 </UserControl>
