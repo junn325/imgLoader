@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:imgLoader_WPF"
-             mc:Ignorable="d" d:DesignWidth="514.5" Background="White" Height="60" MinWidth="515" PreviewMouseRightButtonUp="UserControl_PreviewMouseRightButtonUp">
+             mc:Ignorable="d" d:DesignWidth="514.5" Background="White" Height="60" MinWidth="515">
 
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="{Binding Source={x:Reference Name=title}, Path=Content}"/>
+            <MenuItem Header="삭제" Command=""/>
             <MenuItem Header="{Binding Source={x:Reference Name=author}, Path=Content}"/>
             <MenuItem Header="{Binding Source={x:Reference Name=imgCount}, Path=Content}"/>
             <MenuItem Header="{Binding Source={x:Reference Name=number}, Path=Content}"/>

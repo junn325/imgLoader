@@ -79,10 +79,5 @@ namespace imgLoader_WPF.LoaderList
 
             //this.Width = width;
         }
-
-        private void UserControl_PreviewMouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-
-        }
     }
 }
