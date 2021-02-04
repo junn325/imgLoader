@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:imgLoader_WPF"
+             xmlns:tag="clr-namespace:imgLoader_WPF.Tag"
              mc:Ignorable="d" d:DesignWidth="514.5" Background="White" Height="60" MinWidth="515">
 
     <UserControl.ContextMenu>
@@ -42,6 +43,18 @@
             <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2"  Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="370" Value="0" Orientation="Horizontal" />
                 <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="0,0,5,1"/>
+            </DockPanel>
+
+            <DockPanel x:Name="TagPanel" Grid.Row="2" Grid.Column="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0">
+                <tag:TagItem Sex="Female" TagName="female:ahegao" HorizontalAlignment="Left"/>
+                <tag:TagItem Sex="Female" TagName="섹스" HorizontalAlignment="Left"/>
+                <tag:TagItem Sex="Male" TagName="섹스" HorizontalAlignment="Left"/>
+                <tag:TagItem Sex="Male" TagName="섹스" HorizontalAlignment="Left"/>
+                <tag:TagItem Sex="Female" TagName="섹스" HorizontalAlignment="Left"/>
+                <tag:TagItem Sex="Male" TagName="섹스" HorizontalAlignment="Left"/>
+                <tag:TagItem Sex="Female" TagName="섹스" HorizontalAlignment="Left"/>
+                <tag:TagItem Sex="Male" TagName="섹스" HorizontalAlignment="Left"/>
+                <tag:TagItem Sex="Female" TagName="섹스" HorizontalAlignment="Left"/>
             </DockPanel>
         </Grid>
     </Border>

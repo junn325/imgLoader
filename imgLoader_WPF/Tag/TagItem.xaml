@@ -1,0 +1,12 @@
+﻿<UserControl x:Class="imgLoader_WPF.Tag.TagItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:imgLoader_WPF.Tag"
+             mc:Ignorable="d" 
+             Background="#E86441" Height="17" Margin="1,0,1,0">
+    <Grid>
+        <Label x:Name="Tag" Content="(태그명)" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="1,0,1,0" Margin="0,0,0,0" FontSize="12" Foreground="White"/>
+    </Grid>
+</UserControl>
