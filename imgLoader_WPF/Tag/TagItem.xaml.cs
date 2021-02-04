@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Media;
 
 namespace imgLoader_WPF.Tag
 {
@@ -25,14 +12,26 @@ namespace imgLoader_WPF.Tag
 
         public SColor Sex
         {
-            get => this.Background == (Brush)new BrushConverter().ConvertFrom("#E86441") ? SColor.Female : SColor.Male;
-            set => this.Background = (value == SColor.Female ? (Brush)new BrushConverter().ConvertFrom("#E86441") : (Brush)new BrushConverter().ConvertFrom("#00A2FF"));
+            get => Background == (Brush)new BrushConverter().ConvertFrom("#E86441")
+                    ? SColor.Female
+                    : Background == (Brush)new BrushConverter().ConvertFrom("#00A2FF")
+                        ? SColor.Male
+                        : SColor.None;
+
+            set => Background =
+                value switch
+                {
+                    SColor.Female => (Brush)new BrushConverter().ConvertFrom("#E86441"),
+                    SColor.Male => (Brush)new BrushConverter().ConvertFrom("#00A2FF"),
+                    _ => (Brush)new BrushConverter().ConvertFrom("#F6F6F6")
+                };
         }
 
         public enum SColor
         {
             Female,
-            Male
+            Male,
+            None
         }
         public TagItem()
         {

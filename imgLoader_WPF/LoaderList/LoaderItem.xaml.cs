@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using imgLoader_WPF.Tag;
 
 namespace imgLoader_WPF.LoaderList
 {
@@ -71,6 +73,33 @@ namespace imgLoader_WPF.LoaderList
             Number = number;
 
             //this.Width = sender.Width;
+        }
+        public LoaderItem(string title, string author, string count, string site, string route, string number, string[] tags)
+        {
+            InitializeComponent();
+
+            Title = title;
+            Author = author;
+            ImgCount = count;
+            SiteName = site;
+            Route = route;
+            Number = number;
+
+            foreach (var tag in tags)
+            {
+                if (string.IsNullOrEmpty(tag)) return;
+                TagPanel.Children.Add(new TagItem
+                {
+                    TagName = tag.Contains(':') ? tag.Split(':')[1] : tag,
+
+                    Sex =
+                        tag.Contains(':')
+                            ? string.Equals(tag.Split(':')[0], "female", StringComparison.OrdinalIgnoreCase)
+                                ? TagItem.SColor.Female
+                                : TagItem.SColor.Male
+                            : TagItem.SColor.None
+                });
+            }
         }
         private void Delete_Click(object sender, RoutedEventArgs e)
         {

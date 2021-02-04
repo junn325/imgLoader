@@ -45,7 +45,7 @@ namespace imgLoader_WPF.Windows
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
-        { 
+        {
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
@@ -71,9 +71,10 @@ namespace imgLoader_WPF.Windows
                 {
                     if (string.IsNullOrEmpty(info)) continue;
                     var file = info.Split("\n");
+
                     LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
                     {
-                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0]);
+                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], file[4].Split("tags:")[1].Split('\n')[0].Split(';'));
                         LList.Children.Add(lItem);
                     }));
                 }

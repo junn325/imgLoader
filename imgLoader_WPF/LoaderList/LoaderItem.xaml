@@ -45,16 +45,8 @@
                 <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="0,0,5,1"/>
             </DockPanel>
 
-            <DockPanel x:Name="TagPanel" Grid.Row="2" Grid.Column="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0">
-                <tag:TagItem Sex="Female" TagName="female:ahegao" HorizontalAlignment="Left"/>
-                <tag:TagItem Sex="Female" TagName="섹스" HorizontalAlignment="Left"/>
-                <tag:TagItem Sex="Male" TagName="섹스" HorizontalAlignment="Left"/>
-                <tag:TagItem Sex="Male" TagName="섹스" HorizontalAlignment="Left"/>
-                <tag:TagItem Sex="Female" TagName="섹스" HorizontalAlignment="Left"/>
-                <tag:TagItem Sex="Male" TagName="섹스" HorizontalAlignment="Left"/>
-                <tag:TagItem Sex="Female" TagName="섹스" HorizontalAlignment="Left"/>
-                <tag:TagItem Sex="Male" TagName="섹스" HorizontalAlignment="Left"/>
-                <tag:TagItem Sex="Female" TagName="섹스" HorizontalAlignment="Left"/>
+            <DockPanel x:Name="TagPanel" Grid.Row="2" Grid.Column="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False">
+                
             </DockPanel>
         </Grid>
     </Border>
