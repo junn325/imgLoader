@@ -31,8 +31,7 @@ namespace imgLoader_WPF.LoaderList
         }
         public string Route
         {
-            get => route.Content.ToString();
-            set => route.Content = value.Contains(".ilif") ? value.Replace("\\" + value.Split('\\')[^1], "") : value;
+            get; set;
         }
         public string Number
         {

@@ -38,11 +38,10 @@
             <Label x:Name="author" x:FieldModifier="private" Content="(작가)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0"/>
             <Label x:Name="siteName" x:FieldModifier="private" Content="Hiyobi" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0"/>
             <Label x:Name="imgCount" x:FieldModifier="private" Content="9999장" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0"/>
-            <Label x:Name="route" x:FieldModifier="private" Content="(경로)" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" Padding="0"/>
 
-            <DockPanel x:Name="ProgPanel" Grid.Row="1" Grid.Column="2" Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Right">
-                <ProgressBar x:Name="ProgBar" HorizontalAlignment="Left" Height="5" Margin="10,0,0,0" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" Width="370" Value="0" Orientation="Horizontal" />
-                <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="0,0,5,0"/>
+            <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2"  Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="370" Value="0" Orientation="Horizontal" />
+                <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="0,0,5,1"/>
             </DockPanel>
         </Grid>
     </Border>
