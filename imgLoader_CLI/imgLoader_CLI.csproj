@@ -14,6 +14,7 @@
     <RepositoryUrl></RepositoryUrl>
     <NeutralLanguage />
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <FileVersion>0.3.3.35</FileVersion>
   </PropertyGroup>
 
 </Project>

@@ -8,7 +8,7 @@
 
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="삭제" Command=""/>
+            <MenuItem Header="삭제" Click="Delete_Click"/>
             <MenuItem Header="{Binding Source={x:Reference Name=author}, Path=Content}"/>
             <MenuItem Header="{Binding Source={x:Reference Name=imgCount}, Path=Content}"/>
             <MenuItem Header="{Binding Source={x:Reference Name=number}, Path=Content}"/>

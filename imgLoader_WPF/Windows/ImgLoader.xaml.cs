@@ -31,8 +31,13 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var item = new LoaderItem( $"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000");
-            LList.Children.Add(item);
+            //var item = new LoaderItem( $"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000");
+            for (int j = 0; j < 100; j++)
+            {
+                var item = new LoaderItem(LList);
+                LList.Children.Add(item);
+
+            }
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
@@ -82,7 +87,6 @@ namespace imgLoader_WPF.Windows
             //    if (child.DependencyObjectType.Name == "Grid") continue;
             //    ((LoaderItem)child).Width = System.Windows.SystemParameters.WorkArea.Width;
             //}
-
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
