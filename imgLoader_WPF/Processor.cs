@@ -59,6 +59,9 @@ namespace imgLoader_WPF
             try
             {
                 if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
+
+                item.Dispatcher.Invoke(() => item.progBar.Visibility = Visibility.Visible);
+
                 Url = url;
 
                 Site = Load(url);
@@ -249,6 +252,9 @@ namespace imgLoader_WPF
             {
                 Console.Write("]\n");
                 Console.WriteLine("\n Download complete.\n");
+
+                _item.Dispatcher.Invoke(() => _item.progBar.Visibility = Visibility.Hidden);
+
             }
             else
             {

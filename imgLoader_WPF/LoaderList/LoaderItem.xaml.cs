@@ -1,6 +1,5 @@
-﻿using System.Windows.Controls;
-using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace imgLoader_WPF.LoaderList
 {
@@ -9,55 +8,45 @@ namespace imgLoader_WPF.LoaderList
     /// </summary>
     public partial class LoaderItem
     {
+        #region "Prop"
         public string Title
         {
             get => title.Content.ToString();
             set => title.Content = value;
         }
-
         public string Author
         {
             get => author.Content.ToString();
             set => author.Content = value;
         }
-
         public string ImgCount
         {
             get => imgCount.Content.ToString();
             set => imgCount.Content = value + "장";
         }
-
         public string SiteName
         {
             get => siteName.Content.ToString();
             set => siteName.Content = value;
         }
-
         public string Route
         {
             get => route.Content.ToString();
-            set => route.Content = value;
+            set => route.Content = value.Contains(".ilif") ? value.Replace("\\" + value.Split('\\')[^1], "") : value;
         }
-
         public string Number
         {
             get => number.Content.ToString();
             set => number.Content = value;
         }
 
-        public LoaderList ParentList { get; }
+        #endregion
 
-        private readonly Stopwatch sw = new Stopwatch();
-        
+        //private readonly Stopwatch sw = new Stopwatch();
+
         public LoaderItem()
         {
             InitializeComponent();
-        }
-
-        public LoaderItem(LoaderList parent)
-        {
-            InitializeComponent();
-            ParentList = parent;
         }
 
         public LoaderItem(string title, string author, string count, string site, string route, string number)
@@ -73,35 +62,18 @@ namespace imgLoader_WPF.LoaderList
 
             //this.Width = sender.Width;
         }
-        public LoaderItem(string title, string author, string count, string site, string route, string number, double width)
+        private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            InitializeComponent();
-
-            Title = title;
-            Author = author;
-            ImgCount = count;
-            SiteName = site;
-            Route = route;
-            Number = number;
-
-            //this.Width = width;
         }
 
-        private void Delete_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         {
-            sw.Restart();
-            DeleteCast(sender, this);
-            Debug.WriteLine(sw.Elapsed.Ticks);
-            //.Items.Remove(this);
+            ((LoaderList)((LoaderItem)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).Parent).Children.Remove(this);
         }
 
-        public void DeleteCast(object sender, UIElement @this)
+        private void Open_Click(object sender, RoutedEventArgs e)
         {
-            ((LoaderList)((LoaderItem)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).Parent).Children.Remove(@this);
-        }
-        public void DeleteObject(object sender, UIElement @this)
-        {
-            ParentList.Children.Remove(@this);
+            Core.OpenDir(Route);
         }
     }
 }

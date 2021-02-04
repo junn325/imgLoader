@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -15,9 +16,8 @@ namespace imgLoader_WPF.Windows
 {
     //todo: 이미 본것을 표시 (프로그램 실행 시 초기화)
     //todo: 서로 다른 작품 자동 연결
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    //todo: 자체 탐색기 만들기
+
     public partial class MainWindow : Window
     {
         private Dictionary<string, string> index;
@@ -31,23 +31,16 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            //var item = new LoaderItem( $"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000");
-            for (int j = 0; j < 100; j++)
-            {
-                var item = new LoaderItem(LList);
-                LList.Children.Add(item);
-            }
+            var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000");
+            //for (int j = 0; j < 100; j++)
+            //{
+            //    var item = new LoaderItem(LList);
+            //    LList.Children.Add(item);
+            //}
 
         }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-            for (int j = 0; j < 100; j++)
-            {
-                if (j == 90)
-                    ;
-                if (((LoaderItem)LList.Children[i]).ParentList == null) continue;
-                ((LoaderItem)LList.Children[i]).DeleteCast(((LoaderItem)LList.Children[i]).ContextMenu.Items[0], LList.Children[i]);
-            }
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
@@ -68,26 +61,26 @@ namespace imgLoader_WPF.Windows
 
             this.Title = Core.Route;
 
-            //var temp = new Thread(() =>
-            //{
-            //    index = Core.Index(Core.Route);
+            var temp = new Thread(() =>
+            {
+                index = Core.Index(Core.Route);
 
-            //    if (index == null) return;
+                if (index == null) return;
 
-            //    foreach (var (path, info) in index)
-            //    {
-            //        if (string.IsNullOrEmpty(info)) continue;
-            //        var file = info.Split("\n");
-            //        LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
-            //        {
-            //            var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], LList.Width);
-            //            LList.Children.Add(lItem);
-            //        }));
-            //    }
-            //});
+                foreach (var (path, info) in index)
+                {
+                    if (string.IsNullOrEmpty(info)) continue;
+                    var file = info.Split("\n");
+                    LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
+                    {
+                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0]);
+                        LList.Children.Add(lItem);
+                    }));
+                }
+            });
 
-            //temp.Name = "리스트_로드";
-            //temp.Start();
+            temp.Name = "Load List";
+            temp.Start();
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -119,7 +112,7 @@ namespace imgLoader_WPF.Windows
             var url = TxtUrl.Text;
             var lItem = new LoaderItem();
 
-            var temp = new Thread(() =>
+            var thrTemp = new Thread(() =>
             {
                 var proc = new Processor(url, lItem);
 
@@ -131,16 +124,13 @@ namespace imgLoader_WPF.Windows
 
                 if (!proc.IsValidated) return;
 
-                // processor 객체에 LoaderItem 객체를 매개변수로 넘기는 방식 시도해볼것
-                //var lItem = new LoaderItem(proc.Title, proc.Artist, proc.ImgUrl.Count.ToString(), proc.Site.GetType().Name, Core.GetDirectoryFromFile(proc.Route), Core.GetNumber(url), LList.Width);
-
                 LList.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => LList.Children.Add(lItem)));
                 proc.Load();
             });
 
-            temp.Name = "객체추가";
-            temp.SetApartmentState(ApartmentState.STA);
-            temp.Start();
+            thrTemp.Name = "Add object";
+            thrTemp.SetApartmentState(ApartmentState.STA);
+            thrTemp.Start();
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)

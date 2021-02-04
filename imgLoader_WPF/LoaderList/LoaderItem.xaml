@@ -8,10 +8,15 @@
 
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="삭제" Click="Delete_Click"/>
-            <MenuItem Header="{Binding Source={x:Reference Name=author}, Path=Content}"/>
-            <MenuItem Header="{Binding Source={x:Reference Name=imgCount}, Path=Content}"/>
-            <MenuItem Header="{Binding Source={x:Reference Name=number}, Path=Content}"/>
+            <MenuItem Header="삭제"/>
+            <Separator/>
+            <MenuItem Header="목록에서만 제거" Click="RemoveOnlyList_Click"/>
+            <Separator/>
+            <MenuItem Header="3"/>
+            <MenuItem Header="4"/>
+            <MenuItem Header="수정"/>
+            <Separator/>
+            <MenuItem Header="탐색기에서 열기" Click="Open_Click"/>
         </ContextMenu>
     </UserControl.ContextMenu>
 
@@ -33,7 +38,7 @@
             <Label x:Name="siteName" x:FieldModifier="private" Content="Hiyobi" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0"/>
             <Label x:Name="imgCount" x:FieldModifier="private" Content="9999장" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0"/>
             <Label x:Name="route" x:FieldModifier="private" Content="(경로)" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="2" Padding="0"/>
-            <ProgressBar x:Name="progBar" Grid.Column="2" HorizontalAlignment="Left" Height="5" Margin="10,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="409" Value="0" Orientation="Horizontal"/>
+            <ProgressBar x:Name="progBar" Grid.Column="2" HorizontalAlignment="Left" Height="5" Margin="10,0,0,0" Grid.Row="1" VerticalAlignment="Center" Width="409" Value="0" Orientation="Horizontal" Visibility="Hidden"/>
         </Grid>
     </Border>
 </UserControl>

@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -270,6 +271,11 @@ namespace imgLoader_WPF
         internal static string GetDirectoryFromFile(string path)
         {
             return path.Substring(0, path.IndexOf(path.Split('\\').Last(), StringComparison.Ordinal));
+        }
+
+        internal static void OpenDir(string path)
+        {
+            Process.Start("explorer.exe", path);
         }
     }
 }

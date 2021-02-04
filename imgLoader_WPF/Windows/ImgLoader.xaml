@@ -17,13 +17,13 @@
             </ScrollViewer>
         </Border>
 
-        <Button Content="테스트용 아이템 추가" HorizontalAlignment="Right" Margin="0,0,10,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click" />
-        <Button Content="랜덤" HorizontalAlignment="Right" Margin="0,0,115,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_1"/>
-        <Button Content="설정" HorizontalAlignment="Right" Margin="0,0,220,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_2"/>
+        <Button Content="테스트용 아이템 추가" HorizontalAlignment="Right" Margin="0,0,10,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click" />
+        <Button Content="랜덤" HorizontalAlignment="Right" Margin="0,0,96,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_1"/>
+        <Button Content="설정" HorizontalAlignment="Right" Margin="0,0,182,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_2"/>
 
         <TextBox x:Name="TxtUrl" HorizontalAlignment="Stretch" Height="19" Margin="10,10,10,0" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="TxtUrl_KeyUp" PreviewMouseUp="TxtUrl_PreviewMouseUp"/>
-        <Button Content="직렬 출력" HorizontalAlignment="Right" Margin="0,0,320,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_3"/>
-        <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,420,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_4"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="28" Margin="690,359,0,0" VerticalAlignment="Top" Width="105" Click="Button_Click_5"/>
+        <Button Content="직렬 출력" HorizontalAlignment="Right" Margin="0,0,265,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_3"/>
+        <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,347,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_4"/>
+        <Button Content="Button" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,135,20" Height="27" Width="76" Click="Button_Click_5"/>
     </Grid>
 </Window>
