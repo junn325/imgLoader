@@ -36,7 +36,17 @@ namespace imgLoader_WPF.Windows
             {
                 var item = new LoaderItem(LList);
                 LList.Children.Add(item);
+            }
 
+        }
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            for (int j = 0; j < 100; j++)
+            {
+                if (j == 90)
+                    ;
+                if (((LoaderItem)LList.Children[i]).ParentList == null) continue;
+                ((LoaderItem)LList.Children[i]).DeleteCast(((LoaderItem)LList.Children[i]).ContextMenu.Items[0], LList.Children[i]);
             }
         }
 
@@ -58,26 +68,26 @@ namespace imgLoader_WPF.Windows
 
             this.Title = Core.Route;
 
-            var temp = new Thread(() =>
-            {
-                index = Core.Index(Core.Route);
+            //var temp = new Thread(() =>
+            //{
+            //    index = Core.Index(Core.Route);
 
-                if (index == null) return;
+            //    if (index == null) return;
 
-                foreach (var (path, info) in index)
-                {
-                    if (string.IsNullOrEmpty(info)) continue;
-                    var file = info.Split("\n");
-                    LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
-                    {
-                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], LList.Width);
-                        LList.Children.Add(lItem);
-                    }));
-                }
-            });
+            //    foreach (var (path, info) in index)
+            //    {
+            //        if (string.IsNullOrEmpty(info)) continue;
+            //        var file = info.Split("\n");
+            //        LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
+            //        {
+            //            var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], LList.Width);
+            //            LList.Children.Add(lItem);
+            //        }));
+            //    }
+            //});
 
-            temp.Name = "리스트_로드";
-            temp.Start();
+            //temp.Name = "리스트_로드";
+            //temp.Start();
         }
 
         private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -156,5 +166,6 @@ namespace imgLoader_WPF.Windows
 
             //}
         }
+
     }
 }

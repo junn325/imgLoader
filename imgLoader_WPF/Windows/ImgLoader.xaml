@@ -12,15 +12,7 @@
         <Border BorderBrush="Black" BorderThickness=".5" Margin="10,32,10,64" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ScrollViewer x:Name="MyScrollViewer" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <loaderList:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=MyScrollViewer, Path=ViewportWidth}" Background="White" Orientation="Vertical" ItemWidth="{Binding ElementName=LList, Path=Width}">
-                    <!--<loaderList:LoaderList.ContextMenu>
-                        <ContextMenu x:Uid="Menu" Opened="Menu_Opened">
-                            <MenuItem Header="1"/>
-                            <MenuItem Header="2"/>
-                            <MenuItem Header="3"/>
-                        </ContextMenu>
-                    </loaderList:LoaderList.ContextMenu>-->
-
-                    <loaderList:LoaderItem/>
+                    <!--<loaderList:LoaderItem/>-->
                 </loaderList:LoaderList>
             </ScrollViewer>
         </Border>
@@ -32,5 +24,6 @@
         <TextBox x:Name="TxtUrl" HorizontalAlignment="Stretch" Height="19" Margin="10,10,10,0" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="TxtUrl_KeyUp" PreviewMouseUp="TxtUrl_PreviewMouseUp"/>
         <Button Content="직렬 출력" HorizontalAlignment="Right" Margin="0,0,320,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_3"/>
         <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,420,20" VerticalAlignment="Bottom" Height="27" Width="95" Click="Button_Click_4"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="28" Margin="690,359,0,0" VerticalAlignment="Top" Width="105" Click="Button_Click_5"/>
     </Grid>
 </Window>

@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Diagnostics;
+using System.Windows;
 
 namespace imgLoader_WPF.LoaderList
 {
@@ -89,10 +90,18 @@ namespace imgLoader_WPF.LoaderList
         private void Delete_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             sw.Restart();
-            ((LoaderList)((LoaderItem)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).Parent).Children.Remove(this);
-            //ParentList.Children.Remove(this);
+            DeleteCast(sender, this);
             Debug.WriteLine(sw.Elapsed.Ticks);
             //.Items.Remove(this);
+        }
+
+        public void DeleteCast(object sender, UIElement @this)
+        {
+            ((LoaderList)((LoaderItem)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).Parent).Children.Remove(@this);
+        }
+        public void DeleteObject(object sender, UIElement @this)
+        {
+            ParentList.Children.Remove(@this);
         }
     }
 }
