@@ -7,10 +7,19 @@
         xmlns:loaderList="clr-namespace:imgLoader_WPF.LoaderList"
         mc:Ignorable="d"
         Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" SizeChanged="ImgLoader_WPF_SizeChanged" WindowStartupLocation="CenterScreen">
+
     <Grid>
         <Border BorderBrush="Black" BorderThickness=".5" Margin="10,32,10,64" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ScrollViewer x:Name="MyScrollViewer" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <loaderList:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=MyScrollViewer, Path=ViewportWidth}" Background="White" Orientation="Vertical" ItemWidth="{Binding ElementName=LList, Path=Width}">
+                    <!--<loaderList:LoaderList.ContextMenu>
+                        <ContextMenu x:Uid="Menu" Opened="Menu_Opened">
+                            <MenuItem Header="1"/>
+                            <MenuItem Header="2"/>
+                            <MenuItem Header="3"/>
+                        </ContextMenu>
+                    </loaderList:LoaderList.ContextMenu>-->
+
                     <loaderList:LoaderItem/>
                 </loaderList:LoaderList>
             </ScrollViewer>

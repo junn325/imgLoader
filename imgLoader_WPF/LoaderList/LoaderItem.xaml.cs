@@ -41,12 +41,6 @@ namespace imgLoader_WPF.LoaderList
             get => number.Content.ToString();
             set => number.Content = value;
         }
-        
-        public double Progress
-        {
-            get => progBar.Value;
-            set => progBar.Value = value;
-        }
 
         //public string Size
         //{
@@ -84,6 +78,11 @@ namespace imgLoader_WPF.LoaderList
             Number = number;
 
             //this.Width = width;
+        }
+
+        private void UserControl_PreviewMouseRightButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+
         }
     }
 }

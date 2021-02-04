@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace imgLoader_WPF.Windows
@@ -140,6 +141,16 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
             if (TxtUrl.Text == "주소 입력 후 Enter 키로 다운로드 시작") TxtUrl.Text = "";
+        }
+
+        private void Menu_Opened(object sender, RoutedEventArgs e)
+        {
+            ;
+            //var temp = (LoaderList.LoaderList)(((ContextMenu)e.Source).PlacementTarget);
+            //if (temp.)
+            //{
+
+            //}
         }
     }
 }
