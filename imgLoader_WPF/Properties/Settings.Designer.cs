@@ -70,5 +70,17 @@ namespace imgLoader_WPF.Properties {
                 this["BookMark_Name"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool NoScrollTag {
+            get {
+                return ((bool)(this["NoScrollTag"]));
+            }
+            set {
+                this["NoScrollTag"] = value;
+            }
+        }
     }
 }

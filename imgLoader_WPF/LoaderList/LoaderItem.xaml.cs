@@ -118,6 +118,17 @@ namespace imgLoader_WPF.LoaderList
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
+            if (Properties.Settings.Default.NoScrollTag)
+            {
+                if (e.Delta > 0)
+                    ((ScrollViewer)((LoaderList)((LoaderItem)((Border)((Grid)((ScrollViewer)sender).Parent).Parent).Parent).Parent).Parent).LineUp();
+                else
+                    ((ScrollViewer)((LoaderList)((LoaderItem)((Border)((Grid)((ScrollViewer)sender).Parent).Parent).Parent).Parent).Parent).LineDown();
+
+                e.Handled = true;
+                return;
+            }
+
             if (sender is not ScrollViewer sv) return;
 
             if (e.Delta > 0)

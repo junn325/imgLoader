@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.ComponentModel;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Ookii.Dialogs.Wpf;
 
 namespace imgLoader_WPF.Windows
 {
@@ -23,11 +25,12 @@ namespace imgLoader_WPF.Windows
             CheckFolder.IsChecked = Properties.Settings.Default.BookMark_Name;
             CheckDupl.IsChecked = Properties.Settings.Default.NoAsk_Dupl;
             CheckImmid.IsChecked = Properties.Settings.Default.Down_Immid;
+            CheckScroll.IsChecked = Properties.Settings.Default.NoScrollTag;
         }
 
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var a = new Ookii.Dialogs.Wpf.VistaFolderBrowserDialog();
+            var a = new VistaFolderBrowserDialog();
             if (a.ShowDialog() == true) TxtPath.Text = a.SelectedPath;
         }
 
@@ -37,16 +40,16 @@ namespace imgLoader_WPF.Windows
 
             Core.Route = TxtPath.Text;
 
-            if (File.Exists($"{System.IO.Path.GetTempPath()}{Core.RouteFile}.txt"))
+            if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))
             {
-                if (File.ReadAllText($"{System.IO.Path.GetTempPath()}{Core.RouteFile}.txt") != Core.Route)
+                if (File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt") != Core.Route)
                 {
-                    File.WriteAllText($"{System.IO.Path.GetTempPath()}{Core.RouteFile}.txt", Core.Route);
+                    File.WriteAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt", Core.Route);
                 }
             }
             else
             {
-                File.WriteAllText($"{System.IO.Path.GetTempPath()}{Core.RouteFile}.txt", Core.Route);
+                File.WriteAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt", Core.Route);
             }
         }
 
@@ -70,14 +73,20 @@ namespace imgLoader_WPF.Windows
 
         private void CheckDupl_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.NoAsk_Dupl = ((CheckBox)sender).IsChecked.GetValueOrDefault(); 
+            Properties.Settings.Default.NoAsk_Dupl = ((CheckBox)sender).IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
         }
 
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void Window_Closing(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
-            this.Hide();
+            Hide();
+        }
+
+        private void CheckScroll_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.NoScrollTag = ((CheckBox)sender).IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.Save();
         }
     }
 }

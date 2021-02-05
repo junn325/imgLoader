@@ -25,6 +25,6 @@
 
         <CheckBox x:Name="CheckImmid" Content="항목 모두 즉시 다운로드 시작" Grid.Row="1" Grid.Column="1" Margin="10,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckImmid_Click" Height="15"/>
         <CheckBox x:Name="CheckFolder" Content="북마크에서 로드한 항목은 북마크 제목으로 폴더명을 정함" Grid.Row="1" Grid.Column="1" Margin="10,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click" Height="15"/>
-        <CheckBox x:Name="CheckScroll" Content="항목의 태그를 마우스로 스크롤하지 않음" Grid.Row="1" Grid.Column="1" Margin="10,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click" Height="15"/>
+        <CheckBox x:Name="CheckScroll" Content="항목의 태그를 마우스로 스크롤하지 않음" Grid.Row="1" Grid.Column="1" Margin="10,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckScroll_Click" Height="15"/>
     </Grid>
 </Window>

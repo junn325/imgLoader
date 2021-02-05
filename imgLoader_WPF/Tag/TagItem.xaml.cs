@@ -23,7 +23,7 @@ namespace imgLoader_WPF.Tag
                 {
                     SColor.Female => (Brush)new BrushConverter().ConvertFrom("#E86441"),
                     SColor.Male => (Brush)new BrushConverter().ConvertFrom("#00A2FF"),
-                    _ => (Brush)new BrushConverter().ConvertFrom("#F6F6F6")
+                    _ => (Brush)new BrushConverter().ConvertFrom("#838587")
                 };
         }
 
@@ -33,6 +33,7 @@ namespace imgLoader_WPF.Tag
             Male,
             None
         }
+
         public TagItem()
         {
             InitializeComponent();
