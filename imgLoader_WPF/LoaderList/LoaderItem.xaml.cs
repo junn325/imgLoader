@@ -34,16 +34,12 @@ namespace imgLoader_WPF.LoaderList
             get => TxbSiteName.Text;
             set => TxbSiteName.Text = value;
         }
-        public string Route
-        {
-            get; set;
-        }
+        public string Route { get; set; }
         public string Number
         {
             get => TxbNumber.Text;
             set => TxbNumber.Text = value;
         }
-
         public int CurrentCount
         {
             get => _curCnt;
@@ -53,7 +49,6 @@ namespace imgLoader_WPF.LoaderList
                 ProgLbl.Content = $"{value}/{ImgCount}";
             }
         }
-
         public string[] Tags
         {
             get => _tags;
@@ -79,6 +74,17 @@ namespace imgLoader_WPF.LoaderList
             }
         }
 
+        public bool IsRead
+        {
+            get => _isRead;
+            set
+            {
+                _isRead = value;
+                Background = IsRead ? Brushes.LightGray : Brushes.White;
+            }
+        }
+
+        private bool _isRead;
         private int _curCnt;
         private string[] _tags;
         #endregion
@@ -156,6 +162,8 @@ namespace imgLoader_WPF.LoaderList
 
             var canvas = new Canvas.Canvas { Image = img };
             canvas.Show();
+
+            IsRead = true;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

@@ -52,6 +52,8 @@
             <ScrollViewer x:Name="Scroll" Grid.Row="2" Grid.Column="2" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                 <ScrollViewer.Resources>
                     <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}">3</sys:Double>
+                    <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}">0</sys:Double>
+                    <!--<sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonHeight}">0</sys:Double>-->
                 </ScrollViewer.Resources>
 
                 <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False"/>
