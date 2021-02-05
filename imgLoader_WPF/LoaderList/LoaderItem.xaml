@@ -9,15 +9,16 @@
 
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="삭제"/>
+            <MenuItem Header="열기" Click="Open_Click"/>
+            <MenuItem Header="탐색기에서 열기" Click="OpenExplorer_Click"/>
+            <Separator/>
+            <MenuItem Header="취소" Click="Cancel_Click"/>
+            <MenuItem Header="일시중지" Click="Pause_Click"/>
+            <MenuItem Header="재개" Click="Resume_Click"/>
             <Separator/>
             <MenuItem Header="목록에서만 제거" Click="RemoveOnlyList_Click"/>
             <Separator/>
-            <MenuItem Header="취소"/>
-            <MenuItem Header="일시중지"/>
-            <MenuItem Header="재개"/>
-            <Separator/>
-            <MenuItem Header="탐색기에서 열기" Click="Open_Click"/>
+            <MenuItem Header="삭제" Click="Delete_Click"/>
         </ContextMenu>
     </UserControl.ContextMenu>
 

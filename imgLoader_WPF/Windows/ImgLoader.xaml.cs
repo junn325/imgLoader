@@ -15,10 +15,10 @@ namespace imgLoader_WPF.Windows
     //todo: 서로 다른 작품 자동 연결
     //todo: 자체 탐색기 만들기
 
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
-        private Dictionary<string, string> index;
-        private readonly Settings winSetting = new();
+        private Dictionary<string, string> _index;
+        private readonly Settings _winSetting = new();
         int i;
 
         public MainWindow()
@@ -48,7 +48,7 @@ namespace imgLoader_WPF.Windows
             }
             else
             {
-                winSetting.Show();
+                _winSetting.Show();
             }
 
 #if DEBUG
@@ -59,11 +59,11 @@ namespace imgLoader_WPF.Windows
 
             var temp = new Thread(() =>
             {
-                index = Core.Index(Core.Route);
+                _index = Core.Index(Core.Route);
 
-                if (index == null) return;
+                if (_index == null) return;
 
-                foreach (var (path, info) in index)
+                foreach (var (path, info) in _index)
                 {
                     if (string.IsNullOrEmpty(info)) continue;
                     var file = info.Split("\n");
@@ -80,17 +80,17 @@ namespace imgLoader_WPF.Windows
             temp.Name = "Load List";
             temp.Start();
         }
-        
+
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var temp = index.Keys.ToArray()[new Random().Next(0, index.Count)];
+            var temp = _index.Keys.ToArray()[new Random().Next(0, _index.Count)];
             Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             //winSetting = new Settings();
-            winSetting.Show();
+            _winSetting.Show();
         }
 
         private void TxtUrl_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
@@ -135,6 +135,5 @@ namespace imgLoader_WPF.Windows
             if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
             if (TxtUrl.Text == "주소 입력 후 Enter 키로 다운로드 시작") TxtUrl.Text = "";
         }
-
     }
 }

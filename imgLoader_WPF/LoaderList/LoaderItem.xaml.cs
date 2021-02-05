@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using imgLoader_WPF.Tag;
 
 namespace imgLoader_WPF.LoaderList
 {
-    /// <summary>
-    /// Interaction logic for LoaderItem.xaml
-    /// </summary>
     public partial class LoaderItem
     {
         #region "Prop"
@@ -113,7 +113,7 @@ namespace imgLoader_WPF.LoaderList
             ((LoaderList)((LoaderItem)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).Parent).Children.Remove(this);
         }
 
-        private void Open_Click(object sender, RoutedEventArgs e)
+        private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
             Core.OpenDir(Route);
         }
@@ -146,6 +146,32 @@ namespace imgLoader_WPF.LoaderList
             TxbAuthor.MaxWidth = ActualWidth - 10;
             //TagPanel.MaxWidth = ActualWidth - 105;
         }
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            var img = new BitmapImage();
+            img.BeginInit();
+            img.UriSource = new Uri(Directory.GetFiles(Core.GetDirectoryFromFile(Route),"*.*")[0]);
+            img.EndInit();
+
+            var canvas = new Canvas.Canvas { Image = img };
+            canvas.Show();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Resume_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
     public class ValConvert : IValueConverter
@@ -160,5 +186,4 @@ namespace imgLoader_WPF.LoaderList
             return null;
         }
     }
-
 }
