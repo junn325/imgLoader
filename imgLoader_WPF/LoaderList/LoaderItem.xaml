@@ -40,7 +40,7 @@
             <TextBlock x:Name="TxbSiteName" x:FieldModifier="private" Text="Hiyobi" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="TxbImgCount" x:FieldModifier="private" Text="9999장" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
 
-            <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+            <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="Hidden">
                 <DockPanel.Resources>
                     <local:ValConvert x:Key="ValConverter"/>
                 </DockPanel.Resources>

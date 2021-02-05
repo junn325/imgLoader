@@ -56,10 +56,10 @@ namespace imgLoader_WPF.LoaderList
 
         public string[] Tags
         {
-            get => _Tags;
+            get => _tags;
             set
             {
-                _Tags = value;
+                _tags = value;
 
                 foreach (var tag in value)
                 {
@@ -80,7 +80,7 @@ namespace imgLoader_WPF.LoaderList
         }
 
         private int _curCnt;
-        private string[] _Tags;
+        private string[] _tags;
         #endregion
 
         //private readonly Stopwatch sw = new Stopwatch();
