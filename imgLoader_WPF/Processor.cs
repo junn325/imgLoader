@@ -81,6 +81,9 @@ namespace imgLoader_WPF
                     item.Route = Route;
                     item.SiteName = Site.GetType().Name;
                     item.Number = Core.GetNumber(url);
+
+                    item.TagPanel.Visibility = Visibility.Hidden;
+                    item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
                 });
 
                 if (!Site.IsValidated()) return;
@@ -240,7 +243,6 @@ namespace imgLoader_WPF
 
             _item.Dispatcher.Invoke(() => _item.ProgBar.Maximum = imgList.Count);
 
-            Console.Write("\n[");
             AllocDown(path, imgList);
 
             Task.WaitAll(_tasks);
@@ -250,11 +252,8 @@ namespace imgLoader_WPF
             Core.Log($"Item:Complete: {path}");
             if (success)
             {
-                Console.Write("]\n");
-                Console.WriteLine("\n Download complete.\n");
-
                 _item.Dispatcher.Invoke(() => _item.ProgPanel.Visibility = Visibility.Hidden);
-
+                _item.Dispatcher.Invoke(() => _item.TagPanel.Visibility = Visibility.Visible);
             }
             else
             {

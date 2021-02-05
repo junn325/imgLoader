@@ -70,7 +70,8 @@ namespace imgLoader_WPF.Windows
 
                     LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
                     {
-                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], file[4].Split("tags:")[1].Split('\n')[0].Split(';'));
+                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0]);
+                        lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
                         LList.Children.Add(lItem);
                     }));
                 }
@@ -142,16 +143,6 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
             if (TxtUrl.Text == "주소 입력 후 Enter 키로 다운로드 시작") TxtUrl.Text = "";
-        }
-
-        private void Menu_Opened(object sender, RoutedEventArgs e)
-        {
-            ;
-            //var temp = (LoaderList.LoaderList)(((ContextMenu)e.Source).PlacementTarget);
-            //if (temp.)
-            //{
-
-            //}
         }
 
     }

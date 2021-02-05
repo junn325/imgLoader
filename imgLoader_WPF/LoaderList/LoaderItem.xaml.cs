@@ -52,7 +52,33 @@ namespace imgLoader_WPF.LoaderList
             }
         }
 
+        public string[] Tags
+        {
+            get => _Tags;
+            set
+            {
+                _Tags = value;
+
+                foreach (var tag in value)
+                {
+                    if (string.IsNullOrEmpty(tag)) return;
+                    TagPanel.Children.Add(new TagItem
+                    {
+                        TagName = tag.Contains(':') ? tag.Split(':')[1] : tag,
+
+                        Sex =
+                            tag.Contains(':')
+                                ? string.Equals(tag.Split(':')[0], "female", StringComparison.OrdinalIgnoreCase)
+                                    ? TagItem.SColor.Female
+                                    : TagItem.SColor.Male
+                                : TagItem.SColor.None
+                    });
+                }
+            }
+        }
+
         private int _curCnt;
+        private string[] _Tags;
         #endregion
 
         //private readonly Stopwatch sw = new Stopwatch();
@@ -75,33 +101,7 @@ namespace imgLoader_WPF.LoaderList
 
             //this.Width = sender.Width;
         }
-        public LoaderItem(string title, string author, string count, string site, string route, string number, string[] tags)
-        {
-            InitializeComponent();
 
-            Title = title;
-            Author = author;
-            ImgCount = count;
-            SiteName = site;
-            Route = route;
-            Number = number;
-
-            foreach (var tag in tags)
-            {
-                if (string.IsNullOrEmpty(tag)) return;
-                TagPanel.Children.Add(new TagItem
-                {
-                    TagName = tag.Contains(':') ? tag.Split(':')[1] : tag,
-
-                    Sex =
-                        tag.Contains(':')
-                            ? string.Equals(tag.Split(':')[0], "female", StringComparison.OrdinalIgnoreCase)
-                                ? TagItem.SColor.Female
-                                : TagItem.SColor.Male
-                            : TagItem.SColor.None
-                });
-            }
-        }
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
         }
