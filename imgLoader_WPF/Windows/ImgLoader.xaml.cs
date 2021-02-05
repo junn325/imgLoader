@@ -5,12 +5,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace imgLoader_WPF.Windows
@@ -125,7 +121,7 @@ namespace imgLoader_WPF.Windows
 
                 if (!proc.IsValidated) return;
 
-                LList.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => LList.Children.Add(lItem)));
+                LList.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => LList.Children.Insert(0, lItem)));
                 proc.Load();
             });
 

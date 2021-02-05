@@ -278,4 +278,9 @@ namespace imgLoader_WPF
             Process.Start("explorer.exe", path);
         }
     }
+
+    internal class IndexingService
+    {
+
+    }
 }
