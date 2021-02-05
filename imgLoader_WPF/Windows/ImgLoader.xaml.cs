@@ -80,16 +80,7 @@ namespace imgLoader_WPF.Windows
             temp.Name = "Load List";
             temp.Start();
         }
-
-        private void ImgLoader_WPF_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //foreach (UIElement child in LList.Children)
-            //{
-            //    if (child.DependencyObjectType.Name == "Grid") continue;
-            //    ((LoaderItem)child).Width = System.Windows.SystemParameters.WorkArea.Width;
-            //}
-        }
-
+        
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             var temp = index.Keys.ToArray()[new Random().Next(0, index.Count)];

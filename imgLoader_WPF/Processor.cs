@@ -29,31 +29,6 @@ namespace imgLoader_WPF
         internal ISite Site { get; }
         internal bool IsValidated { get; }
 
-        public Processor(string url)
-        {
-            if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
-
-            Site = Load(url);
-            ImgUrl = Site.GetImgUrls();
-
-            if (!Site.IsValidated()) return;
-
-            Artist = GetArtist(Site);
-            Title = GetTitle(Site.GetTitle());
-            Route = Getpath(Artist, Title);
-            Info = Site.ReturnInfo();
-
-            var temp = CreateInfo(url);
-
-            if (temp != Error.End)
-            {
-                if (temp == Error.Cancel) return;
-
-                throw new Exception("Failed to Initialize: Processor");
-            }
-
-            IsValidated = Site.IsValidated();
-        }
         public Processor(string url, LoaderItem item)
         {
             try

@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             xmlns:local="clr-namespace:imgLoader_WPF"
-             xmlns:tag="clr-namespace:imgLoader_WPF.Tag"
+             xmlns:local="clr-namespace:imgLoader_WPF.LoaderList"
              mc:Ignorable="d" d:DesignWidth="514.5" Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged">
 
     <UserControl.ContextMenu>
@@ -23,7 +22,7 @@
     </UserControl.ContextMenu>
 
     <Border BorderBrush="Black" BorderThickness="0.5">
-        <Grid>
+        <Grid x:Name="Grid">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
@@ -41,9 +40,12 @@
             <TextBlock x:Name="TxbSiteName" x:FieldModifier="private" Text="Hiyobi" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="TxbImgCount" x:FieldModifier="private" Text="9999장" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
 
-            <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2"  Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="370" Value="0" Orientation="Horizontal" />
-                <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="0,0,5,1"/>
+            <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <DockPanel.Resources>
+                    <local:ValConvert x:Key="ValConverter"/>
+                </DockPanel.Resources>
+                <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="{Binding ActualWidth, ElementName=ProgPanel, Converter={StaticResource ValConverter}}" Value="0" HorizontalContentAlignment="Stretch" Orientation="Horizontal" />
+                <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" Margin="5,0,5,1"/>
             </DockPanel>
 
             <ScrollViewer x:Name="Scroll" Grid.Row="2" Grid.Column="2" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">

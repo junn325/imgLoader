@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using imgLoader_WPF.Tag;
 
@@ -145,4 +147,18 @@ namespace imgLoader_WPF.LoaderList
             //TagPanel.MaxWidth = ActualWidth - 105;
         }
     }
+
+    public class ValConvert : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (double)value - 50;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
 }
