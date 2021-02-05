@@ -10,8 +10,8 @@
 
     <Grid>
         <Border BorderBrush="Black" BorderThickness=".5" Margin="10,32,10,64" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <ScrollViewer x:Name="MyScrollViewer" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <loaderList:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=MyScrollViewer, Path=ViewportWidth}" Background="White" Orientation="Vertical" ItemWidth="{Binding ElementName=LList, Path=Width}">
+            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <loaderList:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=Scroll, Path=ViewportWidth}" Background="White" Orientation="Vertical" ItemWidth="{Binding ElementName=LList, Path=Width}">
                     <!--<loaderList:LoaderItem/>-->
                 </loaderList:LoaderList>
             </ScrollViewer>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using imgLoader_WPF.Tag;
 
 namespace imgLoader_WPF.LoaderList
@@ -13,23 +14,23 @@ namespace imgLoader_WPF.LoaderList
         #region "Prop"
         public string Title
         {
-            get => title.Content.ToString();
-            set => title.Content = value;
+            get => TxbTitle.Text;
+            set => TxbTitle.Text = value;
         }
         public string Author
         {
-            get => author.Content.ToString();
-            set => author.Content = value;
+            get => TxbAuthor.Text;
+            set => TxbAuthor.Text = value;
         }
         public string ImgCount
         {
-            get => imgCount.Content.ToString();
-            set => imgCount.Content = value + "장";
+            get => TxbImgCount.Text;
+            set => TxbImgCount.Text = value + "장";
         }
         public string SiteName
         {
-            get => siteName.Content.ToString();
-            set => siteName.Content = value;
+            get => TxbSiteName.Text;
+            set => TxbSiteName.Text = value;
         }
         public string Route
         {
@@ -37,8 +38,8 @@ namespace imgLoader_WPF.LoaderList
         }
         public string Number
         {
-            get => number.Content.ToString();
-            set => number.Content = value;
+            get => TxbNumber.Text;
+            set => TxbNumber.Text = value;
         }
 
         public int CurrentCount
@@ -113,6 +114,24 @@ namespace imgLoader_WPF.LoaderList
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             Core.OpenDir(Route);
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (sender is not ScrollViewer sv) return;
+
+            if (e.Delta > 0)
+                sv.LineLeft();
+            else
+                sv.LineRight();
+            e.Handled = true;
+        }
+
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TxbTitle.MaxWidth = ActualWidth - TxbNumber.ActualWidth - 15;
+            TxbAuthor.MaxWidth = ActualWidth - 10;
+            //TagPanel.MaxWidth = ActualWidth - 105;
         }
     }
 }

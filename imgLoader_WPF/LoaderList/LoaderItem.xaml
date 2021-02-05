@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:imgLoader_WPF"
              xmlns:tag="clr-namespace:imgLoader_WPF.Tag"
-             mc:Ignorable="d" d:DesignWidth="514.5" Background="White" Height="60" MinWidth="515">
+             mc:Ignorable="d" d:DesignWidth="514.5" Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged">
 
     <UserControl.ContextMenu>
         <ContextMenu>
@@ -34,20 +35,24 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Label x:Name="title" x:FieldModifier="private" Content="(제목)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0" Grid.ColumnSpan="3" />
-            <Label x:Name="number" x:FieldModifier="private" Content="(번호)" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0"/>
-            <Label x:Name="author" x:FieldModifier="private" Content="(작가)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0"/>
-            <Label x:Name="siteName" x:FieldModifier="private" Content="Hiyobi" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0"/>
-            <Label x:Name="imgCount" x:FieldModifier="private" Content="9999장" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0"/>
+            <TextBlock x:Name="TxbTitle" x:FieldModifier="private" Text="(제목)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0" Grid.ColumnSpan="3" TextTrimming="WordEllipsis" />
+            <TextBlock x:Name="TxbNumber" x:FieldModifier="private" Text="(번호)" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="TxbAuthor" x:FieldModifier="private" Text="(작가)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="TxbSiteName" x:FieldModifier="private" Text="Hiyobi" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="TxbImgCount" x:FieldModifier="private" Text="9999장" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
 
             <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2"  Visibility="Hidden" VerticalAlignment="Center" HorizontalAlignment="Stretch">
                 <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="370" Value="0" Orientation="Horizontal" />
                 <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="0,0,5,1"/>
             </DockPanel>
 
-            <DockPanel x:Name="TagPanel" Grid.Row="2" Grid.Column="2"  VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False">
-                
-            </DockPanel>
+            <ScrollViewer x:Name="Scroll" Grid.Row="2" Grid.Column="2" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+                <ScrollViewer.Resources>
+                    <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}">3</sys:Double>
+                </ScrollViewer.Resources>
+
+                <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False"/>
+            </ScrollViewer>
         </Grid>
     </Border>
 </UserControl>
