@@ -283,4 +283,56 @@ namespace imgLoader_WPF
     {
 
     }
+
+    internal class VoteSavingService
+    {
+        private bool _stop;
+
+        internal void Start(LoaderList.LoaderList list)
+        {
+            var service = new Thread(() =>
+            {
+                while (!_stop)
+                {
+                    list.Dispatcher.Invoke(() =>
+                    {
+                        foreach (LoaderList.LoaderItem item in list.Children)
+                        {
+                            if (!File.Exists(item.Route)) continue;
+                            if ((File.GetAttributes(item.Route) & FileAttributes.Hidden) != 0) File.SetAttributes(item.Route, FileAttributes.Normal);
+
+                            var temp = File.ReadAllText(item.Route).Split('\n');
+                            var info = new string[7];
+
+                            temp.CopyTo(info, 0);
+
+                            info[6] = item.Vote.ToString();
+
+                            using var sw = new StreamWriter(new FileStream(item.Route, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
+
+                            for (var i = 0; i < info.Length; i++)
+                            {
+                                sw.Write(
+                                    i != info.Length - 1
+                                        ? info[i] + '\n'
+                                        : info[i]
+                                );
+                            }
+
+                            File.SetAttributes(item.Route, FileAttributes.Hidden);
+                        }
+                    });
+                    Thread.Sleep(1000);
+                }
+            });
+
+            service.Name = "VtSvc";
+            service.Start();
+        }
+
+        internal void Stop()
+        {
+            _stop = true;
+        }
+    }
 }

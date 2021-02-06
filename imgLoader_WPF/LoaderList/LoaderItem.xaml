@@ -20,12 +20,6 @@
             <MenuItem Header="일시중지" Click="Pause_Click"/>
             <MenuItem Header="재개" Click="Resume_Click"/>
             <Separator/>
-            <!--UpVote & DownVote-->
-            <Grid Width="100">
-                <Button Content="Up" HorizontalAlignment="Left" Width="22" Height="22"/>
-                <Button Content="Dn" HorizontalAlignment="Right" Width="22" Height="22"/>
-            </Grid>
-            <Separator/>
             <MenuItem Header="목록에서만 제거" Click="RemoveOnlyList_Click"/>
             <Separator/>
             <MenuItem Header="삭제" Click="Delete_Click"/>
@@ -106,9 +100,9 @@
             </ScrollViewer>
 
             <Grid Width="auto" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2"> <!--반투명 색 넣을것-->
-                <Label Content="500" Padding="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,39,0"/>
-                <Button x:Name="DownVote" Template="{StaticResource BtnDown}" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,5,0" Width="15"/>
-                <Button x:Name="UpVote" Template="{StaticResource BtnUp}" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,22,0" Width="15"/>
+                <Label x:Name="LblVote"  Content="0" Padding="5,0,2,1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,39,0"/>
+                <Button x:Name="DownVote" Template="{StaticResource BtnDown}" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,5,0" Width="15" Click="DownVote_Click"/>
+                <Button x:Name="UpVote" Template="{StaticResource BtnUp}" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,22,0" Width="15" Click="UpVote_Click"/>
             </Grid>
         </Grid>
     </Border>

@@ -74,6 +74,16 @@ namespace imgLoader_WPF.LoaderList
             }
         }
 
+        public int Vote
+        {
+            get => _vote;
+            set
+            {
+                _vote = value;
+                LblVote.Content = _vote.ToString();
+            }
+        }
+
         public bool IsRead
         {
             get => _isRead;
@@ -84,6 +94,7 @@ namespace imgLoader_WPF.LoaderList
             }
         }
 
+        private int _vote;
         private bool _isRead;
         private int _curCnt;
         private string[] _tags;
@@ -96,7 +107,7 @@ namespace imgLoader_WPF.LoaderList
             InitializeComponent();
         }
 
-        public LoaderItem(string title, string author, string count, string site, string route, string number)
+        public LoaderItem(string title, string author, string count, string site, string route, string number, int vote)
         {
             InitializeComponent();
 
@@ -106,7 +117,7 @@ namespace imgLoader_WPF.LoaderList
             SiteName = site;
             Route = route;
             Number = number;
-
+            Vote = vote;
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -179,12 +190,15 @@ namespace imgLoader_WPF.LoaderList
         {
 
         }
-        private void ContextMenu_Loaded(object sender, RoutedEventArgs e)
-        {
-            ((Grid)sender).MinWidth = FirstItem.ActualWidth;
-            ((Grid)sender).MinHeight = FirstItem.ActualHeight;
-            ;
 
+        private void UpVote_Click(object sender, RoutedEventArgs e)
+        {
+            Vote++;
+        }
+
+        private void DownVote_Click(object sender, RoutedEventArgs e)
+        {
+            Vote--;
         }
     }
 

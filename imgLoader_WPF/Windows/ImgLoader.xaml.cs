@@ -19,6 +19,7 @@ namespace imgLoader_WPF.Windows
     {
         private Dictionary<string, string> _index;
         private readonly Settings _winSetting = new();
+        private VoteSavingService _vsSvc;
         int i;
 
         public MainWindow()
@@ -28,7 +29,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000");
+            var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000", 0);
             //for (int j = 0; j < 100; j++)
             //{
             //    var item = new LoaderItem(LList);
@@ -58,6 +59,9 @@ namespace imgLoader_WPF.Windows
 
             this.Title = Core.Route;
 
+            _vsSvc = new VoteSavingService();
+            _vsSvc.Start(LList);
+
             var temp = new Thread(() =>
             {
                 _index = Core.Index(Core.Route);
@@ -71,7 +75,7 @@ namespace imgLoader_WPF.Windows
 
                     LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
                     {
-                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0]);
+                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], 0);
                         lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
                         LList.Children.Add(lItem);
                     }));
@@ -135,6 +139,11 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
             if (TxtUrl.Text == "주소 입력 후 Enter 키로 다운로드 시작") TxtUrl.Text = "";
+        }
+
+        private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _vsSvc.Stop();
         }
     }
 }

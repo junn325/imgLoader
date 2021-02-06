@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:imgLoader_WPF"
         xmlns:loaderList="clr-namespace:imgLoader_WPF.LoaderList"
         mc:Ignorable="d"
-        Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen">
+        Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing">
 
     <Grid>
         <Border BorderBrush="Black" BorderThickness=".5" Margin="10,32,10,64" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
