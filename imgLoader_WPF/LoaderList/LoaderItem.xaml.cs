@@ -107,7 +107,6 @@ namespace imgLoader_WPF.LoaderList
             Route = route;
             Number = number;
 
-            //this.Width = sender.Width;
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -178,6 +177,13 @@ namespace imgLoader_WPF.LoaderList
 
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
+
+        }
+        private void ContextMenu_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((Grid)sender).MinWidth = FirstItem.ActualWidth;
+            ((Grid)sender).MinHeight = FirstItem.ActualHeight;
+            ;
 
         }
     }

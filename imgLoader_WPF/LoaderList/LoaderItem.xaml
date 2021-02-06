@@ -5,16 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:local="clr-namespace:imgLoader_WPF.LoaderList"
-             mc:Ignorable="d" d:DesignWidth="514.5" Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged">
+             mc:Ignorable="d"
+             Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged">
+
+    <UserControl.Resources>
+    </UserControl.Resources>
 
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Header="열기" Click="Open_Click"/>
+            <MenuItem x:Name="FirstItem" Header="열기" Click="Open_Click"/>
             <MenuItem Header="탐색기에서 열기" Click="OpenExplorer_Click"/>
             <Separator/>
             <MenuItem Header="취소" Click="Cancel_Click"/>
             <MenuItem Header="일시중지" Click="Pause_Click"/>
             <MenuItem Header="재개" Click="Resume_Click"/>
+            <Separator/>
+            <!--UpVote & DownVote-->
+            <Grid Width="100">
+                <Button Content="Up" HorizontalAlignment="Left" Width="22" Height="22"/>
+                <Button Content="Dn" HorizontalAlignment="Right" Width="22" Height="22"/>
+            </Grid>
             <Separator/>
             <MenuItem Header="목록에서만 제거" Click="RemoveOnlyList_Click"/>
             <Separator/>
@@ -34,6 +44,43 @@
                 <ColumnDefinition Width="45"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
+            <Grid.Resources>
+                <ImageBrush x:Key="Down" ImageSource="Icon\Dwn.png" Stretch="Fill"/>
+                <ImageBrush x:Key="Up" ImageSource="Icon\Up.png" Stretch="Fill"/>
+
+                <ControlTemplate x:Key="BtnUp" TargetType="Button">
+                    <Border Name="border" BorderThickness="0" 
+                            Background="{StaticResource Up}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="Icon/upover.png" Stretch="Fill" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+
+                <ControlTemplate x:Key="BtnDown" TargetType="Button">
+                    <Border Name="border" BorderThickness="0" 
+                            Background="{StaticResource Down}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" TargetName="border">
+                                <Setter.Value>
+                                    <ImageBrush ImageSource="Icon/DownOver.png" Stretch="Fill" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+
+            </Grid.Resources>
 
             <TextBlock x:Name="TxbTitle" x:FieldModifier="private" Text="(제목)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0" Grid.ColumnSpan="3" TextTrimming="WordEllipsis" />
             <TextBlock x:Name="TxbNumber" x:FieldModifier="private" Text="(번호)" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
@@ -53,11 +100,13 @@
                 <ScrollViewer.Resources>
                     <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}">3</sys:Double>
                     <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}">0</sys:Double>
-                    <!--<sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonHeight}">0</sys:Double>-->
                 </ScrollViewer.Resources>
 
                 <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False"/>
             </ScrollViewer>
+
+            <Button x:Name="DownVote" Template="{StaticResource BtnDown}" BorderThickness="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,5,0" Grid.Row="1" Width="15"/>
+            <Button x:Name="UpVote" Template="{StaticResource BtnUp}" BorderThickness="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,22,0" Grid.Row="1" Width="15"/>
         </Grid>
     </Border>
 </UserControl>

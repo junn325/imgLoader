@@ -38,6 +38,7 @@ namespace imgLoader_WPF.Windows
         }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
+            ;
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)

@@ -24,6 +24,6 @@
         <TextBox x:Name="TxtUrl" HorizontalAlignment="Stretch" Height="19" Margin="10,10,10,0" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="TxtUrl_KeyUp" PreviewMouseUp="TxtUrl_PreviewMouseUp"/>
         <Button Content="직렬 출력" HorizontalAlignment="Right" Margin="0,0,265,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_3"/>
         <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,347,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_4"/>
-        <Button Content="Button" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,135,20" Height="27" Width="76" Click="Button_Click_5"/>
+        <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,135,20" Height="27" Width="76" Click="Button_Click_5"/>
     </Grid>
 </Window>
