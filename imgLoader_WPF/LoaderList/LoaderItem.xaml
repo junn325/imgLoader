@@ -105,8 +105,11 @@
                 <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False"/>
             </ScrollViewer>
 
-            <Button x:Name="DownVote" Template="{StaticResource BtnDown}" BorderThickness="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,5,0" Grid.Row="1" Width="15"/>
-            <Button x:Name="UpVote" Template="{StaticResource BtnUp}" BorderThickness="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,22,0" Grid.Row="1" Width="15"/>
+            <Grid Width="auto" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2"> <!--반투명 색 넣을것-->
+                <Label Content="500" Padding="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,39,0"/>
+                <Button x:Name="DownVote" Template="{StaticResource BtnDown}" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,5,0" Width="15"/>
+                <Button x:Name="UpVote" Template="{StaticResource BtnUp}" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,22,0" Width="15"/>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
