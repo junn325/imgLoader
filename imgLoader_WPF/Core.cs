@@ -277,7 +277,8 @@ namespace imgLoader_WPF
 
                     _list.Dispatcher.Invoke(() => _list.Children.Clear());
 
-                    foreach (var (path, info) in _index)
+                    var temp = new Dictionary<string, string>(_index);
+                    foreach (var (path, info) in temp)
                     {
                         if (string.IsNullOrEmpty(info)) continue;
                         var file = info.Split("\n");
@@ -290,8 +291,8 @@ namespace imgLoader_WPF
                         }));
                     }
 
-                    _indexCnt = _index.Count;
-                    _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
+                    _indexCnt = temp.Count;
+                    _label.Dispatcher.Invoke(() => _label.Content = $"{temp.Count}개 항목");
                 }
             });
 
@@ -307,20 +308,21 @@ namespace imgLoader_WPF
     {
         private bool _stop;
         private readonly string _route;
-        //private Dictionary<string, string> _index;
+        private Dictionary<string, string> _index;
         //private int _indexCnt;
 
-        public IndexingService(string route, ref Dictionary<string, string> index)
+        public IndexingService(string route, Dictionary<string, string> index)
         {
             _route = route;
 
-            //_index = index;
-            index = DoIndex(_route);
+            _index = index;
+            DoIndex(_route, _index);
+
             ;
             //_indexCnt = _index.Count;
         }
 
-        private static Dictionary<string, string> DoIndex(string route)
+        private static void DoIndex(string route, Dictionary<string, string> index)
         {
             const string countSeparator = "/**/";
             const string itemSeparator = "-**-";
@@ -338,7 +340,8 @@ namespace imgLoader_WPF
             //}
 
             var sb = new StringBuilder();
-            var infos = new Dictionary<string, string>(infoFiles.Length);
+            //var infos = new Dictionary<string, string>(infoFiles.Length);
+            index.Clear();
             var tasks = new Task[infoFiles.Length];
 
             for (var i = 0; i < infoFiles.Length; i++)
@@ -349,7 +352,7 @@ namespace imgLoader_WPF
                     lock (sb)
                     {
                         var info = File.ReadAllText(infoRoute);
-                        infos.Add(infoRoute, info);
+                        index.Add(infoRoute, info);
                         sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
                     }
                 });
@@ -357,15 +360,12 @@ namespace imgLoader_WPF
 
             Task.WaitAll(tasks);
 
-            File.WriteAllText($"{tempPath}{Core.IndexFile}.txt", $"{infos.Count}{countSeparator}{sb}", Encoding.UTF8);
-
-            return infos;
+            File.WriteAllText($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
         }
 
-        internal void Start(ref Dictionary<string, string> index)
+        internal void Start()
         {
-            var temp = index;
-            var service = new Thread((idx) =>
+            var service = new Thread(() =>
             {
                 while (!_stop)
                 {
@@ -373,13 +373,13 @@ namespace imgLoader_WPF
 
                     //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
-                    idx = DoIndex(_route);
+                    DoIndex(_route, _index);
                     //_indexCnt = _index.Count;
                 }
             });
 
             service.Name = "IdxSvc";
-            service.Start(index);
+            service.Start();
         }
 
         internal void Stop()

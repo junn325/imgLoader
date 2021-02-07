@@ -66,8 +66,8 @@ namespace imgLoader_WPF.Windows
             _vsSvc = new VoteSavingService();
             _vsSvc.Start(LList);
 
-            _idxSvc = new IndexingService(Core.Route, ref _index);
-            _idxSvc.Start(ref _index);
+            _idxSvc = new IndexingService(Core.Route, _index);
+            _idxSvc.Start();
 
             _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
             _rfshSvc.Start();
