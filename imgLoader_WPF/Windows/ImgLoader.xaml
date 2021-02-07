@@ -4,16 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:imgLoader_WPF"
-        xmlns:loaderList="clr-namespace:imgLoader_WPF.LoaderList"
+        xmlns:loaderListCtrl="clr-namespace:imgLoader_WPF.LoaderListCtrl"
         mc:Ignorable="d"
         Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing">
 
     <Grid>
         <Border BorderBrush="Black" BorderThickness=".5" Margin="10,32,10,64" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <loaderList:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=Scroll, Path=ViewportWidth}" Background="White" Orientation="Vertical" ItemWidth="{Binding ElementName=LList, Path=Width}">
+                <loaderListCtrl:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=Scroll, Path=ViewportWidth}" Background="White" Orientation="Vertical" ItemWidth="{Binding ElementName=LList, Path=Width}">
                     <!--<loaderList:LoaderItem/>-->
-                </loaderList:LoaderList>
+                </loaderListCtrl:LoaderList>
             </ScrollViewer>
         </Border>
 
@@ -25,8 +25,8 @@
         <Button Content="직렬 출력" HorizontalAlignment="Right" Margin="0,0,265,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_3"/>
         <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,347,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_4"/>
         <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,135,20" Height="27" Width="76" Click="Button_Click_5"/>
-        <Label x:Name="LblCount" Content="0개 항목" HorizontalAlignment="Left" Margin="10,375,0,0" VerticalAlignment="Top"/>
-        <Button Content="idxSvc" HorizontalAlignment="Left" Height="21" Margin="72,387,0,0" VerticalAlignment="Top" Width="70" Click="Button_Click_6"/>
-        <Button Content="rfshSvc" HorizontalAlignment="Left" Height="21" Margin="147,388,0,0" VerticalAlignment="Top" Width="70" Click="Button_Click_7"/>
+        <Label x:Name="LblCount" Content="0개 항목" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,40"/>
+        <Button Content="idxSvc" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="21" Margin="72,0,0,20" Width="70" Click="Button_Click_6"/>
+        <Button Content="rfshSvc" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="21" Margin="147,0,0,20" Width="70" Click="Button_Click_7"/>
     </Grid>
 </Window>

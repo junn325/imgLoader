@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using imgLoader_WPF.LoaderList;
+using imgLoader_WPF.LoaderListCtrl;
 
 
 namespace imgLoader_WPF

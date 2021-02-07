@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using imgLoader_WPF.LoaderList;
+using imgLoader_WPF.LoaderListCtrl;
 
 namespace imgLoader_WPF
 {
@@ -251,9 +251,9 @@ namespace imgLoader_WPF
         private int _indexCnt;
 
         private readonly Label _label;
-        private readonly LoaderList.LoaderList _list;
+        private readonly LoaderList _list;
 
-        public ItemRefreshService(Dictionary<string, string> index, LoaderList.LoaderList list, Label label)
+        public ItemRefreshService(Dictionary<string, string> index, LoaderList list, Label label)
         {
             _label = label;
             _list = list;
@@ -269,30 +269,39 @@ namespace imgLoader_WPF
                 int count = 0;
                 while (!_stop)
                 {
-                    Thread.Sleep(4000);
-
                     _list.Dispatcher.Invoke(() => count = _list.Children.Count);
 
-                    if (count == _index.Count && _indexCnt == _index.Count) continue;
-
-                    _list.Dispatcher.Invoke(() => _list.Children.Clear());
-
-                    var temp = new Dictionary<string, string>(_index);
-                    foreach (var (path, info) in temp)
+                    if (count == _index.Count && _indexCnt == _index.Count)
                     {
-                        if (string.IsNullOrEmpty(info)) continue;
-                        var file = info.Split("\n");
-
-                        _list.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
-                        {
-                            var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], 0);
-                            lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
-                            _list.Children.Add(lItem);
-                        }));
+                        Thread.Sleep(2000);
+                        continue;
                     }
+
+                    Dictionary<string, string> temp = null;
+
+                    _list.Dispatcher.Invoke(() =>
+                    {
+                        using (_list.Dispatcher.DisableProcessing())
+                        {
+                            _list.Children.Clear();
+
+                            temp = new Dictionary<string, string>(_index);
+                            foreach (var (path, info) in temp)
+                            {
+                                if (string.IsNullOrEmpty(info)) continue;
+                                var file = info.Split("\n");
+
+                                var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], file[6].Length != 0 ? int.Parse(file[6]) : 0);
+                                lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
+                                _list.Children.Add(lItem);
+                            }
+                        }
+                    });
 
                     _indexCnt = temp.Count;
                     _label.Dispatcher.Invoke(() => _label.Content = $"{temp.Count}개 항목");
+
+                    Thread.Sleep(2000);
                 }
             });
 
@@ -308,8 +317,7 @@ namespace imgLoader_WPF
     {
         private bool _stop;
         private readonly string _route;
-        private Dictionary<string, string> _index;
-        //private int _indexCnt;
+        private readonly Dictionary<string, string> _index;
 
         public IndexingService(string route, Dictionary<string, string> index)
         {
@@ -317,9 +325,6 @@ namespace imgLoader_WPF
 
             _index = index;
             DoIndex(_route, _index);
-
-            ;
-            //_indexCnt = _index.Count;
         }
 
         private static void DoIndex(string route, Dictionary<string, string> index)
@@ -369,12 +374,10 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
-                    Thread.Sleep(2000);
-
                     //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
                     DoIndex(_route, _index);
-                    //_indexCnt = _index.Count;
+                    Thread.Sleep(2000);
                 }
             });
 
@@ -387,12 +390,11 @@ namespace imgLoader_WPF
             _stop = true;
         }
     }
-
     internal class VoteSavingService
     {
         private bool _stop;
 
-        internal void Start(LoaderList.LoaderList list)
+        internal void Start(LoaderList list)
         {
             var service = new Thread(() =>
             {
@@ -400,22 +402,21 @@ namespace imgLoader_WPF
                 {
                     list.Dispatcher.Invoke(() =>
                     {
-                        foreach (LoaderList.LoaderItem item in list.Children)
+                        foreach (LoaderItem item in list.Children)
                         {
-                            if (!File.Exists(item.Route)) continue;
-                            if ((File.GetAttributes(item.Route) & FileAttributes.Hidden) != 0) File.SetAttributes(item.Route, FileAttributes.Normal);
-
+                            var file = new FileInfo(item.Route);
+                            if (!file.Exists) continue;
                             var temp = File.ReadAllText(item.Route).Split('\n');
-
                             if (temp.Length == 7 && item.Vote.ToString() == temp[6]) continue;
+
+                            //if ((file.Attributes & FileAttributes.Hidden) != 0) File.SetAttributes(item.Route, FileAttributes.Normal);
+
                             var info = new string[7];
 
                             temp.CopyTo(info, 0);
-
                             info[6] = item.Vote.ToString();
 
-                            using var sw = new StreamWriter(new FileStream(item.Route, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
-
+                            using var sw = new StreamWriter(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
                             for (var i = 0; i < info.Length; i++)
                             {
                                 sw.Write(
@@ -425,9 +426,10 @@ namespace imgLoader_WPF
                                 );
                             }
 
-                            File.SetAttributes(item.Route, FileAttributes.Hidden);
+                            //File.SetAttributes(item.Route, FileAttributes.Hidden);
                         }
                     });
+
                     Thread.Sleep(2000);
                 }
             });
