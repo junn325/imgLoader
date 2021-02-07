@@ -17,9 +17,10 @@ namespace imgLoader_WPF.Windows
 
     public partial class MainWindow
     {
-        private Dictionary<string, string> _index;
-        private readonly Settings _winSetting = new();
         private VoteSavingService _vsSvc;
+        private IndexingService _idxSvc;
+
+        private readonly Settings _winSetting = new();
         int i;
 
         public MainWindow()
@@ -62,13 +63,16 @@ namespace imgLoader_WPF.Windows
             _vsSvc = new VoteSavingService();
             _vsSvc.Start(LList);
 
+            _idxSvc = new IndexingService(Core.Route);
+            _idxSvc.Start();
+
             var temp = new Thread(() =>
             {
-                _index = Core.Index(Core.Route);
+                var index = _idxSvc.Index;
 
-                if (_index == null) return;
+                if (index == null) return;
 
-                foreach (var (path, info) in _index)
+                foreach (var (path, info) in index)
                 {
                     if (string.IsNullOrEmpty(info)) continue;
                     var file = info.Split("\n");
@@ -88,8 +92,8 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            var temp = _index.Keys.ToArray()[new Random().Next(0, _index.Count)];
-            Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
+            //var temp = _index.Keys.ToArray()[new Random().Next(0, _index.Count)];
+            //Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)

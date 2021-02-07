@@ -189,48 +189,6 @@ namespace imgLoader_WPF
             return null;
         }
 
-        internal static Dictionary<string, string> Index(string route)
-        {
-            const string countSeparator = "/**/";
-            const string itemSeparator = "-**-";
-
-            var tempPath = Path.GetTempPath();
-            var infoFiles = Directory.GetFiles(route, $"*.{InfoExt}", SearchOption.AllDirectories);
-
-            if (File.Exists($"{tempPath}{IndexFile}.txt"))
-            {
-                var file = File.ReadAllText($"{tempPath}{IndexFile}.txt");
-                if (file.Length != 0 && file.Contains("/**/") && int.Parse(file.Split(countSeparator)[0]) == infoFiles.Length)
-                {
-                    return file.Split(countSeparator)[1].Split(itemSeparator).Where(s => s.Length != 0).ToDictionary(s => s.Split('`')[0], s => s.Split('`')[1]);
-                }
-            }
-
-            var sb = new StringBuilder();
-            var infos = new Dictionary<string, string>(infoFiles.Length);
-            var tasks = new Task[infoFiles.Length];
-
-            for (var i = 0; i < infoFiles.Length; i++)
-            {
-                var infoRoute = infoFiles[i];
-                tasks[i] = Task.Factory.StartNew(() =>
-                {
-                    lock (sb)
-                    {
-                        var info = File.ReadAllText(infoRoute);
-                        infos.Add(infoRoute, info);
-                        sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
-                    }
-                });
-            }
-
-            Task.WaitAll(tasks);
-
-            File.WriteAllText($"{tempPath}{IndexFile}.txt", $"{infos.Count}{countSeparator}{sb}", Encoding.UTF8);
-
-            return infos;
-        }
-
         internal static void Search(Dictionary<string, string> index, string search, string route)
         {
             var searchResult = new Dictionary<string, string>(index);
@@ -284,7 +242,78 @@ namespace imgLoader_WPF
 
     internal class IndexingService
     {
+        private bool _stop;
+        private readonly string _route;
 
+        public IndexingService(string route)
+        {
+            _route = route;
+            Index = DoIndex(_route);
+        }
+
+        public Dictionary<string,string> Index { get; private set; }
+
+        private static Dictionary<string, string> DoIndex(string route)
+        {
+            const string countSeparator = "/**/";
+            const string itemSeparator = "-**-";
+
+            var tempPath = Path.GetTempPath();
+            var infoFiles = Directory.GetFiles(route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+
+            if (File.Exists($"{tempPath}{Core.IndexFile}.txt"))
+            {
+                var file = File.ReadAllText($"{tempPath}{Core.IndexFile}.txt");
+                if (file.Length != 0 && file.Contains("/**/") && int.Parse(file.Split(countSeparator)[0]) == infoFiles.Length)
+                {
+                    return file.Split(countSeparator)[1].Split(itemSeparator).Where(s => s.Length != 0).ToDictionary(s => s.Split('`')[0], s => s.Split('`')[1]);
+                }
+            }
+
+            var sb = new StringBuilder();
+            var infos = new Dictionary<string, string>(infoFiles.Length);
+            var tasks = new Task[infoFiles.Length];
+
+            for (var i = 0; i < infoFiles.Length; i++)
+            {
+                var infoRoute = infoFiles[i];
+                tasks[i] = Task.Factory.StartNew(() =>
+                {
+                    lock (sb)
+                    {
+                        var info = File.ReadAllText(infoRoute);
+                        infos.Add(infoRoute, info);
+                        sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
+                    }
+                });
+            }
+
+            Task.WaitAll(tasks);
+
+            File.WriteAllText($"{tempPath}{Core.IndexFile}.txt", $"{infos.Count}{countSeparator}{sb}", Encoding.UTF8);
+
+            return infos;
+        }
+
+        internal void Start()
+        {
+            var service = new Thread(() =>
+            {
+                while (!_stop)
+                {
+                    Index = DoIndex(_route);
+                    Thread.Sleep(4000);
+                }
+            });
+
+            service.Name = "IdxSvc";
+            service.Start();
+        }
+
+        internal void Stop()
+        {
+            _stop = true;
+        }
     }
 
     internal class VoteSavingService
