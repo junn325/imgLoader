@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -109,7 +110,7 @@ namespace imgLoader_WPF.Sites
                 sb.Append(item.Split('\"')[1]).Append(';');
             }
             info[4] = sb.ToString().Trim();
-            info[5] = _src_gall.Split("<td class=\"gdt2\">")[1].Split("</td>")[0];
+            info[5] = DateTime.Now.ToString(CultureInfo.InvariantCulture);
 
             return info;
         }

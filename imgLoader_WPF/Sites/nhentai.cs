@@ -68,9 +68,7 @@ namespace imgLoader_WPF.Sites
                 temp.Append(item.Split('\"')[0]).Append(';');
             }
             info[4] = temp.ToString().Trim();
-
-            if (!_source.Contains("datetime")) return info;
-            info[5] = _source.Split("datetime=\"")[1].Split('\"')[0];
+            info[5] = DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
             return info;
         }

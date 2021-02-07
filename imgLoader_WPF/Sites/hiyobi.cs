@@ -95,9 +95,7 @@ namespace imgLoader_WPF.Sites
             }
 
             info[4] = sb.ToString().Trim();
-            if (!_src_api.Contains("\"date\"")) return info;
-
-            info[5] = StrTools.GetStringValue(_src_api, "date");
+            info[5] = DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
             return info;
         }

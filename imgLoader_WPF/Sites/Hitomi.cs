@@ -133,8 +133,7 @@ namespace imgLoader_WPF.Sites
             }
 
             info[4] = sb.ToString().Trim();
-            if (!_src_info.Contains("\"date\"")) return info;
-            info[5] = StrTools.GetStringValue(_src_info, "date");
+            info[5] = DateTime.Now.ToString(CultureInfo.InvariantCulture);
 
             return info;
         }
