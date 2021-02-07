@@ -292,7 +292,6 @@ namespace imgLoader_WPF
 
                     _indexCnt = _index.Count;
                     _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
-
                 }
             });
 
@@ -366,7 +365,7 @@ namespace imgLoader_WPF
         internal void Start(ref Dictionary<string, string> index)
         {
             var temp = index;
-            var service = new Thread(() =>
+            var service = new Thread((idx) =>
             {
                 while (!_stop)
                 {
@@ -374,13 +373,13 @@ namespace imgLoader_WPF
 
                     //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
-                    temp = DoIndex(_route);
+                    idx = DoIndex(_route);
                     //_indexCnt = _index.Count;
                 }
             });
 
             service.Name = "IdxSvc";
-            service.Start();
+            service.Start(index);
         }
 
         internal void Stop()
