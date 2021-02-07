@@ -356,7 +356,8 @@ namespace imgLoader_WPF
                 {
                     lock (sb)
                     {
-                        var info = File.ReadAllText(infoRoute);
+                        using var sr = new StreamReader(new FileStream(infoRoute, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
+                        var info = sr.ReadToEnd();
                         index.Add(infoRoute, info);
                         sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
                     }
@@ -406,7 +407,10 @@ namespace imgLoader_WPF
                         {
                             var file = new FileInfo(item.Route);
                             if (!file.Exists) continue;
-                            var temp = File.ReadAllText(item.Route).Split('\n');
+
+                            using var sr = new StreamReader(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
+                            var temp = sr.ReadToEnd().Split('\n');
+
                             if (temp.Length == 7 && item.Vote.ToString() == temp[6]) continue;
 
                             //if ((file.Attributes & FileAttributes.Hidden) != 0) File.SetAttributes(item.Route, FileAttributes.Normal);
