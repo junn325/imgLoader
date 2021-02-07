@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using imgLoader_WPF.Tag;
 
-namespace imgLoader_WPF.LoaderList
+namespace imgLoader_WPF.LoaderListCtrl
 {
     public partial class LoaderItem
     {

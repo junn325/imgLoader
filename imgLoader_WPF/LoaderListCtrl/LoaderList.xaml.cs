@@ -1,4 +1,4 @@
-﻿namespace imgLoader_WPF.LoaderList
+﻿namespace imgLoader_WPF.LoaderListCtrl
 {
     /// <summary>
     /// Interaction logic for LoaderList.xaml

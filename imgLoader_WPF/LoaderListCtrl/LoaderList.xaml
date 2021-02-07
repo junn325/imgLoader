@@ -3,7 +3,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:imgLoader_WPF"
-             xmlns:local1="clr-namespace:imgLoader_WPF.LoaderList" x:Class="imgLoader_WPF.LoaderList.LoaderList"
+             x:Class="imgLoader_WPF.LoaderListCtrl.LoaderList"
              mc:Ignorable="d" 
              d:DesignHeight="223.573" d:DesignWidth="664.905">
 </WrapPanel>
