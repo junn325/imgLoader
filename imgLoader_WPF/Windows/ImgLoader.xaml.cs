@@ -67,7 +67,7 @@ namespace imgLoader_WPF.Windows
             _vsSvc.Start(LList);
 
             _idxSvc = new IndexingService(Core.Route, ref _index);
-            _idxSvc.Start();
+            _idxSvc.Start(ref _index);
 
             _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
             _rfshSvc.Start();
@@ -161,8 +161,8 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            if (i++ % 2 == 0) _idxSvc.Stop();
-            else _idxSvc.Start();
+            //if (i++ % 2 == 0) _idxSvc.Stop();
+            //else _idxSvc.Start();
         }
 
         private void Button_Click_7(object sender, RoutedEventArgs e)

@@ -266,9 +266,14 @@ namespace imgLoader_WPF
         {
             var service = new Thread(() =>
             {
+                int count = 0;
                 while (!_stop)
                 {
-                    if (_indexCnt == _index.Count) goto sleep;
+                    Thread.Sleep(4000);
+
+                    _list.Dispatcher.Invoke(() => count = _list.Children.Count);
+
+                    if (count == _index.Count && _indexCnt == _index.Count) continue;
 
                     _list.Dispatcher.Invoke(() => _list.Children.Clear());
 
@@ -288,7 +293,6 @@ namespace imgLoader_WPF
                     _indexCnt = _index.Count;
                     _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
 
-                sleep: Thread.Sleep(4000);
                 }
             });
 
@@ -304,15 +308,15 @@ namespace imgLoader_WPF
     {
         private bool _stop;
         private readonly string _route;
-        private Dictionary<string, string> _index;
+        //private Dictionary<string, string> _index;
         //private int _indexCnt;
 
         public IndexingService(string route, ref Dictionary<string, string> index)
         {
             _route = route;
 
-            _index = index;
-            _index = DoIndex(_route);
+            //_index = index;
+            index = DoIndex(_route);
             ;
             //_indexCnt = _index.Count;
         }
@@ -325,14 +329,14 @@ namespace imgLoader_WPF
             var tempPath = Path.GetTempPath();
             var infoFiles = Directory.GetFiles(route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
 
-            if (File.Exists($"{tempPath}{Core.IndexFile}.txt"))
-            {
-                var file = File.ReadAllText($"{tempPath}{Core.IndexFile}.txt");
-                if (file.Length != 0 && file.Contains("/**/") && int.Parse(file.Split(countSeparator)[0]) == infoFiles.Length)
-                {
-                    return file.Split(countSeparator)[1].Split(itemSeparator).Where(s => s.Length != 0).ToDictionary(s => s.Split('`')[0], s => s.Split('`')[1]);
-                }
-            }
+            //if (File.Exists($"{tempPath}{Core.IndexFile}.txt"))
+            //{
+            //    var file = File.ReadAllText($"{tempPath}{Core.IndexFile}.txt");
+            //    if (file.Length != 0 && file.Contains("/**/") && int.Parse(file.Split(countSeparator)[0]) == infoFiles.Length)
+            //    {
+            //        return file.Split(countSeparator)[1].Split(itemSeparator).Where(s => s.Length != 0).ToDictionary(s => s.Split('`')[0], s => s.Split('`')[1]);
+            //    }
+            //}
 
             var sb = new StringBuilder();
             var infos = new Dictionary<string, string>(infoFiles.Length);
@@ -361,16 +365,17 @@ namespace imgLoader_WPF
 
         internal void Start(ref Dictionary<string, string> index)
         {
+            var temp = index;
             var service = new Thread(() =>
             {
                 while (!_stop)
                 {
-                    if (_index.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) goto sleep;
+                    Thread.Sleep(2000);
 
-                    _index = DoIndex(_route);
+                    //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
+
+                    temp = DoIndex(_route);
                     //_indexCnt = _index.Count;
-
-                sleep: Thread.Sleep(2000);
                 }
             });
 
