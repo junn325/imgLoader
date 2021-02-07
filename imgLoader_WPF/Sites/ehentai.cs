@@ -119,6 +119,9 @@ namespace imgLoader_WPF.Sites
             return Number != null;
         }
 
+        /// <summary>
+        ///  Can be null
+        /// </summary>
         private static async Task<string> XmlHttpRequest_ItemAsync(string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
             return await Task.Run(() => {
@@ -163,6 +166,10 @@ namespace imgLoader_WPF.Sites
                 }
             }).ConfigureAwait(false);
         }
+
+        /// <summary>
+        ///  Can be null
+        /// </summary>
         private static string XmlHttpRequest_Data(string url, string gall_id, string gall_token)
         {
             HttpWebRequest rq = null;

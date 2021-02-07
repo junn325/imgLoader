@@ -6,11 +6,17 @@ namespace imgLoader_WPF
 {
     public static class StrLoad
     {
+        /// <summary>
+        /// Value Can be null
+        /// </summary>
         public static async Task<string> LoadAsync(string url)
         {
             return await Task.Run(() => Load(url)).ConfigureAwait(false);
         }
 
+        /// <summary>
+        ///  Can be null
+        /// </summary>
         public static string Load(string url)
         {
             var sb = new StringBuilder();

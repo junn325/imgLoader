@@ -165,6 +165,9 @@ namespace imgLoader_WPF
             return "";
         }
 
+        /// <summary>
+        ///  Can be null
+        /// </summary>
         internal static ISite LoadSite(string url)
         {
             var mNumber = GetNumber(url);
@@ -302,6 +305,8 @@ namespace imgLoader_WPF
                             if ((File.GetAttributes(item.Route) & FileAttributes.Hidden) != 0) File.SetAttributes(item.Route, FileAttributes.Normal);
 
                             var temp = File.ReadAllText(item.Route).Split('\n');
+
+                            if (temp.Length == 7 && item.Vote.ToString() == temp[6]) continue;
                             var info = new string[7];
 
                             temp.CopyTo(info, 0);
@@ -322,7 +327,7 @@ namespace imgLoader_WPF
                             File.SetAttributes(item.Route, FileAttributes.Hidden);
                         }
                     });
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                 }
             });
 

@@ -88,6 +88,9 @@ namespace imgLoader_WPF
             Stopping();
         }
 
+        /// <summary>
+        ///  Can be null
+        /// </summary>
         private static ISite Load(string url)
         {
             try
@@ -104,6 +107,9 @@ namespace imgLoader_WPF
             }
         }
 
+        /// <summary>
+        ///  Can be null
+        /// </summary>
         private static string GetArtist(ISite site)
         {
             var sb = new StringBuilder();
