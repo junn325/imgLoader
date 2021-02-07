@@ -19,9 +19,12 @@ namespace imgLoader_WPF.Windows
     {
         private VoteSavingService _vsSvc;
         private IndexingService _idxSvc;
+        private ItemRefreshService _rfshSvc;
 
         private readonly Settings _winSetting = new();
+        private Dictionary<string, string> _index = new();
         int i;
+        int j;
 
         public MainWindow()
         {
@@ -63,31 +66,35 @@ namespace imgLoader_WPF.Windows
             _vsSvc = new VoteSavingService();
             _vsSvc.Start(LList);
 
-            _idxSvc = new IndexingService(Core.Route);
+            _idxSvc = new IndexingService(Core.Route, ref _index);
             _idxSvc.Start();
 
-            var temp = new Thread(() =>
-            {
-                var index = _idxSvc.Index;
+            _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
+            _rfshSvc.Start();
 
-                if (index == null) return;
+            ;
+            //var temp = new Thread(() =>
+            //{
+            //    var index = _index;
 
-                foreach (var (path, info) in index)
-                {
-                    if (string.IsNullOrEmpty(info)) continue;
-                    var file = info.Split("\n");
+            //    if (index == null) return;
 
-                    LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
-                    {
-                        var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], 0);
-                        lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
-                        LList.Children.Add(lItem);
-                    }));
-                }
-            });
+            //    foreach (var (path, info) in index)
+            //    {
+            //        if (string.IsNullOrEmpty(info)) continue;
+            //        var file = info.Split("\n");
 
-            temp.Name = "Load List";
-            temp.Start();
+            //        LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
+            //        {
+            //            var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], 0);
+            //            lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
+            //            LList.Children.Add(lItem);
+            //        }));
+            //    }
+            //});
+
+            //temp.Name = "Load List";
+            //temp.Start();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -148,6 +155,20 @@ namespace imgLoader_WPF.Windows
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _vsSvc.Stop();
+            _idxSvc.Stop();
+            _rfshSvc.Stop();
+        }
+
+        private void Button_Click_6(object sender, RoutedEventArgs e)
+        {
+            if (i++ % 2 == 0) _idxSvc.Stop();
+            else _idxSvc.Start();
+        }
+
+        private void Button_Click_7(object sender, RoutedEventArgs e)
+        {
+            if (j++ % 2 == 0) _rfshSvc.Stop();
+            else _rfshSvc.Start();
         }
     }
 }

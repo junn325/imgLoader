@@ -25,5 +25,8 @@
         <Button Content="직렬 출력" HorizontalAlignment="Right" Margin="0,0,265,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_3"/>
         <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,347,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_4"/>
         <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,135,20" Height="27" Width="76" Click="Button_Click_5"/>
+        <Label x:Name="LblCount" Content="0개 항목" HorizontalAlignment="Left" Margin="10,375,0,0" VerticalAlignment="Top"/>
+        <Button Content="idxSvc" HorizontalAlignment="Left" Height="21" Margin="72,387,0,0" VerticalAlignment="Top" Width="70" Click="Button_Click_6"/>
+        <Button Content="rfshSvc" HorizontalAlignment="Left" Height="21" Margin="147,388,0,0" VerticalAlignment="Top" Width="70" Click="Button_Click_7"/>
     </Grid>
 </Window>

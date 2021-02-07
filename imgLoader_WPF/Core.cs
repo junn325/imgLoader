@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
+using imgLoader_WPF.LoaderList;
 
 namespace imgLoader_WPF
 {
@@ -240,18 +243,79 @@ namespace imgLoader_WPF
         }
     }
 
+    internal class ItemRefreshService
+    {
+        private bool _stop;
+
+        private readonly Dictionary<string, string> _index;
+        private int _indexCnt;
+
+        private readonly Label _label;
+        private readonly LoaderList.LoaderList _list;
+
+        public ItemRefreshService(Dictionary<string, string> index, LoaderList.LoaderList list, Label label)
+        {
+            _label = label;
+            _list = list;
+
+            _indexCnt = index.Count;
+            _index = index;
+        }
+
+        internal void Start()
+        {
+            var service = new Thread(() =>
+            {
+                while (!_stop)
+                {
+                    if (_indexCnt == _index.Count) goto sleep;
+
+                    _list.Dispatcher.Invoke(() => _list.Children.Clear());
+
+                    foreach (var (path, info) in _index)
+                    {
+                        if (string.IsNullOrEmpty(info)) continue;
+                        var file = info.Split("\n");
+
+                        _list.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
+                        {
+                            var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], 0);
+                            lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
+                            _list.Children.Add(lItem);
+                        }));
+                    }
+
+                    _indexCnt = _index.Count;
+                    _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
+
+                sleep: Thread.Sleep(4000);
+                }
+            });
+
+            service.Name = "Rfshsvc";
+            service.Start();
+        }
+        internal void Stop()
+        {
+            _stop = true;
+        }
+    }
     internal class IndexingService
     {
         private bool _stop;
         private readonly string _route;
+        private Dictionary<string, string> _index;
+        //private int _indexCnt;
 
-        public IndexingService(string route)
+        public IndexingService(string route, ref Dictionary<string, string> index)
         {
             _route = route;
-            Index = DoIndex(_route);
-        }
 
-        public Dictionary<string,string> Index { get; private set; }
+            _index = index;
+            _index = DoIndex(_route);
+            ;
+            //_indexCnt = _index.Count;
+        }
 
         private static Dictionary<string, string> DoIndex(string route)
         {
@@ -295,14 +359,18 @@ namespace imgLoader_WPF
             return infos;
         }
 
-        internal void Start()
+        internal void Start(ref Dictionary<string, string> index)
         {
             var service = new Thread(() =>
             {
                 while (!_stop)
                 {
-                    Index = DoIndex(_route);
-                    Thread.Sleep(4000);
+                    if (_index.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) goto sleep;
+
+                    _index = DoIndex(_route);
+                    //_indexCnt = _index.Count;
+
+                sleep: Thread.Sleep(2000);
                 }
             });
 

@@ -206,6 +206,8 @@ namespace imgLoader_WPF.LoaderList
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if ((double)value < 50) return 0;
+
             return (double)value - 50;
         }
 
