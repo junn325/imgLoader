@@ -335,15 +335,6 @@ namespace imgLoader_WPF
             var tempPath = Path.GetTempPath();
             var infoFiles = Directory.GetFiles(route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
 
-            //if (File.Exists($"{tempPath}{Core.IndexFile}.txt"))
-            //{
-            //    var file = File.ReadAllText($"{tempPath}{Core.IndexFile}.txt");
-            //    if (file.Length != 0 && file.Contains("/**/") && int.Parse(file.Split(countSeparator)[0]) == infoFiles.Length)
-            //    {
-            //        return file.Split(countSeparator)[1].Split(itemSeparator).Where(s => s.Length != 0).ToDictionary(s => s.Split('`')[0], s => s.Split('`')[1]);
-            //    }
-            //}
-
             var sb = new StringBuilder();
             //var infos = new Dictionary<string, string>(infoFiles.Length);
             index.Clear();
@@ -352,21 +343,25 @@ namespace imgLoader_WPF
             for (var i = 0; i < infoFiles.Length; i++)
             {
                 var infoRoute = infoFiles[i];
-                tasks[i] = Task.Factory.StartNew(() =>
-                {
+                //tasks[i] = Task.Factory.StartNew(() =>
+                //{
                     lock (sb)
                     {
-                        using var sr = new StreamReader(new FileStream(infoRoute, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
-                        var info = sr.ReadToEnd();
-                        index.Add(infoRoute, info);
+                        Core.Log($"Indexing.DoIndex StreamReader {infoRoute}");
+
+                        using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+                        var info = (sr.ReadToEndAsync().ConfigureAwait(false));
+
+                        index.Add(infoRoute, info.GetAwaiter().GetResult());
                         sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
+                        sr.Close();
                     }
-                });
+                //});
             }
 
-            Task.WaitAll(tasks);
+            //Task.WaitAll(tasks);
 
-            File.WriteAllText($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
+            //await File.WriteAllTextAsync($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
         }
 
         internal void Start()
@@ -375,10 +370,11 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
+                    Thread.Sleep(2000);
+
                     //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
                     DoIndex(_route, _index);
-                    Thread.Sleep(2000);
                 }
             });
 
@@ -401,15 +397,16 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
-                    list.Dispatcher.Invoke(() =>
+                    list.Dispatcher.Invoke(async () =>
                     {
                         foreach (LoaderItem item in list.Children)
                         {
                             var file = new FileInfo(item.Route);
                             if (!file.Exists) continue;
 
+                            Core.Log($"Vote.Start StreamReader {item.Route}");
                             using var sr = new StreamReader(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
-                            var temp = sr.ReadToEnd().Split('\n');
+                            var temp = (await sr.ReadToEndAsync().ConfigureAwait(false)).Split('\n');
 
                             if (temp.Length == 7 && item.Vote.ToString() == temp[6]) continue;
 
@@ -420,14 +417,15 @@ namespace imgLoader_WPF
                             temp.CopyTo(info, 0);
                             info[6] = item.Vote.ToString();
 
-                            using var sw = new StreamWriter(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
+                            Core.Log($"Vote.Start StreamWriter {item.Route}");
+                            await using var sw = new StreamWriter(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
                             for (var i = 0; i < info.Length; i++)
                             {
-                                sw.Write(
+                                await sw.WriteAsync(
                                     i != info.Length - 1
                                         ? info[i] + '\n'
                                         : info[i]
-                                );
+                                ).ConfigureAwait(false);
                             }
 
                             //File.SetAttributes(item.Route, FileAttributes.Hidden);

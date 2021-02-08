@@ -63,7 +63,7 @@ namespace imgLoader_WPF.Windows
             this.Title = Core.Route;
 
             _vsSvc = new VoteSavingService();
-            _vsSvc.Start(LList);
+            //_vsSvc.Start(LList);
 
             _idxSvc = new IndexingService(Core.Route, _index);
             _idxSvc.Start();
