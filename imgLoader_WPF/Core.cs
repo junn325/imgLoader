@@ -27,8 +27,8 @@ namespace imgLoader_WPF
 
         internal const string InfoExt = "ilif";
 
-        private static readonly string[] DFilter =  { "(",  ")",  "|", ":",  "?", "\"", "<", ">", "/", "*", "..."};
-        private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…"};
+        private static readonly string[] DFilter = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
+        private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
 
         //internal const byte ColumnWidth = 45;
         //internal static List<string> PrevAddress = new List<string>(5);
@@ -289,10 +289,14 @@ namespace imgLoader_WPF
                             foreach (var (path, info) in temp)
                             {
                                 if (string.IsNullOrEmpty(info)) continue;
-                                var file = info.Split("\n");
+                                //if (_list.Children.CopyTo(,)) continue;
+                                //var tempArr = new string[1000];
 
-                                var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], file[6].Length != 0 ? int.Parse(file[6]) : 0);
-                                lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
+                                var file = info.Split("\n");
+                                var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], (file.Length == 7 && !string.IsNullOrEmpty(file[6]))? int.Parse(file[6]) : 0);
+                                
+                                /*if(string.IsNullOrEmpty(file[4])) */lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
+
                                 _list.Children.Add(lItem);
                             }
                         }
@@ -316,19 +320,23 @@ namespace imgLoader_WPF
     internal class IndexingService
     {
         private bool _stop;
-        private readonly string _route;
+        //private readonly string _route;
         private readonly Dictionary<string, string> _index;
 
         public IndexingService(string route, Dictionary<string, string> index)
         {
-            _route = route;
+            Debug.WriteLine("indexing init");
+
+            //_route = route;
 
             _index = index;
-            DoIndex(_route, _index);
+            DoIndex(Core.Route, _index);
         }
 
         private static void DoIndex(string route, Dictionary<string, string> index)
         {
+            Debug.WriteLine("DoIndex()");
+
             const string countSeparator = "/**/";
             const string itemSeparator = "-**-";
 
@@ -343,38 +351,38 @@ namespace imgLoader_WPF
             for (var i = 0; i < infoFiles.Length; i++)
             {
                 var infoRoute = infoFiles[i];
-                //tasks[i] = Task.Factory.StartNew(() =>
-                //{
-                    lock (sb)
-                    {
-                        Core.Log($"Indexing.DoIndex StreamReader {infoRoute}");
 
-                        using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
-                        var info = (sr.ReadToEndAsync().ConfigureAwait(false));
+                lock (sb)
+                {
+                    //Debug.WriteLine($"Indexing.DoIndex StreamReader {infoRoute}");
 
-                        index.Add(infoRoute, info.GetAwaiter().GetResult());
-                        sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
-                        sr.Close();
-                    }
-                //});
+                    using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+                    var info = (sr.ReadToEndAsync().ConfigureAwait(false));
+
+                    index.Add(infoRoute, info.GetAwaiter().GetResult());
+                    sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
+                    sr.Close();
+                }
             }
-
-            //Task.WaitAll(tasks);
 
             //await File.WriteAllTextAsync($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
         }
 
         internal void Start()
         {
+            Debug.WriteLine("indexing Start()");
+
             var service = new Thread(() =>
             {
                 while (!_stop)
                 {
+                    Debug.WriteLine("indexing Service");
+
                     Thread.Sleep(2000);
 
                     //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
-                    DoIndex(_route, _index);
+                    DoIndex(Core.Route, _index);
                 }
             });
 
