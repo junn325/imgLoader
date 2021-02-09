@@ -30,7 +30,6 @@ namespace imgLoader_WPF
         private static readonly string[] DFilter = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
 
-        //internal const byte ColumnWidth = 45;
         //internal static List<string> PrevAddress = new List<string>(5);
 
         //private static readonly List<ListViewItem> LvItem = new List<ListViewItem>();
@@ -266,7 +265,7 @@ namespace imgLoader_WPF
         {
             var service = new Thread(() =>
             {
-                int count = 0;
+                var count = 0;
                 while (!_stop)
                 {
                     _list.Dispatcher.Invoke(() => count = _list.Children.Count);
@@ -287,43 +286,39 @@ namespace imgLoader_WPF
 
                             for (var j = 0; j < _list.Children.Count; j++)
                             {
-                                if (/*_list.Children.Count > j && list.Length > j && */!indexCopy.Keys.Contains(list[j].Key))
-                                {
-                                    Debug.WriteLine($"delete {((LoaderItem)_list.Children[j]).Number}");
-                                    _list.Children.Remove(_list.Children[j]);
-                                }
+                                if (indexCopy.Keys.Contains(list[j].Key)) continue;
+
+                                Debug.WriteLine($"delete {((LoaderItem)_list.Children[j]).Number}");
+                                _list.Children.Remove(_list.Children[j]);
                             }
 
                             foreach (var (path, infoFile) in indexCopy)
                             {
-                                //if (i > list.Length) break;
-                                //if (list.Length != 0 && path == list[i].Key && infoFile.Split('\n')[3] == list[i].Value) continue; 
+                                if (dictionary.Keys.Contains(path)) continue;
 
-                                if (!dictionary.Keys.Contains(path))
+                                var info = infoFile.Split('\n');
+                                var lItem = new LoaderItem
                                 {
-                                    var info = infoFile.Split('\n');
-                                    var lItem = new LoaderItem
-                                    {
-                                        Title = info[1],
-                                        Author = info[2],
-                                        ImgCount = info[3],
-                                        SiteName = info[0],
-                                        Route = path,
+                                    Title = info[1],
+                                    Author = info[2],
+                                    ImgCount = info[3],
+                                    SiteName = info[0],
+                                    Route = path,
 
-                                        Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
-                                        Number = path.Split('\\').Last().Split('.')[0],
-                                        Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
-                                    };
+                                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
+                                    Number = path.Split('\\').Last().Split('.')[0],
+                                    Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
+                                };
 
-                                    _list.Children.Add(lItem);
-                                }
+                                _list.Children.Add(lItem);
                             }
                         }
                     });
 
                     _indexCnt = _index.Count;
                     _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
-                    _list.Dispatcher.Invoke(() => Debug.WriteLine($"{_list.Children.Count}개 항목"));
+                    _label.Dispatcher.Invoke(() => Debug.WriteLine($"index: {_index.Count}개 항목"));
+                    _list.Dispatcher.Invoke(() => Debug.WriteLine($"list: {_list.Children.Count}개 항목"));
 
                     Thread.Sleep(2000);
                 }
@@ -337,50 +332,51 @@ namespace imgLoader_WPF
             _stop = true;
         }
     }
-    internal class IndexingService //index: <path, infofile content>
+    internal class IndexingService //index: <path, content>
     {
         private bool _stop;
-        //private readonly string _route;
         private readonly Dictionary<string, string> _index;
+        private readonly LoaderList _list;
 
-        public IndexingService(string route, Dictionary<string, string> index)
+        public IndexingService(Dictionary<string, string> index, LoaderList list)
         {
             Debug.WriteLine("indexing init");
 
-            //_route = route;
-
             _index = index;
-            DoIndex(Core.Route, _index);
+            _list = list;
+            DoIndex();
         }
 
-        private static void DoIndex(string route, Dictionary<string, string> index)
+        private void DoIndex()
         {
             Debug.WriteLine("DoIndex()");
 
             const string countSeparator = "/**/";
             const string itemSeparator = "-**-";
 
-            var tempPath = Path.GetTempPath();
-            var infoFiles = Directory.GetFiles(route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+            //var tempPath = Path.GetTempPath();
+            var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
 
-            var sb = new StringBuilder();
+            //var sb = new StringBuilder();
             //var infos = new Dictionary<string, string>(infoFiles.Length);
-            index.Clear();
-            var tasks = new Task[infoFiles.Length];
 
-            for (var i = 0; i < infoFiles.Length; i++)
+            //var tasks = new Task[infoFiles.Length];
+            foreach (var idx in new Dictionary<string, string>(_index))
             {
-                var infoRoute = infoFiles[i];
-
-                lock (sb)
+                if (!infoFiles.Contains(idx.Key))
                 {
-                    //Debug.WriteLine($"Indexing.DoIndex StreamReader {infoRoute}");
+                    _index.Remove(idx.Key);
+                }
+            }
 
+            foreach (var infoRoute in infoFiles)
+            {
+                if (!_index.Keys.Contains(infoRoute))
+                {
                     using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
                     var info = (sr.ReadToEndAsync().ConfigureAwait(false));
 
-                    index.Add(infoRoute, info.GetAwaiter().GetResult());
-                    sb.Append(infoRoute).Append('`').Append(info).Append(itemSeparator);
+                    _index.Add(infoRoute, info.GetAwaiter().GetResult());
                     sr.Close();
                 }
             }
@@ -402,7 +398,7 @@ namespace imgLoader_WPF
 
                     //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
-                    DoIndex(Core.Route, _index);
+                    DoIndex();
                 }
             });
 

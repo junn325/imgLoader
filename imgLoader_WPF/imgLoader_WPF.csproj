@@ -7,8 +7,8 @@
     <AssemblyName>imgLoader</AssemblyName>
     <Version>0</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <FileVersion>0.3.361.40</FileVersion>
-    <AssemblyVersion>0.3.361.40</AssemblyVersion>
+    <FileVersion>0.3.371.40</FileVersion>
+    <AssemblyVersion>0.3.371.40</AssemblyVersion>
   </PropertyGroup>
 
   <ItemGroup>
