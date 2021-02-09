@@ -277,33 +277,64 @@ namespace imgLoader_WPF
                         continue;
                     }
 
-                    Dictionary<string, string> temp = null;
-
                     _list.Dispatcher.Invoke(() =>
                     {
                         using (_list.Dispatcher.DisableProcessing())
                         {
-                            _list.Children.Clear();
+                            //_list.Children.Clear();
 
-                            temp = new Dictionary<string, string>(_index);
-                            foreach (var (path, info) in temp)
-                            {
-                                if (string.IsNullOrEmpty(info)) continue;
-                                //if (_list.Children.CopyTo(,)) continue;
-                                //var tempArr = new string[1000];
+                            //temp = new Dictionary<string, string>(_index);
+                            //foreach (var (path, info) in temp)
+                            //{
+                            //    if (string.IsNullOrEmpty(info)) continue;
+                            //    //if (_list.Children.CopyTo(,)) continue;
+                            //    var tempArr = new UIElement[1000];
 
-                                var file = info.Split("\n");
-                                var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], (file.Length == 7 && !string.IsNullOrEmpty(file[6]))? int.Parse(file[6]) : 0);
+                            //    var file = info.Split("\n");
+                            //    var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], (file.Length == 7 && !string.IsNullOrEmpty(file[6]))? int.Parse(file[6]) : 0);
                                 
-                                /*if(string.IsNullOrEmpty(file[4])) */lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
+                            //    /*if(string.IsNullOrEmpty(file[4])) */lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
+
+                            //    _list.Children.Add(lItem);
+                            //}
+
+
+                            //var indexCopy = new Dictionary<string, string>(_index);
+                            var list = _list.Children.Cast<LoaderItem>().ToDictionary(item => item.Route, item => item.ImgCount).ToArray();
+
+                            var i = 0;
+                            foreach (var (path, infoFile) in _index)
+                            {
+                                if (list.Length != 0 && path == list[i].Key && infoFile.Split('\n')[3] == list[i].Value) continue;
+
+                                if (list.Length != 0 && !_index.Keys.Contains(list[i].Key))
+                                {
+                                    _list.Children.Remove(_list.Children[i]);
+                                    continue;
+                                }
+
+                                var info = infoFile.Split('\n');
+                                var lItem = new LoaderItem
+                                {
+                                    Title = info[1],
+                                    Author = info[2],
+                                    ImgCount = info[3],
+                                    SiteName = info[0],
+                                    Route = path,
+
+                                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
+                                    Number = path.Split('\\').Last().Split('.')[0],
+                                    Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
+                                };
 
                                 _list.Children.Add(lItem);
+                                i++;
                             }
                         }
                     });
 
-                    _indexCnt = temp.Count;
-                    _label.Dispatcher.Invoke(() => _label.Content = $"{temp.Count}개 항목");
+                    _indexCnt = _index.Count;
+                    _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
 
                     Thread.Sleep(2000);
                 }
@@ -317,7 +348,7 @@ namespace imgLoader_WPF
             _stop = true;
         }
     }
-    internal class IndexingService
+    internal class IndexingService //index: <path, infofile content>
     {
         private bool _stop;
         //private readonly string _route;

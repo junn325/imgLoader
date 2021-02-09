@@ -12,7 +12,12 @@
         <Border BorderBrush="Black" BorderThickness=".5" Margin="10,32,10,64" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <loaderListCtrl:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=Scroll, Path=ViewportWidth}" Background="White" Orientation="Vertical" ItemWidth="{Binding ElementName=LList, Path=Width}">
-                    <!--<loaderList:LoaderItem/>-->
+                    <!--<loaderListCtrl:LoaderItem Route="c:\temp1" ImgCount="5" Number="000001"/>
+                    <loaderListCtrl:LoaderItem Route="c:\temp2" ImgCount="6" Number="000002"/>
+                    <loaderListCtrl:LoaderItem Route="c:\temp3" ImgCount="7" Number="000003"/>
+                    <loaderListCtrl:LoaderItem Route="c:\temp4" ImgCount="8" Number="000004"/>
+                    <loaderListCtrl:LoaderItem Route="c:\temp5" ImgCount="9" Number="000005"/>
+                    <loaderListCtrl:LoaderItem Route="c:\temp6" ImgCount="10" Number="000006"/>-->
                 </loaderListCtrl:LoaderList>
             </ScrollViewer>
         </Border>

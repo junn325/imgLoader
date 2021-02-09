@@ -13,7 +13,6 @@ namespace imgLoader_WPF.LoaderListCtrl
 {
     public partial class LoaderItem
     {
-        #region "Prop"
         public string Title
         {
             get => TxbTitle.Text;
@@ -34,7 +33,8 @@ namespace imgLoader_WPF.LoaderListCtrl
             get => TxbSiteName.Text;
             set => TxbSiteName.Text = value;
         }
-        public string Route { get; set; }
+
+        public string Route;
         public string Number
         {
             get => TxbNumber.Text;
@@ -98,7 +98,6 @@ namespace imgLoader_WPF.LoaderListCtrl
         private bool _isRead;
         private int _curCnt;
         private string[] _tags;
-        #endregion
 
         //private readonly Stopwatch sw = new Stopwatch();
 
