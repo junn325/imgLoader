@@ -105,7 +105,7 @@ namespace imgLoader_WPF.Windows
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             //winSetting = new Settings();
-            _winSetting.Show();
+            _winSetting.ShowDialog();
         }
 
         private void TxtUrl_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)

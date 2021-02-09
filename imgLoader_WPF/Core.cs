@@ -285,18 +285,19 @@ namespace imgLoader_WPF
                             var dictionary = _list.Children.Cast<LoaderItem>().ToDictionary(item => item.Route, item => item.ImgCount);
                             var list = dictionary.ToArray();
 
-                            var i = 0;
+                            for (var j = 0; j < _list.Children.Count; j++)
+                            {
+                                if (/*_list.Children.Count > j && list.Length > j && */!indexCopy.Keys.Contains(list[j].Key))
+                                {
+                                    Debug.WriteLine($"delete {((LoaderItem)_list.Children[j]).Number}");
+                                    _list.Children.Remove(_list.Children[j]);
+                                }
+                            }
+
                             foreach (var (path, infoFile) in indexCopy)
                             {
                                 //if (i > list.Length) break;
                                 //if (list.Length != 0 && path == list[i].Key && infoFile.Split('\n')[3] == list[i].Value) continue; 
-
-                                if (_list.Children.Count > i && list.Length > i && !indexCopy.Keys.Contains(list[i].Key))
-                                {
-                                    Debug.WriteLine($"delete {((LoaderItem)_list.Children[i]).Number}");
-                                    _list.Children.Remove(_list.Children[i]);
-                                    continue;
-                                }
 
                                 if (!dictionary.Keys.Contains(path))
                                 {
@@ -316,7 +317,6 @@ namespace imgLoader_WPF
 
                                     _list.Children.Add(lItem);
                                 }
-                                i++;
                             }
                         }
                     });
