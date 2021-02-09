@@ -281,53 +281,41 @@ namespace imgLoader_WPF
                     {
                         using (_list.Dispatcher.DisableProcessing())
                         {
-                            //_list.Children.Clear();
-
-                            //temp = new Dictionary<string, string>(_index);
-                            //foreach (var (path, info) in temp)
-                            //{
-                            //    if (string.IsNullOrEmpty(info)) continue;
-                            //    //if (_list.Children.CopyTo(,)) continue;
-                            //    var tempArr = new UIElement[1000];
-
-                            //    var file = info.Split("\n");
-                            //    var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], (file.Length == 7 && !string.IsNullOrEmpty(file[6]))? int.Parse(file[6]) : 0);
-                                
-                            //    /*if(string.IsNullOrEmpty(file[4])) */lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
-
-                            //    _list.Children.Add(lItem);
-                            //}
-
-
-                            //var indexCopy = new Dictionary<string, string>(_index);
-                            var list = _list.Children.Cast<LoaderItem>().ToDictionary(item => item.Route, item => item.ImgCount).ToArray();
+                            var indexCopy = new Dictionary<string, string>(_index);
+                            var dictionary = _list.Children.Cast<LoaderItem>().ToDictionary(item => item.Route, item => item.ImgCount);
+                            var list = dictionary.ToArray();
 
                             var i = 0;
-                            foreach (var (path, infoFile) in _index)
+                            foreach (var (path, infoFile) in indexCopy)
                             {
-                                if (list.Length != 0 && path == list[i].Key && infoFile.Split('\n')[3] == list[i].Value) continue;
+                                //if (i > list.Length) break;
+                                //if (list.Length != 0 && path == list[i].Key && infoFile.Split('\n')[3] == list[i].Value) continue; 
 
-                                if (list.Length != 0 && !_index.Keys.Contains(list[i].Key))
+                                if (_list.Children.Count > i && list.Length > i && !indexCopy.Keys.Contains(list[i].Key))
                                 {
+                                    Debug.WriteLine($"delete {((LoaderItem)_list.Children[i]).Number}");
                                     _list.Children.Remove(_list.Children[i]);
                                     continue;
                                 }
 
-                                var info = infoFile.Split('\n');
-                                var lItem = new LoaderItem
+                                if (!dictionary.Keys.Contains(path))
                                 {
-                                    Title = info[1],
-                                    Author = info[2],
-                                    ImgCount = info[3],
-                                    SiteName = info[0],
-                                    Route = path,
+                                    var info = infoFile.Split('\n');
+                                    var lItem = new LoaderItem
+                                    {
+                                        Title = info[1],
+                                        Author = info[2],
+                                        ImgCount = info[3],
+                                        SiteName = info[0],
+                                        Route = path,
 
-                                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
-                                    Number = path.Split('\\').Last().Split('.')[0],
-                                    Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
-                                };
+                                        Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
+                                        Number = path.Split('\\').Last().Split('.')[0],
+                                        Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
+                                    };
 
-                                _list.Children.Add(lItem);
+                                    _list.Children.Add(lItem);
+                                }
                                 i++;
                             }
                         }
@@ -335,6 +323,7 @@ namespace imgLoader_WPF
 
                     _indexCnt = _index.Count;
                     _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
+                    _list.Dispatcher.Invoke(() => Debug.WriteLine($"{_list.Children.Count}개 항목"));
 
                     Thread.Sleep(2000);
                 }
