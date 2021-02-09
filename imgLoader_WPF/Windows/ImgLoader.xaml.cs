@@ -13,6 +13,7 @@ namespace imgLoader_WPF.Windows
     //todo: 이미 본것을 표시 (프로그램 실행 시 초기화)
     //todo: 서로 다른 작품 자동 연결
     //todo: 자체 탐색기 만들기
+    //todo: 모든 객체에 dispose
 
     public partial class MainWindow
     {

@@ -282,14 +282,26 @@ namespace imgLoader_WPF
                         {
                             var indexCopy = new Dictionary<string, string>(_index);
                             var dictionary = _list.Children.Cast<LoaderItem>().ToDictionary(item => item.Route, item => item.ImgCount);
-                            var list = dictionary.ToArray();
+                            //var list = dictionary.ToArray();
 
-                            for (var j = 0; j < _list.Children.Count; j++)
+                            //for (var j = 0; j < _list.Children.Count; j++)
+                            //{
+                            //    if (indexCopy.Keys.Contains(list[j].Key)) continue;
+
+                            //    Debug.WriteLine($"delete {((LoaderItem)_list.Children[j]).Number}");
+                            //    _list.Children.Remove(_list.Children[j]);
+                            //}
+
+                            var listCopy = new LoaderItem[_list.Children.Count];
+                            _list.Children.CopyTo(listCopy, 0);
+
+                            foreach (LoaderItem item in listCopy)
                             {
-                                if (indexCopy.Keys.Contains(list[j].Key)) continue;
+                                if (indexCopy.Keys.Contains(item.Route)) continue;
 
-                                Debug.WriteLine($"delete {((LoaderItem)_list.Children[j]).Number}");
-                                _list.Children.Remove(_list.Children[j]);
+                                Debug.WriteLine($"delete {item.Number}");
+                                _list.Children.Remove(item);
+
                             }
 
                             foreach (var (path, infoFile) in indexCopy)
@@ -355,6 +367,7 @@ namespace imgLoader_WPF
             const string itemSeparator = "-**-";
 
             //var tempPath = Path.GetTempPath();
+            if (!Directory.Exists(Core.Route)) return;
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
 
             //var sb = new StringBuilder();

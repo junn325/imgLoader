@@ -11,7 +11,7 @@ using imgLoader_WPF.Tag;
 
 namespace imgLoader_WPF.LoaderListCtrl
 {
-    public partial class LoaderItem : IDisposable
+    public partial class LoaderItem
     {
         public string Title
         {
@@ -119,11 +119,13 @@ namespace imgLoader_WPF.LoaderListCtrl
             Vote = vote;
         }
 
-        public void Dispose()
+
+        ~LoaderItem()
         {
+            TagPanel.Dispatcher.Invoke(() => TagPanel.Children.Clear());
             _tags = null;
-            TagPanel.
         }
+
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
         }
