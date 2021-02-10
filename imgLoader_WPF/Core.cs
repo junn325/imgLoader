@@ -282,26 +282,16 @@ namespace imgLoader_WPF
                         {
                             var indexCopy = new Dictionary<string, string>(_index);
                             var dictionary = _list.Children.Cast<LoaderItem>().ToDictionary(item => item.Route, item => item.ImgCount);
-                            //var list = dictionary.ToArray();
-
-                            //for (var j = 0; j < _list.Children.Count; j++)
-                            //{
-                            //    if (indexCopy.Keys.Contains(list[j].Key)) continue;
-
-                            //    Debug.WriteLine($"delete {((LoaderItem)_list.Children[j]).Number}");
-                            //    _list.Children.Remove(_list.Children[j]);
-                            //}
 
                             var listCopy = new LoaderItem[_list.Children.Count];
                             _list.Children.CopyTo(listCopy, 0);
 
-                            foreach (LoaderItem item in listCopy)
+                            foreach (var item in listCopy)
                             {
                                 if (indexCopy.Keys.Contains(item.Route)) continue;
 
                                 Debug.WriteLine($"delete {item.Number}");
                                 _list.Children.Remove(item);
-
                             }
 
                             foreach (var (path, infoFile) in indexCopy)
@@ -363,8 +353,8 @@ namespace imgLoader_WPF
         {
             Debug.WriteLine("DoIndex()");
 
-            const string countSeparator = "/**/";
-            const string itemSeparator = "-**-";
+            //const string countSeparator = "/**/";
+            //const string itemSeparator = "-**-";
 
             //var tempPath = Path.GetTempPath();
             if (!Directory.Exists(Core.Route)) return;
@@ -374,24 +364,21 @@ namespace imgLoader_WPF
             //var infos = new Dictionary<string, string>(infoFiles.Length);
 
             //var tasks = new Task[infoFiles.Length];
-            foreach (var idx in new Dictionary<string, string>(_index))
+            foreach (var (key, _) in new Dictionary<string, string>(_index))
             {
-                if (!infoFiles.Contains(idx.Key))
-                {
-                    _index.Remove(idx.Key);
-                }
+                if (infoFiles.Contains(key)) continue;
+
+                _index.Remove(key);
             }
 
             foreach (var infoRoute in infoFiles)
             {
-                if (!_index.Keys.Contains(infoRoute))
-                {
-                    using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
-                    var info = (sr.ReadToEndAsync().ConfigureAwait(false));
+                if (_index.Keys.Contains(infoRoute)) continue;
+                using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+                var info = (sr.ReadToEndAsync().ConfigureAwait(false));
 
-                    _index.Add(infoRoute, info.GetAwaiter().GetResult());
-                    sr.Close();
-                }
+                _index.Add(infoRoute, info.GetAwaiter().GetResult());
+                sr.Close();
             }
 
             //await File.WriteAllTextAsync($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);

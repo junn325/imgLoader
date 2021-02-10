@@ -6,7 +6,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:loaderListCtrl="clr-namespace:imgLoader_WPF.LoaderListCtrl"
              mc:Ignorable="d"
-             Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged">
+             Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged" Unloaded="UserControl_Unloaded">
 
     <UserControl.Resources>
     </UserControl.Resources>

@@ -56,6 +56,12 @@ namespace imgLoader_WPF.LoaderListCtrl
             {
                 _tags = value;
 
+                if (value == null)
+                {
+                    TagPanel.Children.Clear();
+                    return;
+                }
+
                 foreach (var tag in value)
                 {
                     if (string.IsNullOrEmpty(tag)) return;
@@ -117,13 +123,6 @@ namespace imgLoader_WPF.LoaderListCtrl
             Route = route;
             Number = number;
             Vote = vote;
-        }
-
-
-        ~LoaderItem()
-        {
-            TagPanel.Dispatcher.Invoke(() => TagPanel.Children.Clear());
-            _tags = null;
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -206,6 +205,12 @@ namespace imgLoader_WPF.LoaderListCtrl
         private void DownVote_Click(object sender, RoutedEventArgs e)
         {
             Vote--;
+        }
+
+        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            TagPanel.Dispatcher.Invoke(() => TagPanel.Children.Clear());
+            Tags = null;
         }
     }
 
