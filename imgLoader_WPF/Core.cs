@@ -26,6 +26,7 @@ namespace imgLoader_WPF
         internal const string LogFile = "ILLG";
 
         internal const string InfoExt = "ilif";
+        internal const string VoteExt = "ilvote";
 
         private static readonly string[] DFilter = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
@@ -428,7 +429,7 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
-                    list.Dispatcher.Invoke(async () =>
+                    list.Dispatcher.Invoke(() =>
                     {
                         foreach (LoaderItem item in list.Children)
                         {
@@ -437,7 +438,7 @@ namespace imgLoader_WPF
 
                             Core.Log($"Vote.Start StreamReader {item.Route}");
                             using var sr = new StreamReader(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
-                            var temp = (await sr.ReadToEndAsync().ConfigureAwait(false)).Split('\n');
+                            var temp = sr.ReadToEnd().Split('\n');
 
                             if (temp.Length == 7 && item.Vote.ToString() == temp[6]) continue;
 
@@ -449,10 +450,10 @@ namespace imgLoader_WPF
                             info[6] = item.Vote.ToString();
 
                             Core.Log($"Vote.Start StreamWriter {item.Route}");
-                            await using var sw = new StreamWriter(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
+                             using var sw = new StreamWriter(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
                             for (var i = 0; i < info.Length; i++)
                             {
-                                await sw.WriteAsync(
+                                 sw.WriteAsync(
                                     i != info.Length - 1
                                         ? info[i] + '\n'
                                         : info[i]
