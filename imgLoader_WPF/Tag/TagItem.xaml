@@ -7,6 +7,6 @@
              mc:Ignorable="d" 
              Background="#E86441" Height="17" Margin="1,0,1,0">
     <Grid>
-        <Label x:Name="Tag" Content="(태그명)" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,0,2,0" Margin="0,0,0,0" FontSize="12" Foreground="White"/>
+        <TextBlock x:Name="Tag" Text="(태그명)" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="2,0,2,0" Margin="0,0,0,0" FontSize="12" Foreground="White"/>
     </Grid>
 </UserControl>

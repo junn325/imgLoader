@@ -6,8 +6,8 @@ namespace imgLoader_WPF.Tag
     {
         public string TagName
         {
-            get => Tag.Content.ToString();
-            set => Tag.Content = value;
+            get => Tag.Text;
+            set => Tag.Text = value;
         }
 
         public SColor Sex

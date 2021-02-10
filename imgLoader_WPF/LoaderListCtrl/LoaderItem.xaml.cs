@@ -46,7 +46,7 @@ namespace imgLoader_WPF.LoaderListCtrl
             set
             {
                 _curCnt = value;
-                ProgLbl.Content = $"{value}/{ImgCount}";
+                ProgLbl.Text = $"{value}/{ImgCount}";
             }
         }
         public string[] Tags
@@ -86,7 +86,7 @@ namespace imgLoader_WPF.LoaderListCtrl
             set
             {
                 _vote = value;
-                LblVote.Content = _vote.ToString();
+                LblVote.Text = _vote.ToString();
             }
         }
 
