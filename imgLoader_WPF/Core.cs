@@ -294,7 +294,7 @@ namespace imgLoader_WPF
                             {
                                 if (indexCopy.Keys.Contains(item.Route)) continue;
 
-                                Debug.WriteLine($"delete {item.Number}");
+                                //Debug.WriteLine($"delete {item.Number}");
                                 _list.Children.Remove(item);
                             }
 
@@ -353,7 +353,7 @@ namespace imgLoader_WPF
 
         public IndexingService(Dictionary<string, string> index, LoaderList list)
         {
-            Debug.WriteLine("indexing init");
+            //Debug.WriteLine("indexing init");
 
             _index = index;
             _list = list;
@@ -362,7 +362,7 @@ namespace imgLoader_WPF
 
         private void DoIndex()
         {
-            Debug.WriteLine("DoIndex()");
+            //Debug.WriteLine("DoIndex()");
 
             //const string countSeparator = "/**/";
             //const string itemSeparator = "-**-";
@@ -398,13 +398,13 @@ namespace imgLoader_WPF
         internal void Start()
         {
             _stop = false;
-            Debug.WriteLine("indexing Start()");
+            //Debug.WriteLine("indexing Start()");
 
             var service = new Thread(() =>
             {
                 while (!_stop)
                 {
-                    Debug.WriteLine("indexing Service");
+                    //Debug.WriteLine("indexing Service");
 
                     Thread.Sleep(interval);
 
@@ -441,6 +441,8 @@ namespace imgLoader_WPF
                         foreach (LoaderItem item in list.Children)
                         {
                             var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.VoteExt}";
+
+                            if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
 
                             if (File.Exists(path))
                             {
