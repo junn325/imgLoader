@@ -25,7 +25,6 @@ namespace imgLoader_WPF.Tag
                     {
                         SColor.Female => (Brush)new BrushConverter().ConvertFrom("#E86441"),
                         SColor.Male => (Brush)new BrushConverter().ConvertFrom("#00A2FF"),
-                        SColor.Null => null,
                         _ => (Brush)new BrushConverter().ConvertFrom("#838587")
 
                     };
@@ -36,18 +35,11 @@ namespace imgLoader_WPF.Tag
             Female,
             Male,
             None,
-            Null
         }
 
         public TagItem()
         {
             InitializeComponent();
-        }
-
-        private void UserControl_Unloaded(object sender, System.Windows.RoutedEventArgs e)
-        {
-            TagName = null;
-            Sex = SColor.Null;
         }
     }
 }

@@ -263,6 +263,8 @@ namespace imgLoader_WPF
 
         internal void Start()
         {
+            _stop = false;
+
             var service = new Thread(() =>
             {
                 var count = 0;
@@ -317,6 +319,7 @@ namespace imgLoader_WPF
                         }
                     });
 
+
                     _indexCnt = _index.Count;
                     _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
                     _label.Dispatcher.Invoke(() => Debug.WriteLine($"index: {_index.Count}개 항목"));
@@ -327,6 +330,7 @@ namespace imgLoader_WPF
             });
 
             service.Name = "Rfshsvc";
+            service.SetApartmentState(ApartmentState.STA);
             service.Start();
         }
         internal void Stop()
@@ -386,6 +390,7 @@ namespace imgLoader_WPF
 
         internal void Start()
         {
+            _stop = false;
             Debug.WriteLine("indexing Start()");
 
             var service = new Thread(() =>
@@ -417,6 +422,8 @@ namespace imgLoader_WPF
 
         internal void Start(LoaderList list)
         {
+            _stop = false;
+
             var service = new Thread(() =>
             {
                 while (!_stop)

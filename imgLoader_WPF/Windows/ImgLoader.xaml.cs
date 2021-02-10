@@ -69,8 +69,8 @@ namespace imgLoader_WPF.Windows
             _idxSvc = new IndexingService(_index, LList);
             _idxSvc.Start();
 
-            _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
-            _rfshSvc.Start();
+            //_rfshSvc = new ItemRefreshService(_index, LList, LblCount);
+            //_rfshSvc.Start();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -115,6 +115,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
+            //LList.Children.Clear();
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
@@ -134,13 +135,13 @@ namespace imgLoader_WPF.Windows
             _rfshSvc.Stop();
 
             _winSetting.Close();
-            //_winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
+            _winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
         }
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
         {
-            //if (i++ % 2 == 0) _idxSvc.Stop();
-            //else _idxSvc.Start();
+            if (i++ % 2 == 0) _idxSvc.Stop();
+            else _idxSvc.Start();
         }
 
         private void Button_Click_7(object sender, RoutedEventArgs e)

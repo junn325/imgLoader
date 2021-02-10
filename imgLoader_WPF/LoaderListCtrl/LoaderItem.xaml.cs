@@ -211,6 +211,14 @@ namespace imgLoader_WPF.LoaderListCtrl
         {
             TagPanel.Dispatcher.Invoke(() => TagPanel.Children.Clear());
             Tags = null;
+            Title = null;
+            Author = null;
+            ImgCount = null;
+            SiteName = null;
+            Route = null;
+            Number = null;
+
+            _tags = null;
         }
     }
 
