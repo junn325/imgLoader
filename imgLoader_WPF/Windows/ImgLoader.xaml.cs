@@ -64,13 +64,13 @@ namespace imgLoader_WPF.Windows
             this.Title = Core.Route;
 
             _vsSvc = new VoteSavingService();
-            //_vsSvc.Start(LList);
+            _vsSvc.Start(LList);
 
             _idxSvc = new IndexingService(_index, LList);
             _idxSvc.Start();
 
-            //_rfshSvc = new ItemRefreshService(_index, LList, LblCount);
-            //_rfshSvc.Start();
+            _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
+            _rfshSvc.Start();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)

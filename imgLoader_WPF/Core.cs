@@ -245,6 +245,7 @@ namespace imgLoader_WPF
 
     internal class ItemRefreshService
     {
+        private const int interval = 2000;
         private bool _stop;
 
         private readonly Dictionary<string, string> _index;
@@ -275,7 +276,7 @@ namespace imgLoader_WPF
 
                     if (count == _index.Count && _indexCnt == _index.Count)
                     {
-                        Thread.Sleep(2000);
+                        Thread.Sleep(interval);
                         continue;
                     }
 
@@ -312,7 +313,11 @@ namespace imgLoader_WPF
 
                                     Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
                                     Number = path.Split('\\').Last().Split('.')[0],
-                                    Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
+                                    //Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
+                                    Vote = 
+                                       File.Exists($@"{Core.GetDirectoryFromFile(path)}\{path.Split('\\').Last().Split('.')[0]}.{Core.VoteExt}")
+                                            ? int.Parse(File.ReadAllText($@"{Core.GetDirectoryFromFile(path)}\{path.Split('\\').Last().Split('.')[0]}.{Core.VoteExt}"))
+                                            : 0
                                 };
 
                                 _list.Children.Add(lItem);
@@ -323,10 +328,10 @@ namespace imgLoader_WPF
 
                     _indexCnt = _index.Count;
                     _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
-                    _label.Dispatcher.Invoke(() => Debug.WriteLine($"index: {_index.Count}개 항목"));
-                    _list.Dispatcher.Invoke(() => Debug.WriteLine($"list: {_list.Children.Count}개 항목"));
+                    //_label.Dispatcher.Invoke(() => Debug.WriteLine($"index: {_index.Count}개 항목"));
+                    //_list.Dispatcher.Invoke(() => Debug.WriteLine($"list: {_list.Children.Count}개 항목"));
 
-                    Thread.Sleep(2000);
+                    Thread.Sleep(interval);
                 }
             });
 
@@ -341,6 +346,7 @@ namespace imgLoader_WPF
     }
     internal class IndexingService //index: <path, content>
     {
+        private const int interval = 2000;
         private bool _stop;
         private readonly Dictionary<string, string> _index;
         private readonly LoaderList _list;
@@ -400,7 +406,7 @@ namespace imgLoader_WPF
                 {
                     Debug.WriteLine("indexing Service");
 
-                    Thread.Sleep(2000);
+                    Thread.Sleep(interval);
 
                     //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
@@ -419,6 +425,7 @@ namespace imgLoader_WPF
     }
     internal class VoteSavingService
     {
+        private const int interval = 2000;
         private bool _stop;
 
         internal void Start(LoaderList list)
@@ -433,38 +440,27 @@ namespace imgLoader_WPF
                     {
                         foreach (LoaderItem item in list.Children)
                         {
-                            var file = new FileInfo(item.Route);
-                            if (!file.Exists) continue;
+                            var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.VoteExt}";
 
-                            Core.Log($"Vote.Start StreamReader {item.Route}");
-                            using var sr = new StreamReader(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
-                            var temp = sr.ReadToEnd().Split('\n');
-
-                            if (temp.Length == 7 && item.Vote.ToString() == temp[6]) continue;
-
-                            //if ((file.Attributes & FileAttributes.Hidden) != 0) File.SetAttributes(item.Route, FileAttributes.Normal);
-
-                            var info = new string[7];
-
-                            temp.CopyTo(info, 0);
-                            info[6] = item.Vote.ToString();
-
-                            Core.Log($"Vote.Start StreamWriter {item.Route}");
-                             using var sw = new StreamWriter(new FileStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
-                            for (var i = 0; i < info.Length; i++)
+                            if (File.Exists(path))
                             {
-                                 sw.WriteAsync(
-                                    i != info.Length - 1
-                                        ? info[i] + '\n'
-                                        : info[i]
-                                ).ConfigureAwait(false);
-                            }
+                                var info = File.ReadAllText(path);
 
-                            //File.SetAttributes(item.Route, FileAttributes.Hidden);
+                                if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) != item.Vote) 
+                                {
+                                    info = item.Vote.ToString();
+                                }
+
+                                File.WriteAllText(path, info);
+                            }
+                            else
+                            {
+                                File.WriteAllText(path, item.Vote.ToString());
+                            }
                         }
                     });
 
-                    Thread.Sleep(2000);
+                    Thread.Sleep(interval);
                 }
             });
 
