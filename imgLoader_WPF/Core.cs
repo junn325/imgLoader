@@ -311,7 +311,7 @@ namespace imgLoader_WPF
                                     SiteName = info[0],
                                     Route = path,
 
-                                    //Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
+                                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
                                     Number = path.Split('\\').Last().Split('.')[0],
                                     //Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
                                     Vote = 

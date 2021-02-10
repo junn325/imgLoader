@@ -49,36 +49,36 @@ namespace imgLoader_WPF.LoaderListCtrl
                 ProgLbl.Content = $"{value}/{ImgCount}";
             }
         }
-        //public string[] Tags
-        //{
-        //    get => _tags;
-        //    set
-        //    {
-        //        _tags = value;
+        public string[] Tags
+        {
+            get => _tags;
+            set
+            {
+                _tags = value;
 
-        //        if (value == null)
-        //        {
-        //            TagPanel.Children.Clear();
-        //            return;
-        //        }
+                if (value == null)
+                {
+                    TagPanel.Children.Clear();
+                    return;
+                }
 
-        //        foreach (var tag in value)
-        //        {
-        //            if (string.IsNullOrEmpty(tag)) return;
-        //            TagPanel.Children.Add(new TagItem
-        //            {
-        //                TagName = tag.Contains(':') ? tag.Split(':')[1] : tag,
+                foreach (var tag in value)
+                {
+                    if (string.IsNullOrEmpty(tag)) return;
+                    TagPanel.Children.Add(new TagItem
+                    {
+                        TagName = tag.Contains(':') ? tag.Split(':')[1] : tag,
 
-        //                Sex =
-        //                    tag.Contains(':')
-        //                        ? string.Equals(tag.Split(':')[0], "female", StringComparison.OrdinalIgnoreCase)
-        //                            ? TagItem.SColor.Female
-        //                            : TagItem.SColor.Male
-        //                        : TagItem.SColor.None
-        //            });
-        //        }
-        //    }
-        //}
+                        Sex =
+                            tag.Contains(':')
+                                ? string.Equals(tag.Split(':')[0], "female", StringComparison.OrdinalIgnoreCase)
+                                    ? TagItem.SColor.Female
+                                    : TagItem.SColor.Male
+                                : TagItem.SColor.None
+                    });
+                }
+            }
+        }
 
         public int Vote
         {
@@ -209,8 +209,8 @@ namespace imgLoader_WPF.LoaderListCtrl
 
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
-            //TagPanel.Dispatcher.Invoke(() => TagPanel.Children.Clear());
-            //Tags = null;
+            TagPanel.Dispatcher.Invoke(() => TagPanel.Children.Clear());
+            Tags = null;
             Title = null;
             Author = null;
             ImgCount = null;
