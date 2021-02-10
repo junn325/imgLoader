@@ -21,7 +21,7 @@ namespace imgLoader_WPF.Windows
         private IndexingService _idxSvc;
         private ItemRefreshService _rfshSvc;
 
-        private readonly Settings _winSetting = new();
+        private Settings _winSetting = new();
         private Dictionary<string, string> _index = new();
         int i;
         int j;
@@ -71,30 +71,6 @@ namespace imgLoader_WPF.Windows
 
             _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
             _rfshSvc.Start();
-
-            ;
-            //var temp = new Thread(() =>
-            //{
-            //    var index = _index;
-
-            //    if (index == null) return;
-
-            //    foreach (var (path, info) in index)
-            //    {
-            //        if (string.IsNullOrEmpty(info)) continue;
-            //        var file = info.Split("\n");
-
-            //        LList.Dispatcher.Invoke(DispatcherPriority.Normal, new Action(() =>
-            //        {
-            //            var lItem = new LoaderItem(file[1], file[2], file[3], file[0], path, path.Split('\\').Last().Split('.')[0], 0);
-            //            lItem.Tags = file[4].Split("tags:")[1].Split('\n')[0].Split(';');
-            //            LList.Children.Add(lItem);
-            //        }));
-            //    }
-            //});
-
-            //temp.Name = "Load List";
-            //temp.Start();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -105,7 +81,6 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            //winSetting = new Settings();
             _winSetting.ShowDialog();
         }
 
@@ -157,6 +132,9 @@ namespace imgLoader_WPF.Windows
             _vsSvc.Stop();
             _idxSvc.Stop();
             _rfshSvc.Stop();
+
+            _winSetting.Close();
+            //_winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
         }
 
         private void Button_Click_6(object sender, RoutedEventArgs e)
