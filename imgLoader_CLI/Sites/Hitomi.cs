@@ -29,11 +29,14 @@ namespace imgLoader_CLI.Sites
                 if (_src_info.Contains("\\")) _src_info = _src_info.Replace("\\", "");
                 _title = _src_info.Split("title\":\"")[1].Split('\"')[0];
 
-                for (var i = 1; i < _src_gall.StrLen("/group/") + 1; i++) sb.Append(_src_gall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
+                for (var i = 1; i < _src_gall.StrLen("/group/") + 1; i++) sb.Append(_src_gall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]).Append(',');
+                sb.Remove(sb.Length - 1, 1);
                 _group = sb.ToString();
                 sb.Clear();
 
-                for (var i = 1; i < _src_gall.StrLen("/artist/") + 1; i++) sb.Append(_src_gall.Split("/artist/")[i].Split("</a>")[0].Split(">")[1]);
+                for (var i = 1; i < _src_gall.StrLen("/artist/") + 1; i++) sb.Append(_src_gall.Split("/artist/")[i].Split("</a>")[0].Split(">")[1]).Append(',');
+                sb.Remove(sb.Length - 1, 1);
+
                 _artist = sb.ToString();
 
                 Number = mNumber;
