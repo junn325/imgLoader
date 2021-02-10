@@ -274,7 +274,7 @@ namespace imgLoader_WPF
                 {
                     _list.Dispatcher.Invoke(() => count = _list.Children.Count);
 
-                    if (count == _index.Count && _indexCnt == _index.Count)
+                    if (count == _index.Count && _indexCnt == _index.Count && Properties.Settings.Default.NoIndex)
                     {
                         Thread.Sleep(interval);
                         continue;
@@ -311,7 +311,7 @@ namespace imgLoader_WPF
                                     SiteName = info[0],
                                     Route = path,
 
-                                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
+                                    //Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
                                     Number = path.Split('\\').Last().Split('.')[0],
                                     //Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
                                     Vote = 
@@ -404,10 +404,9 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
-                    //Debug.WriteLine("indexing Service");
-
                     Thread.Sleep(interval);
 
+                    if (Properties.Settings.Default.NoIndex) continue;
                     //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
                     DoIndex();
@@ -436,6 +435,7 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
+                    if (Properties.Settings.Default.NoIndex) goto wait;
                     list.Dispatcher.Invoke(() =>
                     {
                         foreach (LoaderItem item in list.Children)
@@ -448,7 +448,7 @@ namespace imgLoader_WPF
                             {
                                 var info = File.ReadAllText(path);
 
-                                if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) != item.Vote) 
+                                if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) != item.Vote)
                                 {
                                     info = item.Vote.ToString();
                                 }
@@ -462,7 +462,7 @@ namespace imgLoader_WPF
                         }
                     });
 
-                    Thread.Sleep(interval);
+                wait: Thread.Sleep(interval);
                 }
             });
 

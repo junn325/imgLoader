@@ -26,6 +26,7 @@ namespace imgLoader_WPF.Windows
             CheckDupl.IsChecked = Properties.Settings.Default.NoAsk_Dupl;
             CheckImmid.IsChecked = Properties.Settings.Default.Down_Immid;
             CheckScroll.IsChecked = Properties.Settings.Default.NoScrollTag;
+            CheckNoIndex.IsChecked = Properties.Settings.Default.NoIndex;
         }
 
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -55,25 +56,25 @@ namespace imgLoader_WPF.Windows
 
         private void CheckFolder_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.BookMark_Name = ((CheckBox)sender).IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.BookMark_Name = CheckFolder.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
         }
 
         private void CheckAuthorName_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.ShowAuthor_Folder = ((CheckBox)sender).IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.ShowAuthor_Folder = CheckAuthorName.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
         }
 
         private void CheckImmid_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.Down_Immid = ((CheckBox)sender).IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.Down_Immid = CheckImmid.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
         }
 
         private void CheckDupl_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.NoAsk_Dupl = ((CheckBox)sender).IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.NoAsk_Dupl = CheckDupl.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
         }
 
@@ -85,7 +86,13 @@ namespace imgLoader_WPF.Windows
 
         private void CheckScroll_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.NoScrollTag = ((CheckBox)sender).IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.NoScrollTag = CheckScroll.IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.Save();
+        }
+
+        private void CheckNoIndex_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.NoIndex = CheckNoIndex.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
         }
     }

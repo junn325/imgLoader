@@ -149,5 +149,11 @@ namespace imgLoader_WPF.Windows
             if (j++ % 2 == 0) _rfshSvc.Stop();
             else _rfshSvc.Start();
         }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.NoIndex = true;
+            Properties.Settings.Default.NoIndex = false;
+        }
     }
 }

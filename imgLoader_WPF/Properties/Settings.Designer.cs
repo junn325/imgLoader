@@ -82,5 +82,17 @@ namespace imgLoader_WPF.Properties {
                 this["NoScrollTag"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool NoIndex {
+            get {
+                return ((bool)(this["NoIndex"]));
+            }
+            set {
+                this["NoIndex"] = value;
+            }
+        }
     }
 }

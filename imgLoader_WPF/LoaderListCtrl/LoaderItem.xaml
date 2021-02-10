@@ -90,14 +90,14 @@
                 <Label x:Name="ProgLbl" Content="25/70" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" Margin="5,0,5,1"/>
             </DockPanel>
 
-            <ScrollViewer x:Name="Scroll" Grid.Row="2" Grid.Column="2" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+            <!--<ScrollViewer x:Name="Scroll" Grid.Row="2" Grid.Column="2" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="Disabled" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
                 <ScrollViewer.Resources>
                     <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}">3</sys:Double>
                     <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}">0</sys:Double>
                 </ScrollViewer.Resources>
 
                 <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False"/>
-            </ScrollViewer>
+            </ScrollViewer>-->
 
             <Grid Width="auto" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2"> <!--반투명 색 넣을것-->
                 <Label x:Name="LblVote"  Content="0" Padding="5,0,2,1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,39,0"/>

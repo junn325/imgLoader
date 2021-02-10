@@ -57,8 +57,8 @@ namespace imgLoader_WPF
                     item.SiteName = Site.GetType().Name;
                     item.Number = Core.GetNumber(url);
 
-                    item.TagPanel.Visibility = Visibility.Hidden;
-                    item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
+                    //item.TagPanel.Visibility = Visibility.Hidden;
+                    //item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
                 });
 
                 if (!Site.IsValidated()) return;
@@ -234,7 +234,7 @@ namespace imgLoader_WPF
             if (success)
             {
                 _item.Dispatcher.Invoke(() => _item.ProgPanel.Visibility = Visibility.Hidden);
-                _item.Dispatcher.Invoke(() => _item.TagPanel.Visibility = Visibility.Visible);
+                //_item.Dispatcher.Invoke(() => _item.TagPanel.Visibility = Visibility.Visible);
             }
             else
             {

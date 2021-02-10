@@ -11,7 +11,7 @@
     <Grid>
         <Border BorderBrush="Black" BorderThickness=".5" Margin="10,32,10,64" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <loaderListCtrl:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=Scroll, Path=ViewportWidth}" Background="White" Orientation="Vertical" ItemWidth="{Binding ElementName=LList, Path=Width}">
+                <loaderListCtrl:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=Scroll, Path=ViewportWidth}" Background="White" Orientation="Vertical">
                     <!--<loaderListCtrl:LoaderItem Route="c:\temp1" ImgCount="5" Number="000001"/>
                     <loaderListCtrl:LoaderItem Route="c:\temp2" ImgCount="6" Number="000002"/>
                     <loaderListCtrl:LoaderItem Route="c:\temp3" ImgCount="7" Number="000003"/>
@@ -31,7 +31,6 @@
         <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,347,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_4"/>
         <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,135,20" Height="27" Width="76" Click="Button_Click_5"/>
         <Label x:Name="LblCount" Content="0개 항목" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,40"/>
-        <Button Content="idxSvc" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="21" Margin="72,0,0,20" Width="70" Click="Button_Click_6"/>
-        <Button Content="rfshSvc" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="21" Margin="147,0,0,20" Width="70" Click="Button_Click_7"/>
+        <Button Content="새로고침" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="21" Margin="147,0,0,20" Width="70" Click="Refresh_Click"/>
     </Grid>
 </Window>
