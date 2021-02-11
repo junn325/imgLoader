@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using imgLoader_WPF.LoaderListCtrl;
 
@@ -33,7 +35,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            for (int j = 0; j < 1000; j++)
+            for (int j = 0; j < 5; j++)
             {
                 var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
                 LList.Children.Add(item);
@@ -43,7 +45,6 @@ namespace imgLoader_WPF.Windows
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             ;
-            
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
@@ -154,6 +155,80 @@ namespace imgLoader_WPF.Windows
         {
             Properties.Settings.Default.NoIndex = true;
             Properties.Settings.Default.NoIndex = false;
+        }
+
+        private void LList_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            FrameworkElement a;
+            var temp = (FrameworkElement)LList.InputHitTest(e.GetPosition((LoaderList)sender));
+            if (temp.TemplatedParent == null)
+            {
+                a = (FrameworkElement)temp.Parent;
+                do
+                {
+                    a = (FrameworkElement)a.Parent;
+                } while (a == null || a.GetType().Name != "LoaderItem");
+
+            }
+            else
+            {
+                a = (FrameworkElement)temp.TemplatedParent;
+            }
+
+            if (a != null)
+            {
+                ItmCancel.IsEnabled = true;
+                ItmOpen.IsEnabled = true;
+                ItmOpenAt.IsEnabled = true;
+                ItmPause.IsEnabled = true;
+                ItmRemove.IsEnabled = true;
+                ItmResume.IsEnabled = true;
+                ItmRmvAt.IsEnabled = true;
+            }
+            ;
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+        }
+
+        private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
+        {
+            ((LoaderList)((LoaderItem)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).Parent).Children.Remove(this);
+        }
+
+        private void OpenExplorer_Click(object sender, RoutedEventArgs e)
+        {
+            //Core.OpenDir(Route);
+        }
+
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+            var img = new BitmapImage();
+            img.BeginInit();
+            //img.UriSource = new Uri(Directory.GetFiles(Core.GetDirectoryFromFile(Route), "*.*")[0]);
+            img.EndInit();
+
+            var canvas = new Canvas.Canvas { Image = img };
+            canvas.Show();
+
+            //IsRead = true;
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Resume_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Pause_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

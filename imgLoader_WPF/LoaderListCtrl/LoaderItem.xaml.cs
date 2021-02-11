@@ -125,78 +125,6 @@ namespace imgLoader_WPF.LoaderListCtrl
             Vote = vote;
         }
 
-        private void Delete_Click(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
-        {
-            ((LoaderList)((LoaderItem)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).Parent).Children.Remove(this);
-        }
-
-        private void OpenExplorer_Click(object sender, RoutedEventArgs e)
-        {
-            Core.OpenDir(Route);
-        }
-
-        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (sender == null) return;
-                if (Properties.Settings.Default.NoScrollTag)
-            {
-                if (e.Delta > 0)
-                    ((ScrollViewer)((LoaderList)((LoaderItem)((Border)((Grid)((ScrollViewer)sender).Parent).Parent).Parent).Parent).Parent).LineUp();
-                else
-                    ((ScrollViewer)((LoaderList)((LoaderItem)((Border)((Grid)((ScrollViewer)sender).Parent).Parent).Parent).Parent).Parent).LineDown();
-
-                e.Handled = true;
-                return;
-            }
-
-            if (sender is not ScrollViewer sv) return;
-
-            if (e.Delta > 0)
-                sv.LineLeft();
-            else
-                sv.LineRight();
-            e.Handled = true;
-        }
-
-        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            TxbTitle.MaxWidth = ActualWidth - TxbNumber.ActualWidth - 15;
-            TxbAuthor.MaxWidth = ActualWidth - 10;
-            //TagPanel.MaxWidth = ActualWidth - 105;
-        }
-
-        private void Open_Click(object sender, RoutedEventArgs e)
-        {
-            var img = new BitmapImage();
-            img.BeginInit();
-            img.UriSource = new Uri(Directory.GetFiles(Core.GetDirectoryFromFile(Route),"*.*")[0]);
-            img.EndInit();
-
-            var canvas = new Canvas.Canvas { Image = img };
-            canvas.Show();
-
-            IsRead = true;
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Resume_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void Pause_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void UpVote_Click(object sender, RoutedEventArgs e)
         {
             Vote++;
@@ -219,6 +147,34 @@ namespace imgLoader_WPF.LoaderListCtrl
             Number = null;
 
             _tags = null;
+        }
+        private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (sender == null) return;
+            if (Properties.Settings.Default.NoScrollTag)
+            {
+                if (e.Delta > 0)
+                    ((ScrollViewer)((LoaderList)((LoaderItem)((Border)((Grid)((ScrollViewer)sender).Parent).Parent).Parent).Parent).Parent).LineUp();
+                else
+                    ((ScrollViewer)((LoaderList)((LoaderItem)((Border)((Grid)((ScrollViewer)sender).Parent).Parent).Parent).Parent).Parent).LineDown();
+
+                e.Handled = true;
+                return;
+            }
+
+            if (sender is not ScrollViewer sv) return;
+
+            if (e.Delta > 0)
+                sv.LineLeft();
+            else
+                sv.LineRight();
+            e.Handled = true;
+        }
+        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TxbTitle.MaxWidth = ActualWidth - TxbNumber.ActualWidth - 15;
+            TxbAuthor.MaxWidth = ActualWidth - 10;
+            //TagPanel.MaxWidth = ActualWidth - 105;
         }
     }
 
