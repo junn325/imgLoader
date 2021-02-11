@@ -1,33 +1,36 @@
-﻿<Window x:Name="ImgLoader_WPF" x:Class="imgLoader_WPF.Windows.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:imgLoader_WPF"
         xmlns:loaderListCtrl="clr-namespace:imgLoader_WPF.LoaderListCtrl"
+        xmlns:local1="clr-namespace:imgLoader_WPF.Windows" x:Name="ImgLoader_WPF" x:Class="imgLoader_WPF.Windows.MainWindow"
         mc:Ignorable="d"
         Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing">
 
     <Grid>
         <Border BorderBrush="Black" BorderThickness=".5" Margin="10,32,10,64" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <loaderListCtrl:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=Scroll, Path=ViewportWidth}" Background="White" Orientation="Vertical" MouseRightButtonDown="LList_MouseRightButtonDown">
-                    <loaderListCtrl:LoaderList.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="열기" IsEnabled="False" Click="Open_Click"/>
-                            <MenuItem Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
-                            <Separator/>
-                            <MenuItem Header="취소" IsEnabled="False" Click="Cancel_Click"/>
-                            <MenuItem Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
-                            <MenuItem Header="재개" IsEnabled="False" Click="Resume_Click"/>
-                            <Separator/>
-                            <MenuItem Header="목록에서만 제거" IsEnabled="False" Click="RemoveOnlyList_Click"/>
-                            <Separator/>
-                            <MenuItem Header="삭제" IsEnabled="False" Click="Delete_Click"/>
-                        </ContextMenu>
-                    </loaderListCtrl:LoaderList.ContextMenu>
-                </loaderListCtrl:LoaderList>
-            </ScrollViewer>
+            <ItemsControl ItemsSource="{Binding dd}">
+                <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <loaderListCtrl:LoaderList x:Name="LList" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" Orientation="Vertical" MouseRightButtonDown="LList_MouseRightButtonDown">
+                        <loaderListCtrl:LoaderList.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="열기" IsEnabled="False" Click="Open_Click"/>
+                                <MenuItem Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
+                                <Separator/>
+                                <MenuItem Header="취소" IsEnabled="False" Click="Cancel_Click"/>
+                                <MenuItem Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
+                                <MenuItem Header="재개" IsEnabled="False" Click="Resume_Click"/>
+                                <Separator/>
+                                <MenuItem Header="목록에서만 제거" IsEnabled="False" Click="RemoveOnlyList_Click"/>
+                                <Separator/>
+                                <MenuItem Header="삭제" IsEnabled="False" Click="Delete_Click"/>
+                            </ContextMenu>
+                        </loaderListCtrl:LoaderList.ContextMenu>
+                    </loaderListCtrl:LoaderList>
+                </ScrollViewer>
+            </ItemsControl>
         </Border>
 
         <Button Content="테스트용 아이템 추가" HorizontalAlignment="Right" Margin="0,0,10,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click" />

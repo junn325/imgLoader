@@ -24,8 +24,11 @@ namespace imgLoader_WPF.Windows
         private IndexingService _idxSvc;
         private ItemRefreshService _rfshSvc;
 
+        public static string[] dd = { "ddd", "dd", "D" };
+
         private Settings _winSetting = new();
         private Dictionary<string, string> _index = new();
+        private KeyValuePair<string, string>[] _idxCollection = new KeyValuePair<string, string>[50];
         int i;
         int j;
 
@@ -36,15 +39,17 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            for (int j = 0; j < 700; j++)
-            {
-                var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
-                LList.Children.Add(item);
-            }
+            //for (int j = 0; j < 700; j++)
+            //{
+            i++;
+            //var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
+            //LList.Children.Add();
+            //}
 
         }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
+            _idxCollection = _index.ToArray();
             ;
         }
 
@@ -69,7 +74,7 @@ namespace imgLoader_WPF.Windows
             //_vsSvc.Start(LList);
 
             _idxSvc = new IndexingService(_index, LList);
-            //_idxSvc.Start();
+            _idxSvc.Start();
 
             _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
             //_rfshSvc.Start();
