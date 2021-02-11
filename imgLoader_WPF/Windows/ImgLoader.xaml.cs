@@ -33,17 +33,17 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", "C:\\test", "000000", 0);
-            //for (int j = 0; j < 100; j++)
-            //{
-            //    var item = new LoaderItem(LList);
-            //    LList.Children.Add(item);
-            //}
+            for (int j = 0; j < 1000; j++)
+            {
+                var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
+                LList.Children.Add(item);
+            }
 
         }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             ;
+            
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
@@ -64,13 +64,13 @@ namespace imgLoader_WPF.Windows
             this.Title = Core.Route;
 
             _vsSvc = new VoteSavingService();
-            _vsSvc.Start(LList);
+            //_vsSvc.Start(LList);
 
             _idxSvc = new IndexingService(_index, LList);
-            _idxSvc.Start();
+            //_idxSvc.Start();
 
             _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
-            _rfshSvc.Start();
+            //_rfshSvc.Start();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
