@@ -5,5 +5,5 @@
              xmlns:local="clr-namespace:imgLoader_WPF"
              x:Class="imgLoader_WPF.LoaderListCtrl.LoaderList"
              mc:Ignorable="d" 
-             d:DesignHeight="223.573" d:DesignWidth="664.905" VirtualizingPanel.VirtualizationMode="Recycling">
+             d:DesignHeight="223.573" d:DesignWidth="664.905" VirtualizingStackPanel.VirtualizationMode="Recycling">
 </VirtualizingStackPanel>

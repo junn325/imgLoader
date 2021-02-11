@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Windows;
@@ -11,7 +12,7 @@ using imgLoader_WPF.Tag;
 
 namespace imgLoader_WPF.LoaderListCtrl
 {
-    public partial class LoaderItem
+    public partial class LoaderItem : UserControl
     {
         public string Title
         {
@@ -111,7 +112,6 @@ namespace imgLoader_WPF.LoaderListCtrl
         {
             InitializeComponent();
         }
-
         public LoaderItem(string title, string author, string count, string site, string route, string number, int vote)
         {
             InitializeComponent();
@@ -124,17 +124,14 @@ namespace imgLoader_WPF.LoaderListCtrl
             Number = number;
             Vote = vote;
         }
-
         private void UpVote_Click(object sender, RoutedEventArgs e)
         {
             Vote++;
         }
-
         private void DownVote_Click(object sender, RoutedEventArgs e)
         {
             Vote--;
         }
-
         private void UserControl_Unloaded(object sender, RoutedEventArgs e)
         {
             TagPanel.Dispatcher.Invoke(() => TagPanel.Children.Clear());
@@ -175,6 +172,21 @@ namespace imgLoader_WPF.LoaderListCtrl
             TxbTitle.MaxWidth = ActualWidth - TxbNumber.ActualWidth - 15;
             TxbAuthor.MaxWidth = ActualWidth - 10;
             //TagPanel.MaxWidth = ActualWidth - 105;
+        }
+        public void MyDispose()
+        {
+            Tags = null;
+            Title = null;
+            Author = null;
+            ImgCount = null;
+            SiteName = null;
+            Route = null;
+            Number = null;
+
+            _tags = null;
+            _curCnt = 0;
+            _isRead = false;
+            _vote = 0;
         }
     }
 

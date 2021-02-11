@@ -1,4 +1,6 @@
-﻿namespace imgLoader_WPF.LoaderListCtrl
+﻿using System.Windows.Controls;
+
+namespace imgLoader_WPF.LoaderListCtrl
 {
     /// <summary>
     /// Interaction logic for LoaderList.xaml

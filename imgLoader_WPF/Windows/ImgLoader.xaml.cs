@@ -16,6 +16,7 @@ namespace imgLoader_WPF.Windows
     //todo: 서로 다른 작품 자동 연결
     //todo: 자체 탐색기 만들기
     //todo: 모든 객체에 dispose
+    //todo: 완전히 같은 이미지 탐색
 
     public partial class MainWindow
     {
@@ -35,7 +36,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            for (int j = 0; j < 5; j++)
+            for (int j = 0; j < 700; j++)
             {
                 var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
                 LList.Children.Add(item);
@@ -116,11 +117,14 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            //LList.Children.Clear();
         }
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
+            LList.Children.Clear();
+            GC.Collect();
+
+            ;
         }
 
         private void TxtUrl_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -139,10 +143,15 @@ namespace imgLoader_WPF.Windows
             _winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
         }
 
-        private void Button_Click_6(object sender, RoutedEventArgs e)
+        private void IndexingStop(object sender, RoutedEventArgs e)
         {
             if (i++ % 2 == 0) _idxSvc.Stop();
             else _idxSvc.Start();
+        }
+
+        private void dispose(object sender, RoutedEventArgs e)
+        {
+
         }
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
@@ -157,35 +166,36 @@ namespace imgLoader_WPF.Windows
             Properties.Settings.Default.NoIndex = false;
         }
 
+        private LoaderItem _clickedItem;
         private void LList_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            FrameworkElement a;
             var temp = (FrameworkElement)LList.InputHitTest(e.GetPosition((LoaderList)sender));
             if (temp.TemplatedParent == null)
             {
-                a = (FrameworkElement)temp.Parent;
+                temp = (FrameworkElement)temp.Parent;
                 do
                 {
-                    a = (FrameworkElement)a.Parent;
-                } while (a == null || a.GetType().Name != "LoaderItem");
+                    temp = (FrameworkElement)temp.Parent;
+                } while (temp != null && temp.GetType().Name != "LoaderItem");
 
+                _clickedItem = (LoaderItem)temp;
             }
             else
             {
-                a = (FrameworkElement)temp.TemplatedParent;
+                _clickedItem = (LoaderItem)temp.TemplatedParent;
             }
 
-            if (a != null)
+
+            if (LList.ContextMenu == null) return;
+
+            var temp1 = LList.InputHitTest(e.GetPosition((LoaderList)sender));
+            var name = temp1.GetType().Name;
+
+            foreach (var item in LList.ContextMenu.Items)
             {
-                ItmCancel.IsEnabled = true;
-                ItmOpen.IsEnabled = true;
-                ItmOpenAt.IsEnabled = true;
-                ItmPause.IsEnabled = true;
-                ItmRemove.IsEnabled = true;
-                ItmResume.IsEnabled = true;
-                ItmRmvAt.IsEnabled = true;
+                if (item.GetType().Name == "Separator") continue;
+                ((MenuItem)item).IsEnabled = name != "LoaderList";
             }
-            ;
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -194,12 +204,14 @@ namespace imgLoader_WPF.Windows
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         {
-            ((LoaderList)((LoaderItem)((ContextMenu)((MenuItem)sender).Parent).PlacementTarget).Parent).Children.Remove(this);
+            LList.Children.Remove(_clickedItem);
+            _clickedItem.Dispatcher.InvokeShutdown();
+            ;
         }
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
-            //Core.OpenDir(Route);
+            Core.OpenDir(_clickedItem.Route);
         }
 
 
@@ -230,5 +242,6 @@ namespace imgLoader_WPF.Windows
         {
 
         }
+
     }
 }

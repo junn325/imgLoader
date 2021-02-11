@@ -14,16 +14,16 @@
                 <loaderListCtrl:LoaderList x:Name="LList" Height="auto" Width="{Binding ElementName=Scroll, Path=ViewportWidth}" Background="White" Orientation="Vertical" MouseRightButtonDown="LList_MouseRightButtonDown">
                     <loaderListCtrl:LoaderList.ContextMenu>
                         <ContextMenu>
-                            <MenuItem x:Name="ItmOpen" Header="열기" IsEnabled="False" Click="Open_Click"/>
-                            <MenuItem x:Name="ItmOpenAt" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
+                            <MenuItem Header="열기" IsEnabled="False" Click="Open_Click"/>
+                            <MenuItem Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="ItmCancel" Header="취소" IsEnabled="False" Click="Cancel_Click"/>
-                            <MenuItem x:Name="ItmPause" Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
-                            <MenuItem x:Name="ItmResume" Header="재개" IsEnabled="False" Click="Resume_Click"/>
+                            <MenuItem Header="취소" IsEnabled="False" Click="Cancel_Click"/>
+                            <MenuItem Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
+                            <MenuItem Header="재개" IsEnabled="False" Click="Resume_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="ItmRmvAt" Header="목록에서만 제거" IsEnabled="False" Click="RemoveOnlyList_Click"/>
+                            <MenuItem Header="목록에서만 제거" IsEnabled="False" Click="RemoveOnlyList_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="ItmRemove" Header="삭제" IsEnabled="False" Click="Delete_Click"/>
+                            <MenuItem Header="삭제" IsEnabled="False" Click="Delete_Click"/>
                         </ContextMenu>
                     </loaderListCtrl:LoaderList.ContextMenu>
                 </loaderListCtrl:LoaderList>
@@ -35,8 +35,8 @@
         <Button Content="설정" HorizontalAlignment="Right" Margin="0,0,182,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_2"/>
 
         <TextBox x:Name="TxtUrl" HorizontalAlignment="Stretch" Height="19" Margin="10,10,10,0" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Top" KeyUp="TxtUrl_KeyUp" PreviewMouseUp="TxtUrl_PreviewMouseUp"/>
-        <Button Content="직렬 출력" HorizontalAlignment="Right" Margin="0,0,265,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_3"/>
-        <Button Content="직렬 입력" HorizontalAlignment="Right" Margin="0,0,347,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_4"/>
+        <Button Content="테스트 1" HorizontalAlignment="Right" Margin="0,0,265,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="dispose"/>
+        <Button Content="모두 비움" HorizontalAlignment="Right" Margin="0,0,347,20" VerticalAlignment="Bottom" Height="27" Width="78" Click="Button_Click_4"/>
         <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,135,20" Height="27" Width="76" Click="Button_Click_5"/>
         <Label x:Name="LblCount" Content="0개 항목" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,40"/>
         <Button Content="새로고침" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="21" Margin="147,0,0,20" Width="70" Click="Refresh_Click"/>
