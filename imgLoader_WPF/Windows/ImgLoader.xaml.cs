@@ -55,6 +55,8 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            ItemCtrl.DataContext = _idxSvc;
+
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");

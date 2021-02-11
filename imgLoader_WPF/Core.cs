@@ -348,14 +348,14 @@ namespace imgLoader_WPF
     {
         private const int interval = 2000;
         private bool _stop;
-        private readonly Dictionary<string, string> _index;
+        public readonly Dictionary<string, string> Index;
         private readonly LoaderList _list;
 
         public IndexingService(Dictionary<string, string> index, LoaderList list)
         {
             //Debug.WriteLine("indexing init");
 
-            _index = index;
+            Index = index;
             _list = list;
             DoIndex();
         }
@@ -375,20 +375,20 @@ namespace imgLoader_WPF
             //var infos = new Dictionary<string, string>(infoFiles.Length);
 
             //var tasks = new Task[infoFiles.Length];
-            foreach (var (key, _) in new Dictionary<string, string>(_index))
+            foreach (var (key, _) in new Dictionary<string, string>(Index))
             {
                 if (infoFiles.Contains(key)) continue;
 
-                _index.Remove(key);
+                Index.Remove(key);
             }
 
             foreach (var infoRoute in infoFiles)
             {
-                if (_index.Keys.Contains(infoRoute)) continue;
+                if (Index.Keys.Contains(infoRoute)) continue;
                 using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
                 var info = (sr.ReadToEndAsync().ConfigureAwait(false));
 
-                _index.Add(infoRoute, info.GetAwaiter().GetResult());
+                Index.Add(infoRoute, info.GetAwaiter().GetResult());
                 sr.Close();
             }
 
