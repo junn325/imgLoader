@@ -14,9 +14,7 @@
             <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel>
-                            <loaderListCtrl:LoaderItem Title="{Binding Key}"/>
-                        </StackPanel>
+                        <loaderListCtrl:LoaderItem Title="{Binding Title}"/>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
 

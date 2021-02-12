@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using imgLoader_WPF.LoaderListCtrl;
+using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
 {
@@ -243,120 +245,22 @@ namespace imgLoader_WPF
         }
     }
 
-    internal class ItemRefreshService
-    {
-        private const int interval = 2000;
-        private bool _stop;
-
-        private readonly Dictionary<string, string> _index;
-        private int _indexCnt;
-
-        private readonly Label _label;
-        private readonly LoaderList _list;
-
-        public ItemRefreshService(Dictionary<string, string> index, LoaderList list, Label label)
-        {
-            _label = label;
-            _list = list;
-
-            _indexCnt = index.Count;
-            _index = index;
-        }
-
-        internal void Start()
-        {
-            _stop = false;
-
-            var service = new Thread(() =>
-            {
-                var count = 0;
-                while (!_stop)
-                {
-                    _list.Dispatcher.Invoke(() => count = _list.Children.Count);
-
-                    if (count == _index.Count && _indexCnt == _index.Count && Properties.Settings.Default.NoIndex)
-                    {
-                        Thread.Sleep(interval);
-                        continue;
-                    }
-
-                    _list.Dispatcher.Invoke(() =>
-                    {
-                        using (_list.Dispatcher.DisableProcessing())
-                        {
-                            var indexCopy = new Dictionary<string, string>(_index);
-                            var dictionary = _list.Children.Cast<LoaderItem>().ToDictionary(item => item.Route, item => item.ImgCount);
-
-                            var listCopy = new LoaderItem[_list.Children.Count];
-                            _list.Children.CopyTo(listCopy, 0);
-
-                            foreach (var item in listCopy)
-                            {
-                                if (indexCopy.Keys.Contains(item.Route)) continue;
-
-                                //Debug.WriteLine($"delete {item.Number}");
-                                _list.Children.Remove(item);
-                            }
-
-                            foreach (var (path, infoFile) in indexCopy)
-                            {
-                                if (dictionary.Keys.Contains(path)) continue;
-
-                                var info = infoFile.Split('\n');
-                                var lItem = new LoaderItem
-                                {
-                                    Title = info[1],
-                                    Author = info[2],
-                                    ImgCount = info[3],
-                                    SiteName = info[0],
-                                    Route = path,
-
-                                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
-                                    Number = path.Split('\\').Last().Split('.')[0],
-                                    //Vote = (info.Length == 7 && !string.IsNullOrEmpty(info[6])) ? int.Parse(info[6]) : 0
-                                    Vote = 
-                                       File.Exists($@"{Core.GetDirectoryFromFile(path)}\{path.Split('\\').Last().Split('.')[0]}.{Core.VoteExt}")
-                                            ? int.Parse(File.ReadAllText($@"{Core.GetDirectoryFromFile(path)}\{path.Split('\\').Last().Split('.')[0]}.{Core.VoteExt}"))
-                                            : 0
-                                };
-
-                                _list.Children.Add(lItem);
-                            }
-                        }
-                    });
-
-
-                    _indexCnt = _index.Count;
-                    _label.Dispatcher.Invoke(() => _label.Content = $"{_index.Count}개 항목");
-                    //_label.Dispatcher.Invoke(() => Debug.WriteLine($"index: {_index.Count}개 항목"));
-                    //_list.Dispatcher.Invoke(() => Debug.WriteLine($"list: {_list.Children.Count}개 항목"));
-
-                    Thread.Sleep(interval);
-                }
-            });
-
-            service.Name = "Rfshsvc";
-            service.SetApartmentState(ApartmentState.STA);
-            service.Start();
-        }
-        internal void Stop()
-        {
-            _stop = true;
-        }
-    }
     internal class IndexingService //index: <path, content>
     {
         private const int interval = 2000;
         private bool _stop;
-        public readonly Dictionary<string, string> Index;
+        public ObservableCollection<IndexItem> Index;
         private readonly LoaderList _list;
+        private object _sender;
 
-        public IndexingService(Dictionary<string, string> index, LoaderList list)
+        public IndexingService(ObservableCollection<IndexItem> index, object sender, LoaderList list)
         {
             //Debug.WriteLine("indexing init");
 
             Index = index;
             _list = list;
+            _sender = sender;
+
             DoIndex();
         }
 
@@ -375,22 +279,26 @@ namespace imgLoader_WPF
             //var infos = new Dictionary<string, string>(infoFiles.Length);
 
             //var tasks = new Task[infoFiles.Length];
-            foreach (var (key, _) in new Dictionary<string, string>(Index))
+            foreach (var item in new ObservableCollection<IndexItem>(Index))
             {
-                if (infoFiles.Contains(key)) continue;
+                if (infoFiles.Contains(item.Route)) continue;
 
-                Index.Remove(key);
+                Index.Remove(item);
             }
 
             foreach (var infoRoute in infoFiles)
             {
-                if (Index.Keys.Contains(infoRoute)) continue;
+                if (Index.Any(idx => idx.Route == infoRoute)) continue;
+
                 using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
                 var info = (sr.ReadToEndAsync().ConfigureAwait(false));
 
-                Index.Add(infoRoute, info.GetAwaiter().GetResult());
+                var temp = info.GetAwaiter().GetResult().Split('\n');
+                Index.Add(new IndexItem { Title = temp[1], Author = temp[2], SiteName = temp[0], ImgCount = temp[3], Number = infoRoute.Split('\\')[^1].Split('.')[0], Route = infoRoute });
                 sr.Close();
             }
+
+            (()_sender).ItemCtrl.DataContext = _idxSvc;
 
             //await File.WriteAllTextAsync($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
         }
@@ -420,6 +328,19 @@ namespace imgLoader_WPF
         internal void Stop()
         {
             _stop = true;
+        }
+
+        internal class IndexItem
+        {
+            public string Title;
+            public string Author;
+            public string SiteName;
+            public string ImgCount;
+            public string Number;
+            public string[] Tags;
+            public int Vote;
+
+            public string Route;
         }
     }
     internal class VoteSavingService

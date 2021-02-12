@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -22,13 +23,12 @@ namespace imgLoader_WPF.Windows
     {
         private VoteSavingService _vsSvc;
         private IndexingService _idxSvc;
-        private ItemRefreshService _rfshSvc;
+        //private ItemRefreshService _rfshSvc;
 
         public static string[] dd = { "ddd", "dd", "D" };
 
         private Settings _winSetting = new();
-        private Dictionary<string, string> _index = new();
-        private KeyValuePair<string, string>[] _idxCollection = new KeyValuePair<string, string>[50];
+        private ObservableCollection<IndexingService.IndexItem> _index = new();
         int i;
         int j;
 
@@ -49,7 +49,6 @@ namespace imgLoader_WPF.Windows
         }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-            _idxCollection = _index.ToArray();
             ;
         }
 
@@ -75,10 +74,10 @@ namespace imgLoader_WPF.Windows
             _vsSvc = new VoteSavingService();
             //_vsSvc.Start(LList);
 
-            _idxSvc = new IndexingService(_index, LList);
+            _idxSvc = new IndexingService(_index, this, LList);
             _idxSvc.Start();
 
-            _rfshSvc = new ItemRefreshService(_index, LList, LblCount);
+            //_rfshSvc = new ItemRefreshService(_index, LList, LblCount);
             //_rfshSvc.Start();
         }
 
@@ -144,7 +143,6 @@ namespace imgLoader_WPF.Windows
         {
             _vsSvc.Stop();
             _idxSvc.Stop();
-            _rfshSvc.Stop();
 
             _winSetting.Close();
             _winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
@@ -163,8 +161,6 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
-            if (j++ % 2 == 0) _rfshSvc.Stop();
-            else _rfshSvc.Start();
         }
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
