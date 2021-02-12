@@ -19,7 +19,7 @@ namespace imgLoader_WPF.Windows
     //todo: 모든 객체에 dispose
     //todo: 완전히 같은 이미지 탐색
 
-    public partial class MainWindow
+    public partial class ImgLoader
     {
         private VoteSavingService _vsSvc;
         private IndexingService _idxSvc;
@@ -32,7 +32,7 @@ namespace imgLoader_WPF.Windows
         int i;
         int j;
 
-        public MainWindow()
+        public ImgLoader()
         {
             InitializeComponent();
         }
@@ -54,8 +54,6 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            ItemCtrl.DataContext = _idxSvc;
-
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
@@ -74,8 +72,11 @@ namespace imgLoader_WPF.Windows
             _vsSvc = new VoteSavingService();
             //_vsSvc.Start(LList);
 
-            _idxSvc = new IndexingService(_index, this, LList);
+            _idxSvc = new IndexingService(_index, this);
             _idxSvc.Start();
+
+            ItemCtrl.DataContext = _idxSvc;
+
 
             //_rfshSvc = new ItemRefreshService(_index, LList, LblCount);
             //_rfshSvc.Start();
@@ -112,7 +113,7 @@ namespace imgLoader_WPF.Windows
 
                 if (!proc.IsValidated) return;
 
-                LList.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => LList.Children.Insert(0, lItem)));
+                //LList.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => LList.Children.Insert(0, lItem)));
                 proc.Load();
             });
 
@@ -127,7 +128,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
-            LList.Children.Clear();
+            //LList.Children.Clear();
             GC.Collect();
 
             ;
@@ -154,9 +155,10 @@ namespace imgLoader_WPF.Windows
             else _idxSvc.Start();
         }
 
-        private void dispose(object sender, RoutedEventArgs e)
+        private void Test1(object sender, RoutedEventArgs e)
         {
-
+            //ItemCtrl.DataContext = _idxSvc;
+            ItemCtrl.ItemsSource = ((IndexingService)ItemCtrl.DataContext).Index;
         }
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
@@ -172,33 +174,33 @@ namespace imgLoader_WPF.Windows
         private LoaderItem _clickedItem;
         private void LList_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            var temp = (FrameworkElement)LList.InputHitTest(e.GetPosition((LoaderList)sender));
-            if (temp.TemplatedParent == null)
-            {
-                temp = (FrameworkElement)temp.Parent;
-                do
-                {
-                    temp = (FrameworkElement)temp.Parent;
-                } while (temp != null && temp.GetType().Name != "LoaderItem");
+            //var temp = (FrameworkElement)LList.InputHitTest(e.GetPosition((LoaderList)sender));
+            //if (temp.TemplatedParent == null)
+            //{
+            //    temp = (FrameworkElement)temp.Parent;
+            //    do
+            //    {
+            //        temp = (FrameworkElement)temp.Parent;
+            //    } while (temp != null && temp.GetType().Name != "LoaderItem");
 
-                _clickedItem = (LoaderItem)temp;
-            }
-            else
-            {
-                _clickedItem = (LoaderItem)temp.TemplatedParent;
-            }
+            //    _clickedItem = (LoaderItem)temp;
+            //}
+            //else
+            //{
+            //    _clickedItem = (LoaderItem)temp.TemplatedParent;
+            //}
 
 
-            if (LList.ContextMenu == null) return;
+            //if (LList.ContextMenu == null) return;
 
-            var temp1 = LList.InputHitTest(e.GetPosition((LoaderList)sender));
-            var name = temp1.GetType().Name;
+            //var temp1 = LList.InputHitTest(e.GetPosition((LoaderList)sender));
+            //var name = temp1.GetType().Name;
 
-            foreach (var item in LList.ContextMenu.Items)
-            {
-                if (item.GetType().Name == "Separator") continue;
-                ((MenuItem)item).IsEnabled = name != "LoaderList";
-            }
+            //foreach (var item in LList.ContextMenu.Items)
+            //{
+            //    if (item.GetType().Name == "Separator") continue;
+            //    ((MenuItem)item).IsEnabled = name != "LoaderList";
+            //}
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
@@ -207,7 +209,7 @@ namespace imgLoader_WPF.Windows
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         {
-            LList.Children.Remove(_clickedItem);
+            //LList.Children.Remove(_clickedItem);
             _clickedItem.Dispatcher.InvokeShutdown();
             ;
         }

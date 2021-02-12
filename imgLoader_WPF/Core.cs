@@ -250,15 +250,15 @@ namespace imgLoader_WPF
         private const int interval = 2000;
         private bool _stop;
         public ObservableCollection<IndexItem> Index;
-        private readonly LoaderList _list;
-        private object _sender;
+        //private readonly ItemsControl _list;
+        private ImgLoader _sender;
 
-        public IndexingService(ObservableCollection<IndexItem> index, object sender, LoaderList list)
+        public IndexingService(ObservableCollection<IndexItem> index, ImgLoader sender)
         {
             //Debug.WriteLine("indexing init");
 
             Index = index;
-            _list = list;
+            //_list = list;
             _sender = sender;
 
             DoIndex();
@@ -298,7 +298,7 @@ namespace imgLoader_WPF
                 sr.Close();
             }
 
-            (()_sender).ItemCtrl.DataContext = _idxSvc;
+            _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.DataContext = this);
 
             //await File.WriteAllTextAsync($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
         }
