@@ -21,7 +21,7 @@ namespace imgLoader_WPF.Windows
 
     public partial class ImgLoader
     {
-        private VoteSavingService _vsSvc;
+        //private VoteSavingService _vsSvc;
         private IndexingService _idxSvc;
         //private ItemRefreshService _rfshSvc;
 
@@ -69,7 +69,7 @@ namespace imgLoader_WPF.Windows
 
             this.Title = Core.Route;
 
-            _vsSvc = new VoteSavingService();
+            //_vsSvc = new VoteSavingService();
             //_vsSvc.Start(LList);
 
             _idxSvc = new IndexingService(_index, this);
@@ -141,7 +141,7 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _vsSvc.Stop();
+            //_vsSvc.Stop();
             _idxSvc.Stop();
 
             _winSetting.Close();
@@ -216,7 +216,7 @@ namespace imgLoader_WPF.Windows
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
-            Core.OpenDir(_clickedItem.Route);
+            //Core.OpenDir(_clickedItem.Route);
         }
 
 

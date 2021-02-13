@@ -298,7 +298,7 @@ namespace imgLoader_WPF
                 sr.Close();
             }
 
-            //_sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.DataContext = this);
+            _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.ItemsSource = this.Index);
 
             //await File.WriteAllTextAsync($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
         }
@@ -343,57 +343,57 @@ namespace imgLoader_WPF
             public string Route { get; set; }
         }
     }
-    internal class VoteSavingService
-    {
-        private const int interval = 2000;
-        private bool _stop;
+    //internal class VoteSavingService
+    //{
+    //    private const int interval = 2000;
+    //    private bool _stop;
 
-        internal void Start(LoaderList list)
-        {
-            _stop = false;
+    //    internal void Start(LoaderList list)
+    //    {
+    //        _stop = false;
 
-            var service = new Thread(() =>
-            {
-                while (!_stop)
-                {
-                    if (Properties.Settings.Default.NoIndex) goto wait;
-                    list.Dispatcher.Invoke(() =>
-                    {
-                        foreach (LoaderItem item in list.Children)
-                        {
-                            var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.VoteExt}";
+    //        var service = new Thread(() =>
+    //        {
+    //            while (!_stop)
+    //            {
+    //                if (Properties.Settings.Default.NoIndex) goto wait;
+    //                list.Dispatcher.Invoke(() =>
+    //                {
+    //                    foreach (LoaderItem item in list.Children)
+    //                    {
+    //                        var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.VoteExt}";
 
-                            if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
+    //                        if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
 
-                            if (File.Exists(path))
-                            {
-                                var info = File.ReadAllText(path);
+    //                        if (File.Exists(path))
+    //                        {
+    //                            var info = File.ReadAllText(path);
 
-                                if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) != item.Vote)
-                                {
-                                    info = item.Vote.ToString();
-                                }
+    //                            if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) != item.Vote)
+    //                            {
+    //                                info = item.Vote.ToString();
+    //                            }
 
-                                File.WriteAllText(path, info);
-                            }
-                            else
-                            {
-                                File.WriteAllText(path, item.Vote.ToString());
-                            }
-                        }
-                    });
+    //                            File.WriteAllText(path, info);
+    //                        }
+    //                        else
+    //                        {
+    //                            File.WriteAllText(path, item.Vote.ToString());
+    //                        }
+    //                    }
+    //                });
 
-                wait: Thread.Sleep(interval);
-                }
-            });
+    //            wait: Thread.Sleep(interval);
+    //            }
+    //        });
 
-            service.Name = "VtSvc";
-            service.Start();
-        }
+    //        service.Name = "VtSvc";
+    //        service.Start();
+    //    }
 
-        internal void Stop()
-        {
-            _stop = true;
-        }
-    }
+    //    internal void Stop()
+    //    {
+    //        _stop = true;
+    //    }
+    //}
 }

@@ -14,42 +14,6 @@ namespace imgLoader_WPF.LoaderListCtrl
 {
     public partial class LoaderItem
     {
-        public string Title
-        {
-            get => TitleBlock.Text;
-            set => TitleBlock.Text = value;
-        }
-        public string Author
-        {
-            get => AuthorBlock.Text;
-            set => AuthorBlock.Text = value;
-        }
-        public string ImgCount
-        {
-            get => CountBlock.Text;
-            set => CountBlock.Text = value + "장";
-        }
-        public string SiteName
-        {
-            get => SiteBlock.Text;
-            set => SiteBlock.Text = value;
-        }
-
-        public string Route;
-        public string Number
-        {
-            get => NumBlock.Text;
-            set => NumBlock.Text = value;
-        }
-        public int CurrentCount
-        {
-            get => _curCnt;
-            set
-            {
-                _curCnt = value;
-                ProgLbl.Text = $"{value}/{ImgCount}";
-            }
-        }
         public string[] Tags
         {
             get => _tags;
@@ -81,16 +45,6 @@ namespace imgLoader_WPF.LoaderListCtrl
             }
         }
 
-        public int Vote
-        {
-            get => _vote;
-            set
-            {
-                _vote = value;
-                LblVote.Text = _vote.ToString();
-            }
-        }
-
         public bool IsRead
         {
             get => _isRead;
@@ -112,59 +66,30 @@ namespace imgLoader_WPF.LoaderListCtrl
         {
             InitializeComponent();
         }
-        public LoaderItem(string title, string author, string count, string site, string route, string number, int vote)
-        {
-            InitializeComponent();
-
-            Title = title;
-            Author = author;
-            ImgCount = count;
-            SiteName = site;
-            Route = route;
-            Number = number;
-            Vote = vote;
-        }
         private void UpVote_Click(object sender, RoutedEventArgs e)
         {
-            Vote++;
+            ((IndexingService.IndexItem)this.DataContext).Vote++;
         }
         private void DownVote_Click(object sender, RoutedEventArgs e)
         {
-            Vote--;
-        }
-        private void UserControl_Unloaded(object sender, RoutedEventArgs e)
-        {
-            TagPanel.Dispatcher.Invoke(() => TagPanel.Children.Clear());
-            Tags = null;
-            Title = null;
-            Author = null;
-            ImgCount = null;
-            SiteName = null;
-            Route = null;
-            Number = null;
-
-            _tags = null;
+            ((IndexingService.IndexItem)this.DataContext).Vote--;
         }
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (sender == null) return;
-            if (Properties.Settings.Default.NoScrollTag)
+            var temp = ((ScrollViewer)sender);
+            if (Properties.Settings.Default.NoScrollTag && temp.IsEnabled)
             {
-                if (e.Delta > 0)
-                    ((ScrollViewer)((LoaderList)((LoaderItem)((Border)((Grid)((ScrollViewer)sender).Parent).Parent).Parent).Parent).Parent).LineUp();
-                else
-                    ((ScrollViewer)((LoaderList)((LoaderItem)((Border)((Grid)((ScrollViewer)sender).Parent).Parent).Parent).Parent).Parent).LineDown();
-
-                e.Handled = true;
+                temp.IsEnabled = false;
                 return;
             }
 
-            if (sender is not ScrollViewer sv) return;
+            if(!temp.IsEnabled) temp.IsEnabled = true;
 
             if (e.Delta > 0)
-                sv.LineLeft();
+                temp.LineLeft();
             else
-                sv.LineRight();
+                temp.LineRight();
             e.Handled = true;
         }
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -172,21 +97,6 @@ namespace imgLoader_WPF.LoaderListCtrl
             TitleBlock.MaxWidth = ActualWidth - NumBlock.ActualWidth - 15;
             AuthorBlock.MaxWidth = ActualWidth - 10;
             //TagPanel.MaxWidth = ActualWidth - 105;
-        }
-        public void MyDispose()
-        {
-            Tags = null;
-            Title = null;
-            Author = null;
-            ImgCount = null;
-            SiteName = null;
-            Route = null;
-            Number = null;
-
-            _tags = null;
-            _curCnt = 0;
-            _isRead = false;
-            _vote = 0;
         }
     }
 

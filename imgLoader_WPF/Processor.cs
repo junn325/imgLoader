@@ -49,13 +49,13 @@ namespace imgLoader_WPF
 
                 item.Dispatcher.Invoke(() =>
                 {
-                    item.ImgCount = ImgUrl.Count.ToString();
+                    //item.ImgCount = ImgUrl.Count.ToString();
 
-                    item.Author = Artist;
-                    item.Title = Title;
-                    item.Route = Route;
-                    item.SiteName = Site.GetType().Name;
-                    item.Number = Core.GetNumber(url);
+                    //item.Author = Artist;
+                    //item.Title = Title;
+                    //item.Route = Route;
+                    //item.SiteName = Site.GetType().Name;
+                    //item.Number = Core.GetNumber(url);
 
                     item.TagPanel.Visibility = Visibility.Hidden;
                     item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
@@ -308,7 +308,7 @@ namespace imgLoader_WPF
             if (fileSize == resp.ContentLength)
             {
                 _item.Dispatcher.Invoke(() => _item.ProgBar.Value++);
-                _item.Dispatcher.Invoke(() => _item.CurrentCount++);
+                //_item.Dispatcher.Invoke(() => _item.CurrentCount++);
             }
             else
             {
