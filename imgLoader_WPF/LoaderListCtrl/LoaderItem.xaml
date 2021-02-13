@@ -57,11 +57,11 @@
 
             </Grid.Resources>
 
-            <TextBlock x:Name="TxbTitle" x:FieldModifier="private" Text="(제목)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0" Grid.ColumnSpan="3" TextTrimming="WordEllipsis" />
-            <TextBlock x:Name="TxbNumber" x:FieldModifier="private" Text="(번호)" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
-            <TextBlock x:Name="TxbAuthor" x:FieldModifier="private" Text="(작가)" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
-            <TextBlock x:Name="TxbSiteName" x:FieldModifier="private" Text="Hiyobi" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
-            <TextBlock x:Name="TxbImgCount" x:FieldModifier="private" Text="9999장" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="TitleBlock" Text="{Binding Title}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0" Grid.ColumnSpan="3" TextTrimming="WordEllipsis" />
+            <TextBlock x:Name="NumBlock" Text="{Binding Number}" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="AuthorBlock" Text="{Binding Author}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="SiteBlock" Text="{Binding SiteName}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="CountBlock" Text="{Binding Path=ImgCount, StringFormat='\{0\}장'}"  VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
 
             <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="Hidden">
                 <DockPanel.Resources>
@@ -80,7 +80,7 @@
                 <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False"/>
             </ScrollViewer>
 
-            <Grid Width="auto" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2"> <!--반투명 색 넣을것-->
+            <Grid x:Name="VoteGrid" Width="auto" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2">
                 <TextBlock x:Name="LblVote" Text="0" Padding="5,0,2,1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,39,0"/>
                 <Button x:Name="DownVote" Template="{StaticResource BtnDown}" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,5,0" Width="15" Click="DownVote_Click"/>
                 <Button x:Name="UpVote" Template="{StaticResource BtnUp}" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Margin="0,0,22,0" Width="15" Click="UpVote_Click"/>

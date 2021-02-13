@@ -298,7 +298,7 @@ namespace imgLoader_WPF
                 sr.Close();
             }
 
-            _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.DataContext = this);
+            //_sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.DataContext = this);
 
             //await File.WriteAllTextAsync($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
         }

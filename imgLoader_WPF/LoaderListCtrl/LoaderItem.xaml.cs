@@ -16,30 +16,30 @@ namespace imgLoader_WPF.LoaderListCtrl
     {
         public string Title
         {
-            get => TxbTitle.Text;
-            set => TxbTitle.Text = value;
+            get => TitleBlock.Text;
+            set => TitleBlock.Text = value;
         }
         public string Author
         {
-            get => TxbAuthor.Text;
-            set => TxbAuthor.Text = value;
+            get => AuthorBlock.Text;
+            set => AuthorBlock.Text = value;
         }
         public string ImgCount
         {
-            get => TxbImgCount.Text;
-            set => TxbImgCount.Text = value + "장";
+            get => CountBlock.Text;
+            set => CountBlock.Text = value + "장";
         }
         public string SiteName
         {
-            get => TxbSiteName.Text;
-            set => TxbSiteName.Text = value;
+            get => SiteBlock.Text;
+            set => SiteBlock.Text = value;
         }
 
         public string Route;
         public string Number
         {
-            get => TxbNumber.Text;
-            set => TxbNumber.Text = value;
+            get => NumBlock.Text;
+            set => NumBlock.Text = value;
         }
         public int CurrentCount
         {
@@ -169,8 +169,8 @@ namespace imgLoader_WPF.LoaderListCtrl
         }
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            TxbTitle.MaxWidth = ActualWidth - TxbNumber.ActualWidth - 15;
-            TxbAuthor.MaxWidth = ActualWidth - 10;
+            TitleBlock.MaxWidth = ActualWidth - NumBlock.ActualWidth - 15;
+            AuthorBlock.MaxWidth = ActualWidth - 10;
             //TagPanel.MaxWidth = ActualWidth - 105;
         }
         public void MyDispose()

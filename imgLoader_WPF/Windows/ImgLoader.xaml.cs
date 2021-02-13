@@ -77,7 +77,6 @@ namespace imgLoader_WPF.Windows
 
             ItemCtrl.DataContext = _idxSvc;
 
-
             //_rfshSvc = new ItemRefreshService(_index, LList, LblCount);
             //_rfshSvc.Start();
         }
