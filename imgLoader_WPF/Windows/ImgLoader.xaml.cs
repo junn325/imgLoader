@@ -158,6 +158,7 @@ namespace imgLoader_WPF.Windows
         private void Test1(object sender, RoutedEventArgs e)
         {
             //ItemCtrl.DataContext = _idxSvc;
+            ItemCtrl.ItemsSource = null;
             ItemCtrl.ItemsSource = ((IndexingService)ItemCtrl.DataContext).Index;
         }
 

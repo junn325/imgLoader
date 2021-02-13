@@ -12,7 +12,7 @@ using imgLoader_WPF.Tag;
 
 namespace imgLoader_WPF.LoaderListCtrl
 {
-    public partial class LoaderItem : UserControl
+    public partial class LoaderItem
     {
         public string Title
         {

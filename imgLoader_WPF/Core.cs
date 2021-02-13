@@ -332,15 +332,15 @@ namespace imgLoader_WPF
 
         internal class IndexItem
         {
-            public string Title;
-            public string Author;
-            public string SiteName;
-            public string ImgCount;
-            public string Number;
-            public string[] Tags;
-            public int Vote;
+            public string Title { get; set; }
+            public string Author { get; set; }
+            public string SiteName { get; set; }
+            public string ImgCount { get; set; }
+            public string Number { get; set; }
+            public string[] Tags { get; set; }
+            public int Vote { get; set; }
 
-            public string Route;
+            public string Route { get; set; }
         }
     }
     internal class VoteSavingService
