@@ -7,16 +7,5 @@
         mc:Ignorable="d"
         Title="Window1" Height="500" Width="500">
     <Grid>
-        <ListBox x:Name="List" HorizontalAlignment="Center" Height="225" VerticalAlignment="Center" Width="304" ItemsSource="{Binding ModelItems}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel>
-                        <TextBlock Text="{Binding ElementName=List, Path=DataContext.Key}"/>
-                        <TextBlock Text="{Binding Name}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <Button Content="Button" HorizontalAlignment="Center" Margin="0,369,0,0" VerticalAlignment="Top" Height="70" Width="184" Click="Button_Click"/>
     </Grid>
 </Window>

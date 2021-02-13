@@ -1,4 +1,5 @@
-﻿using System;
+﻿using imgLoader_WPF.Windows;
+
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -10,17 +11,14 @@ namespace imgLoader_WPF
     internal class IndexingService //index: <path, content>
     {
         private const int interval = 2000;
+
         private bool _stop;
         public ObservableCollection<IndexItem> Index;
-        //private readonly ItemsControl _list;
-        private Windows.ImgLoader _sender;
+        private readonly ImgLoader _sender;
 
-        public IndexingService(ObservableCollection<IndexItem> index, Windows.ImgLoader sender)
+        public IndexingService(ObservableCollection<IndexItem> index, ImgLoader sender)
         {
-            //Debug.WriteLine("indexing init");
-
             Index = index;
-            //_list = list;
             _sender = sender;
 
             DoIndex();
@@ -28,19 +26,9 @@ namespace imgLoader_WPF
 
         private void DoIndex()
         {
-            //Debug.WriteLine("DoIndex()");
-
-            //const string countSeparator = "/**/";
-            //const string itemSeparator = "-**-";
-
-            //var tempPath = Path.GetTempPath();
             if (!Directory.Exists(Core.Route)) return;
+
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-
-            //var sb = new StringBuilder();
-            //var infos = new Dictionary<string, string>(infoFiles.Length);
-
-            //var tasks = new Task[infoFiles.Length];
             foreach (var item in new ObservableCollection<IndexItem>(Index))
             {
                 if (infoFiles.Contains(item.Route)) continue;
@@ -61,14 +49,11 @@ namespace imgLoader_WPF
             }
 
             _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.ItemsSource = this.Index);
-
-            //await File.WriteAllTextAsync($"{tempPath}{Core.IndexFile}.txt", $"{index.Count}{countSeparator}{sb}", Encoding.UTF8);
         }
 
         internal void Start()
         {
             _stop = false;
-            //Debug.WriteLine("indexing Start()");
 
             var service = new Thread(() =>
             {
@@ -77,7 +62,6 @@ namespace imgLoader_WPF
                     Thread.Sleep(interval);
 
                     if (Properties.Settings.Default.NoIndex) continue;
-                    //if (temp.Count == Directory.GetFiles(_route, $"*.{Core.InfoExt}", SearchOption.AllDirectories).Length) continue;
 
                     DoIndex();
                 }
@@ -105,5 +89,4 @@ namespace imgLoader_WPF
             public string Route { get; set; }
         }
     }
-
 }

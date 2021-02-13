@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using imgLoader_WPF.LoaderListCtrl;
+
+using System;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using imgLoader_WPF.LoaderListCtrl;
 
 namespace imgLoader_WPF.Windows
 {
@@ -21,11 +18,8 @@ namespace imgLoader_WPF.Windows
 
     public partial class ImgLoader
     {
-        //private VoteSavingService _vsSvc;
+        private VoteSavingService _vsSvc;
         private IndexingService _idxSvc;
-        //private ItemRefreshService _rfshSvc;
-
-        public static string[] dd = { "ddd", "dd", "D" };
 
         private Settings _winSetting = new();
         private ObservableCollection<IndexingService.IndexItem> _index = new();
@@ -69,8 +63,8 @@ namespace imgLoader_WPF.Windows
 
             this.Title = Core.Route;
 
-            //_vsSvc = new VoteSavingService();
-            //_vsSvc.Start(LList);
+            _vsSvc = new VoteSavingService();
+            //_vsSvc.Start(ItemCtrl.ItemsPanel.VisualTree.FirstChild);
 
             _idxSvc = new IndexingService(_index, this);
             _idxSvc.Start();

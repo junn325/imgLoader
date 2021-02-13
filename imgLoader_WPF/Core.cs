@@ -2,19 +2,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using imgLoader_WPF.LoaderListCtrl;
-using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
 {
@@ -244,58 +237,4 @@ namespace imgLoader_WPF
             Process.Start("explorer.exe", path);
         }
     }
-
-    //internal class VoteSavingService
-    //{
-    //    private const int interval = 2000;
-    //    private bool _stop;
-
-    //    internal void Start(LoaderList list)
-    //    {
-    //        _stop = false;
-
-    //        var service = new Thread(() =>
-    //        {
-    //            while (!_stop)
-    //            {
-    //                if (Properties.Settings.Default.NoIndex) goto wait;
-    //                list.Dispatcher.Invoke(() =>
-    //                {
-    //                    foreach (LoaderItem item in list.Children)
-    //                    {
-    //                        var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.VoteExt}";
-
-    //                        if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
-
-    //                        if (File.Exists(path))
-    //                        {
-    //                            var info = File.ReadAllText(path);
-
-    //                            if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) != item.Vote)
-    //                            {
-    //                                info = item.Vote.ToString();
-    //                            }
-
-    //                            File.WriteAllText(path, info);
-    //                        }
-    //                        else
-    //                        {
-    //                            File.WriteAllText(path, item.Vote.ToString());
-    //                        }
-    //                    }
-    //                });
-
-    //            wait: Thread.Sleep(interval);
-    //            }
-    //        });
-
-    //        service.Name = "VtSvc";
-    //        service.Start();
-    //    }
-
-    //    internal void Stop()
-    //    {
-    //        _stop = true;
-    //    }
-    //}
 }

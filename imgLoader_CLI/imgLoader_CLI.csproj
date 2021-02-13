@@ -10,11 +10,11 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <AssemblyName>imgL</AssemblyName>
     <StartupObject>imgLoader_CLI.Program</StartupObject>
-    <AssemblyVersion>0.3.12.41</AssemblyVersion>
+    <AssemblyVersion>0.3.13.44</AssemblyVersion>
     <RepositoryUrl></RepositoryUrl>
     <NeutralLanguage />
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <FileVersion>0.3.12.41</FileVersion>
+    <FileVersion>0.3.13.44</FileVersion>
   </PropertyGroup>
 
 </Project>

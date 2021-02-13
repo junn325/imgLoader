@@ -6,8 +6,8 @@
     <AssemblyName>imgL_Fixer</AssemblyName>
     <RootNamespace>imgL_Fixer</RootNamespace>
     <StartupObject>imgL_Fixer.Program</StartupObject>
-    <FileVersion>1.0.5.38</FileVersion>
-    <AssemblyVersion>1.0.3.38</AssemblyVersion>
+    <FileVersion>1.0.6.44</FileVersion>
+    <AssemblyVersion>1.0.4.44</AssemblyVersion>
   </PropertyGroup>
 
 </Project>

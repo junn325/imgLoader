@@ -18,7 +18,7 @@ namespace imgLoader_WPF.Windows
         {
             Dd = new string[]{ "d", "dd", "ddd", "dddd", "ddddd"};
 
-            List.DataContext = new BaseViewModel();
+            //List.DataContext = new BaseViewModel();
         }
 
         public class BaseViewModel
