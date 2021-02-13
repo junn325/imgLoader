@@ -1,14 +1,12 @@
-﻿using System;
-using System.ComponentModel;
+﻿using imgLoader_WPF.Tag;
+
+using System;
 using System.Globalization;
-using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using imgLoader_WPF.Tag;
 
 namespace imgLoader_WPF.LoaderListCtrl
 {
@@ -55,9 +53,7 @@ namespace imgLoader_WPF.LoaderListCtrl
             }
         }
 
-        private int _vote;
         private bool _isRead;
-        private int _curCnt;
         private string[] _tags;
 
         //private readonly Stopwatch sw = new Stopwatch();
@@ -96,7 +92,6 @@ namespace imgLoader_WPF.LoaderListCtrl
         {
             TitleBlock.MaxWidth = ActualWidth - NumBlock.ActualWidth - 15;
             AuthorBlock.MaxWidth = ActualWidth - 10;
-            //TagPanel.MaxWidth = ActualWidth - 105;
         }
     }
 
