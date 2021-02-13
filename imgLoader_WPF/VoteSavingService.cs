@@ -7,7 +7,7 @@ namespace imgLoader_WPF
 {
     internal class VoteSavingService
     {
-        private const int interval = 2000;
+        private const int interval = 3000;
         private bool _stop;
 
         internal void Start(LoaderList list)
@@ -18,7 +18,10 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
-                    if (Properties.Settings.Default.NoIndex) goto wait;
+                    Thread.Sleep(interval);
+
+                    if (Properties.Settings.Default.NoIndex) continue;
+
                     list.Dispatcher.Invoke(() =>
                     {
                         foreach (var item in ((IndexingService)list.DataContext).Index)
@@ -31,11 +34,9 @@ namespace imgLoader_WPF
                             {
                                 var info = File.ReadAllText(path);
 
-                                if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) != item.Vote)
-                                {
-                                    info = item.Vote.ToString();
-                                }
+                                if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) == item.Vote) continue;
 
+                                info = item.Vote.ToString();
                                 File.WriteAllText(path, info);
                             }
                             else
@@ -44,8 +45,6 @@ namespace imgLoader_WPF
                             }
                         }
                     });
-
-                    wait: Thread.Sleep(interval);
                 }
             });
 

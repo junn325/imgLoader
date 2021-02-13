@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -64,7 +65,12 @@ namespace imgLoader_WPF.Windows
             this.Title = Core.Route;
 
             _vsSvc = new VoteSavingService();
-            //_vsSvc.Start(ItemCtrl.ItemsPanel.VisualTree.FirstChild);
+
+            var obj = VisualTreeHelper.GetChild(ItemCtrl, 0);
+            obj = VisualTreeHelper.GetChild(obj, 0);
+            obj = VisualTreeHelper.GetChild(obj, 0);
+
+            _vsSvc.Start((LoaderList)obj);
 
             _idxSvc = new IndexingService(_index, this);
             _idxSvc.Start();
