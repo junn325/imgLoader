@@ -8,7 +8,10 @@ using System.Threading;
 
 namespace imgLoader_WPF
 {
-    internal class IndexingService //index: <path, content>
+    //collection contains IndexingService.IndexItem items                            
+    //get info data every /interval/ milliseconds
+
+    internal class IndexingService
     {
         private const int interval = 2000;
 

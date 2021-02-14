@@ -65,12 +65,7 @@ namespace imgLoader_WPF.Windows
             this.Title = Core.Route;
 
             _vsSvc = new VoteSavingService();
-
-            var obj = VisualTreeHelper.GetChild(ItemCtrl, 0);
-            obj = VisualTreeHelper.GetChild(obj, 0);
-            obj = VisualTreeHelper.GetChild(obj, 0);
-
-            _vsSvc.Start((LoaderList)obj);
+            _vsSvc.Start((LoaderList)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(ItemCtrl, 0), 0), 0));
 
             _idxSvc = new IndexingService(_index, this);
             _idxSvc.Start();

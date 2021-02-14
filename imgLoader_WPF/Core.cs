@@ -21,7 +21,6 @@ namespace imgLoader_WPF
         internal const string LogFile = "ILLG";
 
         internal const string InfoExt = "ilif";
-        internal const string VoteExt = "ilvote";
 
         private static readonly string[] DFilter = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };

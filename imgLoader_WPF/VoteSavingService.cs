@@ -1,6 +1,8 @@
-﻿using imgLoader_WPF.LoaderListCtrl;
+﻿using System;
+using imgLoader_WPF.LoaderListCtrl;
 
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace imgLoader_WPF
@@ -26,7 +28,7 @@ namespace imgLoader_WPF
                     {
                         foreach (var item in ((IndexingService)list.DataContext).Index)
                         {
-                            var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.VoteExt}";
+                            var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.InfoExt}";
 
                             if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
 
@@ -34,10 +36,13 @@ namespace imgLoader_WPF
                             {
                                 var info = File.ReadAllText(path);
 
-                                if (!string.IsNullOrEmpty(info) && int.Parse(info.Trim()) == item.Vote) continue;
+                                if (!string.IsNullOrEmpty(info)
+                                    && int.TryParse(info.Split('\n')[^1].Trim(), out var temp)
+                                    && temp == item.Vote) continue;
 
-                                info = item.Vote.ToString();
-                                File.WriteAllText(path, info);
+                                info = info.Replace() //todo: 여기에 vote 수정 넣을것
+
+                                new StreamWriter(DelayStream(path, FileMode.Append, FileAccess.Write)).Write(info);
                             }
                             else
                             {
@@ -55,6 +60,29 @@ namespace imgLoader_WPF
         internal void Stop()
         {
             _stop = true;
+        }
+
+        private static FileStream DelayStream(string route, FileMode mode, FileAccess access)
+        {
+            var temp = false;
+            FileStream file = null;
+
+            while (!temp)
+            {
+                try
+                {
+                    file = new FileStream(route, mode, access);
+                    temp = true;
+                }
+                catch
+                {
+                    temp = false;
+                }
+            }
+
+            if (file == null) throw new Exception("stream is null");
+
+            return file;
         }
     }
 }
