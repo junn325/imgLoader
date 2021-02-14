@@ -90,6 +90,7 @@ namespace imgLoader_WPF
             public int Vote { get; set; }
 
             public string Route { get; set; }
+            public bool Show = true;
         }
     }
 }

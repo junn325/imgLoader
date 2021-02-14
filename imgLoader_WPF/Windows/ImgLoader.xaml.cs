@@ -27,6 +27,8 @@ namespace imgLoader_WPF.Windows
         private readonly ObservableCollection<IndexingService.IndexItem> _index = new();
 
         private LoaderList _llist;
+        private IndexingService.IndexItem _clickedItem;
+
         int i;
         int j;
 
@@ -170,17 +172,17 @@ namespace imgLoader_WPF.Windows
             Properties.Settings.Default.NoIndex = false;
         }
 
-        private LoaderItem _clickedItem;
         private void LItem_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (sender == null) return;
 
             foreach (var item in ItemCtrl.ContextMenu.Items)
             {
-                if (item.GetType().Name == "Separator") continue;
+                if (item.GetType() == typeof(Separator)) continue;
                 ((MenuItem)item).IsEnabled = true;
             }
 
+            _clickedItem = (IndexingService.IndexItem)((LoaderItem)sender).DataContext;
             e.Handled = true;
         }
 
@@ -188,7 +190,7 @@ namespace imgLoader_WPF.Windows
         {
             foreach (var item in ItemCtrl.ContextMenu.Items)
             {
-                if (item.GetType().Name == "Separator") continue;
+                if (item.GetType() == typeof(Separator)) continue;
                 ((MenuItem)item).IsEnabled = false;
             }
         }
@@ -199,9 +201,6 @@ namespace imgLoader_WPF.Windows
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         {
-            //LList.Children.Remove(_clickedItem);
-            _clickedItem.Dispatcher.InvokeShutdown();
-            ;
         }
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)

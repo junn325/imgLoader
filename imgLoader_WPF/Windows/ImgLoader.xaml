@@ -33,7 +33,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <loaderListCtrl:LoaderItem  MouseRightButtonDown="LItem_MouseRightButtonDown"/>
+                            <loaderListCtrl:LoaderItem MouseRightButtonDown="LItem_MouseRightButtonDown"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

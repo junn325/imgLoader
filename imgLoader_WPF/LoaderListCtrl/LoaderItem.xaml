@@ -6,7 +6,7 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:loaderListCtrl="clr-namespace:imgLoader_WPF.LoaderListCtrl"
              mc:Ignorable="d"
-             Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged" >
+             Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged" Loaded="UserControl_Loaded">
     <Border BorderBrush="Black" BorderThickness="0.5">
         <Grid x:Name="Grid">
             <Grid.RowDefinitions>

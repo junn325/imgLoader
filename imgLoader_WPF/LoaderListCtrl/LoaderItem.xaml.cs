@@ -93,6 +93,14 @@ namespace imgLoader_WPF.LoaderListCtrl
             TitleBlock.MaxWidth = ActualWidth - NumBlock.ActualWidth - 15;
             AuthorBlock.MaxWidth = ActualWidth - 10;
         }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!((IndexingService.IndexItem)this.DataContext).Show)
+            {
+                this.Visibility = Visibility.Collapsed;
+            }
+        }
     }
 
     public class ValConvert : IValueConverter
