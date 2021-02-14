@@ -27,13 +27,13 @@
                     </ItemsControl.ContextMenu>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <loaderListCtrl:LoaderList x:Name="LList" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" Orientation="Vertical" MouseRightButtonDown="LList_MouseRightButtonDown">
+                            <loaderListCtrl:LoaderList VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" Orientation="Vertical" MouseRightButtonDown="LList_MouseRightButtonDown">
                             </loaderListCtrl:LoaderList>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <loaderListCtrl:LoaderItem/>
+                            <loaderListCtrl:LoaderItem  MouseRightButtonDown="LItem_MouseRightButtonDown"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

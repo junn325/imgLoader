@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
@@ -24,6 +25,8 @@ namespace imgLoader_WPF.Windows
 
         private readonly Settings _winSetting = new();
         private readonly ObservableCollection<IndexingService.IndexItem> _index = new();
+
+        private LoaderList _llist;
         int i;
         int j;
 
@@ -63,9 +66,10 @@ namespace imgLoader_WPF.Windows
 #endif
 
             this.Title = Core.Route;
+            _llist = (LoaderList)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(ItemCtrl, 0), 0), 0);
 
             _vsSvc = new VoteSavingService();
-            _vsSvc.Start((LoaderList)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(ItemCtrl, 0), 0), 0));
+            _vsSvc.Start(_llist);
 
             _idxSvc = new IndexingService(_index, this);
             _idxSvc.Start();
@@ -167,35 +171,26 @@ namespace imgLoader_WPF.Windows
         }
 
         private LoaderItem _clickedItem;
+        private void LItem_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (sender == null) return;
+
+            foreach (var item in ItemCtrl.ContextMenu.Items)
+            {
+                if (item.GetType().Name == "Separator") continue;
+                ((MenuItem)item).IsEnabled = true;
+            }
+
+            e.Handled = true;
+        }
+
         private void LList_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            //var temp = (FrameworkElement)LList.InputHitTest(e.GetPosition((LoaderList)sender));
-            //if (temp.TemplatedParent == null)
-            //{
-            //    temp = (FrameworkElement)temp.Parent;
-            //    do
-            //    {
-            //        temp = (FrameworkElement)temp.Parent;
-            //    } while (temp != null && temp.GetType().Name != "LoaderItem");
-
-            //    _clickedItem = (LoaderItem)temp;
-            //}
-            //else
-            //{
-            //    _clickedItem = (LoaderItem)temp.TemplatedParent;
-            //}
-
-
-            //if (LList.ContextMenu == null) return;
-
-            //var temp1 = LList.InputHitTest(e.GetPosition((LoaderList)sender));
-            //var name = temp1.GetType().Name;
-
-            //foreach (var item in LList.ContextMenu.Items)
-            //{
-            //    if (item.GetType().Name == "Separator") continue;
-            //    ((MenuItem)item).IsEnabled = name != "LoaderList";
-            //}
+            foreach (var item in ItemCtrl.ContextMenu.Items)
+            {
+                if (item.GetType().Name == "Separator") continue;
+                ((MenuItem)item).IsEnabled = false;
+            }
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
