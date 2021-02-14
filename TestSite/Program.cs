@@ -10,10 +10,10 @@ namespace TestSite
             int a = 5;
             int b = 12;
 
-           Console.WriteLine($"{a}+{b}의 값은: {Sum(a, b)} 입니다.");
-           Console.WriteLine($"{a}-{b}의 값은: {Minus(a, b)} 입니다.");
-           Console.WriteLine($"{a}*{b}의 값은: {Multiple(a, b)} 입니다.");
-           Console.WriteLine($"{a}/{b}의 값은: {Divide(a, b)} 입니다.");
+            Console.WriteLine($"{a}+{b}의 값은: {Sum(a, b)} 입니다.");
+            Console.WriteLine($"{a}-{b}의 값은: {Minus(a, b)} 입니다.");
+            Console.WriteLine($"{a}*{b}의 값은: {Multiple(a, b)} 입니다.");
+            Console.WriteLine($"{a}/{b}의 값은: {Divide(a, b)} 입니다.");
         }
 
         private static int Sum(int firstNumber, int secondNumber)

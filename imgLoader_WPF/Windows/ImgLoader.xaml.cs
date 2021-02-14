@@ -22,8 +22,8 @@ namespace imgLoader_WPF.Windows
         private VoteSavingService _vsSvc;
         private IndexingService _idxSvc;
 
-        private Settings _winSetting = new();
-        private ObservableCollection<IndexingService.IndexItem> _index = new();
+        private readonly Settings _winSetting = new();
+        private readonly ObservableCollection<IndexingService.IndexItem> _index = new();
         int i;
         int j;
 
