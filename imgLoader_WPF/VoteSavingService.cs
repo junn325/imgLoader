@@ -37,10 +37,10 @@ namespace imgLoader_WPF
                                 var info = File.ReadAllText(path);
 
                                 if (!string.IsNullOrEmpty(info)
-                                    && int.TryParse(info.Split('\n')[^1].Trim(), out var temp)
+                                    && int.TryParse(info.Split('\n')[6].Trim(), out var temp)
                                     && temp == item.Vote) continue;
 
-                                info = info.Replace() //todo: 여기에 vote 수정 넣을것
+                                info = info.Substring(0,)//todo: 여기에 vote 수정 넣을것
 
                                 new StreamWriter(DelayStream(path, FileMode.Append, FileAccess.Write)).Write(info);
                             }
