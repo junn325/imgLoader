@@ -29,7 +29,7 @@ namespace imgLoader_WPF
                     list.Dispatcher.Invoke(() => idx = ((IndexingService)list.DataContext).Index);
                     if (idx == null) continue;
 
-                    foreach (var item in idx)
+                    foreach (var item in new ObservableCollection<IndexingService.IndexItem>(idx))
                     {
                         var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.InfoExt}";
 

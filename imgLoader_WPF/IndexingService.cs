@@ -36,7 +36,7 @@ namespace imgLoader_WPF
             {
                 if (infoFiles.Contains(item.Route)) continue;
 
-                Index.Remove(item);
+                _sender.Dispatcher.Invoke(() => Index.Remove(item));
             }
 
             foreach (var infoRoute in infoFiles)
@@ -47,7 +47,7 @@ namespace imgLoader_WPF
                 var info = (sr.ReadToEndAsync().ConfigureAwait(false));
 
                 var temp = info.GetAwaiter().GetResult().Split('\n');
-                Index.Add(new IndexItem { Title = temp[1], Author = temp[2], SiteName = temp[0], ImgCount = temp[3], Number = infoRoute.Split('\\')[^1].Split('.')[0], Route = infoRoute });
+                _sender.Dispatcher.Invoke(() => Index.Add(new IndexItem { Title = temp[1], Author = temp[2], SiteName = temp[0], ImgCount = temp[3], Number = infoRoute.Split('\\')[^1].Split('.')[0], Route = infoRoute }));
                 sr.Close();
             }
 
