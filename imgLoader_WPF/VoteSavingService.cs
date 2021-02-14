@@ -1,15 +1,16 @@
-﻿using System;
-using imgLoader_WPF.LoaderListCtrl;
+﻿using imgLoader_WPF.LoaderListCtrl;
 
+using System;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Threading;
 
 namespace imgLoader_WPF
 {
     internal class VoteSavingService
     {
-        private const int interval = 3000;
+        private const int Interval = 3000;
         private bool _stop;
 
         internal void Start(LoaderList list)
@@ -20,36 +21,52 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
-                    Thread.Sleep(interval);
+                    ObservableCollection<IndexingService.IndexItem> idx = null;
+                    Thread.Sleep(Interval);
 
                     if (Properties.Settings.Default.NoIndex) continue;
 
-                    list.Dispatcher.Invoke(() =>
+                    list.Dispatcher.Invoke(() => idx = ((IndexingService)list.DataContext).Index);
+                    if (idx == null) continue;
+
+                    foreach (var item in idx)
                     {
-                        foreach (var item in ((IndexingService)list.DataContext).Index)
+                        var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.InfoExt}";
+
+                        if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
+
+                        if (File.Exists(path))
                         {
-                            var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.InfoExt}";
+                            var sr = new StreamReader(DelayStream(path, FileMode.Open, FileAccess.Read));
+                            var info = sr.ReadToEnd();
+                            sr.Close();
 
-                            if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
+                            if (string.IsNullOrEmpty(info)) continue;
 
-                            if (File.Exists(path))
-                            {
-                                var info = File.ReadAllText(path);
+                            while (info.Split('\n').Length < 7) info += '\n';
 
-                                if (!string.IsNullOrEmpty(info)
-                                    && int.TryParse(info.Split('\n')[6].Trim(), out var temp)
-                                    && temp == item.Vote) continue;
+                            var tt = int.TryParse(info.Split('\n')[6].Trim(), out var temp);
+                            if (tt && temp == item.Vote) continue;
 
-                                info = info.Substring(0,)//todo: 여기에 vote 수정 넣을것
+                            info = info.Substring(0, info.LastIndexOf('\n')) + $"\n{item.Vote}";                                       //\n의 마지막 인덱스. 정보 추가시 수정 필요
 
-                                new StreamWriter(DelayStream(path, FileMode.Append, FileAccess.Write)).Write(info);
-                            }
-                            else
-                            {
-                                File.WriteAllText(path, item.Vote.ToString());
-                            }
+                            using var ds = DelayStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+                            var sw = new StreamWriter(ds);
+                            sw.Write(info);
+
+                            sw.Flush();
+                            ds.SetLength(ds.Position);
+
+                            sw.Close();
+                            ds.Close();
+
+                            Debug.WriteLine($"{item.Number} complete");
                         }
-                    });
+                        else
+                        {
+                            File.WriteAllText(path, item.Vote.ToString());
+                        }
+                    }
                 }
             });
 
@@ -64,8 +81,10 @@ namespace imgLoader_WPF
 
         private static FileStream DelayStream(string route, FileMode mode, FileAccess access)
         {
-            var temp = false;
             FileStream file = null;
+
+            var temp = false;
+            var thres = 0;
 
             while (!temp)
             {
@@ -76,7 +95,11 @@ namespace imgLoader_WPF
                 }
                 catch
                 {
+                    if (thres++ > 100) break;
+
                     temp = false;
+                    Debug.WriteLine($"{route} wait");
+                    Thread.Sleep(20);
                 }
             }
 

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using imgLoader_WPF.LoaderListCtrl;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -6,8 +8,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using imgLoader_WPF.LoaderListCtrl;
-
 
 namespace imgLoader_WPF
 {

@@ -73,7 +73,7 @@ namespace imgLoader_WPF
             if (file.Exists && (file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
 
             using var sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
-            var info = site.ReturnInfo();
+            var info = site.ReturnInfo(); //todo: 각 사이트 객체가 아닌 여기에서 7번째 칸 뚫어서 vote 작성
 
             for (var i = 0; i < info.Length; i++)
             {

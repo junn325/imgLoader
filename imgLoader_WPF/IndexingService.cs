@@ -8,12 +8,12 @@ using System.Threading;
 
 namespace imgLoader_WPF
 {
-    //collection contains IndexingService.IndexItem items                            
-    //get info data every /interval/ milliseconds
+    //컬렉션은 IndexingService.IndexItem을 담고있음                        
+    //매 /interval/ 밀리초마다 인덱싱
 
     internal class IndexingService
     {
-        private const int interval = 2000;
+        private const int Interval = 2000;
 
         private bool _stop;
         public ObservableCollection<IndexItem> Index;
@@ -27,7 +27,7 @@ namespace imgLoader_WPF
             DoIndex();
         }
 
-        private void DoIndex()
+        internal void DoIndex()
         {
             if (!Directory.Exists(Core.Route)) return;
 
@@ -62,7 +62,7 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
-                    Thread.Sleep(interval);
+                    Thread.Sleep(Interval);
 
                     if (Properties.Settings.Default.NoIndex) continue;
 

@@ -22,9 +22,9 @@ namespace imgLoader_WPF.Sites
         {
             try
             {
-                var sb = new StringBuilder();
-
                 _src_gall = StrLoad.Load($"{_base_url}g/{mNumber}/");
+
+                var sb = new StringBuilder();
                 var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
 
                 if (_src_gall == null) throw new Exception();
