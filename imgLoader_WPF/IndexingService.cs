@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using imgLoader_WPF.Windows;
 
 using System.Collections.ObjectModel;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace imgLoader_WPF
 {
@@ -70,7 +72,13 @@ namespace imgLoader_WPF
                 _sender.Dispatcher.Invoke(() => Index.Add(new IndexItem { Title = info[1], Author = info[2], SiteName = info[0], ImgCount = info[3], Number = infoRoute.Split('\\')[^1].Split('.')[0], Route = infoRoute }));
             }
 
-            _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.ItemsSource = this.Index);
+            try
+            {
+                _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.ItemsSource = this.Index);
+            }
+            catch (TaskCanceledException)
+            {
+            }
         }
 
         internal void Start()
