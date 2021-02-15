@@ -1,4 +1,5 @@
-﻿using imgLoader_WPF.Windows;
+﻿using System.Collections.Generic;
+using imgLoader_WPF.Windows;
 
 using System.Collections.ObjectModel;
 using System.IO;
@@ -41,14 +42,33 @@ namespace imgLoader_WPF
 
             foreach (var infoRoute in infoFiles)
             {
+                using var sr = new StreamReader(Core.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+                var infos = sr.ReadToEnd();
+                sr.Close();
+
+                var info = infos.Split('\n');
+
+                if (info[7] == "0") //목록에서만 제거 처리
+                {
+                    var temp = Index.Where(t => t.Number == infoRoute.Split('\\')[^1].Split('.')[0]).ToArray();
+
+                    if (temp.Length > 0)
+                    {
+                        foreach (var item in temp)
+                        {
+                            _sender.Dispatcher.Invoke(() => Index.Remove(item));
+                        }
+                    }
+
+                    continue;
+                }
+
                 if (Index.Any(idx => idx.Route == infoRoute)) continue;
 
-                using var sr = new StreamReader(new FileStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
-                var info = (sr.ReadToEndAsync().ConfigureAwait(false));
+                if (infoRoute.Split('\\')[^1].Split('.')[0] == "1218560")
+                    ;
 
-                var temp = info.GetAwaiter().GetResult().Split('\n');
-                _sender.Dispatcher.Invoke(() => Index.Add(new IndexItem { Title = temp[1], Author = temp[2], SiteName = temp[0], ImgCount = temp[3], Number = infoRoute.Split('\\')[^1].Split('.')[0], Route = infoRoute }));
-                sr.Close();
+                _sender.Dispatcher.Invoke(() => Index.Add(new IndexItem { Title = info[1], Author = info[2], SiteName = info[0], ImgCount = info[3], Number = infoRoute.Split('\\')[^1].Split('.')[0], Route = infoRoute }));
             }
 
             _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.ItemsSource = this.Index);

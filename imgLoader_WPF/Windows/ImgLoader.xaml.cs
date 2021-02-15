@@ -197,7 +197,7 @@ namespace imgLoader_WPF.Windows
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         {
-
+            _clickedItem.Show = false;
         }
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)

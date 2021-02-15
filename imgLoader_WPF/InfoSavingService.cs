@@ -49,7 +49,7 @@ namespace imgLoader_WPF
                                 if (string.IsNullOrEmpty(info.Split('\n')[6]) || string.IsNullOrEmpty(info.Split('\n')[7])) goto infoContent;
 
                                 if (int.TryParse(info.Split('\n')[6], out var temp) && temp == item.Vote
-                                    && Convert.ToBoolean(info.Split('\n')[7]) == item.Show) continue;
+                                    && (info.Split('\n')[7] == "1") == item.Show) continue;
 
                                 infoContent:
                                 info = $"{info.Substring(0, info.CountIndexOf('\n', 5))}\n{item.Vote}\n{(item.Show ? 1 : 0)}";
