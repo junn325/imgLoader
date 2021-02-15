@@ -16,9 +16,11 @@ namespace imgLoader_WPF
     {
         private const int Interval = 2000;
 
-        private bool _stop;
         public ObservableCollection<IndexItem> Index;
+
+        private bool _stop;
         private readonly ImgLoader _sender;
+        private Thread _service;
 
         public IndexingService(ObservableCollection<IndexItem> index, ImgLoader sender)
         {
@@ -65,9 +67,6 @@ namespace imgLoader_WPF
 
                 if (Index.Any(idx => idx.Route == infoRoute)) continue;
 
-                if (infoRoute.Split('\\')[^1].Split('.')[0] == "1218560")
-                    ;
-
                 _sender.Dispatcher.Invoke(() => Index.Add(new IndexItem { Title = info[1], Author = info[2], SiteName = info[0], ImgCount = info[3], Number = infoRoute.Split('\\')[^1].Split('.')[0], Route = infoRoute }));
             }
 
@@ -78,7 +77,7 @@ namespace imgLoader_WPF
         {
             _stop = false;
 
-            var service = new Thread(() =>
+            _service = new Thread(() =>
             {
                 while (!_stop)
                 {
@@ -89,9 +88,9 @@ namespace imgLoader_WPF
                     DoIndex();
                 }
             });
+            _service.Name = "IdxSvc";
 
-            service.Name = "IdxSvc";
-            service.Start();
+            _service.Start();
         }
 
         internal void Stop()

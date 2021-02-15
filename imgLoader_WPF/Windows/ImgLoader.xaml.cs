@@ -198,6 +198,14 @@ namespace imgLoader_WPF.Windows
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Show = false;
+            //_idxSvc.RemoveOnlyAtIndex(_clickedItem);
+            _vsSvc.Save(_llist);
+            _index.Remove(_clickedItem);
+
+            _idxSvc.DoIndex();
+
+            //_idxSvc.Start();
+
         }
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
