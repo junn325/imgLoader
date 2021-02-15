@@ -52,7 +52,7 @@ namespace imgLoader_WPF
 
                 var info = infos.Split('\n');
 
-                if (info[7] == "0") //목록에서만 제거 처리
+                if (info.Length > 7 && info[7] == "0") //목록에서만 제거 처리
                 {
                     var temp = Index.Where(t => t.Number == infoRoute.Split('\\')[^1].Split('.')[0]).ToArray();
 
