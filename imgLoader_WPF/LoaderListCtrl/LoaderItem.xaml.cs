@@ -96,10 +96,6 @@ namespace imgLoader_WPF.LoaderListCtrl
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!((IndexingService.IndexItem)this.DataContext).Show)
-            {
-                this.Visibility = Visibility.Collapsed;
-            }
         }
     }
 

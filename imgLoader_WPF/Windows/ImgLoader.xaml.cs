@@ -15,12 +15,11 @@ namespace imgLoader_WPF.Windows
     //todo: 이미 본것을 표시 (프로그램 실행 시 초기화)
     //todo: 서로 다른 작품 자동 연결
     //todo: 자체 탐색기 만들기
-    //todo: 모든 객체에 dispose
     //todo: 완전히 같은 이미지 탐색
-
+    //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
     public partial class ImgLoader
     {
-        private VoteSavingService _vsSvc;
+        private InfoSavingService _vsSvc;
         private IndexingService _idxSvc;
 
         private readonly Settings _winSetting = new();
@@ -70,7 +69,7 @@ namespace imgLoader_WPF.Windows
             this.Title = Core.Route;
             _llist = (LoaderList)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(ItemCtrl, 0), 0), 0);
 
-            _vsSvc = new VoteSavingService();
+            _vsSvc = new InfoSavingService();
             _vsSvc.Start(_llist);
 
             _idxSvc = new IndexingService(_index, this);
@@ -129,9 +128,6 @@ namespace imgLoader_WPF.Windows
         private void Button_Click_4(object sender, RoutedEventArgs e)
         {
             //LList.Children.Clear();
-            GC.Collect();
-
-            ;
         }
 
         private void TxtUrl_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -201,6 +197,7 @@ namespace imgLoader_WPF.Windows
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         {
+
         }
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)

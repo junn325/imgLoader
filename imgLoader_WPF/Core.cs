@@ -186,6 +186,56 @@ namespace imgLoader_WPF
             return null;
         }
 
+        internal static FileStream DelayStream(string route, FileMode mode, FileAccess access)
+        {
+            FileStream file = null;
+
+            var temp = false;
+            var thres = 0;
+
+            while (!temp)
+            {
+                try
+                {
+                    file = new FileStream(route, mode, access);
+                    temp = true;
+                }
+                catch
+                {
+                    if (thres++ > 100) break;
+
+                    temp = false;
+                    Debug.WriteLine($"{route} wait");
+                    Thread.Sleep(20);
+                }
+            }
+
+            if (file == null) throw new Exception("stream is null");
+
+            return file;
+        }
+
+        internal static int CountIndexOf(this string target, char find, int count)
+        {
+            for (int i = 0; i < target.Length; i++)
+            {
+                if (target[i] != find) continue;
+                if (count == 0) return i;
+                count--;
+            }
+
+            return -1;
+        }
+
+        internal static int BoolToInt(bool target)
+        {
+            return target ? 1 : 0;
+        }
+
+        internal static bool IntToBool(int target)
+        {
+            return target != 0;
+        }
         internal static void Search(Dictionary<string, string> index, string search, string route)
         {
             var searchResult = new Dictionary<string, string>(index);
