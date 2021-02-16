@@ -34,7 +34,7 @@ namespace imgLoader_WPF
 
         internal void DoIndex()
         {
-            if (!Directory.Exists(Core.Route)) return;
+            //if (!Directory.Exists(Core.Route)) return;
 
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
             foreach (var item in new ObservableCollection<IndexItem>(Index))
@@ -56,27 +56,32 @@ namespace imgLoader_WPF
                 {
                     var temp = Index.Where(t => t.Number == infoRoute.Split('\\')[^1].Split('.')[0]).ToArray();
 
-                    if (temp.Length > 0)
-                    {
-                        foreach (var item in temp)
-                        {
-                            _sender.Dispatcher.Invoke(() => Index.Remove(item));
-                        }
-                    }
+                    if (temp.Length > 0) foreach (var item in temp) _sender.Dispatcher.Invoke(() => Index.Remove(item));
 
                     continue;
                 }
 
                 if (Index.Any(idx => idx.Route == infoRoute)) continue;
 
-                _sender.Dispatcher.Invoke(() => Index.Add(new IndexItem { Title = info[1], Author = info[2], SiteName = info[0], ImgCount = info[3], Number = infoRoute.Split('\\')[^1].Split('.')[0], Route = infoRoute }));
+                _sender.Dispatcher.Invoke(() =>
+                    Index.Add(
+                    new IndexItem
+                    {
+                        Title = info[1],
+                        Author = info[2],
+                        SiteName = info[0],
+                        ImgCount = info[3],
+                        Number = infoRoute.Split('\\')[^1].Split('.')[0],
+                        Route = infoRoute
+                    }
+                    ));
             }
 
             try
             {
                 _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.ItemsSource = this.Index);
             }
-            catch (TaskCanceledException) { }
+            catch (OperationCanceledException) { }
         }
 
         internal void Start()
@@ -116,6 +121,7 @@ namespace imgLoader_WPF
 
             public string Route { get; set; }
             public bool Show = true;
+            public bool IsDownloading = false;
         }
     }
 }

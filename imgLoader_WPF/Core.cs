@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace imgLoader_WPF
@@ -177,10 +178,10 @@ namespace imgLoader_WPF
             if (url.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new EHentai(mNumber);
             if (url.Contains("exhentai.org", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("\nThis program may not possible to download from exhentai.org. Trying to download from Hitomi.la...");
-                var temp = new Hitomi(mNumber.Contains('/') ? mNumber.Split('/')[0] : mNumber);
-                //var tempp = 
-                if (temp.IsValidated()) return temp;
+                //Console.WriteLine("\nThis program may not possible to download from exhentai.org. Trying to download from Hitomi.la...");
+                //var temp = new Hitomi(mNumber.Contains('/') ? mNumber.Split('/')[0] : mNumber);
+                ////var tempp = 
+                //if (temp.IsValidated()) return temp;
             }
 
             return null;
@@ -210,9 +211,14 @@ namespace imgLoader_WPF
                 }
             }
 
-            if (file == null) throw new Exception("stream is null");
+            //if (file == null) throw new Exception("stream is null");
 
             return file;
+        }
+
+        internal static async void Wait(int msec)
+        {
+            await Task.Delay(msec).ConfigureAwait(false);
         }
 
         internal static int CountIndexOf(this string target, char find, int count)
@@ -227,15 +233,6 @@ namespace imgLoader_WPF
             return -1;
         }
 
-        internal static int BoolToInt(bool target)
-        {
-            return target ? 1 : 0;
-        }
-
-        internal static bool IntToBool(int target)
-        {
-            return target != 0;
-        }
         internal static void Search(Dictionary<string, string> index, string search, string route)
         {
             var searchResult = new Dictionary<string, string>(index);

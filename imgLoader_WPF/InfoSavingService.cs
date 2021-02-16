@@ -1,6 +1,6 @@
-﻿using System;
-using imgLoader_WPF.LoaderListCtrl;
+﻿using imgLoader_WPF.LoaderListCtrl;
 
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -13,14 +13,19 @@ namespace imgLoader_WPF
         private const int Interval = 3000;
         private bool _stop;
 
-        internal void Save(LoaderList list)
+        internal static void Save(LoaderList list)
         {
             ObservableCollection<IndexingService.IndexItem> idx = null;
 
             if (Properties.Settings.Default.NoIndex) return;
 
-            list.Dispatcher.Invoke(() => idx = ((IndexingService)list.DataContext).Index);
-            if (idx == null) return;
+            try
+            {
+                list.Dispatcher.Invoke(() => idx = ((IndexingService)list.DataContext).Index);
+            }
+            catch (OperationCanceledException) { }
+
+            //if (idx == null) return;
 
             foreach (var item in new ObservableCollection<IndexingService.IndexItem>(idx))
             {

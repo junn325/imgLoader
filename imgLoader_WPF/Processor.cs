@@ -97,7 +97,7 @@ namespace imgLoader_WPF
             {
                 var site = Core.LoadSite(url);
 
-                return site?.IsValidated() != true
+                return !site.IsValidated()
                             ? null
                             : site;
             }

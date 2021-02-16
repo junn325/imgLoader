@@ -19,7 +19,7 @@ namespace imgLoader_WPF.Windows
     //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
     public partial class ImgLoader
     {
-        private InfoSavingService _vsSvc;
+        private InfoSavingService _infSvc;
         private IndexingService _idxSvc;
 
         private readonly Settings _winSetting = new();
@@ -69,8 +69,8 @@ namespace imgLoader_WPF.Windows
             this.Title = Core.Route;
             _llist = (LoaderList)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(ItemCtrl, 0), 0), 0);
 
-            _vsSvc = new InfoSavingService();
-            _vsSvc.Start(_llist);
+            _infSvc = new InfoSavingService();
+            _infSvc.Start(_llist);
 
             _idxSvc = new IndexingService(_index, this);
             _idxSvc.Start();
@@ -138,7 +138,7 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            //_vsSvc.Stop();
+            _infSvc.Stop();
             _idxSvc.Stop();
 
             _winSetting.Close();
@@ -199,7 +199,7 @@ namespace imgLoader_WPF.Windows
         {
             _clickedItem.Show = false;
             //_idxSvc.RemoveOnlyAtIndex(_clickedItem);
-            _vsSvc.Save(_llist);
+            InfoSavingService.Save(_llist);
             _index.Remove(_clickedItem);
 
             _idxSvc.DoIndex();
