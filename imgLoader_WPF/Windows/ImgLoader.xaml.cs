@@ -3,6 +3,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -210,18 +211,19 @@ namespace imgLoader_WPF.Windows
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
-            //Core.OpenDir(_clickedItem.Route);
+            Core.OpenDir(_clickedItem.Route);
         }
-
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             var img = new BitmapImage();
+            var temp = Directory.GetFiles(Core.GetDirectoryFromFile(_clickedItem.Route), "*.*").Where(f => !f.Contains(".ilif")).ToArray();
+
             img.BeginInit();
-            //img.UriSource = new Uri(Directory.GetFiles(Core.GetDirectoryFromFile(Route), "*.*")[0]);
+            img.UriSource = new Uri(temp[0]);
             img.EndInit();
 
-            var canvas = new Canvas.Canvas { Image = img };
+            var canvas = new Canvas.Canvas { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
             canvas.Show();
 
             //IsRead = true;

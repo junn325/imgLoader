@@ -275,7 +275,7 @@ namespace imgLoader_WPF
 
         internal static string GetDirectoryFromFile(string path)
         {
-            return path.Substring(0, path.IndexOf(path.Split('\\').Last(), StringComparison.Ordinal));
+            return path.Substring(0, path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal));
         }
 
         internal static void OpenDir(string path)
