@@ -26,7 +26,6 @@ namespace imgLoader_WPF.Windows
         private readonly Settings _winSetting = new();
         private readonly ObservableCollection<IndexingService.IndexItem> _index = new();
 
-        private LoaderList _llist;
         private IndexingService.IndexItem _clickedItem;
 
         int i;
@@ -68,18 +67,12 @@ namespace imgLoader_WPF.Windows
 #endif
 
             this.Title = Core.Route;
-            _llist = (LoaderList)VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(VisualTreeHelper.GetChild(ItemCtrl, 0), 0), 0);
 
             _infSvc = new InfoSavingService();
-            _infSvc.Start(_llist);
+            _infSvc.Start(this);
 
             _idxSvc = new IndexingService(_index, this);
             _idxSvc.Start();
-
-            ItemCtrl.DataContext = _idxSvc;
-
-            //_rfshSvc = new ItemRefreshService(_index, LList, LblCount);
-            //_rfshSvc.Start();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -113,7 +106,6 @@ namespace imgLoader_WPF.Windows
 
                 if (!proc.IsValidated) return;
 
-                //LList.Dispatcher.Invoke(DispatcherPriority.Background, new Action(() => LList.Children.Insert(0, lItem)));
                 proc.Load();
             });
 
@@ -154,9 +146,6 @@ namespace imgLoader_WPF.Windows
 
         private void Test1(object sender, RoutedEventArgs e)
         {
-            //ItemCtrl.DataContext = _idxSvc;
-            ItemCtrl.ItemsSource = null;
-            ItemCtrl.ItemsSource = ((IndexingService)ItemCtrl.DataContext).Index;
         }
 
         private void Button_Click_7(object sender, RoutedEventArgs e)
@@ -199,13 +188,11 @@ namespace imgLoader_WPF.Windows
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Show = false;
-            //_idxSvc.RemoveOnlyAtIndex(_clickedItem);
-            InfoSavingService.Save(_llist);
+
+            InfoSavingService.Save(this);
             _index.Remove(_clickedItem);
 
             _idxSvc.DoIndex();
-
-            //_idxSvc.Start();
 
         }
 
@@ -226,7 +213,7 @@ namespace imgLoader_WPF.Windows
             var canvas = new Canvas.Canvas { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
             canvas.Show();
 
-            //IsRead = true;
+            _clickedItem.IsRead = true;
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

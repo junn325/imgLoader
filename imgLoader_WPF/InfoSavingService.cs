@@ -4,7 +4,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
+using System.Windows.Threading;
 
 namespace imgLoader_WPF
 {
@@ -13,21 +15,21 @@ namespace imgLoader_WPF
         private const int Interval = 3000;
         private bool _stop;
 
-        internal static void Save(LoaderList list)
+        internal static void Save(Windows.ImgLoader sender)
         {
-            ObservableCollection<IndexingService.IndexItem> idx = null;
+            IndexingService.IndexItem[] idx = null;
 
             if (Properties.Settings.Default.NoIndex) return;
 
             try
             {
-                list.Dispatcher.Invoke(() => idx = ((IndexingService)list.DataContext).Index);
+                idx = sender.ItemCtrl.ItemsSource.Cast<IndexingService.IndexItem>().ToArray();
             }
             catch (OperationCanceledException) { }
 
             //if (idx == null) return;
 
-            foreach (var item in new ObservableCollection<IndexingService.IndexItem>(idx))
+            foreach (var item in idx)
             {
                 var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.InfoExt}";
 
@@ -72,7 +74,7 @@ namespace imgLoader_WPF
             }
 
         }
-        internal void Start(LoaderList list)
+        internal void Start(Windows.ImgLoader sender)
         {
             _stop = false;
 
@@ -82,7 +84,7 @@ namespace imgLoader_WPF
                 {
                     Thread.Sleep(Interval);
 
-                    Save(list);
+                    Save(sender);
                 }
             });
 

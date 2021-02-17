@@ -1,6 +1,7 @@
 ﻿using imgLoader_WPF.Tag;
 
 using System;
+using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +11,7 @@ using System.Windows.Media;
 
 namespace imgLoader_WPF.LoaderListCtrl
 {
-    public partial class LoaderItem
+    public partial class LoaderItem : INotifyPropertyChanged
     {
         public string[] Tags
         {
@@ -49,9 +50,11 @@ namespace imgLoader_WPF.LoaderListCtrl
             set
             {
                 _isRead = value;
+                NotifyPropertyChanged("IsRead");
                 Background = IsRead ? Brushes.LightGray : Brushes.White;
             }
         }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private bool _isRead;
         private string[] _tags;
@@ -62,6 +65,11 @@ namespace imgLoader_WPF.LoaderListCtrl
         {
             InitializeComponent();
         }
+        private void NotifyPropertyChanged(string property)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+
         private void UpVote_Click(object sender, RoutedEventArgs e)
         {
             ((IndexingService.IndexItem)this.DataContext).Vote++;
@@ -106,6 +114,20 @@ namespace imgLoader_WPF.LoaderListCtrl
             if ((double)value < 50) return 0;
 
             return (double)value - 50;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return null;
+        }
+    }
+
+    [ValueConversion(typeof(bool), typeof(Brush))]
+    public class IsReadConvert : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return (bool)value ? Brushes.LightGray : Brushes.White; ;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

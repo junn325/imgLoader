@@ -6,7 +6,15 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:loaderListCtrl="clr-namespace:imgLoader_WPF.LoaderListCtrl"
              mc:Ignorable="d"
-             Background="White" Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged" Loaded="UserControl_Loaded">
+             Height="60" MinWidth="515" SizeChanged="UserControl_SizeChanged" Loaded="UserControl_Loaded">
+    <UserControl.Resources>
+        <loaderListCtrl:IsReadConvert x:Key="IsReadConverter"/>
+    </UserControl.Resources>
+
+    <UserControl.Background>
+        <Binding Path="IsRead" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource IsReadConverter}"/>
+    </UserControl.Background>
+
     <Border BorderBrush="Black" BorderThickness="0.5">
         <Grid x:Name="Grid">
             <Grid.RowDefinitions>
