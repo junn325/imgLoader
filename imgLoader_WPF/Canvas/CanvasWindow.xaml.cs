@@ -70,9 +70,12 @@ namespace imgLoader_WPF.Canvas
             }
         }
 
-        private void Window_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        private void Window_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
-            ;
+            if (e.MiddleButton == System.Windows.Input.MouseButtonState.Pressed)
+            {
+                ImgContainer.
+            }
         }
     }
 }
