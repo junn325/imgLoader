@@ -198,7 +198,7 @@ namespace imgLoader_WPF.Windows
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
-            Core.OpenDir(_clickedItem.Route);
+            Core.OpenDir(Core.GetDirectoryFromFile(_clickedItem.Route));
         }
 
         private void Open_Click(object sender, RoutedEventArgs e)
@@ -214,6 +214,7 @@ namespace imgLoader_WPF.Windows
             canvas.Show();
 
             _clickedItem.IsRead = true;
+            _clickedItem.shownChang.Invoke();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

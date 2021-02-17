@@ -111,6 +111,8 @@ namespace imgLoader_WPF
 
         internal class IndexItem
         {
+            public delegate void ShownChange();
+
             public string Title { get; set; }
             public string Author { get; set; }
             public string SiteName { get; set; }
@@ -122,6 +124,8 @@ namespace imgLoader_WPF
             public string Route { get; set; }
             public bool Show = true;
             public bool IsDownloading = false;
+
+            public ShownChange shownChang;
         }
     }
 }
