@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:imgLoader_WPF.Canvas"
         mc:Ignorable="d"
-        Title="Canvas" Height="450" Width="800" PreviewKeyDown="Window_PreviewKeyDown">
+        Title="Canvas" Height="450" Width="800" PreviewKeyDown="Window_PreviewKeyDown" MouseWheel="Window_MouseWheel">
     <Grid>
         <Image x:Name="ImgContainer" HorizontalAlignment="Stretch"  VerticalAlignment="Stretch" Source="C:\Users\junn6\Desktop\i\크기표시용 빗금.png" Stretch="Uniform"/>
     </Grid>

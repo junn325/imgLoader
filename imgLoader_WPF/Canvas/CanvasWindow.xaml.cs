@@ -69,5 +69,10 @@ namespace imgLoader_WPF.Canvas
                 ImgContainer.Source = _imgHandler;
             }
         }
+
+        private void Window_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            ;
+        }
     }
 }
