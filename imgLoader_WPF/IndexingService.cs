@@ -122,10 +122,12 @@ namespace imgLoader_WPF
             public int Vote { get; set; }
             public bool IsRead { get; set; }
             public string Route { get; set; }
+
+            public bool Selected = false;
             public bool Show = true;
             public bool IsDownloading = false;
 
-            public ShownChange shownChang;
+            public ShownChange ShownChang;
         }
     }
 }

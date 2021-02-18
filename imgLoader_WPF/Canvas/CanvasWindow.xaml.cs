@@ -9,7 +9,7 @@ namespace imgLoader_WPF.Canvas
     /// <summary>
     /// Interaction logic for Canvas.xaml
     /// </summary>
-    public partial class Canvas : Window
+    public partial class CanvasWindow : Window
     {
         public ImageSource Image
         {
@@ -21,7 +21,7 @@ namespace imgLoader_WPF.Canvas
         private int _index = 0;
         private BitmapImage _imgHandler;
 
-        public Canvas()
+        public CanvasWindow()
         {
             InitializeComponent();
         }
@@ -70,11 +70,19 @@ namespace imgLoader_WPF.Canvas
             }
         }
 
+        private const byte Delta = 200;
         private void Window_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             if (e.MiddleButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                ImgContainer.
+                if (e.Delta > 0)
+                {
+                    ImgContainer.Arrange(new Rect(0, 0, ImgContainer.ActualWidth + Delta, ImgContainer.ActualHeight + Delta));
+                }
+                else
+                {
+                    ImgContainer.Arrange(new Rect(0, 0, ImgContainer.ActualWidth - Delta, ImgContainer.ActualHeight - Delta));
+                }
             }
         }
     }

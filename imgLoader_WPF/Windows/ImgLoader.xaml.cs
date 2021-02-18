@@ -18,6 +18,8 @@ namespace imgLoader_WPF.Windows
     //todo: 자체 탐색기 만들기
     //todo: 완전히 같은 이미지 탐색
     //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
+    //todo: 페이지네이션
+
     public partial class ImgLoader
     {
         private InfoSavingService _infSvc;
@@ -210,11 +212,11 @@ namespace imgLoader_WPF.Windows
             img.UriSource = new Uri(temp[0]);
             img.EndInit();
 
-            var canvas = new Canvas.Canvas { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
+            var canvas = new Canvas.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
             canvas.Show();
 
             _clickedItem.IsRead = true;
-            _clickedItem.shownChang.Invoke();
+            _clickedItem.ShownChang.Invoke();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

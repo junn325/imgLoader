@@ -90,7 +90,7 @@ namespace imgLoader_WPF.LoaderListCtrl
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ((IndexingService.IndexItem)this.DataContext).shownChang = ShownChanged;
+            ((IndexingService.IndexItem)this.DataContext).ShownChang = ShownChanged;
         }
     }
 
