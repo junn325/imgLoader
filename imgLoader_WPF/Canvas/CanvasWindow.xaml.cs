@@ -11,9 +11,9 @@ namespace imgLoader_WPF.Canvas
     /// </summary>
     public partial class CanvasWindow : Window
     {
-        public ImageSource Image
+        public BitmapImage Image
         {
-            get => ImgContainer.Source;
+            get => (BitmapImage)ImgContainer.Source;
             set => ImgContainer.Source = value;
         }
 
@@ -77,13 +77,19 @@ namespace imgLoader_WPF.Canvas
             {
                 if (e.Delta > 0)
                 {
-                    ImgContainer.Arrange(new Rect(0, 0, ImgContainer.ActualWidth + Delta, ImgContainer.ActualHeight + Delta));
+                    var temp = ImgContainer.PointToScreen(new Point(0, 0));
+                    ImgContainer.Arrange(new Rect(temp.X, temp.Y, ImgContainer.ActualWidth + Delta, ImgContainer.ActualHeight + Delta));
                 }
                 else
                 {
                     ImgContainer.Arrange(new Rect(0, 0, ImgContainer.ActualWidth - Delta, ImgContainer.ActualHeight - Delta));
                 }
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _imgHandler = Image;
         }
     }
 }
