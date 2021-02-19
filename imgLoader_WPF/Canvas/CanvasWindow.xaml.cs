@@ -1,24 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
 using System.Windows;
-using System.Windows.Media;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
-using System;
 
 namespace imgLoader_WPF.Canvas
 {
     /// <summary>
     /// Interaction logic for Canvas.xaml
     /// </summary>
-    public partial class CanvasWindow : Window
+    public partial class CanvasWindow
     {
         public BitmapImage Image
         {
-            get => (BitmapImage)ImgContainer.Source;
-            set => ImgContainer.Source = value;
+            get => (BitmapImage)Container.Source;
+            set => Container.Source = value;
         }
 
         public string[] FileList;
-        private int _index = 0;
+        private int _index;
         private BitmapImage _imgHandler;
 
         public CanvasWindow()
@@ -54,35 +53,56 @@ namespace imgLoader_WPF.Canvas
             return FileList[_index];
         }
 
-        private void Window_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Left)
+            if (e.Key == Key.Left)
             {
                 var temp = GetNextPath(true);
                 _imgHandler = new BitmapImage(new Uri(temp));
-                ImgContainer.Source = _imgHandler;
+                Container.Source = _imgHandler;
             }
-            else if (e.Key == System.Windows.Input.Key.Right)
+            else if (e.Key == Key.Right)
             {
                 var temp = GetNextPath(false);
                 _imgHandler = new BitmapImage(new Uri(temp));
-                ImgContainer.Source = _imgHandler;
+                Container.Source = _imgHandler;
             }
         }
 
         private const byte Delta = 200;
-        private void Window_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.MiddleButton == System.Windows.Input.MouseButtonState.Pressed)
+            if (e.MiddleButton == MouseButtonState.Pressed)
             {
+                var temp = Mouse.GetPosition(Container);
+                var thisPos = Container.TransformToAncestor(this).Transform(new Point(0, 0));
+
                 if (e.Delta > 0)
                 {
-                    var temp = ImgContainer.PointToScreen(new Point(0, 0));
-                    ImgContainer.Arrange(new Rect(temp.X, temp.Y, ImgContainer.ActualWidth + Delta, ImgContainer.ActualHeight + Delta));
+                    var xDelta = Delta * (Math.Abs(temp.X - Container.ActualWidth / 2) / (Container.ActualWidth / 2));
+                    if (temp.X - Container.ActualWidth / 2 < 0) xDelta *= -1;
+
+                    var yDelta = Delta * (Math.Abs(temp.Y - Container.ActualHeight / 2) / (Container.ActualHeight / 2));
+                    if (temp.Y - Container.ActualHeight / 2 / 2 < 0) yDelta *= -1;
+
+                    
+                    Container.Arrange(
+                        new Rect(
+                            thisPos.X - xDelta,
+                            thisPos.Y - yDelta,
+                            Container.ActualWidth + Delta,
+                            Container.ActualHeight + Delta
+                            ));
                 }
                 else
-                {
-                    ImgContainer.Arrange(new Rect(0, 0, ImgContainer.ActualWidth - Delta, ImgContainer.ActualHeight - Delta));
+                { 
+                    Container.Arrange(
+                        new Rect(
+                            thisPos.X + (Delta * (Math.Abs(temp.X - (Container.ActualWidth / 2)) / (Container.ActualWidth / 2))),
+                            thisPos.Y + (Delta * (Math.Abs(temp.Y - (Container.ActualHeight / 2)) / (Container.ActualHeight / 2))),
+                            Container.ActualWidth - Delta,
+                            Container.ActualHeight - Delta
+                        ));
                 }
             }
         }

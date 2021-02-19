@@ -8,7 +8,7 @@
         Title="Canvas" Height="450" Width="800" PreviewKeyDown="Window_PreviewKeyDown" PreviewMouseWheel="Window_PreviewMouseWheel" Loaded="Window_Loaded">
     <Grid>
         <Grid>
-            <Image x:Name="ImgContainer" HorizontalAlignment="Stretch" Source="C:\users\junn6\desktop\i\크기표시용 빗금.png"  VerticalAlignment="Stretch" Stretch="Uniform"/>
+            <Image x:Name="Container" HorizontalAlignment="Stretch" Source="C:\users\junn6\desktop\i\크기표시용 빗금.png"  VerticalAlignment="Stretch" Stretch="Uniform"/>
         </Grid>
     </Grid>
 </Window>
