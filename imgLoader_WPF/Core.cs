@@ -62,6 +62,7 @@ namespace imgLoader_WPF
                 sb.Clear();
                 sb.Append('[').Append(DateTime.Now.ToString("HH:mm:ss")).Append(']').Append(content);
                 sw.WriteLine(sb.ToString());
+                sw.Close();
             }).Start();
         }
 
@@ -84,6 +85,7 @@ namespace imgLoader_WPF
                         : info[i]
                 );
             }
+            sw.Close();
 
             File.SetAttributes(infoRoute, FileAttributes.Hidden);
         }

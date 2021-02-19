@@ -212,7 +212,7 @@ namespace imgLoader_WPF.Windows
             img.UriSource = new Uri(temp[0]);
             img.EndInit();
 
-            var canvas = new Canvas.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
+            var canvas = new CanvasWindow.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
             canvas.Show();
 
             _clickedItem.IsRead = true;

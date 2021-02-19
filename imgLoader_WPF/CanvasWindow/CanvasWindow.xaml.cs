@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace imgLoader_WPF.Canvas
+namespace imgLoader_WPF.CanvasWindow
 {
     /// <summary>
     /// Interaction logic for Canvas.xaml
@@ -69,7 +71,8 @@ namespace imgLoader_WPF.Canvas
             }
         }
 
-        private const byte Delta = 200;
+        private const byte Delta = 50;
+        private Rect relRect;
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.MiddleButton == MouseButtonState.Pressed)
@@ -77,32 +80,43 @@ namespace imgLoader_WPF.Canvas
                 var temp = Mouse.GetPosition(Container);
                 var thisPos = Container.TransformToAncestor(this).Transform(new Point(0, 0));
 
+                if (relRect.Width == 0 || relRect.Height == 0) relRect = new Rect(thisPos.X, thisPos.Y, Container.ActualWidth, Container.ActualHeight);
+
+                var xRightPct = temp.X / Container.ActualWidth;
+                var xLeftPct = (Container.ActualWidth - temp.X) / Container.ActualWidth;
+                var yTopPct = temp.Y / Container.ActualHeight;
+                var yBottPct = (Container.ActualHeight - temp.Y) / Container.ActualHeight;
+
+                //var rect = new Rectangle
+                //{
+                //    Width = relRect.Width,
+                //    Height = relRect.Height,
+                //    Fill = Brushes.Green,
+                //    Stroke = Brushes.Red,
+                //    StrokeThickness = 2
+                //};
+
+                //Canvas1.Children.Add(rect);
+
                 if (e.Delta > 0)
                 {
-                    var xDelta = Delta * (Math.Abs(temp.X - Container.ActualWidth / 2) / (Container.ActualWidth / 2));
-                    if (temp.X - Container.ActualWidth / 2 < 0) xDelta *= -1;
+                    relRect.X -= Delta * xRightPct;
+                    relRect.Y -= Delta * yTopPct;
+                    relRect.Width += Delta * xLeftPct;
+                    relRect.Height += Delta * yBottPct;
 
-                    var yDelta = Delta * (Math.Abs(temp.Y - Container.ActualHeight / 2) / (Container.ActualHeight / 2));
-                    if (temp.Y - Container.ActualHeight / 2 / 2 < 0) yDelta *= -1;
-
-                    
-                    Container.Arrange(
-                        new Rect(
-                            thisPos.X - xDelta,
-                            thisPos.Y - yDelta,
-                            Container.ActualWidth + Delta,
-                            Container.ActualHeight + Delta
-                            ));
+                    Container.Stretch = Stretch.Uniform;
+                    Container.Arrange(relRect);
                 }
                 else
-                { 
-                    Container.Arrange(
-                        new Rect(
-                            thisPos.X + (Delta * (Math.Abs(temp.X - (Container.ActualWidth / 2)) / (Container.ActualWidth / 2))),
-                            thisPos.Y + (Delta * (Math.Abs(temp.Y - (Container.ActualHeight / 2)) / (Container.ActualHeight / 2))),
-                            Container.ActualWidth - Delta,
-                            Container.ActualHeight - Delta
-                        ));
+                {
+                    relRect.X += Delta * xRightPct;
+                    relRect.Y += Delta * yTopPct;
+                    relRect.Width -= Delta * xLeftPct;
+                    relRect.Height -= Delta * yBottPct;
+
+                    Container.RenderTransform = new ScaleTransform(-Delta * xLeftPct, -Delta * yBottPct, Container.ActualWidth / 2, Container.ActualHeight / 2);
+                    //Canvas.SetLeft(Container, relRect.X);
                 }
             }
         }
