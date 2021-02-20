@@ -97,7 +97,8 @@ namespace imgLoader_WPF
                         SiteName = info[0],
                         ImgCount = info[3],
                         Number = infoRoute.Split('\\')[^1].Split('.')[0],
-                        Route = infoRoute
+                        Route = infoRoute,
+                        Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';')
                     }
                     ));
                 sb.Clear();

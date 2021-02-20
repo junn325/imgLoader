@@ -30,7 +30,7 @@ namespace imgLoader_WPF.Windows
         private readonly ObservableCollection<IndexingService.IndexItem> _index = new();
 
         private IndexingService.IndexItem _clickedItem;
-        private StringBuilder sb = new();
+        private readonly StringBuilder sb = new();
 
         int i;
         int j;
