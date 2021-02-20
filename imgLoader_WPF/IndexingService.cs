@@ -29,13 +29,12 @@ namespace imgLoader_WPF
             Index = index;
             _sender = sender;
 
-            DoIndex();
+            DoIndex(new StringBuilder());
         }
 
-        internal void DoIndex()
+        internal void DoIndex(StringBuilder sb)
         {
             //if (!Directory.Exists(Core.Route)) return;
-
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
             foreach (var item in new ObservableCollection<IndexItem>(Index))
             {
@@ -63,18 +62,45 @@ namespace imgLoader_WPF
 
                 if (Index.Any(idx => idx.Route == infoRoute)) continue;
 
+                if (info[2].Contains('|'))
+                {
+                    foreach (var s in info[2].Split('|')[0].Split(';'))
+                    {
+                        if (string.IsNullOrWhiteSpace(s)) continue;
+                        sb.Append(s).Append(", ");
+                    }
+                    sb.Remove(sb.Length - 2, 2);
+
+                    if (info[2].Split('|')[1].Contains(';'))
+                    {
+                        sb.Append(" (");
+                        foreach (var s in info[2].Split('|')[1].Split(';'))
+                        {
+                            if (string.IsNullOrWhiteSpace(s)) continue;
+                            sb.Append(s).Append(", ");
+                        }
+                        sb.Remove(sb.Length - 2, 2);
+                        sb.Append(')');
+                    }
+                }
+                else
+                {
+                    sb.Append(info[2]);
+                }
+
                 _sender.Dispatcher.Invoke(() =>
                     Index.Add(
                     new IndexItem
                     {
                         Title = info[1],
-                        Author = info[2],
+                        Author = sb.ToString(),
                         SiteName = info[0],
                         ImgCount = info[3],
                         Number = infoRoute.Split('\\')[^1].Split('.')[0],
                         Route = infoRoute
                     }
                     ));
+                sb.Clear();
             }
 
             try
@@ -96,7 +122,8 @@ namespace imgLoader_WPF
 
                     if (Properties.Settings.Default.NoIndex) continue;
 
-                    DoIndex();
+                    var sb = new StringBuilder();
+                    DoIndex(sb);
                 }
             });
             _service.Name = "IdxSvc";

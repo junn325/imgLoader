@@ -4,6 +4,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,6 +30,7 @@ namespace imgLoader_WPF.Windows
         private readonly ObservableCollection<IndexingService.IndexItem> _index = new();
 
         private IndexingService.IndexItem _clickedItem;
+        private StringBuilder sb = new();
 
         int i;
         int j;
@@ -194,8 +196,7 @@ namespace imgLoader_WPF.Windows
             InfoSavingService.Save(this);
             _index.Remove(_clickedItem);
 
-            _idxSvc.DoIndex();
-
+            _idxSvc.DoIndex(sb);
         }
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
