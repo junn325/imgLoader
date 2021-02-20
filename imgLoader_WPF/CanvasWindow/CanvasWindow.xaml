@@ -7,7 +7,7 @@
         Title="Canvas" Height="450" Width="800" PreviewKeyDown="Window_PreviewKeyDown" PreviewMouseWheel="Window_PreviewMouseWheel" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" MouseUp="Window_MouseUp" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick">
     <Grid>
         <Grid x:Name="Grid">
-            <Button Content="Button" HorizontalAlignment="Left" Height="60" Margin="400,174,0,0" VerticalAlignment="Top" Width="35" Click="Button_Click"/>
+            <Button Content="Button" HorizontalAlignment="Left" Height="60" Margin="45,44,0,0" VerticalAlignment="Top" Width="35" Click="Button_Click"/>
             <!--<Canvas x:Name="Canvas1"/>-->
         </Grid>
     </Grid>

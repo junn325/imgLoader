@@ -47,7 +47,7 @@ namespace imgLoader_WPF
             foreach (var infoRoute in infoFiles)
             {
                 using var sr = new StreamReader(Core.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
-                var infos = sr.ReadToEnd();
+                var infos = sr.ReadToEnd().Replace("\r\n", "\n");
                 sr.Close();
 
                 var info = infos.Split('\n');

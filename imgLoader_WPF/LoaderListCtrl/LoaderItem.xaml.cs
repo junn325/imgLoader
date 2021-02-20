@@ -1,6 +1,4 @@
-﻿using imgLoader_WPF.Tag;
-
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,6 +24,7 @@ namespace imgLoader_WPF.LoaderListCtrl
             TitleBlock.Width = this.ActualWidth - NumBlock.ActualWidth - 10;
             AuthorBlock.Width = this.ActualWidth - VoteGrid.ActualWidth - 10;
 
+            if (Tags == null) return;
             foreach (var tag in Tags)
             {
                 if (string.IsNullOrEmpty(tag)) return;
@@ -79,7 +78,6 @@ namespace imgLoader_WPF.LoaderListCtrl
             TitleBlock.MaxWidth = ActualWidth - NumBlock.ActualWidth - 15;
             AuthorBlock.MaxWidth = ActualWidth - 10;
         }
-
     }
 
     public class ValConvert : IValueConverter

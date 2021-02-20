@@ -66,70 +66,116 @@ namespace imgLoader_WPF.CanvasWindow
 
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Left)
+            switch (e.Key)
             {
-                var temp = GetNextPath(true);
-                _img.Source = new BitmapImage(new Uri(temp));
-                Title = temp.Split('\\')[^1];
-            }
-            else if (e.Key == Key.Right)
-            {
-                var temp = GetNextPath(false);
-                _img.Source = new BitmapImage(new Uri(temp));
-                Title = temp.Split('\\')[^1];
-            }
+                case Key.Left:
+                    {
+                        var temp = GetNextPath(true);
+                        _img.Source = new BitmapImage(new Uri(temp));
+                        Title = temp.Split('\\')[^1];
 
+                        _img.Arrange(_oriPosition);
+                        _min = 0;
+                        break;
+                    }
+                case Key.Right:
+                    {
+                        var temp = GetNextPath(false);
+                        _img.Source = new BitmapImage(new Uri(temp));
+                        Title = temp.Split('\\')[^1];
+
+                        _img.Arrange(_oriPosition);
+                        _min = 0;
+                        break;
+                    }
+            }
         }
 
-        private const byte Scale = 50;
+        private const byte Scale = 15; //percent
+        private int _min;
+        private int _thres = 5;
+
         private Rect _relRect;
 
         private bool _isMouseDown = false;
         private Point _oriPoint;
+
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.MiddleButton != MouseButtonState.Pressed) return;
-
-            var mousePos = Mouse.GetPosition(_img);
-            var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
-
-            if (_relRect.Width == 0 || _relRect.Height == 0) _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
-
-            var xRightRatio = mousePos.X / _img.ActualWidth;
-            var xLeftRatio = (_img.ActualWidth - mousePos.X) / _img.ActualWidth;
-            var yTopRatio = mousePos.Y / _img.ActualHeight;
-            var yBotRatio = (_img.ActualHeight - mousePos.Y) / _img.ActualHeight;
-
-            //var rect = new Rectangle
-            //{
-            //    Width = relRect.Width,
-            //    Height = relRect.Height,
-            //    Fill = Brushes.Green,
-            //    Stroke = Brushes.Red,
-            //    StrokeThickness = 2
-            //};
-
-            //Canvas1.Children.Add(rect);
-
-            if (e.Delta > 0)
+            if (e.MiddleButton == MouseButtonState.Pressed)
             {
-                _relRect.X -= Scale * xRightRatio;
-                _relRect.Y -= Scale * yTopRatio;
-                _relRect.Width += Scale * xLeftRatio;
-                _relRect.Height += Scale * yBotRatio;
+                _thres = 5;
 
-                _img.Stretch = Stretch.Uniform;
-                _img.Arrange(_relRect);
+                var mousePos = Mouse.GetPosition(_img);
+                var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
+
+                if (_relRect.Width == 0 || _relRect.Height == 0) _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
+
+                var xRightRatio = mousePos.X / _img.ActualWidth;
+                var xLeftRatio = (_img.ActualWidth - mousePos.X) / _img.ActualWidth;
+                var yTopRatio = mousePos.Y / _img.ActualHeight;
+                var yBotRatio = (_img.ActualHeight - mousePos.Y) / _img.ActualHeight;
+
+                //var rect = new Rectangle
+                //{
+                //    Width = relRect.Width,
+                //    Height = relRect.Height,
+                //    Fill = Brushes.Green,
+                //    Stroke = Brushes.Red,
+                //    StrokeThickness = 2
+                //};
+
+                //Canvas1.Children.Add(rect);
+
+                if (e.Delta > 0)
+                {
+                    _relRect.Width *= (Scale + 100) / 100d;
+                    _relRect.Height *= (Scale + 100) / 100d;
+                    _relRect.X = (ActualWidth / 2) - (_relRect.Width / 2);
+                    _relRect.Y = (ActualHeight / 2) - (_relRect.Height / 2);
+
+                    _min++;
+
+                    _img.Stretch = Stretch.Uniform;
+                    _img.Arrange(_relRect);
+                }
+                else
+                {
+                    if (_min <= 0) return;
+                    _relRect.Width /= (Scale + 100) / 100d;
+                    _relRect.Height /= (Scale + 100) / 100d;
+                    _relRect.X = (ActualWidth / 2) - (_relRect.Width / 2);
+                    _relRect.Y = (ActualHeight / 2) - (_relRect.Height / 2);
+
+                    _min--;
+
+                    _img.Arrange(_relRect);
+                    _img.Stretch = Stretch.Uniform;
+                    //Canvas.SetLeft(Container, relRect.X);
+                }
             }
             else
             {
-                _relRect.X += Scale * xRightRatio;
-                _relRect.Y += Scale * yTopRatio;
-                _relRect.Width -= Scale * xLeftRatio;
-                _relRect.Height -= Scale * yBotRatio;
+                _thres--;
+                if (_thres > 0) return;
+                if (e.Delta > 0)
+                {
+                    var temp = GetNextPath(true);
+                    _img.Source = new BitmapImage(new Uri(temp));
+                    Title = temp.Split('\\')[^1];
 
-                _img.RenderTransform = new ScaleTransform(1, 1, Scale, Scale);
-                //Canvas.SetLeft(Container, relRect.X);
+                    _img.Arrange(_oriPosition);
+                    _min = 0;
+                }
+                else
+                {
+                    var temp = GetNextPath(false);
+                    _img.Source = new BitmapImage(new Uri(temp));
+                    Title = temp.Split('\\')[^1];
+
+                    _img.Arrange(_oriPosition);
+                    _min = 0;
+                }
             }
         }
 
@@ -178,6 +224,7 @@ namespace imgLoader_WPF.CanvasWindow
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             _img.Arrange(_oriPosition);
+            _min = 0;
         }
     }
 }
