@@ -12,38 +12,7 @@ namespace imgLoader_WPF.LoaderListCtrl
 {
     public partial class LoaderItem
     {
-        public string[] Tags
-        {
-            get => _tags;
-            set
-            {
-                _tags = value;
-
-                if (value == null)
-                {
-                    TagPanel.Children.Clear();
-                    return;
-                }
-
-                foreach (var tag in value)
-                {
-                    if (string.IsNullOrEmpty(tag)) return;
-                    TagPanel.Children.Add(new TagItem
-                    {
-                        TagName = tag.Contains(':') ? tag.Split(':')[1] : tag,
-
-                        Sex =
-                            tag.Contains(':')
-                                ? string.Equals(tag.Split(':')[0], "female", StringComparison.OrdinalIgnoreCase)
-                                    ? TagItem.SColor.Female
-                                    : TagItem.SColor.Male
-                                : TagItem.SColor.None
-                    });
-                }
-            }
-        }
-        
-        private string[] _tags;
+        public string[] Tags;
 
         //private readonly Stopwatch sw = new Stopwatch();
 
@@ -51,6 +20,29 @@ namespace imgLoader_WPF.LoaderListCtrl
         {
             InitializeComponent();
         }
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((IndexingService.IndexItem)this.DataContext).ShownChang = ShownChanged;
+            TitleBlock.Width = this.ActualWidth - NumBlock.ActualWidth - 10;
+            AuthorBlock.Width = this.ActualWidth - VoteGrid.ActualWidth - 10;
+
+            foreach (var tag in Tags)
+            {
+                if (string.IsNullOrEmpty(tag)) return;
+                TagPanel.Children.Add(new TextBlock
+                {
+                    Text = tag.Contains(':') ? tag.Split(':')[1] : tag,
+
+                    Background =
+                        tag.Contains(':')
+                            ? string.Equals(tag.Split(':')[0], "female", StringComparison.OrdinalIgnoreCase)
+                                ? (Brush)new BrushConverter().ConvertFrom("#E86441")
+                                : (Brush)new BrushConverter().ConvertFrom("#00A2FF")
+                            : (Brush)new BrushConverter().ConvertFrom("#838587")
+                });
+            }
+        }
+
         private void ShownChanged()
         {
             Background = ((IndexingService.IndexItem)this.DataContext).IsRead ? Brushes.LightGray : Brushes.White;
@@ -88,10 +80,6 @@ namespace imgLoader_WPF.LoaderListCtrl
             AuthorBlock.MaxWidth = ActualWidth - 10;
         }
 
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            ((IndexingService.IndexItem)this.DataContext).ShownChang = ShownChanged;
-        }
     }
 
     public class ValConvert : IValueConverter

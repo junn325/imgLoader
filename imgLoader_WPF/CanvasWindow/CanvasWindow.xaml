@@ -6,10 +6,7 @@
         mc:Ignorable="d"
         Title="Canvas" Height="450" Width="800" PreviewKeyDown="Window_PreviewKeyDown" PreviewMouseWheel="Window_PreviewMouseWheel" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" MouseUp="Window_MouseUp" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick">
     <Grid>
-        <Grid>
-            <Border x:Name="Bord" BorderThickness="2" BorderBrush="Black">
-                <Image x:Name="Container" Source="C:\users\junn6\desktop\i\크기표시용 빗금.png" RenderOptions.BitmapScalingMode="Fant" Stretch="Uniform"/>
-            </Border>
+        <Grid x:Name="Grid">
             <Button Content="Button" HorizontalAlignment="Left" Height="60" Margin="400,174,0,0" VerticalAlignment="Top" Width="35" Click="Button_Click"/>
             <!--<Canvas x:Name="Canvas1"/>-->
         </Grid>
