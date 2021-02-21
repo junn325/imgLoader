@@ -18,6 +18,7 @@ namespace imgLoader_WPF
         private Task[] _tasks;
 
         private bool _stop;
+        private bool _pause;
         private readonly LoaderItem _item;
 
         internal string Route { get; }
@@ -247,7 +248,16 @@ namespace imgLoader_WPF
             _failed.Clear();
 
             var i = 0;
-            foreach (var (key, value) in urlList) _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(value, path, key));
+            foreach (var (key, value) in urlList)
+            {
+                if (_stop) break;
+
+                while (_pause)
+                {
+                    Task.Delay(500).Wait();  //일시정지
+                }
+                _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(value, path, key));
+            }
         }
 
         private void ThrDownload(string uri, string path, string fileName)
