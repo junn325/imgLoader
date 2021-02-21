@@ -7,23 +7,18 @@ namespace imgLoader_WPF
 {
     public static class StringCipher
     {
-        private static readonly byte[] salt = new byte[] { 0x49, 0x76, 0x61, 0x6e, 0x20, 0x4d, 0x65, 0x64, 0x76, 0x65, 0x64, 0x65, 0x76};
+        private static readonly byte[] salt = new byte[] { 0x52, 0x02, 0x8a, 0x76, 0x75, 0x4d, 0x7c, 0x23, 0x65, 0xd4, 0x1e, 0x5d, 0x63};
         public static string Encrypt(string clearText)
         {
-            var clearBytes = Encoding.Unicode.GetBytes(clearText);
-
-            using var encryptor = Aes.Create();
-
+            var bytes = Encoding.Unicode.GetBytes(clearText);
             var pdb = new Rfc2898DeriveBytes(Core.ProjectName, salt);
+            using var encryptor = Aes.Create();
 
             encryptor.Key = pdb.GetBytes(32);
             encryptor.IV = pdb.GetBytes(16);
 
             using var ms = new MemoryStream();
-            using (var cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write))
-            {
-                cs.Write(clearBytes, 0, clearBytes.Length);
-            }
+            using (var cs = new CryptoStream(ms, encryptor.CreateEncryptor(), CryptoStreamMode.Write)) cs.Write(bytes, 0, bytes.Length);
 
             return Convert.ToBase64String(ms.ToArray());
         }
@@ -31,17 +26,13 @@ namespace imgLoader_WPF
         {
             var bytes = Convert.FromBase64String(text.Replace(" ", "+"));
             var pdb = new Rfc2898DeriveBytes(Core.ProjectName, salt);
-
             using var encrypt = Aes.Create();
 
             encrypt.Key = pdb.GetBytes(32);
             encrypt.IV = pdb.GetBytes(16);
 
             using var ms = new MemoryStream();
-            using (var cs = new CryptoStream(ms, encrypt.CreateDecryptor(), CryptoStreamMode.Write))
-            {
-                cs.Write(bytes, 0, bytes.Length);
-            }
+            using (var cs = new CryptoStream(ms, encrypt.CreateDecryptor(), CryptoStreamMode.Write)) cs.Write(bytes, 0, bytes.Length);
 
             return Encoding.Unicode.GetString(ms.ToArray());
         }
