@@ -8,7 +8,7 @@ namespace TestSite
         public static void Main(string[] args)
         {
             int a = 5;
-            int b = 12;
+            int b = 20;
 
             Console.WriteLine($"{a}+{b}의 값은: {Sum(a, b)} 입니다.");
             Console.WriteLine($"{a}-{b}의 값은: {Minus(a, b)} 입니다.");

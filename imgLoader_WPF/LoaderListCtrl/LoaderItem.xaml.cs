@@ -21,8 +21,6 @@ namespace imgLoader_WPF.LoaderListCtrl
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             ((IndexingService.IndexItem)this.DataContext).ShownChang = ShownChanged;
-            TitleBlock.Width = this.ActualWidth - NumBlock.ActualWidth - 10;
-            AuthorBlock.Width = this.ActualWidth - VoteGrid.ActualWidth - 10;
 
             if (Tags == null) return;
             foreach (var tag in Tags)
@@ -75,8 +73,14 @@ namespace imgLoader_WPF.LoaderListCtrl
         }
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            TitleBlock.MaxWidth = ActualWidth - NumBlock.ActualWidth - 15;
-            AuthorBlock.MaxWidth = ActualWidth - 10;
+            TitleBlock.Width = this.ActualWidth - NumBlock.ActualWidth - 10;
+            AuthorBlock.Width = this.ActualWidth - VoteGrid.ActualWidth - 10;
+        }
+
+        private void NumBlock_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            TitleBlock.Width = this.ActualWidth - NumBlock.ActualWidth - 10;
+            AuthorBlock.Width = this.ActualWidth - VoteGrid.ActualWidth - 10;
         }
     }
 

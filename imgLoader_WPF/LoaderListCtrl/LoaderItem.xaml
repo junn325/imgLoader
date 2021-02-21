@@ -23,7 +23,6 @@
             <Grid.Resources>
                 <ImageBrush x:Key="Down" ImageSource="Icon\Dwn.png" Stretch="Fill"/>
                 <ImageBrush x:Key="Up" ImageSource="Icon\Up.png" Stretch="Fill"/>
-
                 <ControlTemplate x:Key="BtnUp" TargetType="Button">
                     <Border Name="border" BorderThickness="0" 
                             Background="{StaticResource Up}">
@@ -39,7 +38,6 @@
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
-
                 <ControlTemplate x:Key="BtnDown" TargetType="Button">
                     <Border Name="border" BorderThickness="0" 
                             Background="{StaticResource Down}">
@@ -55,19 +53,17 @@
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
-
+                
+                <loaderListCtrl:ValConvert x:Key="ValConverter"/>
             </Grid.Resources>
 
             <TextBlock x:Name="TitleBlock" Text="{Binding Title}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0" Grid.ColumnSpan="3" TextTrimming="WordEllipsis" />
-            <TextBlock x:Name="NumBlock" Text="{Binding Number}" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="NumBlock" Text="{Binding Number}" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis" SizeChanged="NumBlock_SizeChanged"/>
             <TextBlock x:Name="AuthorBlock" Text="{Binding Author}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="SiteBlock" Text="{Binding SiteName}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="CountBlock" Text="{Binding Path=ImgCount, StringFormat='\{0\}장'}"  VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
 
             <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="Hidden">
-                <DockPanel.Resources>
-                    <loaderListCtrl:ValConvert x:Key="ValConverter"/>
-                </DockPanel.Resources>
                 <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="{Binding ActualWidth, ElementName=ProgPanel, Converter={StaticResource ValConverter}}" Value="0" HorizontalContentAlignment="Stretch" Orientation="Horizontal" />
                 <TextBlock x:Name="ProgLbl" Text="0/0" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" Margin="5,0,5,1"/>
             </DockPanel>

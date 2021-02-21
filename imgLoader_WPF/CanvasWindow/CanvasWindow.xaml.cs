@@ -35,7 +35,6 @@ namespace imgLoader_WPF.CanvasWindow
             _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
         }
 
-
         private string GetNextPath(bool left)
         {
             if (left)
@@ -105,34 +104,16 @@ namespace imgLoader_WPF.CanvasWindow
             if (e.MiddleButton == MouseButtonState.Pressed)
             {
                 _thres = 5;
-
-                var mousePos = Mouse.GetPosition(_img);
                 var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
 
                 if (_relRect.Width == 0 || _relRect.Height == 0) _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
-
-                var xRightRatio = mousePos.X / _img.ActualWidth;
-                var xLeftRatio = (_img.ActualWidth - mousePos.X) / _img.ActualWidth;
-                var yTopRatio = mousePos.Y / _img.ActualHeight;
-                var yBotRatio = (_img.ActualHeight - mousePos.Y) / _img.ActualHeight;
-
-                //var rect = new Rectangle
-                //{
-                //    Width = relRect.Width,
-                //    Height = relRect.Height,
-                //    Fill = Brushes.Green,
-                //    Stroke = Brushes.Red,
-                //    StrokeThickness = 2
-                //};
-
-                //Canvas1.Children.Add(rect);
 
                 if (e.Delta > 0)
                 {
                     _relRect.Width *= (Scale + 100) / 100d;
                     _relRect.Height *= (Scale + 100) / 100d;
-                    _relRect.X = (ActualWidth / 2) - (_relRect.Width / 2);
-                    _relRect.Y = (ActualHeight / 2) - (_relRect.Height / 2);
+                    _relRect.X = (ActualWidth - _relRect.Width) / 2;
+                    _relRect.Y = (ActualHeight - _relRect.Height) / 2;
 
                     _min++;
 
@@ -144,8 +125,8 @@ namespace imgLoader_WPF.CanvasWindow
                     if (_min <= 0) return;
                     _relRect.Width /= (Scale + 100) / 100d;
                     _relRect.Height /= (Scale + 100) / 100d;
-                    _relRect.X = (ActualWidth / 2) - (_relRect.Width / 2);
-                    _relRect.Y = (ActualHeight / 2) - (_relRect.Height / 2);
+                    _relRect.X = (ActualWidth - _relRect.Width) / 2;
+                    _relRect.Y = (ActualHeight - _relRect.Height) / 2;
 
                     _min--;
 
