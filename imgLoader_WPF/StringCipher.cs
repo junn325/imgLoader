@@ -27,22 +27,20 @@ namespace imgLoader_WPF
 
             return Convert.ToBase64String(ms.ToArray());
         }
-        public static string Decrypt(string cipherText)
+        public static string Decrypt(string text)
         {
-            cipherText = cipherText.Replace(" ", "+");
-            var cipherBytes = Convert.FromBase64String(cipherText);
-
-            using var encryptor = Aes.Create();
-
+            var bytes = Convert.FromBase64String(text.Replace(" ", "+"));
             var pdb = new Rfc2898DeriveBytes(Core.ProjectName, salt);
 
-            encryptor.Key = pdb.GetBytes(32);
-            encryptor.IV = pdb.GetBytes(16);
+            using var encrypt = Aes.Create();
+
+            encrypt.Key = pdb.GetBytes(32);
+            encrypt.IV = pdb.GetBytes(16);
 
             using var ms = new MemoryStream();
-            using (var cs = new CryptoStream(ms, encryptor.CreateDecryptor(), CryptoStreamMode.Write))
+            using (var cs = new CryptoStream(ms, encrypt.CreateDecryptor(), CryptoStreamMode.Write))
             {
-                cs.Write(cipherBytes, 0, cipherBytes.Length);
+                cs.Write(bytes, 0, bytes.Length);
             }
 
             return Encoding.Unicode.GetString(ms.ToArray());

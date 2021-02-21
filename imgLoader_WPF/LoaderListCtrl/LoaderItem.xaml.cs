@@ -69,6 +69,7 @@ namespace imgLoader_WPF.LoaderListCtrl
                 temp.LineLeft();
             else
                 temp.LineRight();
+
             e.Handled = true;
         }
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
