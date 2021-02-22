@@ -20,7 +20,7 @@ namespace imgLoader_WPF.LoaderListCtrl
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ((IndexingService.IndexItem)this.DataContext).ShownChang = ShownChanged;
+            ((IndexItem)this.DataContext).ShownChang = ShownChanged;
 
             if (Tags == null) return;
             foreach (var tag in Tags)
@@ -42,16 +42,16 @@ namespace imgLoader_WPF.LoaderListCtrl
 
         private void ShownChanged()
         {
-            Background = ((IndexingService.IndexItem)this.DataContext).IsRead ? Brushes.LightGray : Brushes.White;
+            Background = ((IndexItem)this.DataContext).IsRead ? Brushes.LightGray : Brushes.White;
         }
 
         private void UpVote_Click(object sender, RoutedEventArgs e)
         {
-            ((IndexingService.IndexItem)this.DataContext).Vote++;
+            ((IndexItem)this.DataContext).Vote++;
         }
         private void DownVote_Click(object sender, RoutedEventArgs e)
         {
-            ((IndexingService.IndexItem)this.DataContext).Vote--;
+            ((IndexItem)this.DataContext).Vote--;
         }
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {

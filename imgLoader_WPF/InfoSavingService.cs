@@ -17,13 +17,14 @@ namespace imgLoader_WPF
 
         internal static void Save(Windows.ImgLoader sender)
         {
-            IndexingService.IndexItem[] idx = null;
+            IndexItem[] idx = null;
 
             if (Properties.Settings.Default.NoIndex) return;
 
             try
             {
-                idx = sender.ItemCtrl.ItemsSource.Cast<IndexingService.IndexItem>().ToArray();
+                if (sender.ItemCtrl.ItemsSource == null) return;
+                idx = sender.ItemCtrl.ItemsSource.Cast<IndexItem>().ToArray();
             }
             catch (OperationCanceledException) { }
 

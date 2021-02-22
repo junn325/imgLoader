@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using imgLoader_WPF.Windows;
 
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace imgLoader_WPF
 {
-    //컬렉션은 IndexingService.IndexItem을 담고있음                        
+    //컬렉션은 IndexItem을 담고있음                        
     //매 /interval/ 밀리초마다 인덱싱
 
     internal class IndexingService
@@ -38,6 +39,8 @@ namespace imgLoader_WPF
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
             foreach (var item in new ObservableCollection<IndexItem>(Index))
             {
+                if (item.IsDownloading)
+                    continue;
                 if (infoFiles.Contains(item.Route)) continue;
 
                 _sender.Dispatcher.Invoke(() => Index.Remove(item));
@@ -48,8 +51,14 @@ namespace imgLoader_WPF
                 using var sr = new StreamReader(Core.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
                 var infos = sr.ReadToEnd().Replace("\r\n", "\n");
                 sr.Close();
+                if (string.IsNullOrWhiteSpace(infos)) continue;
 
                 var info = infos.Split('\n');
+                if (info.Length != 8)
+                {
+                    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}");
+                    continue;
+                }
 
                 if (info.Length > 7 && info[7] == "0") //목록에서만 제거 처리
                 {
@@ -103,12 +112,6 @@ namespace imgLoader_WPF
                     ));
                 sb.Clear();
             }
-
-            try
-            {
-                _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ItemCtrl.ItemsSource = this.Index);
-            }
-            catch (OperationCanceledException) { }
         }
 
         internal void Start()
@@ -136,26 +139,33 @@ namespace imgLoader_WPF
         {
             _stop = true;
         }
-
-        internal class IndexItem
-        {
-            public delegate void ShownChange();
-
-            public string Title { get; set; }
-            public string Author { get; set; }
-            public string SiteName { get; set; }
-            public string ImgCount { get; set; }
-            public string Number { get; set; }
-            public string[] Tags { get; set; }
-            public int Vote { get; set; }
-            public bool IsRead { get; set; }
-            public string Route { get; set; }
-
-            public bool Selected = false;
-            public bool Show = true;
-            public bool IsDownloading = false;
-
-            public ShownChange ShownChang;
-        }
     }
+
+    internal class IndexItem
+    {
+        public delegate void ShownChange();
+
+        public string Title { get; set; }
+        public string Author { get; set; }
+        public string SiteName { get; set; }
+        public string ImgCount { get; set; }
+        public string Number { get; set; }
+        public string[] Tags { get; set; }
+        public int Vote { get; set; }
+        public bool IsRead { get; set; }
+        public string Route { get; set; }
+
+        public bool Selected = false;
+        public bool Show = true;
+        public bool IsDownloading = false;
+
+        public System.Windows.Visibility ProgPanelVisibility { get; set; } = System.Windows.Visibility.Hidden;
+        public System.Windows.Visibility TagPanelVisibility { get; set; } = System.Windows.Visibility.Hidden;
+
+        public int ProgBarMax { get; set; }
+        public int ProgBarVal { get; set; }
+
+        public ShownChange ShownChang;
+    }
+
 }

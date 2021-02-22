@@ -63,8 +63,8 @@
             <TextBlock x:Name="SiteBlock" Text="{Binding SiteName}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="CountBlock" Text="{Binding Path=ImgCount, StringFormat='\{0\}장'}"  VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
 
-            <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="Hidden">
-                <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="{Binding ActualWidth, ElementName=ProgPanel, Converter={StaticResource ValConverter}}" Value="0" HorizontalContentAlignment="Stretch" Orientation="Horizontal" />
+            <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="{Binding ProgPanelVisibility}">
+                <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" Width="{Binding ActualWidth, ElementName=ProgPanel, Converter={StaticResource ValConverter}}" Value="{Binding ProgBarVal}" HorizontalContentAlignment="Stretch" Orientation="Horizontal" Maximum="{Binding ProgBarMax}"/>
                 <TextBlock x:Name="ProgLbl" Text="0/0" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,0,0,0" Margin="5,0,5,1"/>
             </DockPanel>
 
@@ -74,7 +74,7 @@
                     <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}">0</sys:Double>
                 </ScrollViewer.Resources>
 
-                <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False"/>
+                <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False" Visibility="{Binding TagPanelVisibility}"/>
             </ScrollViewer>
 
             <Grid x:Name="VoteGrid" Width="auto" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="2">

@@ -1,6 +1,4 @@
-﻿using imgLoader_WPF.LoaderListCtrl;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -17,52 +15,60 @@ namespace imgLoader_WPF
 
         private Task[] _tasks;
 
+        //private int _index;
+        private IndexItem _item;
+
         private bool _stop;
         private bool _pause;
-        private readonly LoaderItem _item;
 
         internal string Route { get; }
         internal string Url { get; }
         internal string Artist { get; }
         internal string Title { get; }
         internal string[] Info { get; }
+        internal string Number { get; }
         internal Dictionary<string, string> ImgUrl { get; }
         internal ISite Site { get; }
         internal bool IsValidated { get; }
 
-        public Processor(string url, LoaderItem item)
+        public Processor(string url, IndexItem item)
         {
             try
             {
                 if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
 
-                item.Dispatcher.Invoke(() => item.ProgPanel.Visibility = Visibility.Visible);
+                item.IsDownloading = true;
+                item.ProgPanelVisibility = Visibility.Visible;
 
                 Url = url;
 
                 Site = Load(url);
+
+                if (Site == null)
+                {
+                    MessageBox.Show("주소에 연결할 수 없음.");
+                    return;
+                }
+
+                if (!Site.IsValidated()) throw new Exception("Failed to Initialize: Processor: Invalidate");
+
                 ImgUrl = Site.GetImgUrls();
 
+                Number = Core.GetNumber(url);
                 Artist = GetArtist(Site);
                 Title = GetTitle(Site.GetTitle());
                 Route = Getpath(Artist, Title);
                 Info = Site.ReturnInfo();
 
-                item.Dispatcher.Invoke(() =>
-                {
-                    //item.ImgCount = ImgUrl.Count.ToString();
+                item.ImgCount = ImgUrl.Count.ToString();
+                item.Author = Artist;
+                item.Title = Title;
+                item.Route = Route;
+                item.SiteName = Site.GetType().Name;
+                item.Number = Number;
+                item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
 
-                    //item.Author = Artist;
-                    //item.Title = Title;
-                    //item.Route = Route;
-                    //item.SiteName = Site.GetType().Name;
-                    //item.Number = Core.GetNumber(url);
-
-                    item.TagPanel.Visibility = Visibility.Hidden;
-                    item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
-                });
-
-                if (!Site.IsValidated()) return;
+                item.TagPanelVisibility = Visibility.Hidden;
 
                 _item = item;
             }
@@ -86,6 +92,7 @@ namespace imgLoader_WPF
             }
 
             AllocTask(Route, ImgUrl);
+            _item.IsDownloading = false;
             Stopping();
         }
 
@@ -97,6 +104,8 @@ namespace imgLoader_WPF
             try
             {
                 var site = Core.LoadSite(url);
+
+                if (site == null) throw new Exception("Failed to Initialize: Processor: private Load: site is null");
 
                 return !site.IsValidated()
                             ? null
@@ -162,7 +171,7 @@ namespace imgLoader_WPF
                         : temp;
         }
 
-        private static string Getpath(string artist, string title)
+        private string Getpath(string artist, string title)
         {
             var temp =
                 artist == "N/A"
@@ -174,26 +183,23 @@ namespace imgLoader_WPF
                     ? temp.Replace(title, title.Substring(0, 80) + "...")
                     : temp;
 
-            return $@"{Core.Route}\{temp}";
-        }       //returns folder name
+            return $@"{Core.Route}\{temp}\{Number}.{Core.InfoExt}";
+        }       //returns info path
 
         private Error CreateInfo(string url)
         {
             try
             {
-                var temp = Core.GetNumber(url);
-                var infopath = $"{Route}\\{(temp.Contains('/') ? temp.Split('/')[0] : temp)}.{Core.InfoExt}";
-
                 if (!CheckDupl())
                 {
-                    Directory.CreateDirectory(Route);
+                    Directory.CreateDirectory(Core.GetDirectoryFromFile(Route));
                 }
                 else
                 {
                     MessageBox.Show("Test");
                 }
 
-                Core.CreateInfo(infopath, Site);
+                Core.CreateInfo(Route, Site);
 
                 return Error.End;
             }
@@ -209,9 +215,9 @@ namespace imgLoader_WPF
 
         internal bool CheckDupl()
         {
-            if (!Directory.Exists(Route)) return false;
+            if (!Directory.Exists(Core.GetDirectoryFromFile(Route))) return false;
 
-            if (ImgUrl.Count.ToString() == File.ReadAllText($"{Route}\\{Site.Number}.ilif").Split('\n')[3])
+            if (ImgUrl.Count.ToString() == File.ReadAllText(Route).Split('\n')[3])
             {
                 return true;
             }
@@ -223,8 +229,8 @@ namespace imgLoader_WPF
         {
             _tasks = new Task[imgList.Count];
 
-            _item.Dispatcher.Invoke(() => _item.ProgBar.Maximum = imgList.Count);
-
+            _item.ProgBarMax = imgList.Count;
+            
             AllocDown(path, imgList);
 
             Task.WaitAll(_tasks);
@@ -234,8 +240,8 @@ namespace imgLoader_WPF
             Core.Log($"Item:Complete: {path}");
             if (success)
             {
-                _item.Dispatcher.Invoke(() => _item.ProgPanel.Visibility = Visibility.Hidden);
-                _item.Dispatcher.Invoke(() => _item.TagPanel.Visibility = Visibility.Visible);
+                _item.ProgPanelVisibility = Visibility.Hidden;
+                _item.TagPanelVisibility = Visibility.Visible;
             }
             else
             {
@@ -245,6 +251,7 @@ namespace imgLoader_WPF
 
         private void AllocDown(string path, Dictionary<string, string> urlList)
         {
+            path = Core.GetDirectoryFromFile(path);
             _failed.Clear();
 
             var i = 0;
@@ -317,7 +324,7 @@ namespace imgLoader_WPF
 
             if (fileSize == resp.ContentLength)
             {
-                _item.Dispatcher.Invoke(() => _item.ProgBar.Value++);
+                _item.ProgBarVal++;
                 //_item.Dispatcher.Invoke(() => _item.CurrentCount++);
             }
             else

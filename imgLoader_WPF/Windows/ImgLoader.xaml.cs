@@ -20,6 +20,7 @@ namespace imgLoader_WPF.Windows
     //todo: 완전히 같은 이미지 탐색
     //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
     //todo: 페이지네이션
+    //todo: 조회수
 
     public partial class ImgLoader
     {
@@ -27,9 +28,9 @@ namespace imgLoader_WPF.Windows
         private IndexingService _idxSvc;
 
         private readonly Settings _winSetting = new();
-        private readonly ObservableCollection<IndexingService.IndexItem> _index = new();
+        private ObservableCollection<IndexItem> _index = new();
 
-        private IndexingService.IndexItem _clickedItem;
+        private IndexItem _clickedItem;
         private readonly StringBuilder sb = new();
 
         int i;
@@ -40,16 +41,6 @@ namespace imgLoader_WPF.Windows
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //for (int j = 0; j < 700; j++)
-            //{
-            i++;
-            //var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
-            //LList.Children.Add();
-            //}
-
-        }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             ;
@@ -71,6 +62,7 @@ namespace imgLoader_WPF.Windows
 #endif
 
             this.Title = Core.Route;
+            ItemCtrl.ItemsSource = _index;
 
             _infSvc = new InfoSavingService();
             _infSvc.Start(this);
@@ -84,6 +76,15 @@ namespace imgLoader_WPF.Windows
             //var temp = _index.Keys.ToArray()[new Random().Next(0, _index.Count)];
             //Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
         }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //for (int j = 0; j < 700; j++)
+            //{
+            i++;
+            //var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
+            //LList.Children.Add();
+            //}
+        }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
@@ -96,11 +97,13 @@ namespace imgLoader_WPF.Windows
             if (TxtUrl.Text.Length == 0) return;
 
             var url = TxtUrl.Text;
-            var lItem = new LoaderItem();
+            var lItem = new IndexItem();
 
             var thrTemp = new Thread(() =>
             {
                 var proc = new Processor(url, lItem);
+
+                if (!proc.IsValidated) return;
 
                 if (proc.CheckDupl())
                 {
@@ -108,8 +111,7 @@ namespace imgLoader_WPF.Windows
                     return;
                 }
 
-                if (!proc.IsValidated) return;
-
+                ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem));
                 proc.Load();
             });
 
@@ -172,7 +174,7 @@ namespace imgLoader_WPF.Windows
                 ((MenuItem)item).IsEnabled = true;
             }
 
-            _clickedItem = (IndexingService.IndexItem)((LoaderItem)sender).DataContext;
+            _clickedItem = (IndexItem)((LoaderItem)sender).DataContext;
             e.Handled = true;
         }
 
