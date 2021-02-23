@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using imgLoader_WPF.Windows;
+﻿using imgLoader_WPF.Windows;
 
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace imgLoader_WPF
 {
@@ -148,6 +146,8 @@ namespace imgLoader_WPF
     {
         public delegate void NoParam();
         public delegate void IntOne(int value);
+
+        public Processor Proc;
 
         public string Title { get; set; }
         public string Author { get; set; }

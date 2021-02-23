@@ -19,8 +19,8 @@ namespace imgLoader_WPF
         //private int _index;
         private IndexItem _item;
 
-        private bool _stop;
-        private bool _pause;
+        public bool Stop;
+        public bool Pause;
 
         internal string Route { get; }
         internal string Url { get; }
@@ -263,21 +263,26 @@ namespace imgLoader_WPF
             var i = 0;
             foreach (var (key, value) in urlList)
             {
-                if (_stop) break;
+                if (Stop) break;
 
-                while (_pause)
+                while (Pause)
                 {
-                    Task.Delay(500).Wait();  //일시정지
+                    Task.Delay(500).Wait();
                 }
+
                 _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(value, path, key));
             }
         }
 
         private void ThrDownload(string uri, string path, string fileName)
         {
-            if (_stop)
+            if (Stop)
             {
                 return;
+            }
+            while (Pause)
+            {
+                Task.Delay(500).Wait();
             }
 
             var req = WebRequest.Create(uri) as HttpWebRequest;
@@ -366,9 +371,9 @@ namespace imgLoader_WPF
 
                 if (_tasks == null) return;
 
-                _stop = true;
+                Stop = true;
                 Task.WaitAll(_tasks);
-                _stop = false;
+                Stop = false;
 
                 _tasks = null;
             }).Start();

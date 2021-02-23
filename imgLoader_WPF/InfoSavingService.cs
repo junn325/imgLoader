@@ -1,12 +1,9 @@
-﻿using imgLoader_WPF.LoaderListCtrl;
-
+﻿
 using System;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Windows.Threading;
 
 namespace imgLoader_WPF
 {

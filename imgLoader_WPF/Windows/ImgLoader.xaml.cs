@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -101,18 +102,18 @@ namespace imgLoader_WPF.Windows
 
             var thrTemp = new Thread(() =>
             {
-                var proc = new Processor(url, lItem);
+                lItem.Proc = new Processor(url, lItem);
 
-                if (!proc.IsValidated) return;
+                if (!lItem.Proc.IsValidated) return;
 
-                if (proc.CheckDupl())
+                if (lItem.Proc.CheckDupl())
                 {
                     MessageBox.Show("Already Exists.");
                     return;
                 }
 
                 ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem));
-                proc.Load();
+                lItem.Proc.Load();
             });
 
             thrTemp.Name = "Add object";
@@ -194,7 +195,6 @@ namespace imgLoader_WPF.Windows
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
 
             _idxSvc.DoIndex(sb);
-
         }
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
@@ -230,18 +230,23 @@ namespace imgLoader_WPF.Windows
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
+            _clickedItem.Proc.Stop = true;
 
+            _clickedItem.Show = false;
+
+            Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true); //todo
+
+            _idxSvc.DoIndex(sb);
         }
 
         private void Resume_Click(object sender, RoutedEventArgs e)
         {
-
+            _clickedItem.Proc.Pause = false;
         }
 
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
-
+            _clickedItem.Proc.Pause = true;
         }
-
     }
 }
