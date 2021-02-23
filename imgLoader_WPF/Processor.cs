@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -38,7 +39,6 @@ namespace imgLoader_WPF
                 if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
 
                 item.IsDownloading = true;
-                item.ProgPanelVisibility = Visibility.Visible;
 
                 Url = url;
 
@@ -67,8 +67,6 @@ namespace imgLoader_WPF
                 item.SiteName = Site.GetType().Name;
                 item.Number = Number;
                 item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
-
-                item.TagPanelVisibility = Visibility.Hidden;
 
                 _item = item;
             }
@@ -227,10 +225,18 @@ namespace imgLoader_WPF
 
         private void AllocTask(string path, Dictionary<string, string> imgList)
         {
+            while (_item.ProgBarMax == null)
+            {
+                Debug.WriteLine("wait");
+                Task.Delay(200).Wait();
+            }
+
+            _item.ProgPanelShow.Invoke();
+            _item.TagPanelHide.Invoke();
+            _item.ProgBarMax.Invoke(imgList.Count);
+
             _tasks = new Task[imgList.Count];
 
-            _item.ProgBarMax = imgList.Count;
-            
             AllocDown(path, imgList);
 
             Task.WaitAll(_tasks);
@@ -240,8 +246,8 @@ namespace imgLoader_WPF
             Core.Log($"Item:Complete: {path}");
             if (success)
             {
-                _item.ProgPanelVisibility = Visibility.Hidden;
-                _item.TagPanelVisibility = Visibility.Visible;
+                _item.ProgPanelHide.Invoke();
+                _item.TagPanelShow.Invoke();
             }
             else
             {
@@ -324,7 +330,7 @@ namespace imgLoader_WPF
 
             if (fileSize == resp.ContentLength)
             {
-                _item.ProgBarVal++;
+                _item.ProgBarVal.Invoke();
                 //_item.Dispatcher.Invoke(() => _item.CurrentCount++);
             }
             else

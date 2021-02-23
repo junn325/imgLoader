@@ -12,6 +12,9 @@ namespace imgLoader_WPF.LoaderListCtrl
     {
         public string[] Tags;
 
+        private int _progMax;
+        private int _progVal;
+
         //private readonly Stopwatch sw = new Stopwatch();
 
         public LoaderItem()
@@ -20,7 +23,26 @@ namespace imgLoader_WPF.LoaderListCtrl
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ((IndexItem)this.DataContext).ShownChang = ShownChanged;
+            ((IndexItem)DataContext).ShownChang = () => Background = ((IndexItem)DataContext).IsRead ? Brushes.LightGray : Brushes.White;
+
+            ((IndexItem)DataContext).ProgPanelHide = () => Dispatcher.Invoke(() => ProgPanel.Visibility = Visibility.Hidden);
+            ((IndexItem)DataContext).ProgPanelShow = () => Dispatcher.Invoke(() => ProgPanel.Visibility = Visibility.Visible);
+
+            ((IndexItem)DataContext).TagPanelHide = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Hidden);
+            ((IndexItem)DataContext).TagPanelShow = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Visible);
+
+            ((IndexItem)DataContext).ProgBarMax = value => Dispatcher.Invoke(() =>
+            {
+                _progMax = value;
+                ProgBlock.Text = $"0/{value}";
+                ProgBar.Maximum = value;
+            });
+            ((IndexItem)DataContext).ProgBarVal = () => Dispatcher.Invoke(() =>
+            {
+                _progVal++;
+                ProgBar.Value++;
+                ProgBlock.Text = $"{_progVal}/{_progMax}";
+            });
 
             if (Tags == null) return;
             foreach (var tag in Tags)
@@ -40,18 +62,13 @@ namespace imgLoader_WPF.LoaderListCtrl
             }
         }
 
-        private void ShownChanged()
-        {
-            Background = ((IndexItem)this.DataContext).IsRead ? Brushes.LightGray : Brushes.White;
-        }
-
         private void UpVote_Click(object sender, RoutedEventArgs e)
         {
-            ((IndexItem)this.DataContext).Vote++;
+            ((IndexItem)DataContext).Vote++;
         }
         private void DownVote_Click(object sender, RoutedEventArgs e)
         {
-            ((IndexItem)this.DataContext).Vote--;
+            ((IndexItem)DataContext).Vote--;
         }
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -74,14 +91,14 @@ namespace imgLoader_WPF.LoaderListCtrl
         }
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            TitleBlock.Width = this.ActualWidth - NumBlock.ActualWidth - 10;
-            AuthorBlock.Width = this.ActualWidth - VoteGrid.ActualWidth - 10;
+            TitleBlock.Width = ActualWidth - NumBlock.ActualWidth - 10;
+            AuthorBlock.Width = ActualWidth - VoteGrid.ActualWidth - 10;
         }
 
         private void NumBlock_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            TitleBlock.Width = this.ActualWidth - NumBlock.ActualWidth - 10;
-            AuthorBlock.Width = this.ActualWidth - VoteGrid.ActualWidth - 10;
+            TitleBlock.Width = ActualWidth - NumBlock.ActualWidth - 10;
+            AuthorBlock.Width = ActualWidth - VoteGrid.ActualWidth - 10;
         }
     }
 

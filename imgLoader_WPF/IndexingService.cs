@@ -43,6 +43,7 @@ namespace imgLoader_WPF
                     continue;
                 if (infoFiles.Contains(item.Route)) continue;
 
+                Debug.WriteLine($"remove {item.Number}");
                 _sender.Dispatcher.Invoke(() => Index.Remove(item));
             }
 
@@ -143,7 +144,8 @@ namespace imgLoader_WPF
 
     internal class IndexItem
     {
-        public delegate void ShownChange();
+        public delegate void NoParam();
+        public delegate void IntOne(int value);
 
         public string Title { get; set; }
         public string Author { get; set; }
@@ -159,13 +161,15 @@ namespace imgLoader_WPF
         public bool Show = true;
         public bool IsDownloading = false;
 
-        public System.Windows.Visibility ProgPanelVisibility { get; set; } = System.Windows.Visibility.Hidden;
-        public System.Windows.Visibility TagPanelVisibility { get; set; } = System.Windows.Visibility.Hidden;
+        public NoParam ShownChang;
 
-        public int ProgBarMax { get; set; }
-        public int ProgBarVal { get; set; }
+        public NoParam ProgPanelHide;
+        public NoParam ProgPanelShow;
+        public NoParam TagPanelHide;
+        public NoParam TagPanelShow;
 
-        public ShownChange ShownChang;
+        public IntOne ProgBarMax;
+        public NoParam ProgBarVal;
     }
 
 }
