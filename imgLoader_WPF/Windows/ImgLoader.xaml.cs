@@ -189,6 +189,12 @@ namespace imgLoader_WPF.Windows
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+            _clickedItem.Show = false;
+
+            Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
+
+            _idxSvc.DoIndex(sb);
+
         }
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
