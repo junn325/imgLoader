@@ -34,9 +34,6 @@ namespace imgLoader_WPF.Windows
         private IndexItem _clickedItem;
         private readonly StringBuilder sb = new();
 
-        private int i;
-        int j;
-
         public ImgLoader()
         {
             InitializeComponent();
@@ -81,7 +78,6 @@ namespace imgLoader_WPF.Windows
         {
             //for (int j = 0; j < 700; j++)
             //{
-            i++;
             //var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
             //LList.Children.Add();
             //}
@@ -119,6 +115,10 @@ namespace imgLoader_WPF.Windows
             thrTemp.Name = "Add object";
             thrTemp.SetApartmentState(ApartmentState.STA);
             thrTemp.Start();
+
+            AddBorder.Visibility = Visibility.Hidden;
+            Focus();
+            TxtUrl.Text = "주소 입력 후 Enter 키로 다운로드 시작";
         }
 
         private void Button_Click_3(object sender, RoutedEventArgs e)
@@ -130,10 +130,8 @@ namespace imgLoader_WPF.Windows
             //LList.Children.Clear();
         }
 
-        private void TxtUrl_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TxtUrl_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
-            if (TxtUrl.Text == "주소 입력 후 Enter 키로 다운로드 시작") TxtUrl.Text = "";
         }
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -145,33 +143,13 @@ namespace imgLoader_WPF.Windows
             _winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
         }
 
-        private void IndexingStop(object sender, RoutedEventArgs e)
-        {
-            if (i++ % 2 == 0) _idxSvc.Stop();
-            else _idxSvc.Start();
-        }
-
-        private void Test1(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void Button_Click_7(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void Refresh_Click(object sender, RoutedEventArgs e)
-        {
-            Properties.Settings.Default.NoIndex = true;
-            Properties.Settings.Default.NoIndex = false;
-        }
-
         private void LItem_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             if (sender == null) return;
 
             _clickedItem = (IndexItem)((LoaderItem)sender).DataContext;
 
-            for (var j = 0; j < ItemCtrl.ContextMenu.Items.Count; j++)
+            for (var j = 1; j < ItemCtrl.ContextMenu.Items.Count; j++)
             {
                 var item = ItemCtrl.ContextMenu.Items[j];
                 if (item.GetType() == typeof(Separator)) continue;
@@ -205,8 +183,9 @@ namespace imgLoader_WPF.Windows
 
         private void LList_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            foreach (var item in ItemCtrl.ContextMenu.Items)
+            for (var j = 1; j < ItemCtrl.ContextMenu.Items.Count; j++)
             {
+                var item = ItemCtrl.ContextMenu.Items[j];
                 if (item.GetType() == typeof(Separator)) continue;
                 ((MenuItem)item).IsEnabled = false;
             }
@@ -277,6 +256,32 @@ namespace imgLoader_WPF.Windows
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void AddItem_Click(object sender, RoutedEventArgs e)
+        {
+            AddBorder.Visibility = Visibility.Visible;
+        }
+
+        private void AddBorder_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Released)
+            {
+                AddBorder.Visibility = Visibility.Hidden;
+                Focus();
+                TxtUrl.Text = "주소 입력 후 Enter 키로 다운로드 시작";
+            }
+        }
+
+        private void TxtUrl_GotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        {
+            //if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
+            if (TxtUrl.Text == "주소 입력 후 Enter 키로 다운로드 시작") TxtUrl.Text = "";
+        }
+
+        private void Border_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

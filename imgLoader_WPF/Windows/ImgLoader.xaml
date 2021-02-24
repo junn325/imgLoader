@@ -8,11 +8,16 @@
         Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing">
 
     <Grid>
-        <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,10,10,30">
+        <Grid.Resources>
+            <SolidColorBrush x:Key="BBrush" Color="Gray" Opacity="0.5"/>
+        </Grid.Resources>
+        <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,10,10,20">
             <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
                     <ItemsControl.ContextMenu>
                         <ContextMenu>
+                            <MenuItem Header="항목 추가" Click="AddItem_Click"/>
+                            <Separator/>
                             <MenuItem Header="열기" IsEnabled="False" Click="Open_Click"/>
                             <MenuItem Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
                             <Separator/>
@@ -42,7 +47,12 @@
             </ScrollViewer>
         </Border>
 
-        <TextBox x:Name="TxtUrl" Height="19" Margin="10,10,10,7" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Bottom" KeyUp="TxtUrl_KeyUp" PreviewMouseUp="TxtUrl_PreviewMouseUp"/>
+        <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseUp="AddBorder_MouseUp">
+            <Border Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp">
+                <TextBox x:Name="TxtUrl" Height="21" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" MouseUp="TxtUrl_MouseUp" GotKeyboardFocus="TxtUrl_GotKeyboardFocus"/>
+            </Border>
+        </Border>
+
         <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,376,0,0" Height="27" Width="76" Click="Button_Click_5"/>
     </Grid>
 </Window>
