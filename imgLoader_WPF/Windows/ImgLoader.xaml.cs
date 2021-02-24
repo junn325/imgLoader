@@ -34,7 +34,7 @@ namespace imgLoader_WPF.Windows
         private IndexItem _clickedItem;
         private readonly StringBuilder sb = new();
 
-        int i;
+        private int i;
         int j;
 
         public ImgLoader()
@@ -87,7 +87,7 @@ namespace imgLoader_WPF.Windows
             //}
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void Setting_Click(object sender, RoutedEventArgs e)
         {
             _winSetting.ShowDialog();
         }
@@ -272,6 +272,11 @@ namespace imgLoader_WPF.Windows
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Proc.Pause = true;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
