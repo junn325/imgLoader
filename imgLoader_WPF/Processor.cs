@@ -80,12 +80,13 @@ namespace imgLoader_WPF
 
         internal void Load()
         {
-            var temp = CreateInfo(Url);
+            var temp = CreateInfo();
 
             if (temp != Error.End)
             {
                 if (temp == Error.Cancel) return;
 
+                _item.IsDownloading = false;
                 throw new Exception("Failed to Load: Processor.Load()");
             }
 
@@ -184,7 +185,7 @@ namespace imgLoader_WPF
             return $@"{Core.Route}\{temp}\{Number}.{Core.InfoExt}";
         }       //returns info path
 
-        private Error CreateInfo(string url)
+        private Error CreateInfo()
         {
             try
             {

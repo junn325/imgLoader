@@ -169,13 +169,37 @@ namespace imgLoader_WPF.Windows
         {
             if (sender == null) return;
 
-            foreach (var item in ItemCtrl.ContextMenu.Items)
+            _clickedItem = (IndexItem)((LoaderItem)sender).DataContext;
+
+            for (var j = 0; j < ItemCtrl.ContextMenu.Items.Count; j++)
             {
+                var item = ItemCtrl.ContextMenu.Items[j];
                 if (item.GetType() == typeof(Separator)) continue;
+
+                if (!_clickedItem.IsDownloading && (j == 3 || j == 4 || j == 5))
+                {
+                    ((MenuItem)item).IsEnabled = false;
+                    continue;
+                }
+
+                if (j == 5)
+                {
+                    if (_clickedItem.Proc.Pause)
+                    {
+                        ((MenuItem)item).IsEnabled = true;
+                        ((MenuItem)ItemCtrl.ContextMenu.Items[4]).IsEnabled = false;
+                        continue;
+                    }
+                    else
+                    {
+                        ((MenuItem)item).IsEnabled = false;
+                        continue;
+                    }
+                }
+
                 ((MenuItem)item).IsEnabled = true;
             }
 
-            _clickedItem = (IndexItem)((LoaderItem)sender).DataContext;
             e.Handled = true;
         }
 
@@ -233,6 +257,7 @@ namespace imgLoader_WPF.Windows
             _clickedItem.Proc.Stop = true;
 
             _clickedItem.Show = false;
+            _clickedItem.IsDownloading = false;
 
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true); //todo
 
