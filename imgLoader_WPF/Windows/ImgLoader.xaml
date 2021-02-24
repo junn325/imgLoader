@@ -49,7 +49,7 @@
 
         <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseUp="AddBorder_MouseUp">
             <Border Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp">
-                <TextBox x:Name="TxtUrl" Height="21" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" MouseUp="TxtUrl_MouseUp" GotKeyboardFocus="TxtUrl_GotKeyboardFocus"/>
+                <TextBox x:Name="TxtUrl" Height="21" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" GotKeyboardFocus="TxtUrl_GotKeyboardFocus"/>
             </Border>
         </Border>
 

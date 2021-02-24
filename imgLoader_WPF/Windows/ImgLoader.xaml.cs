@@ -98,6 +98,8 @@ namespace imgLoader_WPF.Windows
 
             var thrTemp = new Thread(() =>
             {
+                ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem)); //todo: 
+
                 lItem.Proc = new Processor(url, lItem);
 
                 if (!lItem.Proc.IsValidated) return;
@@ -105,10 +107,10 @@ namespace imgLoader_WPF.Windows
                 if (lItem.Proc.CheckDupl())
                 {
                     MessageBox.Show("Already Exists.");
+                    ItemCtrl.Dispatcher.Invoke(() => _index.Remove(lItem));
                     return;
                 }
 
-                ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem));
                 lItem.Proc.Load();
             });
 
@@ -119,19 +121,6 @@ namespace imgLoader_WPF.Windows
             AddBorder.Visibility = Visibility.Hidden;
             Focus();
             TxtUrl.Text = "주소 입력 후 Enter 키로 다운로드 시작";
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void Button_Click_4(object sender, RoutedEventArgs e)
-        {
-            //LList.Children.Clear();
-        }
-
-        private void TxtUrl_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
         }
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -238,7 +227,7 @@ namespace imgLoader_WPF.Windows
             _clickedItem.Show = false;
             _clickedItem.IsDownloading = false;
 
-            Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true); //todo
+            Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
 
             _idxSvc.DoIndex(sb);
         }
