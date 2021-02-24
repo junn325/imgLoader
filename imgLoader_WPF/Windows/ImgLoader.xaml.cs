@@ -94,11 +94,11 @@ namespace imgLoader_WPF.Windows
             if (TxtUrl.Text.Length == 0) return;
 
             var url = TxtUrl.Text;
-            var lItem = new IndexItem();
+            var lItem = new IndexItem() { Author = "준비 중...", ImgCount = "\n" }; //imgcount = "\n" => hides "장"
 
             var thrTemp = new Thread(() =>
             {
-                ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem)); //todo: 
+                ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem));
 
                 lItem.Proc = new Processor(url, lItem);
 
@@ -111,10 +111,12 @@ namespace imgLoader_WPF.Windows
                     return;
                 }
 
+                lItem.RefreshInfo();
+
                 lItem.Proc.Load();
             });
 
-            thrTemp.Name = "Add object";
+            thrTemp.Name = "AddItem";
             thrTemp.SetApartmentState(ApartmentState.STA);
             thrTemp.Start();
 
@@ -149,7 +151,7 @@ namespace imgLoader_WPF.Windows
                     continue;
                 }
 
-                if (j == 5)
+                if (j == 5) //todo: 인덱스 재처리
                 {
                     if (_clickedItem.Proc.Pause)
                     {
@@ -183,6 +185,7 @@ namespace imgLoader_WPF.Windows
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Show = false;
+            _clickedItem.IsDownloading = false;
 
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
 
@@ -213,7 +216,7 @@ namespace imgLoader_WPF.Windows
             img.UriSource = new Uri(temp[0]);
             img.EndInit();
 
-            var canvas = new CanvasWindow.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
+            var canvas = new CanvasWindow.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
             canvas.Show();
 
             _clickedItem.IsRead = true;

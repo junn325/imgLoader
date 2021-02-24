@@ -29,8 +29,9 @@ namespace imgLoader_WPF
 
             foreach (var item in idx)
             {
-                var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.InfoExt}";
+                if (string.IsNullOrWhiteSpace(item.Route)) continue;
 
+                var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.InfoExt}";
                 if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
 
                 if (File.Exists(path))

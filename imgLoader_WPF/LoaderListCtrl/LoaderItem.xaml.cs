@@ -23,21 +23,33 @@ namespace imgLoader_WPF.LoaderListCtrl
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            ((IndexItem)DataContext).ShownChang = () => Background = ((IndexItem)DataContext).IsRead ? Brushes.LightGray : Brushes.White;
+            var data = ((IndexItem)DataContext);
+            data.ShownChang = () => Background = data.IsRead ? Brushes.LightGray : Brushes.White;
 
-            ((IndexItem)DataContext).ProgPanelHide = () => Dispatcher.Invoke(() => ProgPanel.Visibility = Visibility.Hidden);
-            ((IndexItem)DataContext).ProgPanelShow = () => Dispatcher.Invoke(() => ProgPanel.Visibility = Visibility.Visible);
+            data.ProgPanelHide = () => Dispatcher.Invoke(() => ProgPanel.Visibility = Visibility.Hidden);
+            data.ProgPanelShow = () => Dispatcher.Invoke(() => ProgPanel.Visibility = Visibility.Visible);
 
-            ((IndexItem)DataContext).TagPanelHide = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Hidden);
-            ((IndexItem)DataContext).TagPanelShow = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Visible);
+            data.TagPanelHide = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Hidden);
+            data.TagPanelShow = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Visible);
 
-            ((IndexItem)DataContext).ProgBarMax = value => Dispatcher.Invoke(() =>
+            data.RefreshInfo = () => Dispatcher.Invoke(() =>
+            {
+                AuthorBlock.Text = data.Author;
+                CountBlock.Text = data.ImgCount;
+                NumBlock.Text = data.Number;
+                SiteBlock.Text = data.SiteName;
+                TitleBlock.Text = data.Title;
+            });
+
+            //todo: 부울값을 적용만 시키도록 바꿀것
+
+            data.ProgBarMax = value => Dispatcher.Invoke(() =>
             {
                 _progMax = value;
                 ProgBlock.Text = $"0/{value}";
                 ProgBar.Maximum = value;
             });
-            ((IndexItem)DataContext).ProgBarVal = () => Dispatcher.Invoke(() =>
+            data.ProgBarVal = () => Dispatcher.Invoke(() =>
             {
                 _progVal++;
                 ProgBar.Value++;

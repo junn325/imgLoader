@@ -163,6 +163,8 @@ namespace imgLoader_WPF
         public bool Show = true;
         public bool IsDownloading = false;
 
+        public NoParam RefreshInfo;
+
         public NoParam ShownChang;
 
         public NoParam ProgPanelHide;
