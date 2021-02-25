@@ -37,7 +37,7 @@ namespace imgLoader_WPF
             {
                 if (string.IsNullOrWhiteSpace(item.Route)) continue;
 
-                var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{Core.EHNumConverter(item.Number)}.{Core.InfoExt}";
+                var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{Core.EHNumForDir(item.Number)}.{Core.InfoExt}";
                 if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
 
                 if (File.Exists(path))

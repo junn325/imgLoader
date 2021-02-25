@@ -16,7 +16,7 @@
                 <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="45"/>
+                <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="45"/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
@@ -60,7 +60,7 @@
             <TextBlock x:Name="TitleBlock" Text="{Binding Title}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Padding="0" Grid.ColumnSpan="3" TextTrimming="WordEllipsis" />
             <TextBlock x:Name="NumBlock" Text="{Binding Number}" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Row="0" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis" SizeChanged="NumBlock_SizeChanged"/>
             <TextBlock x:Name="AuthorBlock" Text="{Binding Author}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
-            <TextBlock x:Name="SiteBlock" Text="{Binding SiteName}" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="SiteBlock" Text="{Binding SiteName}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="CountBlock" Text="{Binding Path=ImgCount, StringFormat='\{0\}장'}"  VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
 
             <DockPanel x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="Hidden">

@@ -15,7 +15,7 @@ namespace imgLoader_WPF
 
     internal class IndexingService
     {
-        private const int Interval = 2000;
+        private const int Interval = 3000;
 
         public ObservableCollection<IndexItem> Index;
 
@@ -106,7 +106,7 @@ namespace imgLoader_WPF
                         Author = sb.ToString(),
                         SiteName = info[0],
                         ImgCount = info[3],
-                        Number = infoRoute.Split('\\')[^1].Split('.')[0],
+                        Number = Core.EHNumForInternal(infoRoute.Split('\\')[^1].Split('.')[0]),
                         Route = infoRoute,
                         Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';')
                     }

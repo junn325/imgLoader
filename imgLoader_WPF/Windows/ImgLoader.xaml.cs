@@ -45,7 +45,7 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            Menu.Focus();
+            Menu.Focus(); //메뉴 미리 로드
 
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
@@ -246,11 +246,6 @@ namespace imgLoader_WPF.Windows
             _clickedItem.Proc.Pause = true;
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void AddItem_Click(object sender, RoutedEventArgs e)
         {
             AddBorder.Visibility = Visibility.Visible;
@@ -298,10 +293,10 @@ namespace imgLoader_WPF.Windows
                     Clipboard.SetText($"https://hiyobi.me/reader/{_clickedItem.Number}");
                     break;
                 case "Hitomi":
-                    Clipboard.SetText($"https://Hitomi.la/galleries/{_clickedItem.Number}.html");
+                    Clipboard.SetText($"https://hitomi.la/galleries/{_clickedItem.Number}.html");
                     break;
                 case "EHentai":
-                    Clipboard.SetText($"https://ehentai.org/g/{_clickedItem.Number}");
+                    Clipboard.SetText($"https://e-hentai.org/g/{_clickedItem.Number}/");
                     break;
                 case "NHentai":
                     Clipboard.SetText($"https://nhentai.net/g/{_clickedItem.Number}");

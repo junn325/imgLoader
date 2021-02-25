@@ -290,9 +290,14 @@ namespace imgLoader_WPF
             Process.Start("explorer.exe", path);
         }
 
-        internal static string EHNumConverter(string number)
+        internal static string EHNumForDir(string number)
         {
             return number.Contains('/') ? number.Replace('/', '!') : number;
+        }
+
+        internal static string EHNumForInternal(string number)
+        {
+            return number.Contains('!') ? number.Replace('!', '/') : number;
         }
     }
 }
