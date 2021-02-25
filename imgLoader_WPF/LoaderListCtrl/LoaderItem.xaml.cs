@@ -103,8 +103,10 @@ namespace imgLoader_WPF.LoaderListCtrl
         }
         private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            TitleBlock.Width = ActualWidth - NumBlock.ActualWidth - 10;
-            AuthorBlock.Width = ActualWidth - VoteGrid.ActualWidth - 10;
+            //TitleBlock.Width = ActualWidth - NumBlock.ActualWidth - 10;
+            //AuthorBlock.Width = ActualWidth - VoteGrid.ActualWidth - 10;
+
+            //todo: https://hiyobi.me/reader/1854917 추가시 무한히 늘어남
         }
 
         private void NumBlock_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -74,12 +74,15 @@ namespace imgLoader_WPF
 
                 if (info[2].Contains('|'))
                 {
+                    //if (info[1].Contains("첫사랑"))
+                    //    ;
                     foreach (var s in info[2].Split('|')[0].Split(';'))
                     {
                         if (string.IsNullOrWhiteSpace(s)) continue;
                         sb.Append(s).Append(", ");
                     }
-                    sb.Remove(sb.Length - 2, 2);
+
+                    if(sb.Length != 0) sb.Remove(sb.Length - 2, 2);
 
                     if (info[2].Split('|')[1].Contains(';'))
                     {
