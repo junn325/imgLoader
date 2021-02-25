@@ -101,33 +101,5 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             e.Handled = true;
         }
-        private void UserControl_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //TitleBlock.Width = ActualWidth - NumBlock.ActualWidth - 10;
-            //AuthorBlock.Width = ActualWidth - VoteGrid.ActualWidth - 10;
-
-            //todo: https://hiyobi.me/reader/1854917 추가시 무한히 늘어남
-        }
-
-        private void NumBlock_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            TitleBlock.Width = ActualWidth - NumBlock.ActualWidth - 10;
-            AuthorBlock.Width = ActualWidth - VoteGrid.ActualWidth - 10;
-        }
-    }
-
-    public class ValConvert : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if ((double)value < 50) return 0;
-
-            return (double)value - 50;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return null;
-        }
     }
 }
