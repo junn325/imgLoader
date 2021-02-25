@@ -156,6 +156,7 @@ namespace imgLoader_WPF.Windows
 
                 if (j == 7)
                 {
+                    if (_clickedItem.Proc == null) continue;
                     if (_clickedItem.Proc.Pause)
                     {
                         ((MenuItem)item).IsEnabled = true;
