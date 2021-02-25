@@ -95,7 +95,7 @@ namespace imgLoader_WPF.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[6];
+            var info = new string[5];
             info[0] = "EHentai";
             info[1] = _title ?? throw new Exception("_title was Null");
             info[2] = $"{_artist}|{_group}";
@@ -110,7 +110,6 @@ namespace imgLoader_WPF.Sites
                 sb.Append(item.Split('\"')[1]).Append(';');
             }
             info[4] = sb.ToString().Trim();
-            info[5] = DateTime.Now.ToString(CultureInfo.InvariantCulture);
 
             return info;
         }

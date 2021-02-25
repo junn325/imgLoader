@@ -107,7 +107,7 @@ namespace imgLoader_WPF.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[6];
+            var info = new string[5];
 
             info[0] = "Hitomi";
             info[1] = _title;
@@ -133,7 +133,6 @@ namespace imgLoader_WPF.Sites
             }
 
             info[4] = sb.ToString().Trim();
-            info[5] = DateTime.Now.ToString(CultureInfo.InvariantCulture);
 
             return info;
         }

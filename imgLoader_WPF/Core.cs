@@ -87,8 +87,7 @@ namespace imgLoader_WPF
                         : info[i]
                 );
             }
-
-            sw.Write("\n0\n1"); //0 = Vote, 1 = Show
+            sw.Write($"\n{DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture)}\n0\n1"); //0 = Vote, 1 = Show
 
             sw.Close();
 

@@ -53,7 +53,7 @@ namespace imgLoader_WPF.Sites
 
         public string[] ReturnInfo()
         {
-            var info = new string[6];
+            var info = new string[5];
 
             info[0] = "NHentai";
             info[1] = _title;
@@ -68,7 +68,6 @@ namespace imgLoader_WPF.Sites
                 temp.Append(item.Split('\"')[0]).Append(';');
             }
             info[4] = temp.ToString().Trim();
-            info[5] = DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
             return info;
         }
