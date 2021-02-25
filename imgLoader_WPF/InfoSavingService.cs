@@ -11,6 +11,12 @@ namespace imgLoader_WPF
     {
         private const int Interval = 3000;
         private bool _stop;
+        private readonly Windows.ImgLoader _sender;
+
+        public InfoSavingService(Windows.ImgLoader sender)
+        {
+            _sender = sender;
+        }
 
         internal static void Save(Windows.ImgLoader sender)
         {
@@ -31,7 +37,7 @@ namespace imgLoader_WPF
             {
                 if (string.IsNullOrWhiteSpace(item.Route)) continue;
 
-                var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{item.Number}.{Core.InfoExt}";
+                var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{Core.EHNumConverter(item.Number)}.{Core.InfoExt}";
                 if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) continue;
 
                 if (File.Exists(path))
@@ -73,7 +79,7 @@ namespace imgLoader_WPF
             }
 
         }
-        internal void Start(Windows.ImgLoader sender)
+        internal void Start()
         {
             _stop = false;
 
@@ -81,9 +87,11 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
+                    Debug.WriteLine("VtSvc");
+
                     Thread.Sleep(Interval);
 
-                    Save(sender);
+                    Save(_sender);
                 }
             });
 

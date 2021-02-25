@@ -18,6 +18,7 @@ namespace imgLoader_WPF
 
         //private int _index;
         private IndexItem _item;
+        private Windows.ImgLoader _sender;
 
         public bool Stop;
         public bool Pause;
@@ -32,18 +33,19 @@ namespace imgLoader_WPF
         internal ISite Site { get; }
         internal bool IsValidated { get; }
 
-        public Processor(string url, IndexItem item)
+        public Processor(string url, IndexItem item, Windows.ImgLoader sender)
         {
             try
             {
                 if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
 
+                _sender = sender;
+
+                _sender._infSvc.Stop();
                 item.IsDownloading = true;
 
                 Url = url;
-
                 Site = Load(url);
-
                 if (Site == null)
                 {
                     MessageBox.Show("주소에 연결할 수 없음.");
@@ -92,6 +94,8 @@ namespace imgLoader_WPF
 
             AllocTask(Route, ImgUrl);
             _item.IsDownloading = false;
+
+            _sender._infSvc.Start();
             Stopping();
         }
 
@@ -182,13 +186,13 @@ namespace imgLoader_WPF
                     ? temp.Replace(title, title.Substring(0, 80) + "...")
                     : temp;
 
-            return $@"{Core.Route}\{temp}\{Number}.{Core.InfoExt}";
+            return $@"{Core.Route}\{temp}\{Core.EHNumConverter(Number)}.{Core.InfoExt}";
         }       //returns info path
 
         private Error CreateInfo()
         {
-            try
-            {
+            //try
+            //{
                 if (!CheckDupl())
                 {
                     Directory.CreateDirectory(Core.GetDirectoryFromFile(Route));
@@ -201,20 +205,21 @@ namespace imgLoader_WPF
                 Core.CreateInfo(Route, Site);
 
                 return Error.End;
-            }
-            catch (DirectoryNotFoundException)
-            {
-                return Error.NoDir;
-            }
-            catch (FileNotFoundException)
-            {
-                return Error.NoFile;
-            }
+            //}
+            //catch (DirectoryNotFoundException)
+            //{
+            //    return Error.NoDir;
+            //}
+            //catch (FileNotFoundException)
+            //{
+            //    return Error.NoFile;
+            //}
         }
 
         internal bool CheckDupl()
         {
             if (!Directory.Exists(Core.GetDirectoryFromFile(Route))) return false;
+            if (!File.Exists(Route)) return false;
 
             if (ImgUrl.Count.ToString() == File.ReadAllText(Route).Split('\n')[3])
             {

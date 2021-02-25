@@ -23,8 +23,8 @@ namespace imgLoader_WPF
 
         internal const string InfoExt = "ilif";
 
-        private static readonly string[] DFilter = { "(", ")", "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
-        private static readonly string[] DReplace = { "（", "）", "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
+        private static readonly string[] DFilter = {"|", ":", "?", "\"", "<", ">", "/", "*", "..." };
+        private static readonly string[] DReplace = { "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
 
         //internal static List<string> PrevAddress = new List<string>(5);
 
@@ -66,15 +66,17 @@ namespace imgLoader_WPF
             }).Start();
         }
 
-        internal static void CreateInfo(string infoRoute, ISite site)
+        internal static void CreateInfo(string infoFileName, ISite site)
         {
-            if (!Directory.Exists(Path.GetDirectoryName(infoRoute))) throw new DirectoryNotFoundException();
-            if (site == null) throw new NullReferenceException("\"site\" is null.");
+            if (!Directory.Exists(GetDirectoryFromFile(infoFileName)))
+                throw new DirectoryNotFoundException();
+            if (site == null)
+                throw new NullReferenceException("\"site\" is null.");
 
-            var file = new FileInfo(infoRoute);
+            var file = new FileInfo(infoFileName);
             if (file.Exists && (file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
 
-            using var sw = new StreamWriter(new FileStream(infoRoute, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
+            using var sw = new StreamWriter(new FileStream(infoFileName, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
             var info = site.ReturnInfo(); //todo: 각 사이트 객체가 아닌 여기에서 7번째 칸 뚫어서 vote 작성
 
             for (var i = 0; i < info.Length; i++)
@@ -85,9 +87,12 @@ namespace imgLoader_WPF
                         : info[i]
                 );
             }
+
+            sw.Write("\n0\n1"); //0 = Vote, 1 = Show
+
             sw.Close();
 
-            File.SetAttributes(infoRoute, FileAttributes.Hidden);
+            File.SetAttributes(infoFileName, FileAttributes.Hidden);
         }
 
         private static void InfoEncrypt(string path, string[] info)
@@ -277,12 +282,17 @@ namespace imgLoader_WPF
 
         internal static string GetDirectoryFromFile(string path)
         {
-            return path.Substring(0, path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal));
+            return path.Substring(0, path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1);
         }
 
         internal static void OpenDir(string path)
         {
             Process.Start("explorer.exe", path);
+        }
+
+        internal static string EHNumConverter(string number)
+        {
+            return number.Contains('/') ? number.Replace('/', '!') : number;
         }
     }
 }

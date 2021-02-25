@@ -15,7 +15,6 @@ using System.Windows.Threading;
 
 namespace imgLoader_WPF.Windows
 {
-    //todo: 이미 본것을 표시 (프로그램 실행 시 초기화)
     //todo: 서로 다른 작품 자동 연결
     //todo: 자체 탐색기 만들기
     //todo: 완전히 같은 이미지 탐색
@@ -25,14 +24,14 @@ namespace imgLoader_WPF.Windows
 
     public partial class ImgLoader
     {
-        private InfoSavingService _infSvc;
+        internal InfoSavingService _infSvc;
         private IndexingService _idxSvc;
 
         private readonly Settings _winSetting = new();
-        private ObservableCollection<IndexItem> _index = new();
+        private readonly ObservableCollection<IndexItem> _index = new();
 
         private IndexItem _clickedItem;
-        private readonly StringBuilder sb = new();
+        private readonly StringBuilder _sb = new();
 
         public ImgLoader()
         {
@@ -46,6 +45,8 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            Menu.Focus();
+
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
                 Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
@@ -62,8 +63,8 @@ namespace imgLoader_WPF.Windows
             this.Title = Core.Route;
             ItemCtrl.ItemsSource = _index;
 
-            _infSvc = new InfoSavingService();
-            _infSvc.Start(this);
+            _infSvc = new InfoSavingService(this);
+            _infSvc.Start();
 
             _idxSvc = new IndexingService(_index, this);
             _idxSvc.Start();
@@ -96,13 +97,19 @@ namespace imgLoader_WPF.Windows
             var url = TxtUrl.Text;
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = "\n" }; //imgcount = "\n" => hides "장"
 
+            HideAddBorder();
+
             var thrTemp = new Thread(() =>
             {
                 ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem));
 
-                lItem.Proc = new Processor(url, lItem);
+                lItem.Proc = new Processor(url, lItem, this);
 
-                if (!lItem.Proc.IsValidated) return;
+                if (!lItem.Proc.IsValidated)
+                {
+                    ItemCtrl.Dispatcher.Invoke(() => _index.Remove(lItem));
+                    return;
+                }
 
                 if (lItem.Proc.CheckDupl())
                 {
@@ -119,10 +126,6 @@ namespace imgLoader_WPF.Windows
             thrTemp.Name = "AddItem";
             thrTemp.SetApartmentState(ApartmentState.STA);
             thrTemp.Start();
-
-            AddBorder.Visibility = Visibility.Hidden;
-            Focus();
-            TxtUrl.Text = "주소 입력 후 Enter 키로 다운로드 시작";
         }
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -145,13 +148,13 @@ namespace imgLoader_WPF.Windows
                 var item = ItemCtrl.ContextMenu.Items[j];
                 if (item.GetType() == typeof(Separator)) continue;
 
-                if (!_clickedItem.IsDownloading && (j == 3 || j == 4 || j == 5))
+                if (!_clickedItem.IsDownloading && (j == 5 || j == 6 || j == 7))
                 {
                     ((MenuItem)item).IsEnabled = false;
                     continue;
                 }
 
-                if (j == 5) //todo: 인덱스 재처리
+                if (j == 7)
                 {
                     if (_clickedItem.Proc.Pause)
                     {
@@ -159,11 +162,9 @@ namespace imgLoader_WPF.Windows
                         ((MenuItem)ItemCtrl.ContextMenu.Items[4]).IsEnabled = false;
                         continue;
                     }
-                    else
-                    {
-                        ((MenuItem)item).IsEnabled = false;
-                        continue;
-                    }
+
+                    ((MenuItem)item).IsEnabled = false;
+                    continue;
                 }
 
                 ((MenuItem)item).IsEnabled = true;
@@ -189,7 +190,7 @@ namespace imgLoader_WPF.Windows
 
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
 
-            _idxSvc.DoIndex(sb);
+            _idxSvc.DoIndex(_sb);
         }
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
@@ -199,7 +200,7 @@ namespace imgLoader_WPF.Windows
             InfoSavingService.Save(this);
             _index.Remove(_clickedItem);
 
-            _idxSvc.DoIndex(sb);
+            _idxSvc.DoIndex(_sb);
         }
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
@@ -232,7 +233,7 @@ namespace imgLoader_WPF.Windows
 
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
 
-            _idxSvc.DoIndex(sb);
+            _idxSvc.DoIndex(_sb);
         }
 
         private void Resume_Click(object sender, RoutedEventArgs e)
@@ -253,25 +254,62 @@ namespace imgLoader_WPF.Windows
         private void AddItem_Click(object sender, RoutedEventArgs e)
         {
             AddBorder.Visibility = Visibility.Visible;
+            TxtUrl.Focus();
         }
 
-        private void AddBorder_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void AddBorder_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Released)
+            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
             {
-                AddBorder.Visibility = Visibility.Hidden;
-                Focus();
-                TxtUrl.Text = "주소 입력 후 Enter 키로 다운로드 시작";
+                HideAddBorder();
             }
         }
 
-        private void TxtUrl_GotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
+        private void HideAddBorder()
         {
-            //if (e.LeftButton != System.Windows.Input.MouseButtonState.Released) return;
-            if (TxtUrl.Text == "주소 입력 후 Enter 키로 다운로드 시작") TxtUrl.Text = "";
+            AddBorder.Visibility = Visibility.Hidden;
+            Focus();
+
+            TxtUrl.Text = "";
+            LabelBlock.Visibility = Visibility.Visible;
         }
 
         private void Border_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void TxtUrl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TxtUrl.Text.Length == 0)
+            {
+                LabelBlock.Visibility = Visibility.Visible;
+                return;
+            }
+
+            LabelBlock.Visibility = Visibility.Collapsed;
+        }
+
+        private void CopyAddress_Click(object sender, RoutedEventArgs e)
+        {
+            switch (_clickedItem.SiteName)
+            {
+                case "Hiyobi":
+                    Clipboard.SetText($"https://hiyobi.me/reader/{_clickedItem.Number}");
+                    break;
+                case "Hitomi":
+                    Clipboard.SetText($"https://Hitomi.la/galleries/{_clickedItem.Number}.html");
+                    break;
+                case "EHentai":
+                    Clipboard.SetText($"https://ehentai.org/g/{_clickedItem.Number}");
+                    break;
+                case "NHentai":
+                    Clipboard.SetText($"https://nhentai.net/g/{_clickedItem.Number}");
+                    break;
+            }
+        }
+
+        private void TxtUrl_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             e.Handled = true;
         }

@@ -15,7 +15,7 @@
             <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
                     <ItemsControl.ContextMenu>
-                        <ContextMenu>
+                        <ContextMenu x:Name="Menu">
                             <MenuItem Header="항목 추가" Click="AddItem_Click"/>
                             <Separator/>
                             <MenuItem Header="열기" IsEnabled="False" Click="Open_Click"/>
@@ -29,6 +29,7 @@
                             <Separator/>
                             <MenuItem Header="삭제" IsEnabled="False" Click="Delete_Click"/>
                             <Separator/>
+                            <MenuItem Header="주소 복사" Click="CopyAddress_Click"/>
                             <MenuItem Header="설정" Click="Setting_Click"/>
                         </ContextMenu>
                     </ItemsControl.ContextMenu>
@@ -47,10 +48,11 @@
             </ScrollViewer>
         </Border>
 
-        <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseUp="AddBorder_MouseUp">
-            <Border Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp">
-                <TextBox x:Name="TxtUrl" Height="21" Text="주소 입력 후 Enter 키로 다운로드 시작" TextWrapping="Wrap" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" GotKeyboardFocus="TxtUrl_GotKeyboardFocus"/>
-            </Border>
+        <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="AddBorder_MouseDown">
+            <Grid Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
+                <TextBox x:Name="TxtUrl" Height="21" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" TextChanged="TxtUrl_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
+                <TextBlock x:Name="LabelBlock" Height="21" VerticalAlignment="Center" Text="주소 입력 후 Enter 키로 다운로드 시작" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>
+            </Grid>
         </Border>
 
         <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,376,0,0" Height="27" Width="76" Click="Button_Click_5"/>

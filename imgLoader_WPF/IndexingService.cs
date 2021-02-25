@@ -123,6 +123,8 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
+                    Debug.WriteLine("IdxSvc");
+
                     Thread.Sleep(Interval);
 
                     if (Properties.Settings.Default.NoIndex) continue;
