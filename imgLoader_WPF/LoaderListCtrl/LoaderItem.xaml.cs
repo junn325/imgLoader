@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -14,6 +12,8 @@ namespace imgLoader_WPF.LoaderListCtrl
 
         private int _progMax;
         private int _progVal;
+
+        public static int MHeight { get; } = 60;
 
         //private readonly Stopwatch sw = new Stopwatch();
 
@@ -31,6 +31,10 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             data.TagPanelHide = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Hidden);
             data.TagPanelShow = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Visible);
+
+            data.SizeChange = (value) =>
+                //this.Grid.ColumnDefinitions[2].MaxWidth = this.ActualWidth - VoteGrid.ActualWidth;
+                this.MaxWidth = value;
 
             data.RefreshInfo = () => Dispatcher.Invoke(() =>
             {

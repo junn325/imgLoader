@@ -151,6 +151,7 @@ namespace imgLoader_WPF
     {
         public delegate void NoParam();
         public delegate void IntOne(int value);
+        public delegate void DblOne(double value);
 
         public Processor Proc;
 
@@ -179,6 +180,8 @@ namespace imgLoader_WPF
 
         public IntOne ProgBarMax;
         public NoParam ProgBarVal;
+
+        public DblOne SizeChange;
     }
 
 }
