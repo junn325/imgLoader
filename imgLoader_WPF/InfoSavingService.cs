@@ -4,18 +4,33 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
 {
     internal class InfoSavingService
     {
         private const int Interval = 3000;
-        private bool _stop;
-        private readonly Windows.ImgLoader _sender;
 
-        public InfoSavingService(Windows.ImgLoader sender)
+        private bool _stop;
+        private readonly Thread _service;
+
+        public InfoSavingService(ImgLoader sender)
         {
-            _sender = sender;
+            _service = new Thread(() =>
+            {
+                while (!_stop)
+                {
+                    Debug.WriteLine("VtSvc");
+
+                    Thread.Sleep(Interval);
+
+                    Save(sender);
+                }
+            });
+
+            _service.Name = "VtSvc";
+
         }
 
         internal static void Save(Windows.ImgLoader sender)
@@ -82,21 +97,7 @@ namespace imgLoader_WPF
         internal void Start()
         {
             _stop = false;
-
-            var service = new Thread(() =>
-            {
-                while (!_stop)
-                {
-                    Debug.WriteLine("VtSvc");
-
-                    Thread.Sleep(Interval);
-
-                    Save(_sender);
-                }
-            });
-
-            service.Name = "VtSvc";
-            service.Start();
+            _service.Start();
         }
 
         internal void Stop()

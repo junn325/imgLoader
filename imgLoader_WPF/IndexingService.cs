@@ -1,6 +1,5 @@
 ﻿using imgLoader_WPF.Windows;
 
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -17,23 +16,41 @@ namespace imgLoader_WPF
     {
         private const int Interval = 3000;
 
+        private readonly Thread _service;
+        private bool _stop;
+
         public ObservableCollection<IndexItem> Index;
 
-        private bool _stop;
         private readonly ImgLoader _sender;
-        private Thread _service;
 
         public IndexingService(ObservableCollection<IndexItem> index, ImgLoader sender)
         {
             Index = index;
             _sender = sender;
 
+            _service = new Thread(() =>
+            {
+                while (!_stop)
+                {
+                    Debug.WriteLine("IdxSvc");
+
+                    Thread.Sleep(Interval);
+
+                    if (Properties.Settings.Default.NoIndex) continue;
+
+                    var sb = new StringBuilder();
+                    DoIndex(sb);
+                }
+            });
+            _service.Name = "IdxSvc";
+
             DoIndex(new StringBuilder());
         }
 
         internal void DoIndex(StringBuilder sb)
         {
-            //if (!Directory.Exists(Core.Route)) return;
+            if (!Directory.Exists(Core.Route)) return;
+
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
             foreach (var item in new ObservableCollection<IndexItem>(Index))
             {
@@ -121,23 +138,6 @@ namespace imgLoader_WPF
         internal void Start()
         {
             _stop = false;
-
-            _service = new Thread(() =>
-            {
-                while (!_stop)
-                {
-                    Debug.WriteLine("IdxSvc");
-
-                    Thread.Sleep(Interval);
-
-                    if (Properties.Settings.Default.NoIndex) continue;
-
-                    var sb = new StringBuilder();
-                    DoIndex(sb);
-                }
-            });
-            _service.Name = "IdxSvc";
-
             _service.Start();
         }
 
@@ -164,9 +164,9 @@ namespace imgLoader_WPF
         public bool IsRead { get; set; }
         public string Route { get; set; }
 
-        public bool Selected = false;
+        //public bool Selected = false;
         public bool Show = true;
-        public bool IsDownloading = false;
+        public bool IsDownloading;
 
         public NoParam RefreshInfo;
 
