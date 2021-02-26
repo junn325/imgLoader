@@ -74,7 +74,7 @@ namespace imgLoader_WPF.Windows
 
             Title = Core.Route;
 
-            _winSetting = new Settings(_showItems);
+            _winSetting = new Settings(_showItems, _index);
 
             ItemCtrl.ItemsSource = _showItems;
 

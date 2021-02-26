@@ -59,7 +59,7 @@ namespace imgLoader_WPF
                 if (infoFiles.Contains(item.Route)) continue;
 
                 Debug.WriteLine($"remove {item.Number}");
-                _sender.Dispatcher.Invoke(() => Index.Remove(item));
+                Index.Remove(item);
             }
 
             foreach (var infoRoute in infoFiles)
@@ -82,7 +82,7 @@ namespace imgLoader_WPF
                 {
                     var temp = Index.Where(t => t.Number == infoRoute.Split('\\')[^1].Split('.')[0]).ToArray();
 
-                    if (temp.Length > 0) foreach (var item in temp) _sender.Dispatcher.Invoke(() => Index.Remove(item));
+                    if (temp.Length > 0) foreach (var item in temp) Index.Remove(item);
 
                     continue;
                 }
@@ -118,19 +118,19 @@ namespace imgLoader_WPF
                     sb.Append(info[2]);
                 }
 
-                _sender.Dispatcher.Invoke(() =>
-                    Index.Add(
-                    new IndexItem
-                    {
-                        Title = info[1],
-                        Author = sb.ToString(),
-                        SiteName = info[0],
-                        ImgCount = info[3],
-                        Number = Core.EHNumForInternal(infoRoute.Split('\\')[^1].Split('.')[0]),
-                        Route = infoRoute,
-                        Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';')
-                    }
-                    ));
+
+                Index.Add(
+                new IndexItem
+                {
+                    Title = info[1],
+                    Author = sb.ToString(),
+                    SiteName = info[0],
+                    ImgCount = info[3],
+                    Number = Core.EHNumForInternal(infoRoute.Split('\\')[^1].Split('.')[0]),
+                    Route = infoRoute,
+                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';')
+                }
+                );
                 sb.Clear();
             }
         }

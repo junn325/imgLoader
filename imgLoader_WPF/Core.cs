@@ -1,7 +1,9 @@
 ﻿using imgLoader_WPF.Sites;
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -297,6 +299,15 @@ namespace imgLoader_WPF
         internal static string EHNumForInternal(string number)
         {
             return number.Contains('!') ? number.Replace('!', '/') : number;
+        }
+
+        internal static void CompareCollections(ObservableCollection<IndexItem> collect1, ObservableCollection<IndexItem> collect2)
+        {
+            foreach (var item in collect1)
+            {
+                if (collect2.Any((i) => i.Title == item.Title)) continue;
+                Debug.WriteLine($"{item.Title}");
+            }
         }
     }
 }

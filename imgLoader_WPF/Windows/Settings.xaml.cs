@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,12 +14,14 @@ namespace imgLoader_WPF.Windows
     /// </summary>
     public partial class Settings : Window
     {
-        private readonly ObservableCollection<IndexItem> _index;
+        private readonly ObservableCollection<IndexItem> _showIndex; 
+        private readonly ObservableCollection<IndexItem> _actualIndex; 
 
-        internal Settings(ObservableCollection<IndexItem> sender)
+        internal Settings(ObservableCollection<IndexItem> showIndex, ObservableCollection<IndexItem> actualIndex)
         {
             InitializeComponent();
-            _index = sender;
+            _showIndex = showIndex;
+            _actualIndex = actualIndex;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -36,7 +39,8 @@ namespace imgLoader_WPF.Windows
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var a = new VistaFolderBrowserDialog();
-            if (a.ShowDialog() == true) TxtPath.Text = a.SelectedPath;
+            if (a.ShowDialog() == true) 
+                TxtPath.Text = a.SelectedPath;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
@@ -44,7 +48,13 @@ namespace imgLoader_WPF.Windows
             if (TxtPath.Text == "더블클릭하여 다운로드 경로를 선택하거나 직접 입력" || Core.Route == TxtPath.Text) return;
 
             Core.Route = TxtPath.Text;
-            _index.Clear();
+
+            var a = _actualIndex.Count;
+            _showIndex.Clear();
+            while (a == _actualIndex.Count)
+            {
+                Task.Delay(500).Wait();
+            }
 
             if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))
             {
