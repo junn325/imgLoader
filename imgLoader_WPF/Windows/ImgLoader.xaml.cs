@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
+using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 
@@ -26,9 +26,12 @@ namespace imgLoader_WPF.Windows
     {
         internal InfoSavingService _infSvc;
         private IndexingService _idxSvc;
+        private PaginationService _pgSvc;
 
-        private readonly Settings _winSetting = new();
+        private Settings _winSetting;
+
         private readonly ObservableCollection<IndexItem> _index = new();
+        private readonly ObservableCollection<IndexItem> _showItems = new();
 
         private IndexItem _clickedItem;
         private readonly StringBuilder _sb = new();
@@ -36,6 +39,15 @@ namespace imgLoader_WPF.Windows
         public ImgLoader()
         {
             InitializeComponent();
+        }
+
+        private void HideAddBorder()
+        {
+            AddBorder.Visibility = Visibility.Hidden;
+            Focus();
+
+            TxtUrl.Text = "";
+            LabelBlock.Visibility = Visibility.Visible;
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -60,14 +72,19 @@ namespace imgLoader_WPF.Windows
             Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
 #endif
 
-            this.Title = Core.Route;
-            ItemCtrl.ItemsSource = _index;
+            Title = Core.Route;
+
+            _winSetting = new Settings(_showItems);
+
+            ItemCtrl.ItemsSource = _showItems;
 
             _infSvc = new InfoSavingService(this);
-            _infSvc.Start();
-
             _idxSvc = new IndexingService(_index, this);
+            _pgSvc = new PaginationService(this, Scroll, _showItems, _index);
+
+            _infSvc.Start();
             _idxSvc.Start();
+            _pgSvc.Paginate();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -89,9 +106,9 @@ namespace imgLoader_WPF.Windows
             _winSetting.ShowDialog();
         }
 
-        private void TxtUrl_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key != System.Windows.Input.Key.Enter) return;
+            if (e.Key != Key.Enter) return;
             if (TxtUrl.Text.Length == 0) return;
 
             var url = TxtUrl.Text;
@@ -137,7 +154,7 @@ namespace imgLoader_WPF.Windows
             _winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
         }
 
-        private void LItem_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void LItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (sender == null) return;
 
@@ -174,7 +191,7 @@ namespace imgLoader_WPF.Windows
             e.Handled = true;
         }
 
-        private void LList_MouseRightButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void LList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             for (var j = 1; j < ItemCtrl.ContextMenu.Items.Count; j++)
             {
@@ -253,24 +270,15 @@ namespace imgLoader_WPF.Windows
             TxtUrl.Focus();
         }
 
-        private void AddBorder_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void AddBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 HideAddBorder();
             }
         }
 
-        private void HideAddBorder()
-        {
-            AddBorder.Visibility = Visibility.Hidden;
-            Focus();
-
-            TxtUrl.Text = "";
-            LabelBlock.Visibility = Visibility.Visible;
-        }
-
-        private void Border_MouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
         }
@@ -305,9 +313,27 @@ namespace imgLoader_WPF.Windows
             }
         }
 
-        private void TxtUrl_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void TxtUrl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || _index.Count <= _showItems.Count) return;
+
+            var sder = ((ScrollViewer)sender);
+            _pgSvc.Paginate();
+        }
+
+        private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            foreach (var item in _showItems)
+            {
+                if (item.SizeChange == null) return;
+                item.SizeChange(Scroll.ActualWidth - 10.0);
+                Debug.WriteLine("size");
+            }
         }
     }
 }

@@ -12,7 +12,7 @@
             <SolidColorBrush x:Key="BBrush" Color="Gray" Opacity="0.5"/>
         </Grid.Resources>
         <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,10,10,20">
-            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged" SizeChanged="Scroll_SizeChanged">
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
@@ -35,8 +35,7 @@
                     </ItemsControl.ContextMenu>
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <loaderListCtrl:LoaderList VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" Orientation="Vertical" MouseRightButtonDown="LList_MouseRightButtonDown">
-                            </loaderListCtrl:LoaderList>
+                            <loaderListCtrl:LoaderList x:Name="LList" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="White" Orientation="Vertical" MouseRightButtonDown="LList_MouseRightButtonDown"/>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -48,7 +47,7 @@
             </ScrollViewer>
         </Border>
 
-        <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="AddBorder_MouseDown">
+        <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="AddBorder_MouseDown"> 
             <Grid Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
                 <TextBox x:Name="TxtUrl" Height="21" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" TextChanged="TxtUrl_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
                 <TextBlock x:Name="LabelBlock" Height="21" VerticalAlignment="Center" Text="주소 입력 후 Enter 키로 다운로드 시작" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>

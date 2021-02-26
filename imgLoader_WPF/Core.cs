@@ -207,12 +207,12 @@ namespace imgLoader_WPF
                     file = new FileStream(route, mode, access);
                     temp = true;
                 }
-                catch
+                catch (Exception ex)
                 {
                     if (thres++ > 100) break;
 
                     temp = false;
-                    Debug.WriteLine($"{route} wait");
+                    Log($"{route} wait: {ex.Message}");
                     Thread.Sleep(20);
                 }
             }

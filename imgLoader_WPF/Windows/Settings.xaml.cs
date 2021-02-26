@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,9 +13,12 @@ namespace imgLoader_WPF.Windows
     /// </summary>
     public partial class Settings : Window
     {
-        public Settings()
+        private readonly ObservableCollection<IndexItem> _index;
+
+        internal Settings(ObservableCollection<IndexItem> sender)
         {
             InitializeComponent();
+            _index = sender;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -40,6 +44,7 @@ namespace imgLoader_WPF.Windows
             if (TxtPath.Text == "더블클릭하여 다운로드 경로를 선택하거나 직접 입력" || Core.Route == TxtPath.Text) return;
 
             Core.Route = TxtPath.Text;
+            _index.Clear();
 
             if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))
             {
