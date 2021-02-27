@@ -15,13 +15,15 @@ namespace imgLoader_WPF.Windows
     public partial class Settings : Window
     {
         private readonly ObservableCollection<IndexItem> _showIndex; 
-        private readonly ObservableCollection<IndexItem> _actualIndex; 
+        private readonly ObservableCollection<IndexItem> _actualIndex;
+        private ScrollViewer _scroll;
 
-        internal Settings(ObservableCollection<IndexItem> showIndex, ObservableCollection<IndexItem> actualIndex)
+        internal Settings(ScrollViewer scroll, ObservableCollection<IndexItem> showIndex, ObservableCollection<IndexItem> actualIndex)
         {
             InitializeComponent();
             _showIndex = showIndex;
             _actualIndex = actualIndex;
+            _scroll = scroll;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -51,6 +53,8 @@ namespace imgLoader_WPF.Windows
 
             var a = _actualIndex.Count;
             _showIndex.Clear();
+            _scroll.ScrollToTop();
+
             while (a == _actualIndex.Count)
             {
                 Task.Delay(500).Wait();

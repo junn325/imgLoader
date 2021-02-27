@@ -118,7 +118,6 @@ namespace imgLoader_WPF
                     sb.Append(info[2]);
                 }
 
-
                 Index.Add(
                 new IndexItem
                 {

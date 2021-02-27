@@ -21,6 +21,7 @@ namespace imgLoader_WPF.Windows
     //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
     //todo: 페이지네이션
     //todo: 조회수
+    //todo: 여러 폴더를 탭으로 동시에 관리
 
     public partial class ImgLoader
     {
@@ -30,8 +31,9 @@ namespace imgLoader_WPF.Windows
 
         private Settings _winSetting;
 
-        private readonly ObservableCollection<IndexItem> _index = new();
-        private readonly ObservableCollection<IndexItem> _showItems = new();
+        private readonly ObservableCollection<IndexItem> _index = new();   //단순 인덱싱 결과
+        internal ObservableCollection<IndexItem> _list = new();            //표시되어야 할 총 항목
+        private ObservableCollection<IndexItem> _showItems = new();        //실제 표시되는 항목
 
         private IndexItem _clickedItem;
         private readonly StringBuilder _sb = new();
@@ -53,6 +55,7 @@ namespace imgLoader_WPF.Windows
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             ;
+            //_list = _index;
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
@@ -74,13 +77,22 @@ namespace imgLoader_WPF.Windows
 
             Title = Core.Route;
 
-            _winSetting = new Settings(_showItems, _index);
+            _winSetting = new Settings(Scroll, _showItems, _index);
 
             ItemCtrl.ItemsSource = _showItems;
 
+            new Thread(() =>
+            {
+                while (true)
+                {
+                    Debug.WriteLine(_list.Count);
+                    Thread.Sleep(200);
+                }
+            }).Start();
+
             _infSvc = new InfoSavingService(this);
             _idxSvc = new IndexingService(_index, this);
-            _pgSvc = new PaginationService(this, Scroll, _showItems, _index);
+            _pgSvc = new PaginationService(this, Scroll, _showItems, _list, _index);
 
             _infSvc.Start();
             _idxSvc.Start();
@@ -334,6 +346,17 @@ namespace imgLoader_WPF.Windows
                 item.SizeChange(Scroll.ActualWidth - 10.0);
                 Debug.WriteLine("size");
             }
+        }
+
+        private void Search_Click(object sender, RoutedEventArgs e)
+        {
+            _showItems.Clear();
+            Core.SearchFromAll(_index, "loli", _list);
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            _showItems.Add(new IndexItem() { Title = "test" });
         }
     }
 }

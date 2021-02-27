@@ -241,27 +241,44 @@ namespace imgLoader_WPF
             return -1;
         }
 
-        internal static void Search(Dictionary<string, string> index, string search, string route)
+        internal static void SearchFromSpecif(ObservableCollection<IndexItem> index, SearchOption option)
         {
-            var searchResult = new Dictionary<string, string>(index);
-            foreach (var (key, value) in index)
+
+        }
+        internal static void SearchFromAll(ObservableCollection<IndexItem> searchIndex, string search, ObservableCollection<IndexItem> destIndex)
+        {
+            var sb = new StringBuilder();
+
+            var temp = new string[searchIndex.Count];
+            var searchResult = new ObservableCollection<IndexItem>(searchIndex);
+
+            for (var i = 0; i < searchIndex.Count; i++)
             {
-                foreach (var srch in search.Split(','))
+                var item = searchIndex[i];
+
+                sb.Append(item.Author).Append(item.Number).Append(item.SiteName).Append(item.Title);
+                foreach (var tag in item.Tags) sb.Append(tag);
+
+                temp[i] = sb.ToString();
+                sb.Clear();
+            }
+
+            for (var i = 0; i < searchIndex.Count; i++)
+            {
+                foreach (var srch in search.Split(','))             //검색어 나열
                 {
-                    if (!value.Contains(srch, StringComparison.OrdinalIgnoreCase))
+                    if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
                     {
-                        searchResult.Remove(key);
+                        searchResult.Remove(searchIndex[i]);
                     }
                 }
             }
 
+            destIndex.Clear();
             foreach (var item in searchResult)
             {
-                Console.WriteLine(item.Key.Replace(route, "%BaseDir%").Replace($"\\{item.Key.Split('\\').Last()}", "").Insert(10, " "));
+                destIndex.Add(item);
             }
-
-            Console.WriteLine($"{searchResult.Count} results");
-            Console.WriteLine(new string('=', 100));
         }
 
         internal static T[] AppendArray<T>(T[] a, T[] b)
@@ -308,6 +325,11 @@ namespace imgLoader_WPF
                 if (collect2.Any((i) => i.Title == item.Title)) continue;
                 Debug.WriteLine($"{item.Title}");
             }
+        }
+
+        internal enum SearchOption
+        {
+            
         }
     }
 }
