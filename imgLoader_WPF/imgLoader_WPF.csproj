@@ -7,8 +7,8 @@
     <AssemblyName>imgLoader</AssemblyName>
     <Version>0</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <FileVersion>0.3.0.1280</FileVersion>
-    <AssemblyVersion>0.3.0.1280</AssemblyVersion>
+    <FileVersion>0.3.0.1297</FileVersion>
+    <AssemblyVersion>0.3.0.1297</AssemblyVersion>
     <StartupObject>imgLoader_WPF.App</StartupObject>
   </PropertyGroup>
 

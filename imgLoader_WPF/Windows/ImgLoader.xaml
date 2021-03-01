@@ -16,10 +16,10 @@
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
-                            <MenuItem Header="항목 추가" Click="AddItem_Click"/>
-                            <Separator/>
-                            <MenuItem Header="열기" IsEnabled="False" Click="Open_Click"/>
+                            <MenuItem x:Name="Open" Header="열기" IsEnabled="False" Click="Open_Click"/>
                             <MenuItem Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
+                            <Separator/>
+                            <MenuItem Header="항목 추가" Click="AddItem_Click"/>
                             <Separator/>
                             <MenuItem Header="취소" IsEnabled="False" Click="Cancel_Click"/>
                             <MenuItem Header="일시중지" IsEnabled="False" Click="Pause_Click"/>

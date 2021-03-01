@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,9 +20,9 @@ namespace imgLoader_WPF.Windows
     //todo: 자체 탐색기 만들기
     //todo: 완전히 같은 이미지 탐색
     //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
-    //todo: 페이지네이션
     //todo: 조회수
     //todo: 여러 폴더를 탭으로 동시에 관리
+    //todo: 조건이 있는 랜덤
 
     public partial class ImgLoader
     {
@@ -85,7 +86,7 @@ namespace imgLoader_WPF.Windows
                 while (true)
                 {
                     Debug.WriteLine($"_index:{_index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
                 }
             }).Start();
 
@@ -153,8 +154,9 @@ namespace imgLoader_WPF.Windows
                     return;
                 }
 
-                lItem.RefreshInfo();
+                while (lItem.RefreshInfo == null) Task.Delay(100).Wait();
 
+                lItem.RefreshInfo();
                 lItem.Proc.Load();
 
                 _infSvc.Start();
@@ -180,12 +182,12 @@ namespace imgLoader_WPF.Windows
 
             _clickedItem = (IndexItem)((LoaderItem)sender).DataContext;
 
-            for (var j = 1; j < ItemCtrl.ContextMenu.Items.Count; j++)
+            for (var j = 0; j < ItemCtrl.ContextMenu.Items.Count; j++)
             {
                 var item = ItemCtrl.ContextMenu.Items[j];
                 if (item.GetType() == typeof(Separator)) continue;
 
-                if (!_clickedItem.IsDownloading && (j == 5 || j == 6 || j == 7))
+                if (!_clickedItem.IsDownloading && (j == 5 || j == 6 || j == 7)) //todo: switch menuitem 이름별
                 {
                     ((MenuItem)item).IsEnabled = false;
                     continue;
