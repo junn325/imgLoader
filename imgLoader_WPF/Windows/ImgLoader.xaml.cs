@@ -44,13 +44,13 @@ namespace imgLoader_WPF.Windows
             InitializeComponent();
         }
 
-        private void HideAddBorder()
+        private void HideBorder(Border border, TextBox txtB, TextBlock label)
         {
-            AddBorder.Visibility = Visibility.Hidden;
+            border.Visibility = Visibility.Hidden;
             Focus();
 
-            TxtUrl.Text = "";
-            LabelBlock.Visibility = Visibility.Visible;
+            txtB.Text = "";
+            label.Visibility = Visibility.Visible;
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -103,7 +103,15 @@ namespace imgLoader_WPF.Windows
                     Thread.Sleep(1000);
                 }
             }).Start();
+        }
 
+        private void List_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            if (PgSvc != null && List.Count != 0 && ShowItems.Count == 0)
+            {
+                Debug.WriteLine("paginate");
+                PgSvc.Paginate();
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -133,7 +141,7 @@ namespace imgLoader_WPF.Windows
             var url = TxtUrl.Text;
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = "\n" }; //imgcount = "\n" => hides "장"
 
-            HideAddBorder();
+            HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
 
             var thrTemp = new Thread(() =>
             {
@@ -185,33 +193,35 @@ namespace imgLoader_WPF.Windows
 
             _clickedItem = (IndexItem)((LoaderItem)sender).DataContext;
 
-            foreach (var item in ItemCtrl.ContextMenu.Items)
+            foreach (var i in ItemCtrl.ContextMenu.Items)
             {
-                if (item.GetType() == typeof(Separator)) continue;
+                if (i.GetType() == typeof(Separator)) continue;
 
-                switch (((MenuItem)item).Name)
+                var item = (MenuItem)i;
+
+                switch (item.Name)
                 {
                     case "Cancel":
                         break;
                     case "Resume":
                         if (!_clickedItem.IsDownloading)
                         {
-                            ((MenuItem)item).IsEnabled = false;
+                            item.IsEnabled = false;
                         }
                         break;
                     case "Pause":
                         if (_clickedItem.Proc == null) continue;
                         if (_clickedItem.Proc.Pause)
                         {
-                            ((MenuItem)item).IsEnabled = true;
-                            ((MenuItem)ItemCtrl.ContextMenu.Items[4]).IsEnabled = false;
+                            item.IsEnabled = false;
+                            ((MenuItem)ItemCtrl.ContextMenu.Items[7]).IsEnabled = false;        //Resume
                             continue;
                         }
 
-                        ((MenuItem)item).IsEnabled = false;
+                        item.IsEnabled = false;
                         break;
                     default:
-                        ((MenuItem)item).IsEnabled = true;
+                        item.IsEnabled = true;
                         break;
                 }
             }
@@ -221,11 +231,21 @@ namespace imgLoader_WPF.Windows
 
         private void LList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            for (var j = 1; j < ItemCtrl.ContextMenu.Items.Count; j++)
+            foreach (var item in ItemCtrl.ContextMenu.Items)
             {
-                var item = ItemCtrl.ContextMenu.Items[j];
                 if (item.GetType() == typeof(Separator)) continue;
-                ((MenuItem)item).IsEnabled = false;
+
+                switch (((MenuItem)item).Name)
+                {
+                    case "Setting":
+                    case "Add":
+                    case "Search":
+                        ((MenuItem)item).IsEnabled = true;
+                        break;
+                    default:
+                        ((MenuItem)item).IsEnabled = false;
+                        break;
+                }
             }
         }
 
@@ -302,7 +322,7 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                HideAddBorder();
+                HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
             }
         }
 
@@ -315,11 +335,11 @@ namespace imgLoader_WPF.Windows
         {
             if (TxtUrl.Text.Length == 0)
             {
-                LabelBlock.Visibility = Visibility.Visible;
+                LabelBlock_Add.Visibility = Visibility.Visible;
                 return;
             }
 
-            LabelBlock.Visibility = Visibility.Collapsed;
+            LabelBlock_Add.Visibility = Visibility.Collapsed;
         }
 
         private void CopyAddress_Click(object sender, RoutedEventArgs e)
@@ -366,15 +386,48 @@ namespace imgLoader_WPF.Windows
 
         private void Search_Click(object sender, RoutedEventArgs e)
         {
-            List.Clear();
-            ShowItems.Clear();
-            Core.SearchFromAll(_index, "loli", List);
+            SrchBorder.Visibility = Visibility.Visible;
+            TxtSrchAll.Focus();
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             //ShowItems.Add(new IndexItem() { Title = "test" });
             PgSvc.Paginate();
+        }
+
+        private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TxtSrchAll.Text.Length == 0)
+            {
+                LabelBlock_Srch.Visibility = Visibility.Visible;
+                return;
+            }
+
+            LabelBlock_Srch.Visibility = Visibility.Collapsed;
+        }
+
+        private void TxtSrchAll_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+            if (TxtSrchAll.Text.Length == 0) return;
+
+            List.Clear();
+            ShowItems.Clear();
+
+            Core.SearchFromAll(_index, TxtSrchAll.Text, List);
+            PgSvc.Paginate();
+
+            TxtSrchAll.Text = "";
+            SrchBorder.Visibility = Visibility.Collapsed;
+        }
+
+        private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                HideBorder(SrchBorder, TxtSrchAll, LabelBlock_Srch);
+            }
         }
     }
 }

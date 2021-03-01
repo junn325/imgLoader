@@ -19,7 +19,7 @@
                             <MenuItem x:Name="Open" Header="열기" IsEnabled="False" Click="Open_Click"/>
                             <MenuItem x:Name="OpenExplorer" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="AddItem" Header="항목 추가" Click="AddItem_Click"/>
+                            <MenuItem x:Name="Add" Header="항목 추가" Click="AddItem_Click"/>
                             <Separator/>
                             <MenuItem x:Name="Cancel" Header="취소" IsEnabled="False" Click="Cancel_Click"/>
                             <MenuItem x:Name="Pause" Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
@@ -58,9 +58,9 @@
             </Grid>
         </Border>
 
-        <Border x:Name="SrchBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="AddBorder_MouseDown"> 
+        <Border x:Name="SrchBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="SrchBorder_MouseDown"> 
             <Grid Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
-                <TextBox x:Name="TxtSrchAll" Height="21" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" TextChanged="TxtUrl_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
+                <TextBox x:Name="TxtSrchAll" Height="21" VerticalAlignment="Center" KeyUp="TxtSrchAll_KeyUp" TextChanged="TxtSrchAll_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
                 <TextBlock x:Name="LabelBlock_Srch" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>
             </Grid>
         </Border>
