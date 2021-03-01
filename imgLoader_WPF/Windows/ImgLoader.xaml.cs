@@ -27,13 +27,13 @@ namespace imgLoader_WPF.Windows
     {
         private InfoSavingService _infSvc;
         private IndexingService _idxSvc;
-        private PaginationService PgSvc;
+        internal PaginationService PgSvc;
 
         private Settings _winSetting;
 
         private readonly ObservableCollection<IndexItem> _index = new();   //단순 인덱싱 결과
-        private ObservableCollection<IndexItem> List = new();            //표시되어야 할 총 항목
-        private ObservableCollection<IndexItem> ShowItems = new();        //실제 표시되는 항목
+        internal ObservableCollection<IndexItem> List = new();            //표시되어야 할 총 항목
+        internal ObservableCollection<IndexItem> ShowItems = new();        //실제 표시되는 항목
 
         private IndexItem _clickedItem;
         private readonly StringBuilder _sb = new();

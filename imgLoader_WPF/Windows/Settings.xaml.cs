@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
@@ -57,9 +58,12 @@ namespace imgLoader_WPF.Windows
             _sender.ShowItems.Clear();
             _scroll.ScrollToTop();
 
+            //_sender.PgSvc.Paginate();
+
             while (a == _actualIndex.Count)
             {
                 Task.Delay(500).Wait();
+                Debug.WriteLine("Settings: wait");
             }
 
             if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))

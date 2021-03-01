@@ -1,4 +1,5 @@
-﻿using imgLoader_WPF.Windows;
+﻿using System;
+using imgLoader_WPF.Windows;
 
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -20,6 +21,7 @@ namespace imgLoader_WPF
         private bool _stop;
 
         public ObservableCollection<IndexItem> Index;
+        private string _route = "";
 
         private readonly ImgLoader _sender;
 
@@ -39,7 +41,17 @@ namespace imgLoader_WPF
                     if (Properties.Settings.Default.NoIndex) continue;
 
                     var sb = new StringBuilder();
-                    DoIndex(sb);
+
+                    if (!string.Equals(_route, Core.Route, StringComparison.OrdinalIgnoreCase))
+                    {
+                        _route = Core.Route;
+                        DoIndex(sb);
+                        _sender.PgSvc.Paginate();
+                    }
+                    else
+                    {
+                        DoIndex(sb);
+                    }
                 }
             });
             _service.Name = "IdxSvc";
