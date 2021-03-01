@@ -42,7 +42,7 @@ namespace imgLoader_WPF.Windows
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             var a = new VistaFolderBrowserDialog();
-            if (a.ShowDialog() == true) 
+            if (a.ShowDialog() == true)
                 TxtPath.Text = a.SelectedPath;
         }
 
@@ -53,6 +53,8 @@ namespace imgLoader_WPF.Windows
             Core.Route = TxtPath.Text;
 
             var a = _actualIndex.Count;
+
+            _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = Visibility.Visible);
 
             _sender.List.Clear();
             _sender.ShowItems.Clear();

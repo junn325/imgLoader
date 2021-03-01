@@ -29,6 +29,7 @@ namespace imgLoader_WPF
         {
             Index = index;
             _sender = sender;
+            _route = Core.Route;
 
             _service = new Thread(() =>
             {
@@ -143,6 +144,7 @@ namespace imgLoader_WPF
                 }
                 );
                 sb.Clear();
+                _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
             }
         }
 

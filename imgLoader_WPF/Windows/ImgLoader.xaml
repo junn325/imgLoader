@@ -49,6 +49,8 @@
             </ScrollViewer>
         </Border>
 
+        <TextBlock x:Name="IdxBlock" Text="인덱싱 중..." VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
         <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="AddBorder_MouseDown"> 
             <Grid Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
                 <TextBox x:Name="TxtUrl" Height="21" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" TextChanged="TxtUrl_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
