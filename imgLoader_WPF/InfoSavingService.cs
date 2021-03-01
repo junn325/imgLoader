@@ -99,7 +99,7 @@ namespace imgLoader_WPF
         {
             _stop = false;
 
-            if (_service.ThreadState != System.Threading.ThreadState.Running)
+            if (_service == null || _service.ThreadState != System.Threading.ThreadState.Running)
             {
                 _service = new Thread(() => _func(_stop, _sender));
                 _service.Name = "VtSvc";

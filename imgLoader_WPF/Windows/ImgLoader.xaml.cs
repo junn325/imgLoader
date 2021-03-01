@@ -178,36 +178,39 @@ namespace imgLoader_WPF.Windows
 
         private void LItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (sender == null) return;
+            if (sender == null || ItemCtrl.ContextMenu == null) return;
 
             _clickedItem = (IndexItem)((LoaderItem)sender).DataContext;
 
-            for (var j = 0; j < ItemCtrl.ContextMenu.Items.Count; j++)
+            foreach (var item in ItemCtrl.ContextMenu.Items)
             {
-                var item = ItemCtrl.ContextMenu.Items[j];
                 if (item.GetType() == typeof(Separator)) continue;
 
-                if (!_clickedItem.IsDownloading && (j == 5 || j == 6 || j == 7)) //todo: switch menuitem 이름별
+                switch (((MenuItem)item).Name)
                 {
-                    ((MenuItem)item).IsEnabled = false;
-                    continue;
-                }
+                    case "Cancel":
+                        break;
+                    case "Resume":
+                        if (!_clickedItem.IsDownloading)
+                        {
+                            ((MenuItem)item).IsEnabled = false;
+                        }
+                        break;
+                    case "Pause":
+                        if (_clickedItem.Proc == null) continue;
+                        if (_clickedItem.Proc.Pause)
+                        {
+                            ((MenuItem)item).IsEnabled = true;
+                            ((MenuItem)ItemCtrl.ContextMenu.Items[4]).IsEnabled = false;
+                            continue;
+                        }
 
-                if (j == 7)
-                {
-                    if (_clickedItem.Proc == null) continue;
-                    if (_clickedItem.Proc.Pause)
-                    {
+                        ((MenuItem)item).IsEnabled = false;
+                        break;
+                    default:
                         ((MenuItem)item).IsEnabled = true;
-                        ((MenuItem)ItemCtrl.ContextMenu.Items[4]).IsEnabled = false;
-                        continue;
-                    }
-
-                    ((MenuItem)item).IsEnabled = false;
-                    continue;
+                        break;
                 }
-
-                ((MenuItem)item).IsEnabled = true;
             }
 
             e.Handled = true;

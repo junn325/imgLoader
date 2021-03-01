@@ -17,22 +17,22 @@
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
                             <MenuItem x:Name="Open" Header="열기" IsEnabled="False" Click="Open_Click"/>
-                            <MenuItem Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
+                            <MenuItem x:Name="OpenExplorer" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
                             <Separator/>
-                            <MenuItem Header="항목 추가" Click="AddItem_Click"/>
+                            <MenuItem x:Name="AddItem" Header="항목 추가" Click="AddItem_Click"/>
                             <Separator/>
-                            <MenuItem Header="취소" IsEnabled="False" Click="Cancel_Click"/>
-                            <MenuItem Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
-                            <MenuItem Header="재개" IsEnabled="False" Click="Resume_Click"/>
+                            <MenuItem x:Name="Cancel" Header="취소" IsEnabled="False" Click="Cancel_Click"/>
+                            <MenuItem x:Name="Pause" Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
+                            <MenuItem x:Name="Resume" Header="재개" IsEnabled="False" Click="Resume_Click"/>
                             <!--<Separator/>
                             <MenuItem Header="목록에서만 제거" IsEnabled="False" Click="RemoveOnlyList_Click"/>-->
                             <Separator/>
-                            <MenuItem Header="삭제" IsEnabled="False" Click="Delete_Click"/>
+                            <MenuItem x:Name="Delete" Header="삭제" IsEnabled="False" Click="Delete_Click"/>
                             <Separator/>
-                            <MenuItem Header="검색" Click="Search_Click"/>
-                            <MenuItem Header="주소 복사" Click="CopyAddress_Click"/>
+                            <MenuItem x:Name="Search" Header="검색" Click="Search_Click"/>
+                            <MenuItem x:Name="CopyAddress" Header="주소 복사" Click="CopyAddress_Click"/>
                             <Separator/>
-                            <MenuItem Header="설정" Click="Setting_Click"/>
+                            <MenuItem x:Name="Setting" Header="설정" Click="Setting_Click"/>
                         </ContextMenu>
                     </ItemsControl.ContextMenu>
                     <ItemsControl.ItemsPanel>
