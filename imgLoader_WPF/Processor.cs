@@ -18,7 +18,7 @@ namespace imgLoader_WPF
 
         //private int _index;
         private IndexItem _item;
-        private Windows.ImgLoader _sender;
+        //private Windows.ImgLoader _sender;
 
         public bool Stop;
         public bool Pause;
@@ -33,15 +33,12 @@ namespace imgLoader_WPF
         internal ISite Site { get; }
         internal bool IsValidated { get; }
 
-        public Processor(string url, IndexItem item, Windows.ImgLoader sender)
+        public Processor(string url, IndexItem item)
         {
             try
             {
                 if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
 
-                _sender = sender;
-
-                _sender._infSvc.Stop();
                 item.IsDownloading = true;
 
                 Url = url;
@@ -95,7 +92,6 @@ namespace imgLoader_WPF
             AllocTask(Route, ImgUrl);
             _item.IsDownloading = false;
 
-            _sender._infSvc.Start();
             Stopping();
         }
 

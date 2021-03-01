@@ -14,14 +14,14 @@ namespace imgLoader_WPF.Windows
     /// </summary>
     public partial class Settings : Window
     {
-        private readonly ObservableCollection<IndexItem> _showIndex; 
         private readonly ObservableCollection<IndexItem> _actualIndex;
+        private readonly ImgLoader _sender;
         private ScrollViewer _scroll;
 
-        internal Settings(ScrollViewer scroll, ObservableCollection<IndexItem> showIndex, ObservableCollection<IndexItem> actualIndex)
+        internal Settings(Windows.ImgLoader sender, ScrollViewer scroll, ObservableCollection<IndexItem> actualIndex)
         {
             InitializeComponent();
-            _showIndex = showIndex;
+            _sender = sender;
             _actualIndex = actualIndex;
             _scroll = scroll;
         }
@@ -52,7 +52,9 @@ namespace imgLoader_WPF.Windows
             Core.Route = TxtPath.Text;
 
             var a = _actualIndex.Count;
-            _showIndex.Clear();
+
+            _sender.List.Clear();
+            _sender.ShowItems.Clear();
             _scroll.ScrollToTop();
 
             while (a == _actualIndex.Count)

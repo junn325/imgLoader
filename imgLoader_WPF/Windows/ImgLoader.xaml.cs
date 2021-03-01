@@ -25,15 +25,15 @@ namespace imgLoader_WPF.Windows
 
     public partial class ImgLoader
     {
-        internal InfoSavingService _infSvc;
+        private InfoSavingService _infSvc;
         private IndexingService _idxSvc;
-        private PaginationService _pgSvc;
+        private PaginationService PgSvc;
 
         private Settings _winSetting;
 
         private readonly ObservableCollection<IndexItem> _index = new();   //단순 인덱싱 결과
-        internal ObservableCollection<IndexItem> _list = new();            //표시되어야 할 총 항목
-        private ObservableCollection<IndexItem> _showItems = new();        //실제 표시되는 항목
+        private ObservableCollection<IndexItem> List = new();            //표시되어야 할 총 항목
+        private ObservableCollection<IndexItem> ShowItems = new();        //실제 표시되는 항목
 
         private IndexItem _clickedItem;
         private readonly StringBuilder _sb = new();
@@ -55,7 +55,6 @@ namespace imgLoader_WPF.Windows
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             ;
-            //_list = _index;
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
@@ -77,26 +76,30 @@ namespace imgLoader_WPF.Windows
 
             Title = Core.Route;
 
-            _winSetting = new Settings(Scroll, _showItems, _index);
+            _winSetting = new Settings(this, Scroll, _index);
 
-            ItemCtrl.ItemsSource = _showItems;
+            ItemCtrl.ItemsSource = ShowItems;
 
             new Thread(() =>
             {
                 while (true)
                 {
-                    Debug.WriteLine(_list.Count);
-                    Thread.Sleep(200);
+                    Debug.WriteLine($"_index:{_index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
+                    Thread.Sleep(500);
                 }
             }).Start();
 
+
             _infSvc = new InfoSavingService(this);
             _idxSvc = new IndexingService(_index, this);
-            _pgSvc = new PaginationService(this, Scroll, _showItems, _list, _index);
+
+            List = _index;
+
+            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
 
             _infSvc.Start();
             _idxSvc.Start();
-            _pgSvc.Paginate();
+            PgSvc.Paginate();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -132,17 +135,20 @@ namespace imgLoader_WPF.Windows
             {
                 ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem));
 
-                lItem.Proc = new Processor(url, lItem, this);
+                _infSvc.Stop();
+                lItem.Proc = new Processor(url, lItem);
 
                 if (!lItem.Proc.IsValidated)
                 {
                     ItemCtrl.Dispatcher.Invoke(() => _index.Remove(lItem));
+                    _infSvc.Start();
                     return;
                 }
 
                 if (lItem.Proc.CheckDupl())
                 {
                     MessageBox.Show("Already Exists.");
+                    _infSvc.Start();
                     ItemCtrl.Dispatcher.Invoke(() => _index.Remove(lItem));
                     return;
                 }
@@ -150,6 +156,8 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
 
                 lItem.Proc.Load();
+
+                _infSvc.Start();
             });
 
             thrTemp.Name = "AddItem";
@@ -332,15 +340,15 @@ namespace imgLoader_WPF.Windows
 
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || _index.Count <= _showItems.Count) return;
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || _index.Count <= ShowItems.Count) return;
 
             var sder = ((ScrollViewer)sender);
-            _pgSvc.Paginate();
+            PgSvc.Paginate();
         }
 
         private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            foreach (var item in _showItems)
+            foreach (var item in ShowItems)
             {
                 if (item.SizeChange == null) return;
                 item.SizeChange(Scroll.ActualWidth - 10.0);
@@ -350,13 +358,14 @@ namespace imgLoader_WPF.Windows
 
         private void Search_Click(object sender, RoutedEventArgs e)
         {
-            _showItems.Clear();
-            Core.SearchFromAll(_index, "loli", _list);
+            ShowItems.Clear();
+            Core.SearchFromAll(_index, "loli", List);
         }
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            _showItems.Add(new IndexItem() { Title = "test" });
+            //ShowItems.Add(new IndexItem() { Title = "test" });
+            PgSvc.Paginate();
         }
     }
 }

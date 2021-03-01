@@ -15,24 +15,22 @@ namespace imgLoader_WPF
         private Thread _service;
 
         private readonly Windows.ImgLoader _sender;
-        private readonly ScrollViewer _scroll;
+        private readonly double _scrollHeight;
         private readonly ObservableCollection<IndexItem> _showItems;
         internal readonly ObservableCollection<IndexItem> _list;
-        private readonly ObservableCollection<IndexItem> _index;
 
-        public PaginationService(Windows.ImgLoader sender, ScrollViewer scroll, ObservableCollection<IndexItem> showItems, ObservableCollection<IndexItem> list, ObservableCollection<IndexItem> index)
+        public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, ObservableCollection<IndexItem> list)
         {
             _sender = sender;
             _showItems = showItems;
             _list = list;
-            _scroll = scroll;
-            _index = index;
+            _scrollHeight = scrollHeight;
         }
 
         internal void Paginate()
         {
             if (_service == null) goto page;
-            if (_service.ThreadState != System.Threading.ThreadState.Stopped) return;
+            if (_service.ThreadState != ThreadState.Stopped) return;
 
             page: _service = new Thread(() =>
             {
@@ -42,7 +40,7 @@ namespace imgLoader_WPF
                 //}
 
                 int oriCnt = _showItems.Count;
-                for (int i = 0; i < Math.Ceiling(_scroll.ActualHeight / LoaderItem.MHeight); i++)
+                for (int i = 0; i < Math.Ceiling(_scrollHeight / LoaderItem.MHeight); i++)
                 {
                     var i1 = i;
                     if (oriCnt + i1 + 1 > _list.Count) return;
