@@ -81,6 +81,20 @@ namespace imgLoader_WPF.Windows
 
             ItemCtrl.ItemsSource = ShowItems;
 
+            _infSvc = new InfoSavingService(this);
+            _idxSvc = new IndexingService(_index, this);
+
+            foreach (var item in _index)
+            {
+                List.Add(item);
+            }
+
+            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, ref List);
+
+            _infSvc.Start();
+            _idxSvc.Start();
+            PgSvc.Paginate();
+
             new Thread(() =>
             {
                 while (true)
@@ -90,17 +104,6 @@ namespace imgLoader_WPF.Windows
                 }
             }).Start();
 
-
-            _infSvc = new InfoSavingService(this);
-            _idxSvc = new IndexingService(_index, this);
-
-            List = _index;
-
-            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
-
-            _infSvc.Start();
-            _idxSvc.Start();
-            PgSvc.Paginate();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -363,6 +366,7 @@ namespace imgLoader_WPF.Windows
 
         private void Search_Click(object sender, RoutedEventArgs e)
         {
+            List.Clear();
             ShowItems.Clear();
             Core.SearchFromAll(_index, "loli", List);
         }
