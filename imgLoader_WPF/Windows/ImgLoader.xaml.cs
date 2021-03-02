@@ -146,14 +146,14 @@ namespace imgLoader_WPF.Windows
 
             var thrTemp = new Thread(() =>
             {
-                ItemCtrl.Dispatcher.Invoke(() => _index.Insert(0, lItem));
+                ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
 
                 _infSvc.Stop();
                 lItem.Proc = new Processor(url, lItem);
 
                 if (!lItem.Proc.IsValidated)
                 {
-                    ItemCtrl.Dispatcher.Invoke(() => _index.Remove(lItem));
+                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
                     _infSvc.Start();
                     return;
                 }
@@ -162,9 +162,11 @@ namespace imgLoader_WPF.Windows
                 {
                     MessageBox.Show("Already Exists.");
                     _infSvc.Start();
-                    ItemCtrl.Dispatcher.Invoke(() => _index.Remove(lItem));
+                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
                     return;
                 }
+
+                PgSvc.Paginate();
 
                 while (lItem.RefreshInfo == null) Task.Delay(100).Wait();
 
