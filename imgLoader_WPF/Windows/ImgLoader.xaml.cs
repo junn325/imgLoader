@@ -54,9 +54,21 @@ namespace imgLoader_WPF.Windows
             label.Visibility = Visibility.Visible;
         }
 
-        private void Sort(ObservableCollection<IndexItem> collection)
+        private void Sort(ObservableCollection<IndexItem> collection, Sorter sorter)
         {
-            var temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+            ObservableCollection<IndexItem> temp;
+            switch (sorter)
+            {
+                case Sorter.Number:
+                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+                    break;
+                case Sorter.Title:
+                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => i.Title));
+                    break;
+                default:
+                    return;
+            }
+
             collection.Clear();
 
             foreach (var item in temp)
@@ -66,6 +78,14 @@ namespace imgLoader_WPF.Windows
 
             ShowItems.Clear();
             PgSvc.Paginate();
+        }
+
+        enum Sorter
+        {
+            Number,
+            Page,
+            Title,
+            Author
         }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
