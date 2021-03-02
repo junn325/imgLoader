@@ -64,7 +64,8 @@ namespace imgLoader_WPF.Windows
                 collection.Add(item);
             }
 
-            PgSvc.PaginateToEnd();
+            ShowItems.Clear();
+            PgSvc.Paginate();
         }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
@@ -384,7 +385,7 @@ namespace imgLoader_WPF.Windows
 
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || _index.Count <= ShowItems.Count) return;
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || _index.Count <= ShowItems.Count || List.Count == 0) return;
 
             var sder = ((ScrollViewer)sender);
             PgSvc.Paginate();

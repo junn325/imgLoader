@@ -47,6 +47,12 @@ namespace imgLoader_WPF
                     {
                         _route = Core.Route;
                         DoIndex(sb);
+
+                        foreach (var item in Index)
+                        {
+                            _sender.List.Add(item);
+                        }
+
                         _sender.PgSvc.Paginate();
                     }
                     else
