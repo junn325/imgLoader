@@ -54,8 +54,21 @@ namespace imgLoader_WPF.Windows
             label.Visibility = Visibility.Visible;
         }
 
+        private void Sort(ObservableCollection<IndexItem> collection)
+        {
+            var temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+            collection.Clear();
+
+            foreach (var item in temp)
+            {
+                collection.Add(item);
+            }
+
+            PgSvc.PaginateToEnd();
+        }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
+            Sort(List);
             ;
         }
 

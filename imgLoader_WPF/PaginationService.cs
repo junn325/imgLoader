@@ -34,11 +34,6 @@ namespace imgLoader_WPF
 
             page: _service = new Thread(() =>
             {
-                //while (_list.Count == 0)
-                //{
-                //    Task.Delay(500).Wait();
-                //}
-
                 int oriCnt = _showItems.Count;
                 for (int i = 0; i < Math.Ceiling(_scrollHeight / LoaderItem.MHeight); i++)
                 {
@@ -47,6 +42,24 @@ namespace imgLoader_WPF
 
                     var temp = _list[oriCnt + i1];
                     _sender.Dispatcher.Invoke(() => _showItems.Add(temp));
+                }
+            });
+            _service.Name = "PgSvc";
+            _service.Start();
+        }
+
+        internal void PaginateToEnd()
+        {
+            if (_service == null) goto page;
+            if (_service.ThreadState != ThreadState.Stopped) return;
+
+            page: _service = new Thread(() =>
+            {
+                _sender.Dispatcher.Invoke(() => _showItems.Clear());
+
+                foreach (var item in _list)
+                {
+                    _sender.Dispatcher.Invoke(() => _showItems.Add(item));
                 }
             });
             _service.Name = "PgSvc";
