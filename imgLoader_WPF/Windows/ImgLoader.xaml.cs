@@ -65,6 +65,13 @@ namespace imgLoader_WPF.Windows
                 case Sorter.Title:
                     temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
                     break;
+                case Sorter.Page:
+                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => int.TryParse(i.ImgCount, out var result) ? result : int.MaxValue));
+                    break;
+                case Sorter.Author:
+                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
+                    break;
+
                 default:
                     return;
             }
@@ -91,7 +98,7 @@ namespace imgLoader_WPF.Windows
         {
             //Sort(List, Sorter.Number);
             ;
-            Sort(List, Sorter.Title);
+            Sort(List, Sorter.Page);
             ;
         }
 
