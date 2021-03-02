@@ -23,6 +23,7 @@ namespace imgLoader_WPF.Windows
     //todo: 조회수
     //todo: 여러 폴더를 탭으로 동시에 관리
     //todo: 조건이 있는 랜덤
+    //todo: 정보 직접 수정
 
     public partial class ImgLoader
     {
@@ -145,7 +146,7 @@ namespace imgLoader_WPF.Windows
 
             var thrTemp = new Thread(() =>
             {
-                ItemCtrl.Dispatcher.Invoke(() => _index.Add(lItem));
+                ItemCtrl.Dispatcher.Invoke(() => _index.Insert(0, lItem));
 
                 _infSvc.Stop();
                 lItem.Proc = new Processor(url, lItem);
