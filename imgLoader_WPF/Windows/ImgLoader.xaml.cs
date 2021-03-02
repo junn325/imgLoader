@@ -25,6 +25,17 @@ namespace imgLoader_WPF.Windows
     //todo: 조건이 있는 랜덤
     //todo: 정보 직접 수정
 
+    //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
+    //todo: 작업 표시줄에 프로그래스바 
+    //todo: numericupdown 같은것으로 작품별로 순위 매기는 시스템
+    //todo: 작가, 태그 등으로 자동으로 폴더로 나눠주는 시스템
+    //todo: 항상 위로 상태로 떠 있다가 인터넷 창에서 누르면 자동으로 해당 작품 다운로드 
+    //todo: 작가별 트리식 정렬
+    //todo: 작가/태그 분포, 주로 보는 작품 등 분석 기능
+    //todo: 여러 폴더를 지정해 동시에 관리
+    //todo: 특정 이미지 숨기기(삭제x)
+    //todo: 아무 값 없는 분류(그냥 빨주노초파남보) 분류 기능
+
     public partial class ImgLoader
     {
         private InfoSavingService _infSvc;
@@ -87,13 +98,14 @@ namespace imgLoader_WPF.Windows
             PgSvc.Paginate();
         }
 
-        enum Sorter
+        private enum Sorter
         {
             Number,
             Page,
             Title,
             Author
         }
+
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             //Sort(List, Sorter.Number);
