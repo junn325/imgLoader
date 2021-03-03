@@ -1,10 +1,12 @@
 ﻿using imgLoader_WPF.LoaderListCtrl;
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +26,8 @@ namespace imgLoader_WPF.Windows
     //todo: 여러 폴더를 탭으로 동시에 관리
     //todo: 조건이 있는 랜덤
     //todo: 정보 직접 수정
+    //todo: 뷰어: 계속 다시 로드하지 말고 배열에 이미지를 담아놓을것
+    //todo: 단행본 나누기
 
     //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
     //todo: 작업 표시줄에 프로그래스바 
@@ -42,10 +46,12 @@ namespace imgLoader_WPF.Windows
         private IndexingService _idxSvc;
         internal PaginationService PgSvc;
 
+        private Sorter sort;
+
         private Settings _winSetting;
 
-        private readonly ObservableCollection<IndexItem> _index = new();   //단순 인덱싱 결과
-        internal ObservableCollection<IndexItem> List = new();            //표시되어야 할 총 항목
+        private readonly List<IndexItem> _index = new();   //단순 인덱싱 결과
+        internal List<IndexItem> List = new();            //표시되어야 할 총 항목
         internal ObservableCollection<IndexItem> ShowItems = new();        //실제 표시되는 항목
 
         private IndexItem _clickedItem;
@@ -65,52 +71,17 @@ namespace imgLoader_WPF.Windows
             label.Visibility = Visibility.Visible;
         }
 
-        private void Sort(ObservableCollection<IndexItem> collection, Sorter sorter)
+        private void Sort(Sorter.SortOption option)
         {
-            ObservableCollection<IndexItem> temp;
-            switch (sorter)
-            {
-                case Sorter.Number:
-                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
-                    break;
-                case Sorter.Title:
-                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
-                    break;
-                case Sorter.Page:
-                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => int.TryParse(i.ImgCount, out var result) ? result : int.MaxValue));
-                    break;
-                case Sorter.Author:
-                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
-                    break;
-
-                default:
-                    return;
-            }
-
-            collection.Clear();
-
-            foreach (var item in temp)
-            {
-                collection.Add(item);
-            }
-
+            sort.Sort(List, option);
             ShowItems.Clear();
             PgSvc.Paginate();
         }
-
-        private enum Sorter
-        {
-            Number,
-            Page,
-            Title,
-            Author
-        }
-
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             //Sort(List, Sorter.Number);
             ;
-            Sort(List, Sorter.Page);
+            Sort(Sorter.SortOption.Page);
             ;
         }
 
@@ -146,6 +117,7 @@ namespace imgLoader_WPF.Windows
             }
 
             PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, ref List);
+            sort = new Sorter();
 
             _infSvc.Start();
             _idxSvc.Start();
@@ -228,6 +200,7 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.Load();
 
+                List.Insert(0, lItem);
                 _infSvc.Start();
             });
 
@@ -486,6 +459,32 @@ namespace imgLoader_WPF.Windows
             {
                 HideBorder(SrchBorder, TxtSrchAll, LabelBlock_Srch);
             }
+        }
+
+        private void SortMenu_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void TitleSort_Click(object sender, RoutedEventArgs e)
+        {
+            Sort(Sorter.SortOption.Title);
+        }
+
+        private void AuthorSort_Click(object sender, RoutedEventArgs e)
+        {
+            Sort(Sorter.SortOption.Author);
+            //todo: 아예 분류로 넣을것
+        }
+
+        private void PageSort_Click(object sender, RoutedEventArgs e)
+        {
+            Sort(Sorter.SortOption.Page);
+        }
+
+        private void NumberSort_Click(object sender, RoutedEventArgs e)
+        {
+            Sort(Sorter.SortOption.Number);
         }
     }
 }

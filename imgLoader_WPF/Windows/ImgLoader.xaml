@@ -30,6 +30,12 @@
                             <MenuItem x:Name="Delete" Header="삭제" IsEnabled="False" Click="Delete_Click"/>
                             <Separator/>
                             <MenuItem x:Name="Search" Header="검색" Click="Search_Click"/>
+                            <MenuItem x:Name="SortMenu" Header="정렬">
+                                <MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>
+                                <MenuItem x:Name="AuthorSort" Header="작가로 정렬" Click="AuthorSort_Click"/>
+                                <MenuItem x:Name="PageSort" Header="페이지수로 정렬" Click="PageSort_Click"/>
+                                <MenuItem x:Name="NumberSort" Header="번호로 정렬" Click="NumberSort_Click"/>
+                            </MenuItem>
                             <MenuItem x:Name="CopyAddress" Header="주소 복사" Click="CopyAddress_Click"/>
                             <Separator/>
                             <MenuItem x:Name="Setting" Header="설정" Click="Setting_Click"/>
