@@ -1,6 +1,7 @@
 ﻿using imgLoader_WPF.LoaderListCtrl;
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,9 +18,9 @@ namespace imgLoader_WPF
         private readonly Windows.ImgLoader _sender;
         private readonly double _scrollHeight;
         private readonly ObservableCollection<IndexItem> _showItems;
-        private readonly ObservableCollection<IndexItem> _list;
+        private readonly List<IndexItem> _list;
 
-        public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, ref ObservableCollection<IndexItem> list)
+        public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, ref List<IndexItem> list)
         {
             _sender = sender;
             _showItems = showItems;

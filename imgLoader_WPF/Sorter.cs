@@ -12,20 +12,20 @@ namespace imgLoader_WPF
         internal void Sort(List<IndexItem> collection, SortOption sortOption)
         {
             Option = sortOption;
-            ObservableCollection<IndexItem> temp;
+            List<IndexItem> temp;
             switch (sortOption)
             {
                 case SortOption.Number:
-                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+                    temp = new List<IndexItem>(collection.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
                     break;
                 case SortOption.Title:
-                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
+                    temp = new List<IndexItem>(collection.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
                     break;
                 case SortOption.Page:
-                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => int.TryParse(i.ImgCount, out var result) ? result : int.MaxValue));
+                    temp = new List<IndexItem>(collection.OrderBy(i => int.TryParse(i.ImgCount, out var result) ? result : int.MaxValue));
                     break;
                 case SortOption.Author:
-                    temp = new ObservableCollection<IndexItem>(collection.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
+                    temp = new List<IndexItem>(collection.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
                     break;
 
                 default:

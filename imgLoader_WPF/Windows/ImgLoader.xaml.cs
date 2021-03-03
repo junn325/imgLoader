@@ -169,6 +169,9 @@ namespace imgLoader_WPF.Windows
             var url = TxtUrl.Text;
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = "\n" }; //imgcount = "\n" => hides "장"
 
+            var sw = new Stopwatch();
+            sw.Start();
+
             HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
 
             var thrTemp = new Thread(() =>
@@ -202,6 +205,9 @@ namespace imgLoader_WPF.Windows
 
                 List.Insert(0, lItem);
                 _infSvc.Start();
+
+                Debug.WriteLine(sw.Elapsed.Ticks);
+                sw.Reset();
             });
 
             thrTemp.Name = "AddItem";
@@ -288,6 +294,8 @@ namespace imgLoader_WPF.Windows
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
 
             _idxSvc.DoIndex(_sb);
+            List.Remove(_clickedItem);
+            ShowItems.Remove(_clickedItem);
         }
 
         private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)

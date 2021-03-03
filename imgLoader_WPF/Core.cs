@@ -79,7 +79,7 @@ namespace imgLoader_WPF
             if (file.Exists && (file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
 
             using var sw = new StreamWriter(new FileStream(infoFileName, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
-            var info = site.ReturnInfo(); //todo: 각 사이트 객체가 아닌 여기에서 7번째 칸 뚫어서 vote 작성
+            var info = site.ReturnInfo();
 
             for (var i = 0; i < info.Length; i++)
             {
@@ -245,12 +245,12 @@ namespace imgLoader_WPF
         {
 
         }
-        internal static void SearchFromAll(ObservableCollection<IndexItem> searchIndex, string search, ObservableCollection<IndexItem> destIndex)
+        internal static void SearchFromAll(List<IndexItem> searchIndex, string search, List<IndexItem> destIndex)
         {
             var sb = new StringBuilder();
 
             var temp = new string[searchIndex.Count];
-            var searchResult = new ObservableCollection<IndexItem>(searchIndex);
+            var searchResult = new List<IndexItem>(searchIndex);
 
             for (var i = 0; i < searchIndex.Count; i++)
             {
@@ -318,13 +318,15 @@ namespace imgLoader_WPF
             return number.Contains('!') ? number.Replace('!', '/') : number;
         }
 
-        internal static void CompareCollections(ObservableCollection<IndexItem> collect1, ObservableCollection<IndexItem> collect2)
+        internal static string CompareCollections(IEnumerable<IndexItem> collect1, IEnumerable<IndexItem> collect2)
         {
-            foreach (var item in collect1)
+            var sb = new StringBuilder();
+            foreach (var item in collect1.Where(item => collect2.All(i => i.Title != item.Title)))
             {
-                if (collect2.Any((i) => i.Title == item.Title)) continue;
+                sb.Append(item.Title).Append(", ");
                 Debug.WriteLine($"{item.Title}");
             }
+            return sb.ToString();
         }
 
         internal enum SearchOption

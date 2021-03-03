@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <FileVersion>1.0.6.44</FileVersion>
-    <AssemblyVersion>1.0.4.44</AssemblyVersion>
+    <FileVersion>1.0.6.45</FileVersion>
+    <AssemblyVersion>1.0.4.45</AssemblyVersion>
   </PropertyGroup>
 
 </Project>

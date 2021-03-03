@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using imgLoader_WPF.Windows;
 
 using System.Collections.ObjectModel;
@@ -20,16 +21,15 @@ namespace imgLoader_WPF
         private readonly Thread _service;
         private bool _stop;
 
-        public ObservableCollection<IndexItem> Index;
-        private string _route = "";
+        public List<IndexItem> Index;
 
         private readonly ImgLoader _sender;
 
-        public IndexingService(ObservableCollection<IndexItem> index, ImgLoader sender)
+        public IndexingService(List<IndexItem> index, ImgLoader sender)
         {
             Index = index;
             _sender = sender;
-            _route = Core.Route;
+            var route = Core.Route;
 
             _service = new Thread(() =>
             {
@@ -43,9 +43,9 @@ namespace imgLoader_WPF
 
                     var sb = new StringBuilder();
 
-                    if (!string.Equals(_route, Core.Route, StringComparison.OrdinalIgnoreCase))
+                    if (!string.Equals(route, Core.Route, StringComparison.OrdinalIgnoreCase))
                     {
-                        _route = Core.Route;
+                        route = Core.Route;
                         DoIndex(sb);
 
                         foreach (var item in Index)
@@ -71,7 +71,7 @@ namespace imgLoader_WPF
             if (!Directory.Exists(Core.Route)) return;
 
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-            foreach (var item in new ObservableCollection<IndexItem>(Index))
+            foreach (var item in new List<IndexItem>(Index))
             {
                 if (item.IsDownloading)
                     continue;

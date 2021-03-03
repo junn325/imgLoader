@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -15,11 +16,11 @@ namespace imgLoader_WPF.Windows
     /// </summary>
     public partial class Settings : Window
     {
-        private readonly ObservableCollection<IndexItem> _actualIndex;
+        private readonly List<IndexItem> _actualIndex;
         private readonly ImgLoader _sender;
         private ScrollViewer _scroll;
 
-        internal Settings(Windows.ImgLoader sender, ScrollViewer scroll, ObservableCollection<IndexItem> actualIndex)
+        internal Settings(Windows.ImgLoader sender, ScrollViewer scroll, List<IndexItem> actualIndex)
         {
             InitializeComponent();
             _sender = sender;
