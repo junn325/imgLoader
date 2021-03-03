@@ -65,12 +65,16 @@
             <Rectangle Fill="LightGray" Grid.Row="1" Grid.Column="3"/>-->
 
 
-            <Grid x:Name="ProgPanel" Grid.Row="1" Grid.Column="2" Visibility="Hidden" Grid.ColumnSpan="2" Margin="0,19,0,0" Grid.RowSpan="2" >
-                <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,30,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Orientation="Horizontal"/>
-                <TextBlock x:Name="ProgBlock" Text="0/0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="5,1,5,1"/>
+            <Grid x:Name="ProgPanel" Grid.Row="2" Grid.Column="2" Visibility="Visible" Grid.ColumnSpan="2" Margin="0,0,0,0" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Panel.ZIndex="100" Orientation="Horizontal"/>
+                <TextBlock x:Name="ProgBlock" Grid.Column="1" Text="0/0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="5,1,5,1"/>
             </Grid>
 
-            <ScrollViewer x:Name="ScrollItem" Grid.Row="1" Grid.Column="2" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="Disabled" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" Grid.ColumnSpan="2" Margin="0,19,0,0" Grid.RowSpan="2">
+            <ScrollViewer x:Name="ScrollItem" Grid.Row="2" Grid.Column="2" HorizontalScrollBarVisibility="auto" VerticalScrollBarVisibility="Disabled" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel" Grid.ColumnSpan="2" Margin="0,0,0,0">
                 <ScrollViewer.Resources>
                     <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}">3</sys:Double>
                     <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarButtonWidthKey}">0</sys:Double>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -59,6 +60,12 @@ namespace imgLoader_WPF.LoaderListCtrl
                 ProgBar.Value++;
                 ProgBlock.Text = $"{_progVal}/{_progMax}";
             });
+
+            //var dp = DependencyPropertyDescriptor.FromProperty(TextBlock.TextProperty, typeof(TextBlock));
+            //dp.AddValueChanged(ProgBlock, (sender, args) =>
+            //{
+            //    ProgBar.Width = Grid.ColumnDefinitions[2].ActualWidth + Grid.ColumnDefinitions[3].ActualWidth - 
+            //});
 
             if (Tags == null) return;
             foreach (var tag in Tags)
