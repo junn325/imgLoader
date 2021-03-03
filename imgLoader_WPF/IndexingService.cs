@@ -171,6 +171,7 @@ namespace imgLoader_WPF
         public delegate void NoParam();
         public delegate void IntOne(int value);
         public delegate void DblOne(double value);
+        public delegate void VisOne(System.Windows.Visibility value);
 
         public Processor Proc;
 
@@ -192,10 +193,8 @@ namespace imgLoader_WPF
 
         public NoParam ShownChang;
 
-        public NoParam ProgPanelHide;
-        public NoParam ProgPanelShow;
-        public NoParam TagPanelHide;
-        public NoParam TagPanelShow;
+        public VisOne ProgPanelVis;
+        public VisOne TagPanelVis;
 
         public IntOne ProgBarMax;
         public NoParam ProgBarVal;

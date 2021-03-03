@@ -233,8 +233,8 @@ namespace imgLoader_WPF
                 Task.Delay(200).Wait();
             }
 
-            _item.ProgPanelShow.Invoke();
-            _item.TagPanelHide.Invoke();
+            _item.ProgPanelVis.Invoke(Visibility.Visible);
+            _item.TagPanelVis.Invoke(Visibility.Hidden);
             _item.ProgBarMax.Invoke(imgList.Count);
 
             _tasks = new Task[imgList.Count];
@@ -248,8 +248,8 @@ namespace imgLoader_WPF
             Core.Log($"Item:Complete: {path}");
             if (success)
             {
-                _item.ProgPanelHide.Invoke();
-                _item.TagPanelShow.Invoke();
+                _item.ProgPanelVis.Invoke(Visibility.Hidden);
+                _item.TagPanelVis.Invoke(Visibility.Visible);
             }
             else
             {

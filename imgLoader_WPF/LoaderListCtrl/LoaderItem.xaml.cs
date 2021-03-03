@@ -27,11 +27,8 @@ namespace imgLoader_WPF.LoaderListCtrl
             var data = ((IndexItem)DataContext);
             data.ShownChang = () => Background = data.IsRead ? Brushes.LightGray : Brushes.White;
 
-            data.ProgPanelHide = () => Dispatcher.Invoke(() => ProgPanel.Visibility = Visibility.Hidden);
-            data.ProgPanelShow = () => Dispatcher.Invoke(() => ProgPanel.Visibility = Visibility.Visible);
-
-            data.TagPanelHide = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Hidden);
-            data.TagPanelShow = () => Dispatcher.Invoke(() => TagPanel.Visibility = Visibility.Visible);
+            data.ProgPanelVis = (v) => Dispatcher.Invoke(() => ProgPanel.Visibility = v);
+            data.TagPanelVis = (v) => Dispatcher.Invoke(() => TagPanel.Visibility = v);
 
             data.SizeChange = (value) =>
                 //this.Grid.ColumnDefinitions[2].MaxWidth = this.ActualWidth - VoteGrid.ActualWidth;
@@ -46,8 +43,6 @@ namespace imgLoader_WPF.LoaderListCtrl
                 TitleBlock.Text = data.Title;
             });
 
-            //todo: 부울값을 적용만 시키도록 바꿀것
-
             data.ProgBarMax = value => Dispatcher.Invoke(() =>
             {
                 _progMax = value;
@@ -60,12 +55,6 @@ namespace imgLoader_WPF.LoaderListCtrl
                 ProgBar.Value++;
                 ProgBlock.Text = $"{_progVal}/{_progMax}";
             });
-
-            //var dp = DependencyPropertyDescriptor.FromProperty(TextBlock.TextProperty, typeof(TextBlock));
-            //dp.AddValueChanged(ProgBlock, (sender, args) =>
-            //{
-            //    ProgBar.Width = Grid.ColumnDefinitions[2].ActualWidth + Grid.ColumnDefinitions[3].ActualWidth - 
-            //});
 
             if (Tags == null) return;
             foreach (var tag in Tags)
