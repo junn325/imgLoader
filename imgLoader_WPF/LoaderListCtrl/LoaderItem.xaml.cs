@@ -14,7 +14,7 @@ namespace imgLoader_WPF.LoaderListCtrl
         private int _progMax;
         private int _progVal;
 
-        public static int MHeight { get; } = 60;
+        public static int MHeight { get; } = 53;
 
         //private readonly Stopwatch sw = new Stopwatch();
 

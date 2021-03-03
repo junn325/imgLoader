@@ -11,7 +11,9 @@ namespace imgLoader_WPF
         internal bool IsSorting;
         internal void Sort(List<IndexItem> collection, SortOption sortOption)
         {
+            IsSorting = true;
             Option = sortOption;
+
             List<IndexItem> temp;
             switch (sortOption)
             {
@@ -42,7 +44,7 @@ namespace imgLoader_WPF
 
         internal void ClearSort()
         {
-
+            IsSorting = false;
         }
 
         internal enum SortOption

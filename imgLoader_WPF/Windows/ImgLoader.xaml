@@ -55,16 +55,24 @@
             </ScrollViewer>
         </Border>
 
+        <DockPanel x:Name="CondGrid" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Rectangle Grid.Row="0" Fill="Gray"/>
+            <!--<Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="25"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>-->
+        </DockPanel>
+
         <TextBlock x:Name="IdxBlock" Text="인덱싱 중..." VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-        <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="AddBorder_MouseDown"> 
+        <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="AddBorder_MouseDown">
             <Grid Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
                 <TextBox x:Name="TxtUrl" Height="21" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" TextChanged="TxtUrl_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
                 <TextBlock x:Name="LabelBlock_Add" Height="21" VerticalAlignment="Center" Text="주소 입력 후 Enter 키로 다운로드 시작" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>
             </Grid>
         </Border>
 
-        <Border x:Name="SrchBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="SrchBorder_MouseDown"> 
+        <Border x:Name="SrchBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="SrchBorder_MouseDown">
             <Grid Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
                 <TextBox x:Name="TxtSrchAll" Height="21" VerticalAlignment="Center" KeyUp="TxtSrchAll_KeyUp" TextChanged="TxtSrchAll_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
                 <TextBlock x:Name="LabelBlock_Srch" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>
@@ -72,6 +80,6 @@
         </Border>
 
         <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,376,0,0" Height="27" Width="76" Click="Button_Click_5"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="65" Margin="230,359,0,0" VerticalAlignment="Top" Width="80" Click="Button_Click_2"/>
+        <Button Content="Button" HorizontalAlignment="Left" Height="27" Margin="230,376,0,0" VerticalAlignment="Top" Width="80" Click="Button_Click_2"/>
     </Grid>
 </Window>
