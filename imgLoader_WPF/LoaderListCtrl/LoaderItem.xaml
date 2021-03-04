@@ -90,8 +90,8 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock x:Name="LblVote" Text="{Binding Vote}" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
-                <Button x:Name="DownVote" Template="{StaticResource BtnDown}" Grid.Column="1" BorderThickness="0" Margin="0,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Width="15" Click="DownVote_Click"/>
-                <Button x:Name="UpVote" Template="{StaticResource BtnUp}" Grid.Column="2" BorderThickness="0" Margin="0,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Width="15" Click="UpVote_Click"/>
+                <Button x:Name="DownVote" Template="{StaticResource BtnDown}" Grid.Column="2" BorderThickness="0" Margin="0,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Width="15" Click="DownVote_Click"/>
+                <Button x:Name="UpVote" Template="{StaticResource BtnUp}" Grid.Column="1" BorderThickness="0" Margin="0,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Width="15" Click="UpVote_Click"/>
             </Grid>
         </Grid>
     </Border>

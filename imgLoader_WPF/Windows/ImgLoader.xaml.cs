@@ -261,6 +261,9 @@ namespace imgLoader_WPF.Windows
 
                         item.IsEnabled = false;
                         break;
+                    case "Manage":
+                        item.IsEnabled = false;
+                        break;
                     default:
                         item.IsEnabled = true;
                         break;
@@ -435,8 +438,12 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            var a = new ManageWindow("D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)\\섹스타그램 챕터_01 (kidmo) - 복사본");
-            a.Show();
+            foreach (var item in ShowItems)
+            {
+                item.RefreshInfo();
+            }
+            //var a = new ManageWindow("D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)\\섹스타그램 챕터_01 (kidmo) - 복사본");
+            //a.Show();
         }
 
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)

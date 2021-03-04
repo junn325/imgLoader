@@ -41,6 +41,7 @@ namespace imgLoader_WPF.LoaderListCtrl
                 NumBlock.Text = data.Number;
                 SiteBlock.Text = data.SiteName;
                 TitleBlock.Text = data.Title;
+                LblVote.Text = data.Vote.ToString();
             });
 
             data.ProgBarMax = value => Dispatcher.Invoke(() =>
@@ -76,11 +77,15 @@ namespace imgLoader_WPF.LoaderListCtrl
 
         private void UpVote_Click(object sender, RoutedEventArgs e)
         {
-            ((IndexItem)DataContext).Vote++;
+            var data = ((IndexItem)DataContext);
+            data.Vote++;
+            LblVote.Text = data.Vote.ToString();
         }
         private void DownVote_Click(object sender, RoutedEventArgs e)
         {
-            ((IndexItem)DataContext).Vote--;
+            var data = ((IndexItem)DataContext);
+            data.Vote--;
+            LblVote.Text = data.Vote.ToString();
         }
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {

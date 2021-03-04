@@ -42,12 +42,11 @@ namespace imgLoader_WPF
                     if (Properties.Settings.Default.NoIndex) continue;
 
                     var sb = new StringBuilder();
-
                     if (!string.Equals(route, Core.Route, StringComparison.OrdinalIgnoreCase))
                     {
                         route = Core.Route;
+                        
                         DoIndex(sb);
-
                         foreach (var item in Index)
                         {
                             _sender.List.Add(item);
@@ -59,6 +58,8 @@ namespace imgLoader_WPF
                     {
                         DoIndex(sb);
                     }
+
+                    RefreshAll();
                 }
             });
             _service.Name = "IdxSvc";
@@ -146,7 +147,8 @@ namespace imgLoader_WPF
                     ImgCount = info[3],
                     Number = Core.EHNumForInternal(infoRoute.Split('\\')[^1].Split('.')[0]),
                     Route = infoRoute,
-                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';')
+                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
+                    Vote = int.Parse(info[6])
                 }
                 );
                 sb.Clear();
@@ -154,6 +156,13 @@ namespace imgLoader_WPF
             }
         }
 
+        internal void RefreshAll()
+        {
+            foreach (var item in Index)
+            {
+                item.RefreshInfo?.Invoke();
+            }
+        }
         internal void Start()
         {
             _stop = false;
@@ -184,6 +193,8 @@ namespace imgLoader_WPF
         public int Vote { get; set; }
         public bool IsRead { get; set; }
         public string Route { get; set; }
+
+        public string Date;
 
         //public bool Selected = false;
         public bool Show = true;

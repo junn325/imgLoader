@@ -22,6 +22,8 @@ namespace imgLoader_WPF
         {
             var removedItem = new Dictionary<int, IndexItem>();
 
+            if (SearchList.ContainsKey(search)) return;
+
             _sender.Sorter.ClearSort();
             SearchFromAll(_list, search, _list, removedItem);
             SearchList.Add(search, removedItem);
@@ -45,6 +47,12 @@ namespace imgLoader_WPF
 
             foreach (var (key, value) in removed)
             {
+                if (_sender.List.Count < key)
+                {
+                    _sender.List.Add(value);
+                    continue;
+                }
+
                 _sender.List.Insert(key, value);
             }
             _sender.ShowItems.Clear();
