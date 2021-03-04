@@ -94,7 +94,12 @@ namespace imgLoader_WPF
                 var info = infos.Split('\n');
                 if (info.Length != 8)
                 {
-                    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}");
+                    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}/{info.Length}");
+
+                    using var sw = new StreamWriter(Core.DelayStream(infoRoute, FileMode.Append, FileAccess.Write));
+                    sw.Write("\n0\n1");
+                    sw.Close();
+
                     continue;
                 }
 

@@ -25,6 +25,7 @@ namespace imgLoader_WPF
         internal void Sort(SortOption sortOption)
         {
             ClearSort();
+            _sender.Scroll.ScrollToTop();
 
             _oriItem = new List<IndexItem>(_list);
 

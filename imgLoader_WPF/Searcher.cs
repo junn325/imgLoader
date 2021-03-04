@@ -20,10 +20,11 @@ namespace imgLoader_WPF
 
         internal void Search(string search)
         {
-            var removedItem = new Dictionary<int, IndexItem>();
-
             if (SearchList.ContainsKey(search)) return;
 
+            var removedItem = new Dictionary<int, IndexItem>();
+
+            _sender.Scroll.ScrollToTop();
             _sender.Sorter.ClearSort();
             SearchFromAll(_list, search, _list, removedItem);
             SearchList.Add(search, removedItem);
