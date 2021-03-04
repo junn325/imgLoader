@@ -10,21 +10,21 @@ namespace imgLoader_WPF
     {
         internal Dictionary<string, Dictionary<int, IndexItem>> SearchList = new();
         private Windows.ImgLoader _sender;
-        private List<IndexItem> _srchInd;
-        private List<IndexItem> _destInd;
+        private List<IndexItem> _index;
+        private List<IndexItem> _list;
 
-        public Searcher(Windows.ImgLoader sender, List<IndexItem> searchIndex, List<IndexItem> destIndex)
+        public Searcher(Windows.ImgLoader sender, List<IndexItem> index, List<IndexItem> list)
         {
             _sender = sender;
-            _srchInd = searchIndex;
-            _destInd = destIndex;
+            _index = index;
+            _list = list;
         }
 
         internal void Search(string search)
         {
             var removedItem = new Dictionary<int, IndexItem>();
 
-            SearchFromAll(_destInd, search, _destInd, removedItem);
+            SearchFromAll(_list, search, _list, removedItem);
             //SearchFromAll(_srchInd, search, _destInd, removedItem);
             SearchList.Add(search, removedItem);
 
@@ -33,11 +33,12 @@ namespace imgLoader_WPF
 
         internal void Remove(string search)
         {
-            Dictionary<int, IndexItem> remove;
+            var searchTxt = search.Replace("Search:", "");
 
+            Dictionary<int, IndexItem> remove;
             try
             {
-                remove = SearchList[search];
+                remove = SearchList[searchTxt];
             }
             catch
             {
@@ -50,7 +51,7 @@ namespace imgLoader_WPF
             }
             _sender.ShowItems.Clear();
 
-            SearchList.Remove(search);
+            SearchList.Remove(searchTxt);
         }
 
         private void SearchFromAll(List<IndexItem> searchIndex, string search, List<IndexItem> destIndex, Dictionary<int, IndexItem> removeItem)
