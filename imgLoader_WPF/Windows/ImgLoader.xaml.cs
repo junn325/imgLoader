@@ -47,7 +47,8 @@ namespace imgLoader_WPF.Windows
         internal PaginationService PgSvc;
 
         private Sorter _sort;
-        private ConditionIndicator _condInd;
+        internal Searcher Searcher;
+        internal ConditionIndicator CondInd;
 
         private Settings _winSetting;
 
@@ -82,8 +83,8 @@ namespace imgLoader_WPF.Windows
         {
             //Sort(List, Sorter.Number);
             ;
-            Sort(Sorter.SortOption.Page);
-            ;
+            //Sort(Sorter.SortOption.Page);
+            //;
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
@@ -119,7 +120,8 @@ namespace imgLoader_WPF.Windows
 
             PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, ref List);
             _sort = new Sorter();
-            _condInd = new ConditionIndicator(this);
+            Searcher = new Searcher(this, _index, List);
+            CondInd = new ConditionIndicator(this);
 
             _infSvc.Start();
             _idxSvc.Start();
@@ -433,8 +435,8 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            _condInd.Add("sort:test", ConditionIndicator.Condition.Sort);
-            _condInd.Add("search:test", ConditionIndicator.Condition.Search);
+            CondInd.Add("sort:test", ConditionIndicator.Condition.Sort);
+            CondInd.Add("search:test", ConditionIndicator.Condition.Search);
         }
 
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
@@ -453,10 +455,11 @@ namespace imgLoader_WPF.Windows
             if (e.Key != Key.Enter) return;
             if (TxtSrchAll.Text.Length == 0) return;
 
-            List.Clear();
+            //List.Clear();
             ShowItems.Clear();
 
-            Core.SearchFromAll(_index, TxtSrchAll.Text, List);
+            Searcher.Search(TxtSrchAll.Text);
+            //Core.SearchFromAll(_index, TxtSrchAll.Text, List);
             PgSvc.Paginate();
 
             TxtSrchAll.Text = "";
