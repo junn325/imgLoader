@@ -46,7 +46,7 @@ namespace imgLoader_WPF.Windows
         private IndexingService _idxSvc;
         internal PaginationService PgSvc;
 
-        private Sorter _sort;
+        internal Sorter Sorter;
         internal Searcher Searcher;
         internal ConditionIndicator CondInd;
 
@@ -75,7 +75,7 @@ namespace imgLoader_WPF.Windows
 
         private void Sort(Sorter.SortOption option)
         {
-            _sort.Sort(List, option);
+            Sorter.Sort(option);
             ShowItems.Clear();
             PgSvc.Paginate();
         }
@@ -119,8 +119,8 @@ namespace imgLoader_WPF.Windows
             }
 
             PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, ref List);
-            _sort = new Sorter();
-            Searcher = new Searcher(this, _index, List);
+            Sorter = new Sorter(this, List);
+            Searcher = new Searcher(this, List);
             CondInd = new ConditionIndicator(this);
 
             _infSvc.Start();

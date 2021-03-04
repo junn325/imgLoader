@@ -56,8 +56,18 @@ namespace imgLoader_WPF
         {
             var item = (TextBlock)sender;
 
-            _sender.CondGrid.Children.Remove((DockPanel)item.Parent);
-            _sender.Searcher.Remove(item.Text);
+            //_sender.CondGrid.Children.Remove((DockPanel)item.Parent);
+
+            switch (item.Text.Split(':')[0])
+            {
+                case "Search":
+                    _sender.Searcher.Remove(item.Text);
+                    break;
+
+                case "Sort":
+                    _sender.Sorter.ClearSort();
+                    break;
+            }
         }
 
         internal enum Condition

@@ -2,15 +2,32 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace imgLoader_WPF
 {
-    public class Sorter
+    internal class Sorter
     {
         internal SortOption Option = SortOption.Title;
         internal bool IsSorting;
-        internal void Sort(List<IndexItem> collection, SortOption sortOption)
+
+        private Windows.ImgLoader _sender;
+        private List<IndexItem> _oriItem;
+        private List<IndexItem> _list;
+
+        public Sorter(Windows.ImgLoader sender, List<IndexItem> list)
         {
+            _list = list;
+            _sender = sender;
+        }
+
+        internal void Sort(SortOption sortOption)
+        {
+            ClearSort();
+
+            _oriItem = new List<IndexItem>(_list);
+
             IsSorting = true;
             Option = sortOption;
 
@@ -18,33 +35,65 @@ namespace imgLoader_WPF
             switch (sortOption)
             {
                 case SortOption.Number:
-                    temp = new List<IndexItem>(collection.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+                    temp = new List<IndexItem>(_list.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
                     break;
                 case SortOption.Title:
-                    temp = new List<IndexItem>(collection.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
+                    temp = new List<IndexItem>(_list.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
                     break;
                 case SortOption.Page:
-                    temp = new List<IndexItem>(collection.OrderBy(i => int.TryParse(i.ImgCount, out var result) ? result : int.MaxValue));
+                    temp = new List<IndexItem>(_list.OrderBy(i => int.TryParse(i.ImgCount, out var result) ? result : int.MaxValue));
                     break;
                 case SortOption.Author:
-                    temp = new List<IndexItem>(collection.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
+                    temp = new List<IndexItem>(_list.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
                     break;
 
                 default:
                     return;
             }
 
-            collection.Clear();
+            _list.Clear();
 
             foreach (var item in temp)
             {
-                collection.Add(item);
+                _list.Add(item);
             }
+
+            _sender.CondInd.Add(
+                sortOption switch
+                {
+                    SortOption.Number => "Number",
+                    SortOption.Page => "Page",
+                    SortOption.Title => "Title",
+                    SortOption.Author => "Author",
+                    _ => " -Error"
+                }, ConditionIndicator.Condition.Sort);
         }
 
         internal void ClearSort()
         {
+            if (_oriItem == null) return;
+
+            _list.Clear();
+            _sender.ShowItems.Clear();
+
+            foreach (var item in _oriItem)
+            {
+                _list.Add(item);
+            }
+
+            var temp = new DockPanel[_sender.CondGrid.Children.Count];
+            _sender.CondGrid.Children.CopyTo(temp, 0);
+
+            foreach (DockPanel item in temp)
+            {
+                if (!((TextBlock)item.Children[0]).Text.Contains("Sort")) continue;
+
+                _sender.CondGrid.Children.Remove(item);
+            }
+
             IsSorting = false;
+            Option = SortOption.Null;
+            _oriItem = null;
         }
 
         internal enum SortOption
@@ -52,7 +101,8 @@ namespace imgLoader_WPF
             Number,
             Page,
             Title,
-            Author
+            Author,
+            Null
         }
     }
 }

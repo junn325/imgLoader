@@ -32,17 +32,17 @@ namespace imgLoader_WPF
         {
             var searchTxt = search.Replace("Search:", "");
 
-            Dictionary<int, IndexItem> remove;
+            Dictionary<int, IndexItem> removed;
             try
             {
-                remove = SearchList[searchTxt];
+                removed = SearchList[searchTxt];
             }
             catch
             {
                 return;
             }
 
-            foreach (var (key, value) in remove)
+            foreach (var (key, value) in removed)
             {
                 _sender.List.Insert(key, value);
             }

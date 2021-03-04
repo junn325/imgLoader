@@ -56,7 +56,7 @@
         </Border>
 
         <DockPanel x:Name="CondGrid" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Rectangle Grid.Row="0" Fill="Gray"/>
+            <!--<Rectangle Grid.Row="0" Fill="Gray"/>-->
             <!--<Grid.RowDefinitions>
                 <RowDefinition Height="*" MinHeight="25"/>
                 <RowDefinition Height="*"/>
