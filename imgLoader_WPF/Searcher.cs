@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+
+using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
 {
     internal class Searcher
     {
         internal Dictionary<string, Dictionary<int, IndexItem>> SearchList = new();
-        private Windows.ImgLoader _sender;
-        private List<IndexItem> _index;
-        private List<IndexItem> _list;
+        private readonly ImgLoader _sender;
+        private readonly List<IndexItem> _list;
 
-        public Searcher(Windows.ImgLoader sender, List<IndexItem> index, List<IndexItem> list)
+        public Searcher(ImgLoader sender, List<IndexItem> list)
         {
             _sender = sender;
-            _index = index;
             _list = list;
         }
 
@@ -25,7 +23,6 @@ namespace imgLoader_WPF
             var removedItem = new Dictionary<int, IndexItem>();
 
             SearchFromAll(_list, search, _list, removedItem);
-            //SearchFromAll(_srchInd, search, _destInd, removedItem);
             SearchList.Add(search, removedItem);
 
             _sender.CondInd.Add(search, ConditionIndicator.Condition.Search);
@@ -54,16 +51,16 @@ namespace imgLoader_WPF
             SearchList.Remove(searchTxt);
         }
 
-        private void SearchFromAll(List<IndexItem> searchIndex, string search, List<IndexItem> destIndex, Dictionary<int, IndexItem> removeItem)
+        private void SearchFromAll(List<IndexItem> searchFrom, string search, List<IndexItem> destination, Dictionary<int, IndexItem> removeItem)
         {
             var sb = new StringBuilder();
 
-            var temp = new string[searchIndex.Count];
-            var searchResult = new List<IndexItem>(searchIndex);
+            var temp = new string[searchFrom.Count];
+            var searchResult = new List<IndexItem>(searchFrom);
 
-            for (var i = 0; i < searchIndex.Count; i++)
+            for (var i = 0; i < searchFrom.Count; i++)
             {
-                var item = searchIndex[i];
+                var item = searchFrom[i];
 
                 sb.Append(item.Author).Append(item.Number).Append(item.SiteName).Append(item.Title);
                 foreach (var tag in item.Tags) sb.Append(tag);
@@ -72,22 +69,22 @@ namespace imgLoader_WPF
                 sb.Clear();
             }
 
-            for (var i = 0; i < searchIndex.Count; i++)
+            for (var i = 0; i < searchFrom.Count; i++)
             {
                 foreach (var srch in search.Split(','))             //검색어 나열
                 {
                     if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
                     {
-                        removeItem.Add(i, searchIndex[i]);
-                        searchResult.Remove(searchIndex[i]);
+                        removeItem.Add(i, searchFrom[i]);
+                        searchResult.Remove(searchFrom[i]);
                     }
                 }
             }
 
-            destIndex.Clear();
+            destination.Clear();
             foreach (var item in searchResult)
             {
-                destIndex.Add(item);
+                destination.Add(item);
             }
         }
     }

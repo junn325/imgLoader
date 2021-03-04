@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using imgLoader_WPF.Windows;
+
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 
 namespace imgLoader_WPF
 {
     internal class ConditionIndicator
     {
-        private Dictionary<string, DockPanel> _list = new();
-        private Windows.ImgLoader _sender;
-        //private Rectangle _item;
-        public ConditionIndicator(Windows.ImgLoader sender)
+        //private Dictionary<string, DockPanel> _list = new();
+        private readonly ImgLoader _sender;
+
+        public ConditionIndicator(ImgLoader sender)
         {
             _sender = sender;
         }
@@ -25,7 +21,7 @@ namespace imgLoader_WPF
         {
             var tb = new TextBlock
             {
-                Text = 
+                Text =
                     cond == Condition.Search
                         ? $"Search:{label}"
                         : $"Sort:{label}",
