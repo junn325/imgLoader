@@ -28,6 +28,7 @@ namespace imgLoader_WPF.Windows
     //todo: 정보 직접 수정
     //todo: 뷰어: 계속 다시 로드하지 말고 배열에 이미지를 담아놓을것
     //todo: 단행본 나누기
+    //todo: 캔버스 이미지크기 제대로 안나옴(예시: 2000 어쩌구)
 
     //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
     //todo: 작업 표시줄에 프로그래스바 
