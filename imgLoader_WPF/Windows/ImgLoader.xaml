@@ -12,9 +12,10 @@
             <SolidColorBrush x:Key="BBrush" Color="Gray" Opacity="0.5"/>
         </Grid.Resources>
 
-        <DockPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
+        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Width="20" Margin="0,4,10,0" Background="Transparent" Content="Ñ" FontFamily="Wingdings 2" FontSize="15" Padding="2" BorderThickness="0,0,0,0" Click="Button_Click_3"/>
             <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
-        </DockPanel>
+        </StackPanel>
 
         <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,30,10,20">
             <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged" SizeChanged="Scroll_SizeChanged">
@@ -22,7 +23,7 @@
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
                             <MenuItem x:Name="Open" Header="열기" IsEnabled="False" Click="Open_Click"/>
-                            <MenuItem x:Name="OpenExplorer" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
+                            <MenuItem x:Name="Manage" Header="관리" IsEnabled="False" Click="Manage_Click"/>
                             <Separator/>
                             <MenuItem x:Name="Add" Header="항목 추가" Click="AddItem_Click"/>
                             <Separator/>
@@ -41,6 +42,8 @@
                                 <MenuItem x:Name="PageSort" Header="페이지수로 정렬" Click="PageSort_Click"/>
                                 <MenuItem x:Name="NumberSort" Header="번호로 정렬" Click="NumberSort_Click"/>
                             </MenuItem>
+                            <Separator/>
+                            <MenuItem x:Name="OpenExplorer" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
                             <MenuItem x:Name="CopyAddress" Header="주소 복사" Click="CopyAddress_Click"/>
                             <Separator/>
                             <MenuItem x:Name="Setting" Header="설정" Click="Setting_Click"/>

@@ -20,7 +20,7 @@ namespace imgLoader_WPF
         private readonly ObservableCollection<IndexItem> _showItems;
         private readonly List<IndexItem> _list;
 
-        public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, ref List<IndexItem> list)
+        public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, List<IndexItem> list)
         {
             _sender = sender;
             _showItems = showItems;

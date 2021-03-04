@@ -118,7 +118,7 @@ namespace imgLoader_WPF.Windows
                 List.Add(item);
             }
 
-            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, ref List);
+            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
             Sorter = new Sorter(this, List);
             Searcher = new Searcher(this, List);
             CondInd = new ConditionIndicator(this);
@@ -435,8 +435,8 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("sort:test", ConditionIndicator.Condition.Sort);
-            CondInd.Add("search:test", ConditionIndicator.Condition.Search);
+            var a = new ManageWindow("D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)\\섹스타그램 챕터_01 (kidmo) - 복사본");
+            a.Show();
         }
 
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
@@ -504,6 +504,16 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Manage_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
