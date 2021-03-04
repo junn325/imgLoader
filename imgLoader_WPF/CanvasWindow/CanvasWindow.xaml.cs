@@ -85,6 +85,17 @@ namespace imgLoader_WPF.CanvasWindow
                 case Key.Right:
                     MoveImage(false);
                     break;
+
+                case Key.Q:
+                    SizeChange(false);
+                    break;
+                case Key.E:
+                    SizeChange(true);
+                    break;
+                case Key.S:
+                    _img.Arrange(_oriPosition);
+                    _min = 0;
+                    break;
             }
         }
 
