@@ -1,8 +1,8 @@
-﻿using System;
+﻿using imgLoader_WPF.Windows;
+
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace imgLoader_WPF
@@ -12,11 +12,11 @@ namespace imgLoader_WPF
         internal SortOption Option = SortOption.Title;
         internal bool IsSorting;
 
-        private Windows.ImgLoader _sender;
+        private readonly ImgLoader _sender;
         private List<IndexItem> _oriItem;
-        private List<IndexItem> _list;
+        private readonly List<IndexItem> _list;
 
-        public Sorter(Windows.ImgLoader sender, List<IndexItem> list)
+        public Sorter(ImgLoader sender, List<IndexItem> list)
         {
             _list = list;
             _sender = sender;
@@ -69,9 +69,9 @@ namespace imgLoader_WPF
                 }, ConditionIndicator.Condition.Sort);
         }
 
-        internal void ClearSort()
+        internal bool ClearSort()
         {
-            if (_oriItem == null) return;
+            if (_oriItem == null) return false;
 
             _list.Clear();
             _sender.ShowItems.Clear();
@@ -81,19 +81,21 @@ namespace imgLoader_WPF
                 _list.Add(item);
             }
 
-            var temp = new DockPanel[_sender.CondGrid.Children.Count];
-            _sender.CondGrid.Children.CopyTo(temp, 0);
+            var temp = new DockPanel[_sender.CondPanel.Children.Count];
+            _sender.CondPanel.Children.CopyTo(temp, 0);
 
             foreach (DockPanel item in temp)
             {
                 if (!((TextBlock)item.Children[0]).Text.Contains("Sort")) continue;
 
-                _sender.CondGrid.Children.Remove(item);
+                _sender.CondPanel.Children.Remove(item);
             }
 
             IsSorting = false;
             Option = SortOption.Null;
             _oriItem = null;
+
+            return true;
         }
 
         internal enum SortOption

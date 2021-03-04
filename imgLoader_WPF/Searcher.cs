@@ -22,6 +22,7 @@ namespace imgLoader_WPF
         {
             var removedItem = new Dictionary<int, IndexItem>();
 
+            _sender.Sorter.ClearSort();
             SearchFromAll(_list, search, _list, removedItem);
             SearchList.Add(search, removedItem);
 

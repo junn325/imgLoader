@@ -499,5 +499,11 @@ namespace imgLoader_WPF.Windows
         {
             Sort(Sorter.SortOption.Number);
         }
+
+        private void DockPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
     }
 }

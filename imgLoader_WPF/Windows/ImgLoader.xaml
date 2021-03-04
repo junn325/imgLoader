@@ -5,13 +5,18 @@
         xmlns:loaderListCtrl="clr-namespace:imgLoader_WPF.LoaderListCtrl"
         x:Class="imgLoader_WPF.Windows.ImgLoader"
         mc:Ignorable="d"
-        Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing">
+        Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing" WindowStyle="None">
 
     <Grid>
         <Grid.Resources>
             <SolidColorBrush x:Key="BBrush" Color="Gray" Opacity="0.5"/>
         </Grid.Resources>
-        <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,10,10,20">
+
+        <DockPanel VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
+            <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
+        </DockPanel>
+
+        <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,30,10,20">
             <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged" SizeChanged="Scroll_SizeChanged">
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
                     <ItemsControl.ContextMenu>
@@ -54,14 +59,6 @@
                 </ItemsControl>
             </ScrollViewer>
         </Border>
-
-        <DockPanel x:Name="CondGrid" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <!--<Rectangle Grid.Row="0" Fill="Gray"/>-->
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="*" MinHeight="25"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>-->
-        </DockPanel>
 
         <TextBlock x:Name="IdxBlock" Text="인덱싱 중..." VerticalAlignment="Center" HorizontalAlignment="Center"/>
 

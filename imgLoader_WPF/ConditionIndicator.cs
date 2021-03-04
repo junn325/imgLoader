@@ -34,7 +34,7 @@ namespace imgLoader_WPF
             };
             tb.MouseUp += Remove;
 
-            tb.Measure(_sender.CondGrid.DesiredSize);
+            tb.Measure(_sender.CondPanel.DesiredSize);
 
             var item = new DockPanel
             {
@@ -49,23 +49,23 @@ namespace imgLoader_WPF
             };
 
             item.Children.Add(tb);
-            _sender.CondGrid.Children.Add(item);
+            _sender.CondPanel.Children.Add(item);
         }
 
         public void Remove(object sender, MouseEventArgs e)
         {
             var item = (TextBlock)sender;
 
-            //_sender.CondGrid.Children.Remove((DockPanel)item.Parent);
-
             switch (item.Text.Split(':')[0])
             {
                 case "Search":
+                    _sender.Sorter.ClearSort();
+                    _sender.CondPanel.Children.Remove((DockPanel)item.Parent);
                     _sender.Searcher.Remove(item.Text);
                     break;
 
                 case "Sort":
-                    _sender.Sorter.ClearSort();
+                    if(!_sender.Sorter.ClearSort()) _sender.CondPanel.Children.Remove((DockPanel)item.Parent);
                     break;
             }
         }
