@@ -59,7 +59,7 @@ namespace imgLoader_WPF
                         DoIndex(sb);
                     }
 
-                    RefreshAll();
+                    //RefreshAll();
                 }
             });
             _service.Name = "IdxSvc";

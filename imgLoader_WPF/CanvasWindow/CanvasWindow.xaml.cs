@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,6 +15,7 @@ namespace imgLoader_WPF.CanvasWindow
     public partial class CanvasWindow
     {
         private const byte Scale = 15; //percent
+        private int MovePix = 50;
 
         private Rect _oriPosition;
         private Rect _relRect;
@@ -35,8 +38,14 @@ namespace imgLoader_WPF.CanvasWindow
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            //FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
+            FileList = FileList.OrderBy(i => int.TryParse(i.Split('\\')[^1].Split('.')[0], out var result) ? result : int.MaxValue).ToArray();
+
             _img = new Image();
             _img.Source = Image;
+            //_img.VerticalAlignment = VerticalAlignment.Center;
+            //_img.HorizontalAlignment = HorizontalAlignment.Center;
+
             RenderOptions.SetBitmapScalingMode(_img, BitmapScalingMode.Fant);
             Grid.Children.Add(_img);
 
@@ -76,14 +85,52 @@ namespace imgLoader_WPF.CanvasWindow
         {
             switch (e.Key)
             {
-                case Key.A:
-                case Key.Left:
-                    MoveImage(true);
+                case Key.G:
+                    ;
                     break;
 
+                case Key.W:
+                    if (_min != 0)
+                    {
+                        _relRect.Y += MovePix;
+                        _img.Arrange(_relRect);
+                    }
+                    break;
+                case Key.A:
+                    if (_min != 0)
+                    {
+                        _relRect.X += MovePix;
+                        _img.Arrange(_relRect);
+                    }
+                    else
+                    {
+                        ChangeImage(true);
+                    }
+                    break;
+                case Key.S:
+                    if (_min != 0)
+                    {
+                        _relRect.Y -= MovePix;
+                        _img.Arrange(_relRect);
+                    }
+                    break;
                 case Key.D:
+                    if (_min != 0)
+                    {
+                        _relRect.X -= MovePix;
+                        _img.Arrange(_relRect);
+                    }
+                    else
+                    {
+                        ChangeImage(false);
+                    }
+                    break;
+
+                case Key.Left:
+                    ChangeImage(true);
+                    break;
                 case Key.Right:
-                    MoveImage(false);
+                    ChangeImage(false);
                     break;
 
                 case Key.Q:
@@ -92,8 +139,9 @@ namespace imgLoader_WPF.CanvasWindow
                 case Key.E:
                     SizeChange(true);
                     break;
-                case Key.S:
+                case Key.R:
                     _img.Arrange(_oriPosition);
+                    _relRect = new Rect(_oriPosition.Size);
                     _min = 0;
                     break;
             }
@@ -110,7 +158,7 @@ namespace imgLoader_WPF.CanvasWindow
             {
                 _thres--;
                 if (_thres > 0) return;
-                MoveImage(e.Delta > 0);
+                ChangeImage(e.Delta > 0);
             }
         }
 
@@ -121,7 +169,10 @@ namespace imgLoader_WPF.CanvasWindow
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
+            //return;
             if (_img == null) return;
+
+            MovePix = (int)(_img.ActualHeight / 10);
 
             _relRect = new Rect(0, 0, 0, 0);
             var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
@@ -159,11 +210,17 @@ namespace imgLoader_WPF.CanvasWindow
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             _img.Arrange(_oriPosition);
+            _relRect = new Rect(_oriPosition.Size);
             _min = 0;
         }
 
         private void SizeChange(bool enlarge)
         {
+            if (_min == 0)
+            {
+                _oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
+            }
+
             var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             if (_relRect.Width == 0 || _relRect.Height == 0) _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
 
@@ -194,13 +251,27 @@ namespace imgLoader_WPF.CanvasWindow
             }
         }
 
-        private void MoveImage(bool next)
+        private void ChangeImage(bool prev)
         {
-            var temp = GetNextPath(next);
-            _img.Source = new BitmapImage(new Uri(temp));
-            Title = temp.Split('\\')[^1];
+            var nextPath = GetNextPath(prev);
+            var image = new BitmapImage(new Uri(nextPath));
+            _img.Source = image;
+            Title = nextPath.Split('\\')[^1];
 
-            _img.Arrange(_oriPosition);
+            var imgOffset = _img.TransformToAncestor(this).Transform(new Point(0, 0));
+
+            _img.Measure(new Size(Grid.ActualWidth, Grid.ActualHeight));
+
+            _relRect.Width = _img.DesiredSize.Width;
+            _relRect.Height = _img.DesiredSize.Height;
+            _relRect.X = imgOffset.X;
+            _relRect.Y = imgOffset.Y;
+
+            //_img.Arrange(_relRect);
+
+            _img.UpdateLayout();
+            _oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
+
             _min = 0;
         }
     }
