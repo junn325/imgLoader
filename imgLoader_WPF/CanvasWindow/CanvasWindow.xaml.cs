@@ -12,13 +12,23 @@ namespace imgLoader_WPF.CanvasWindow
     /// </summary>
     public partial class CanvasWindow
     {
+        private const byte Scale = 15; //percent
+
+        private Rect _oriPosition;
+        private Rect _relRect;
+        private Point _oriPoint;
+
+        private Image _img;
         public BitmapImage Image;
+
         public string[] FileList;
 
         private int _index;
-        //private BitmapImage _imgHandler;
-        private Rect _oriPosition;
-        private Image _img;
+        private int _min;
+        private int _thres = 5;
+
+        private bool _isMouseDown = false;
+
         public CanvasWindow()
         {
             InitializeComponent();
@@ -30,7 +40,6 @@ namespace imgLoader_WPF.CanvasWindow
             RenderOptions.SetBitmapScalingMode(_img, BitmapScalingMode.Fant);
             Grid.Children.Add(_img);
 
-            //_imgHandler = Image;
             var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
         }
@@ -67,96 +76,30 @@ namespace imgLoader_WPF.CanvasWindow
         {
             switch (e.Key)
             {
+                case Key.A:
                 case Key.Left:
-                    {
-                        var temp = GetNextPath(true);
-                        _img.Source = new BitmapImage(new Uri(temp));
-                        Title = temp.Split('\\')[^1];
+                    MoveImage(true);
+                    break;
 
-                        _img.Arrange(_oriPosition);
-                        _min = 0;
-                        break;
-                    }
+                case Key.D:
                 case Key.Right:
-                    {
-                        var temp = GetNextPath(false);
-                        _img.Source = new BitmapImage(new Uri(temp));
-                        Title = temp.Split('\\')[^1];
-
-                        _img.Arrange(_oriPosition);
-                        _min = 0;
-                        break;
-                    }
+                    MoveImage(false);
+                    break;
             }
         }
-
-        private const byte Scale = 15; //percent
-        private int _min;
-        private int _thres = 5;
-
-        private Rect _relRect;
-
-        private bool _isMouseDown = false;
-        private Point _oriPoint;
 
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (e.MiddleButton == MouseButtonState.Pressed)
             {
                 _thres = 5;
-                var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
-
-                if (_relRect.Width == 0 || _relRect.Height == 0) _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
-
-                if (e.Delta > 0)
-                {
-                    _relRect.Width *= (Scale + 100) / 100d;
-                    _relRect.Height *= (Scale + 100) / 100d;
-                    _relRect.X = (ActualWidth - _relRect.Width) / 2;
-                    _relRect.Y = (ActualHeight - _relRect.Height) / 2;
-
-                    _min++;
-
-                    _img.Stretch = Stretch.Uniform;
-                    _img.Arrange(_relRect);
-                }
-                else
-                {
-                    if (_min <= 0) return;
-                    _relRect.Width /= (Scale + 100) / 100d;
-                    _relRect.Height /= (Scale + 100) / 100d;
-                    _relRect.X = (ActualWidth - _relRect.Width) / 2;
-                    _relRect.Y = (ActualHeight - _relRect.Height) / 2;
-
-                    _min--;
-
-                    _img.Arrange(_relRect);
-                    _img.Stretch = Stretch.Uniform;
-                    //Canvas.SetLeft(Container, relRect.X);
-                }
+                SizeChange(e.Delta > 0);
             }
             else
             {
                 _thres--;
                 if (_thres > 0) return;
-                if (e.Delta > 0)
-                {
-                    var temp = GetNextPath(true);
-                    _img.Source = new BitmapImage(new Uri(temp));
-                    Title = temp.Split('\\')[^1];
-
-                    _img.Arrange(_oriPosition);
-                    _min = 0;
-                }
-                else
-                {
-                    var temp = GetNextPath(false);
-                    _img.Source = new BitmapImage(new Uri(temp));
-                    Title = temp.Split('\\')[^1];
-
-                    _img.Arrange(_oriPosition);
-                    _min = 0;
-                }
+                MoveImage(e.Delta > 0);
             }
         }
 
@@ -204,6 +147,48 @@ namespace imgLoader_WPF.CanvasWindow
 
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
+            _img.Arrange(_oriPosition);
+            _min = 0;
+        }
+
+        private void SizeChange(bool enlarge)
+        {
+            var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
+            if (_relRect.Width == 0 || _relRect.Height == 0) _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
+
+            if (enlarge)
+            {
+                _relRect.Width *= (Scale + 100) / 100d;
+                _relRect.Height *= (Scale + 100) / 100d;
+                _relRect.X = (ActualWidth - _relRect.Width) / 2;
+                _relRect.Y = (ActualHeight - _relRect.Height) / 2;
+
+                _min++;
+
+                _img.Stretch = Stretch.Uniform;
+                _img.Arrange(_relRect);
+            }
+            else
+            {
+                if (_min <= 0) return;
+                _relRect.Width /= (Scale + 100) / 100d;
+                _relRect.Height /= (Scale + 100) / 100d;
+                _relRect.X = (ActualWidth - _relRect.Width) / 2;
+                _relRect.Y = (ActualHeight - _relRect.Height) / 2;
+
+                _min--;
+
+                _img.Arrange(_relRect);
+                _img.Stretch = Stretch.Uniform;
+            }
+        }
+
+        private void MoveImage(bool next)
+        {
+            var temp = GetNextPath(next);
+            _img.Source = new BitmapImage(new Uri(temp));
+            Title = temp.Split('\\')[^1];
+
             _img.Arrange(_oriPosition);
             _min = 0;
         }

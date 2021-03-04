@@ -16,15 +16,15 @@ namespace imgLoader_WPF.Windows
     /// </summary>
     public partial class Settings : Window
     {
-        private readonly List<IndexItem> _actualIndex;
+        private readonly List<IndexItem> _index;
         private readonly ImgLoader _sender;
         private ScrollViewer _scroll;
 
-        internal Settings(Windows.ImgLoader sender, ScrollViewer scroll, List<IndexItem> actualIndex)
+        internal Settings(Windows.ImgLoader sender, ScrollViewer scroll, List<IndexItem> index)
         {
             InitializeComponent();
             _sender = sender;
-            _actualIndex = actualIndex;
+            _index = index;
             _scroll = scroll;
         }
 
@@ -53,7 +53,7 @@ namespace imgLoader_WPF.Windows
 
             Core.Route = TxtPath.Text;
 
-            var a = _actualIndex.Count;
+            var a = _index.Count;
 
             _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = Visibility.Visible);
 
@@ -63,7 +63,7 @@ namespace imgLoader_WPF.Windows
 
             //_sender.PgSvc.Paginate();
 
-            while (a == _actualIndex.Count)
+            while (a == _index.Count)
             {
                 Task.Delay(500).Wait();
                 Debug.WriteLine("Settings: wait");

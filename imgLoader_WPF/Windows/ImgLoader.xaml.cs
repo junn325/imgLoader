@@ -52,9 +52,9 @@ namespace imgLoader_WPF.Windows
 
         private Settings _winSetting;
 
-        private readonly List<IndexItem> _index = new();   //단순 인덱싱 결과
-        internal List<IndexItem> List = new();            //표시되어야 할 총 항목
-        internal ObservableCollection<IndexItem> ShowItems = new();        //실제 표시되는 항목
+        private readonly List<IndexItem> _index = new();                    //단순 인덱싱 결과
+        internal List<IndexItem> List = new();                              //표시되어야 할 총 항목
+        internal ObservableCollection<IndexItem> ShowItems = new();         //실제 표시되는 항목
 
         private IndexItem _clickedItem;
         private readonly StringBuilder _sb = new();
@@ -81,15 +81,13 @@ namespace imgLoader_WPF.Windows
         }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
-            //Sort(List, Sorter.Number);
             ;
-            //Sort(Sorter.SortOption.Page);
-            //;
         }
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
             Menu.Focus(); //메뉴 미리 로드
+            _winSetting = new Settings(this, Scroll, _index);
 
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
@@ -102,6 +100,12 @@ namespace imgLoader_WPF.Windows
 
 #if DEBUG
             Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+#endif
+#if !DEBUG
+            D_Stop.IsEnabled = false;
+            D_Else1.IsEnabled = false;
+            D_Stop.Visibility = Visibility.Collapsed;
+            D_Else1.Visibility = Visibility.Collapsed;
 #endif
 
             Title = Core.Route;
@@ -442,8 +446,6 @@ namespace imgLoader_WPF.Windows
             {
                 item.RefreshInfo();
             }
-            //var a = new ManageWindow("D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)\\섹스타그램 챕터_01 (kidmo) - 복사본");
-            //a.Show();
         }
 
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
@@ -521,6 +523,11 @@ namespace imgLoader_WPF.Windows
         private void Manage_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void DateSort_Click(object sender, RoutedEventArgs e)
+        {
+            Sort(Sorter.SortOption.Date);
         }
     }
 }

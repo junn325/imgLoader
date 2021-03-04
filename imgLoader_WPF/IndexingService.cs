@@ -148,7 +148,8 @@ namespace imgLoader_WPF
                     Number = Core.EHNumForInternal(infoRoute.Split('\\')[^1].Split('.')[0]),
                     Route = infoRoute,
                     Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
-                    Vote = int.Parse(info[6])
+                    Vote = int.Parse(info[6]),
+                    Date = info[5]
                 }
                 );
                 sb.Clear();

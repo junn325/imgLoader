@@ -41,6 +41,7 @@
                                 <MenuItem x:Name="AuthorSort" Header="작가로 정렬" Click="AuthorSort_Click"/>
                                 <MenuItem x:Name="PageSort" Header="페이지수로 정렬" Click="PageSort_Click"/>
                                 <MenuItem x:Name="NumberSort" Header="번호로 정렬" Click="NumberSort_Click"/>
+                                <MenuItem x:Name="DateSort" Header="날짜로 정렬" Click="DateSort_Click"/>
                             </MenuItem>
                             <Separator/>
                             <MenuItem x:Name="OpenExplorer" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
@@ -79,7 +80,7 @@
             </Grid>
         </Border>
 
-        <Button Content="정지" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,376,0,0" Height="27" Width="76" Click="Button_Click_5"/>
-        <Button Content="Button" HorizontalAlignment="Left" Height="27" Margin="230,376,0,0" VerticalAlignment="Top" Width="80" Click="Button_Click_2"/>
+        <Button x:Name="D_Stop" Content="정지" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,376,0,0" Height="27" Width="76" Click="Button_Click_5"/>
+        <Button x:Name="D_Else1" Content="Button" HorizontalAlignment="Left" Height="27" Margin="230,376,0,0" VerticalAlignment="Top" Width="80" Click="Button_Click_2"/>
     </Grid>
 </Window>

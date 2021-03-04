@@ -46,6 +46,9 @@ namespace imgLoader_WPF
                 case SortOption.Author:
                     temp = new List<IndexItem>(_list.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
                     break;
+                case SortOption.Date:
+                    temp = new List<IndexItem>(_list.OrderBy(i => i.Date, StringComparer.OrdinalIgnoreCase));
+                    break;
 
                 default:
                     return;
@@ -65,6 +68,7 @@ namespace imgLoader_WPF
                     SortOption.Page => "Page",
                     SortOption.Title => "Title",
                     SortOption.Author => "Author",
+                    SortOption.Date => "Date",
                     _ => " -Error"
                 }, ConditionIndicator.Condition.Sort);
         }
@@ -104,6 +108,7 @@ namespace imgLoader_WPF
             Page,
             Title,
             Author,
+            Date,
             Null
         }
     }
