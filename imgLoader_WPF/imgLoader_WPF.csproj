@@ -17,6 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Font\Wingdings2.ttf" />
     <None Remove="LoaderListCtrl\Icon\DownOver.png" />
     <None Remove="LoaderListCtrl\Icon\Dwn.png" />
     <None Remove="LoaderListCtrl\Icon\Up.png" />
@@ -28,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Font\Wingdings2.ttf" />
     <Resource Include="LoaderListCtrl\Icon\DownOver.png" />
     <Resource Include="LoaderListCtrl\Icon\Dwn.png" />
     <Resource Include="LoaderListCtrl\Icon\Up.png" />

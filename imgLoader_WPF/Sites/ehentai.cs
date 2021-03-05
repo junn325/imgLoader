@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -11,48 +10,41 @@ namespace imgLoader_WPF.Sites
 {
     public class EHentai : ISite
     {
-        private const string _api_url = "https://api.e-hentai.org/api.php";
-        private const string _base_url = "https://e-hentai.org/";
+        public string Number { get; }
+
+        private const string ApiUrl = "https://api.e-hentai.org/api.php";
+        private const string BaseUrl = "https://e-hentai.org/";
 
         private readonly string _src_gall, _src_data, _gall_id, _artist, _group, _title, _showKey;
 
-        public string Number { get; }
-
         public EHentai(string mNumber)
         {
-            try
-            {
-                _src_gall = StrLoad.Load($"{_base_url}g/{mNumber}/");
+            _src_gall = StrLoad.Load($"{BaseUrl}g/{mNumber}/");
 
-                var sb = new StringBuilder();
-                var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
+            var sb = new StringBuilder();
+            var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
 
-                if (_src_gall == null) throw new Exception();
+            if (_src_gall == null) throw new Exception();
 
-                _gall_id = mNumber.Split('/')[0];
-                var gallToken = mNumber.Split('/')[1];
+            _gall_id = mNumber.Split('/')[0];
+            var gallToken = mNumber.Split('/')[1];
 
-                _src_data = XmlHttpRequest_Data(_api_url, _gall_id, gallToken);
+            _src_data = XmlHttpRequest_Data(ApiUrl, _gall_id, gallToken);
 
-                _title = StrTools.GetStringValue(_src_data, "title");
+            _title = StrTools.GetStringValue(_src_data, "title");
 
-                for (var i = 1; i < _src_data.StrLen("group") + 1; i++) sb.Append(_src_data.Split("group:")[i].Split('"')[0]).Append(';');
-                _group = sb.ToString();
-                sb.Clear();
+            for (var i = 1; i < _src_data.StrLen("group") + 1; i++) sb.Append(_src_data.Split("group:")[i].Split('"')[0]).Append(';');
+            _group = sb.ToString();
+            sb.Clear();
 
-                for (var i = 1; i < _src_data.StrLen("artist") + 1; i++) sb.Append(_src_data.Split("artist:")[i].Split('"')[0]).Append(';');
-                _artist = sb.ToString();
+            for (var i = 1; i < _src_data.StrLen("artist") + 1; i++) sb.Append(_src_data.Split("artist:")[i].Split('"')[0]).Append(';');
+            _artist = sb.ToString();
 
-                temp.Wait();
-                var srcItem = temp.Result;
-                _showKey = srcItem.Split("var showkey=\"")[1].Split("\";")[0];
+            temp.Wait();
+            var srcItem = temp.Result;
+            _showKey = srcItem.Split("var showkey=\"")[1].Split("\";")[0];
 
-                Number = mNumber;
-            }
-            catch
-            {
-                throw new Exception("failed to initiate");
-            }
+            Number = mNumber;
         }
 
         public string GetArtist()
@@ -70,7 +62,7 @@ namespace imgLoader_WPF.Sites
             var rtnVal = new string[pageCount];
 
             var sb = new StringBuilder(pages);
-            for (var i = 1; i < (pageCount / 40) + 1; i++) sb.Append(StrLoad.Load($"{_base_url}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
+            for (var i = 1; i < (pageCount / 40) + 1; i++) sb.Append(StrLoad.Load($"{BaseUrl}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
 
             var temp = sb.ToString();
             for (var i = 0; i < pageCount; i++)
@@ -133,8 +125,8 @@ namespace imgLoader_WPF.Sites
                     string returnVal;
                     var param = Encoding.UTF8.GetBytes($"{{\"method\":\"showpage\",\"gid\":{gid},\"page\":{reqPage},\"imgkey\":\"{imgKey}\",\"showkey\":\"{showKey}\"}}");
 
-                    rq = WebRequest.CreateHttp(_api_url);
-                    rq.Referer = $"{_base_url}s/{imgKey}/{gid}-{pageNum}";
+                    rq = WebRequest.CreateHttp(ApiUrl);
+                    rq.Referer = $"{BaseUrl}s/{imgKey}/{gid}-{pageNum}";
                     rq.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36";
                     rq.Method = "POST";
                     rq.ContentLength = param.Length;

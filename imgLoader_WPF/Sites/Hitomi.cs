@@ -12,6 +12,7 @@ namespace imgLoader_WPF.Sites
         public string Number { get; }
 
         private readonly string _src_info, _artist, _group, _title;
+
         public Hitomi(string mNumber)
         {
             var wc = new WebClient {Encoding = Encoding.UTF8};
@@ -42,17 +43,13 @@ namespace imgLoader_WPF.Sites
             {
                 if (ex.Message.Contains("404")) return;
             }
-            catch
-            {
-                throw new Exception("failed to initiate");
-            }
         }
 
         public string GetArtist()
         {
             return $"{_artist}|{_group}";
         }
-        public Dictionary<string, string> GetImgUrls()            //키: 이미지이름/값: 주소
+        public Dictionary<string, string> GetImgUrls()
         {
             var js = _src_info.Split('{');
             var imgList = new Dictionary<string, string>();

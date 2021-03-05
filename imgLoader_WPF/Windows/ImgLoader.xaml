@@ -6,7 +6,6 @@
         x:Class="imgLoader_WPF.Windows.ImgLoader"
         mc:Ignorable="d"
         Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing" WindowStyle="None">
-
     <Grid>
         <Grid.Resources>
             <SolidColorBrush x:Key="BBrush" Color="Gray" Opacity="0.5"/>
@@ -14,7 +13,7 @@
 
         <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
             <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Width="20" Margin="0,4,10,0" Background="Transparent" Content="Ñ" FontFamily="Wingdings 2" FontSize="15" Padding="2" BorderThickness="0,0,0,0" Click="Button_Click_3"/>
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Width="20" Margin="0,4,10,0" Background="Transparent" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Padding="2" BorderThickness="0,0,0,0" Click="Button_Click_3"/>
         </Grid>
 
         <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,30,10,20">

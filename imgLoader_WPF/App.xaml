@@ -4,6 +4,6 @@
              xmlns:local="clr-namespace:imgLoader_WPF"
              StartupUri="Windows/ImgLoader.xaml">
     <Application.Resources>
-         
+        <FontFamily x:Key="Wingdings 2">pack://application:,,,/Font/#Wingdings 2</FontFamily>
     </Application.Resources>
 </Application>
