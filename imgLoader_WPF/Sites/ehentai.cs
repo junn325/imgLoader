@@ -24,20 +24,22 @@ namespace imgLoader_WPF.Sites
             var sb = new StringBuilder();
             var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
 
-            if (_src_gall == null) throw new Exception();
-
             _gall_id = mNumber.Split('/')[0];
-            var gallToken = mNumber.Split('/')[1];
-
-            _src_data = XmlHttpRequest_Data(ApiUrl, _gall_id, gallToken);
-
+            _src_data = XmlHttpRequest_Data(ApiUrl, _gall_id, mNumber.Split('/')[1]);
             _title = StrTools.GetStringValue(_src_data, "title");
 
-            for (var i = 1; i < _src_data.StrLen("group") + 1; i++) sb.Append(_src_data.Split("group:")[i].Split('"')[0]).Append(';');
+            for (var i = 1; i < _src_data.StrLen("group") + 1; i++)
+            {
+                sb.Append(_src_data.Split("group:")[i].Split('"')[0]).Append(';');
+            }
             _group = sb.ToString();
+
             sb.Clear();
 
-            for (var i = 1; i < _src_data.StrLen("artist") + 1; i++) sb.Append(_src_data.Split("artist:")[i].Split('"')[0]).Append(';');
+            for (var i = 1; i < _src_data.StrLen("artist") + 1; i++)
+            {
+                sb.Append(_src_data.Split("artist:")[i].Split('"')[0]).Append(';');
+            }
             _artist = sb.ToString();
 
             temp.Wait();
@@ -62,7 +64,10 @@ namespace imgLoader_WPF.Sites
             var rtnVal = new string[pageCount];
 
             var sb = new StringBuilder(pages);
-            for (var i = 1; i < (pageCount / 40) + 1; i++) sb.Append(StrLoad.Load($"{BaseUrl}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
+            for (var i = 1; i < (pageCount / 40) + 1; i++)
+            {
+                sb.Append(StrLoad.Load($"{BaseUrl}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
+            }
 
             var temp = sb.ToString();
             for (var i = 0; i < pageCount; i++)
@@ -73,7 +78,8 @@ namespace imgLoader_WPF.Sites
 
             for (var i = 0; i < pageCount; i++)
             {
-                rtnVal[i] = tasks[i].Result; var url = tasks[i].Result.Split("\"img\\\" src=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/");
+                rtnVal[i] = tasks[i].Result; 
+                var url = tasks[i].Result.Split("\"img\\\" src=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/");
                 imgList.Add(url.Split("/").Last(), url);
             }
 
@@ -117,7 +123,6 @@ namespace imgLoader_WPF.Sites
         private static async Task<string> XmlHttpRequest_ItemAsync(string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
             return await Task.Run(() => {
-
                 HttpWebRequest rq = null;
                 WebResponse resp = null;
                 try
@@ -138,12 +143,22 @@ namespace imgLoader_WPF.Sites
                     }
 
                     resp = rq.GetResponse();
+
                     using (var s = resp.GetResponseStream())
                     {
-                        using var reader = new StreamReader(s);
-                        returnVal = reader.ReadToEnd();
+                        var sb = new StringBuilder();
+
+                        int count;
+                        var buffer = new byte[1024];
+                        do
+                        {
+                            count = s.Read(buffer, 0, buffer.Length);
+                            sb.Append(Encoding.UTF8.GetString(buffer, 0, count));
+                        } while (count > 0);
+
+                        returnVal = sb.ToString();
                     }
-                    resp.Close();
+                    //resp.Close();
 
                     return returnVal;
                 }
@@ -185,8 +200,17 @@ namespace imgLoader_WPF.Sites
                 resp = rq.GetResponse();
                 using (var s = resp.GetResponseStream())
                 {
-                    using var reader = new StreamReader(s);
-                    returnVal = reader.ReadToEnd();
+                    var sb = new StringBuilder();
+
+                    int count;
+                    var buffer = new byte[1024];
+                    do
+                    {
+                        count = s.Read(buffer, 0, buffer.Length);
+                        sb.Append(Encoding.UTF8.GetString(buffer, 0, count));
+                    } while (count > 0);
+
+                    returnVal = sb.ToString();
                 }
                 resp.Close();
 

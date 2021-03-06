@@ -184,13 +184,7 @@ namespace imgLoader_WPF
             if (url.Contains("hiyobi.me", StringComparison.OrdinalIgnoreCase)) return new Hiyobi(mNumber);
             if (url.Contains("hitomi.la", StringComparison.OrdinalIgnoreCase)) return new Hitomi(mNumber);
             if (url.Contains("e-hentai.org", StringComparison.OrdinalIgnoreCase)) return new EHentai(mNumber);
-            if (url.Contains("exhentai.org", StringComparison.OrdinalIgnoreCase))
-            {
-                //Console.WriteLine("\nThis program may not possible to download from exhentai.org. Trying to download from Hitomi.la...");
-                //var temp = new Hitomi(mNumber.Contains('/') ? mNumber.Split('/')[0] : mNumber);
-                ////var tempp = 
-                //if (temp.IsValidated()) return temp;
-            }
+            if (url.Contains("exhentai.org", StringComparison.OrdinalIgnoreCase)) return null;
 
             return null;
         }

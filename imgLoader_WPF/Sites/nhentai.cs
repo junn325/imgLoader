@@ -15,12 +15,9 @@ namespace imgLoader_WPF.Sites
 
         public NHentai(string mNumber)
         {
-            var wc = new WebClient();
-            wc.Encoding = Encoding.UTF8;
-
             try
             {
-                _source = wc.DownloadString($"https://nhentai.net/api/gallery/{mNumber}");
+                _source = StrLoad.Load($"https://nhentai.net/api/gallery/{mNumber}");
 
                 var sb = new StringBuilder();
                 for (var i = 1; i < _source.Split("group\",\"name\":\"").Length; i++) sb.Append(_source.Split("group\",\"name\":\"")[i].Split('"')[0]).Append(';');

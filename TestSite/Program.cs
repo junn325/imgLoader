@@ -1,5 +1,9 @@
-﻿
-using System;
+﻿using System;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using BenchmarkDotNet.Running;
+using BenchmarkDotNet.Attributes;
 
 namespace TestSite
 {
@@ -7,48 +11,69 @@ namespace TestSite
     {
         public static void Main(string[] args)
         {
-            int a = 5;
-            int b = 20;
-
-            Console.WriteLine($"{a}+{b}의 값은: {Sum(a, b)} 입니다.");
-            Console.WriteLine($"{a}-{b}의 값은: {Minus(a, b)} 입니다.");
-            Console.WriteLine($"{a}*{b}의 값은: {Multiple(a, b)} 입니다.");
-            Console.WriteLine($"{a}/{b}의 값은: {Divide(a, b)} 입니다.");
+            var summary = BenchmarkRunner.Run<StringLoader>();
         }
+    }
 
-        private static int Sum(int firstNumber, int secondNumber)
+    public class StringLoader
+    {
+        private const int cnt = 1;
+
+        private readonly WebClient wc = new();
+        private readonly HttpClient hc = new();
+
+        [Benchmark]
+        public void Webclient()
         {
-            int result;
-            result = firstNumber + secondNumber;
-
-            return result;
+            var temp = new string[cnt];
+            for (int i = 0; i < cnt; i++)
+            {
+                temp[i] = wc.DownloadString("http://www.naver.com");
+            }
         }
-
-        private static int Minus(int firstNumber, int secondNumber)
+        [Benchmark]
+        public void HttpClient()
         {
-            int result;
-            result = firstNumber - secondNumber;
+            var tasks = new Task<string>[cnt];
+            var temp = new string[cnt];
+            for (int i = 0; i < cnt; i++)
+            {
+                tasks[i] = hc.GetStringAsync("http://www.naver.com");
+            }
 
-            return result;
+            Task.WaitAll(tasks);
+
+            for (int i = 0; i < cnt; i++)
+            {
+                temp[i] = tasks[i].Result;
+            }
         }
-
-        private static double Divide(int firstNumber, int secondNumber)
+        [Benchmark]
+        public void StrLoadA()
         {
-            double result;
-            result = (double)firstNumber / secondNumber;
-
-            return result;
+            var temp = new string[cnt];
+            for (int i = 0; i < cnt; i++)
+            {
+                temp[i] = StrLoad.Load("http://www.naver.com");
+            }
         }
-
-        private static int Multiple(int firstNumber, int secondNumber)
+        [Benchmark]
+        public void StrLoadU()
         {
-            int result;
-            result = firstNumber * secondNumber;
+            var tasks = new Task<string>[cnt];
+            var temp = new string[cnt];
+            for (int i = 0; i < cnt; i++)
+            {
+                tasks[i] = StrLoad.LoadAsync("http://www.naver.com");
+            }
 
-            return result;
+            Task.WaitAll(tasks);
+
+            for (int i = 0; i < cnt; i++)
+            {
+                temp[i] = tasks[i].Result;
+            }
         }
-
-
     }
 }
 

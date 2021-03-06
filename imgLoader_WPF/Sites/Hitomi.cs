@@ -15,13 +15,12 @@ namespace imgLoader_WPF.Sites
 
         public Hitomi(string mNumber)
         {
-            var wc = new WebClient {Encoding = Encoding.UTF8};
             var sb = new StringBuilder();
 
             try
             {
                 var temp = StrLoad.LoadAsync($"https://ltn.hitomi.la/galleries/{mNumber}.js");
-                var srcGall = wc.DownloadString(wc.DownloadString($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
+                var srcGall = StrLoad.Load(StrLoad.Load($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
 
                 _src_info = temp.Result;
 
@@ -41,7 +40,7 @@ namespace imgLoader_WPF.Sites
             }
             catch (WebException ex)
             {
-                if (ex.Message.Contains("404")) return;
+                Core.Log(ex.Message);
             }
         }
 

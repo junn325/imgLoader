@@ -23,7 +23,7 @@ namespace imgLoader_WPF
 
             var req = WebRequest.Create(url);
             var resp = req.GetResponse();
-            //if (resp == null) return null;
+            if (resp == null) return null;
 
             using var br = resp.GetResponseStream();
 
