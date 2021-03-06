@@ -85,6 +85,9 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            ChangeIP temp = new ChangeIP();
+            temp.Change("2C-F0-5D-0A-B0-23");
+
             Menu.Focus(); //메뉴 미리 로드
             _winSetting = new Settings(this, Scroll, _index);
 
@@ -132,12 +135,12 @@ namespace imgLoader_WPF.Windows
 
             new Thread(() =>
             {
-                while (true)
+                while (false)
                 {
                     Debug.WriteLine($"_index:{_index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
                     Thread.Sleep(1000);
                 }
-            }).Start();
+            }){IsBackground = true}.Start();
         }
 
         private void List_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -246,23 +249,37 @@ namespace imgLoader_WPF.Windows
                 switch (item.Name)
                 {
                     case "Cancel":
+                        item.IsEnabled = _clickedItem.IsDownloading;
                         break;
                     case "Resume":
                         if (!_clickedItem.IsDownloading)
                         {
                             item.IsEnabled = false;
+                            break;
                         }
+
+                        if (_clickedItem.Proc == null) continue;
+                        if (_clickedItem.Proc.Pause)
+                        {
+                            item.IsEnabled = true;
+                        }
+
                         break;
                     case "Pause":
+                        if (!_clickedItem.IsDownloading)
+                        {
+                            item.IsEnabled = false;
+                            break;
+                        }
+
                         if (_clickedItem.Proc == null) continue;
                         if (_clickedItem.Proc.Pause)
                         {
                             item.IsEnabled = false;
-                            ((MenuItem)ItemCtrl.ContextMenu.Items[7]).IsEnabled = false;        //Resume
-                            continue;
+                            break;
                         }
 
-                        item.IsEnabled = false;
+                        item.IsEnabled = true;
                         break;
                     case "Manage":
                         item.IsEnabled = false;
@@ -341,12 +358,15 @@ namespace imgLoader_WPF.Windows
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            _clickedItem.Proc.Stop = true;
+            if (_clickedItem.Proc != null)
+                _clickedItem.Proc.Stop = true;
 
             _clickedItem.Show = false;
             _clickedItem.IsDownloading = false;
 
+            _infSvc.Stop();
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
+            _infSvc.Start();
 
             _idxSvc.DoIndex(_sb);
         }

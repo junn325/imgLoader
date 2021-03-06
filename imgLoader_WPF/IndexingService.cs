@@ -35,7 +35,7 @@ namespace imgLoader_WPF
             {
                 while (!_stop)
                 {
-                    Debug.WriteLine("IdxSvc");
+                    //Debug.WriteLine("IdxSvc");
 
                     Thread.Sleep(Interval);
 

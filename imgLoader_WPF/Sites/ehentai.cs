@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -15,18 +16,26 @@ namespace imgLoader_WPF.Sites
         private const string ApiUrl = "https://api.e-hentai.org/api.php";
         private const string BaseUrl = "https://e-hentai.org/";
 
+        private Stopwatch sw = new();
         private readonly string _src_gall, _src_data, _gall_id, _artist, _group, _title, _showKey;
 
         public EHentai(string mNumber)
         {
+            sw.Start();
             _src_gall = StrLoad.Load($"{BaseUrl}g/{mNumber}/");
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+            sw.Restart();
 
             var sb = new StringBuilder();
             var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+            sw.Restart();
 
             _gall_id = mNumber.Split('/')[0];
             _src_data = XmlHttpRequest_Data(ApiUrl, _gall_id, mNumber.Split('/')[1]);
             _title = StrTools.GetStringValue(_src_data, "title");
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+            sw.Restart();
 
             for (var i = 1; i < _src_data.StrLen("group") + 1; i++)
             {
@@ -43,10 +52,14 @@ namespace imgLoader_WPF.Sites
             _artist = sb.ToString();
 
             temp.Wait();
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+            sw.Restart();
+
             var srcItem = temp.Result;
             _showKey = srcItem.Split("var showkey=\"")[1].Split("\";")[0];
 
             Number = mNumber;
+            sw.Restart();
         }
 
         public string GetArtist()
@@ -62,12 +75,16 @@ namespace imgLoader_WPF.Sites
             var pages = _src_gall.Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0];
             var tasks = new Task<string>[pageCount];
             var rtnVal = new string[pageCount];
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+            sw.Restart();
 
             var sb = new StringBuilder(pages);
             for (var i = 1; i < (pageCount / 40) + 1; i++)
             {
                 sb.Append(StrLoad.Load($"{BaseUrl}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
             }
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+            sw.Restart();
 
             var temp = sb.ToString();
             for (var i = 0; i < pageCount; i++)
@@ -75,6 +92,8 @@ namespace imgLoader_WPF.Sites
                 var url = temp.Split("<a href=\"")[i + 1].Split("\">")[0];
                 tasks[i] = XmlHttpRequest_ItemAsync(_gall_id, (i + 1).ToString(), url.Split('/')[4], _showKey, (i + 1).ToString());
             }
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+            sw.Restart();
 
             for (var i = 0; i < pageCount; i++)
             {
@@ -82,6 +101,8 @@ namespace imgLoader_WPF.Sites
                 var url = tasks[i].Result.Split("\"img\\\" src=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/");
                 imgList.Add(url.Split("/").Last(), url);
             }
+            Debug.WriteLine(sw.ElapsedMilliseconds);
+            sw.Restart();
 
             return imgList;
         }

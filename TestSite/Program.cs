@@ -1,20 +1,27 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Attributes;
+using System.Management;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 
 namespace TestSite
 {
-    internal static class Program
+    internal class Program
     {
         public static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<StringLoader>();
-        }
-    }
+            //var summary = BenchmarkRunner.Run<StringLoader>();
 
+            //SetIP("111.111.111.111");
+        }
+
+    }
     public class StringLoader
     {
         private const int cnt = 1;
@@ -31,6 +38,7 @@ namespace TestSite
                 temp[i] = wc.DownloadString("http://www.naver.com");
             }
         }
+
         [Benchmark]
         public void HttpClient()
         {
@@ -48,6 +56,7 @@ namespace TestSite
                 temp[i] = tasks[i].Result;
             }
         }
+
         [Benchmark]
         public void StrLoadA()
         {
@@ -57,6 +66,7 @@ namespace TestSite
                 temp[i] = StrLoad.Load("http://www.naver.com");
             }
         }
+
         [Benchmark]
         public void StrLoadU()
         {

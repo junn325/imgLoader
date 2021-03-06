@@ -35,8 +35,8 @@ namespace imgLoader_WPF
 
         public Processor(string url, IndexItem item)
         {
-            try
-            {
+            //try
+            //{
                 if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
 
                 item.IsDownloading = true;
@@ -68,11 +68,11 @@ namespace imgLoader_WPF
                 item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
 
                 _item = item;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Failed to Initialize: Processor: {ex.StackTrace}");
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception($"Failed to Initialize: Processor: {ex.StackTrace}");
+            //}
 
             IsValidated = Site.IsValidated();
         }
@@ -349,6 +349,7 @@ namespace imgLoader_WPF
             resp.Close();
         }
 
+        private int thres = 10;
         private bool HandleFail(string path)
         {
             if (_failed.Count == 0) return true;
@@ -358,7 +359,9 @@ namespace imgLoader_WPF
 
             Task.WaitAll(_tasks);
 
-            if (_failed.Count != 0) HandleFail(path);
+            thres--;
+
+            if (thres > 0 && _failed.Count != 0) HandleFail(path);
 
             _failed.Clear();
 
