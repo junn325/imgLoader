@@ -51,7 +51,11 @@ namespace imgLoader_WPF
 
             if (SearchList.Count != 0)
             {
-                
+                var searches = SearchList.Keys.ToArray();
+                foreach (var s in searches)
+                {
+                    removed = removed.Where(i => i.Value.)
+                }
             }
 
             foreach (var (key, value) in removed)
@@ -68,7 +72,9 @@ namespace imgLoader_WPF
             _sender.PgSvc.Paginate();
         }
 
-        private void SearchFromAll(List<IndexItem> searchFrom, string search, List<IndexItem> destination, Dictionary<int, IndexItem> removeItem)
+        //todo:void Search() 를 구현한 후 SearchFromAll이 그것을 호출하는것으로 변경할 것
+
+        private void SearchFromAll(List<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> removeItem)
         {
             var sb = new StringBuilder();
 

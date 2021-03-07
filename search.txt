@@ -1,0 +1,43 @@
+1
+12
+123
+1234
+12345
+123456
+1234567
+12345678
+
+검색어:	4
+delete:	1, 12, 123
+result:	1234, 12345, 123456, 1234567, 12345678
+
+검색어:	6
+delete:	1234, 12345
+result:	123456, 1234567, 12345678
+
+검색어:	7
+delete:	123456
+result:	1234567, 12345678
+
+a b c
+a
+b c
+c d e f
+a f b
+b a e
+c d f
+b f c
+c e d
+a d f b
+
+검색어:	b
+delete:	a, cdef, cdf, ced
+result:	abc, bc, afb, bae, bfc, adfb
+
+검색어:	a
+delete:	bc, bfc
+result:	abc, afb, bae, adfb
+
+검색어:	f
+delete:	abc, bae
+result:	afb, adfb
