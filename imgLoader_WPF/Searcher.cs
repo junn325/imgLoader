@@ -57,6 +57,7 @@ namespace imgLoader_WPF
                 _sender.List.Insert(key, value);
             }
             _sender.ShowItems.Clear();
+            _sender.PgSvc.Paginate();
 
             SearchList.Remove(searchTxt);
         }

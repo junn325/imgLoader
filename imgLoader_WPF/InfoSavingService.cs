@@ -13,28 +13,17 @@ namespace imgLoader_WPF
         private const int Interval = 3000;
 
         private bool _stop;
-        private Thread _service;
+        internal Thread Service;
         private readonly ImgLoader _sender;
 
         private delegate void ServDele(bool stop, ImgLoader sender);
-        private readonly ServDele _func = ((stop, sender) =>
-        {
-            while (!stop)
-            {
-                //Debug.WriteLine("VtSvc");
-
-                Thread.Sleep(Interval);
-
-                Save(sender);
-            }
-        });
 
         public InfoSavingService(ImgLoader sender)
         {
             _sender = sender;
         }
 
-        internal static void Save(Windows.ImgLoader sender)
+        internal void Save(Windows.ImgLoader sender)
         {
             IndexItem[] idx = null;
 
@@ -75,7 +64,10 @@ namespace imgLoader_WPF
                         infoContent:
                         info = $"{info.Substring(0, info.CountIndexOf('\n', 5))}\n{item.Vote}\n{(item.Show ? 1 : 0)}";
 
+                        if (_stop) return;
                         using var ds = Core.DelayStream(path, FileMode.OpenOrCreate, FileAccess.Write);
+                        if (_stop) return;
+
                         var sw = new StreamWriter(ds);
                         sw.Write(info);
 
@@ -97,16 +89,27 @@ namespace imgLoader_WPF
         }
         internal void Start()
         {
+            Debug.WriteLine("vtsvc: start");
             _stop = false;
 
-            if (_service == null || _service.ThreadState != System.Threading.ThreadState.Running)
+            if (Service == null || Service.ThreadState != System.Threading.ThreadState.Running)
             {
-                Debug.WriteLine(_service?.ThreadState);
+                Debug.WriteLine(Service?.ThreadState);
 
-                _service = new Thread(() => _func(_stop, _sender));
-                _service.Name = "VtSvc";
+                Service = new Thread(() =>
+                {
+                    while (!_stop)
+                    {
+                        //Debug.WriteLine("VtSvc");
 
-                _service.Start();
+                        Thread.Sleep(Interval);
+
+                        Save(_sender);
+                    }
+                });
+                Service.Name = "VtSvc";
+
+                Service.Start();
             }
         }
 

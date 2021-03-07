@@ -85,9 +85,9 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            var temp = new ChangeIP();
+            //var temp = new ChangeIP();
 
-            temp.ChangeMACAddress("2C-F0-5D-0A-B0-21");
+            //var a = temp.ChangeMACAddress("2C-F0-5D-0A-B0-22");
 
             Menu.Focus(); //메뉴 미리 로드
             _winSetting = new Settings(this, Scroll, _index);
@@ -190,6 +190,12 @@ namespace imgLoader_WPF.Windows
                 ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
 
                 _infSvc.Stop();
+
+                while (_infSvc.Service.IsAlive)
+                {
+                    Thread.Sleep(100);
+                }
+
                 lItem.Proc = new Processor(url, lItem);
 
                 if (!lItem.Proc.IsValidated)
@@ -330,7 +336,7 @@ namespace imgLoader_WPF.Windows
         {
             _clickedItem.Show = false;
 
-            InfoSavingService.Save(this);
+            _infSvc.Save(this);
             _index.Remove(_clickedItem);
 
             _idxSvc.DoIndex(_sb);

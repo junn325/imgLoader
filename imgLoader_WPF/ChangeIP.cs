@@ -43,13 +43,13 @@ namespace imgLoader_WPF
             key += $"\\{adaptNum:D4}";
 
             using var searcher = new ManagementObjectSearcher($"Select * From win32_networkadapter Where Name='{desc}'").Get();
-            using var adapter = searcher.Cast<ManagementObject>().FirstOrDefault();
+            using var adapter = searcher.Cast<ManagementObject>().First();
             using var reg = Registry.LocalMachine.OpenSubKey(key, true);
             if (reg == null) return false;
 
-            //adapter.InvokeMethod("Disable", null);
+            adapter.InvokeMethod("Disable", null);
             reg.SetValue("NetworkAddress", mac);
-            //adapter.InvokeMethod("Enable", null);
+            adapter.InvokeMethod("Enable", null);
 
             return true;
         }
