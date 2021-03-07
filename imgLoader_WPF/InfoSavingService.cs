@@ -13,10 +13,8 @@ namespace imgLoader_WPF
         private const int Interval = 3000;
 
         private bool _stop;
-        internal Thread Service;
+        internal Thread _service;
         private readonly ImgLoader _sender;
-
-        private delegate void ServDele(bool stop, ImgLoader sender);
 
         public InfoSavingService(ImgLoader sender)
         {
@@ -40,6 +38,8 @@ namespace imgLoader_WPF
 
             foreach (var item in idx)
             {
+                if (_stop) return;
+
                 if (string.IsNullOrWhiteSpace(item.Route)) continue;
 
                 var path = $@"{Core.GetDirectoryFromFile(item.Route)}\{Core.EHNumForDir(item.Number)}.{Core.InfoExt}";
@@ -85,18 +85,18 @@ namespace imgLoader_WPF
                     File.WriteAllText(path, item.Vote.ToString());
                 }
             }
-
         }
+
         internal void Start()
         {
             Debug.WriteLine("vtsvc: start");
             _stop = false;
 
-            if (Service == null || Service.ThreadState != System.Threading.ThreadState.Running)
+            if (_service == null || _service.ThreadState != System.Threading.ThreadState.Running)
             {
-                Debug.WriteLine(Service?.ThreadState);
+                Debug.WriteLine(_service?.ThreadState);
 
-                Service = new Thread(() =>
+                _service = new Thread(() =>
                 {
                     while (!_stop)
                     {
@@ -107,15 +107,16 @@ namespace imgLoader_WPF
                         Save(_sender);
                     }
                 });
-                Service.Name = "VtSvc";
+                _service.Name = "VtSvc";
 
-                Service.Start();
+                _service.Start();
             }
         }
 
         internal void Stop()
         {
             _stop = true;
+            while (_service.IsAlive) Thread.Sleep(100);
         }
     }
 }

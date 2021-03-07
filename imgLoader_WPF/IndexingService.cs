@@ -173,6 +173,7 @@ namespace imgLoader_WPF
         internal void Stop()
         {
             _stop = true;
+            while (_service.IsAlive) Thread.Sleep(100);
         }
     }
 

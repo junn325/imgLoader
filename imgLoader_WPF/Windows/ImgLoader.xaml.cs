@@ -191,11 +191,6 @@ namespace imgLoader_WPF.Windows
 
                 _infSvc.Stop();
 
-                while (_infSvc.Service.IsAlive)
-                {
-                    Thread.Sleep(100);
-                }
-
                 lItem.Proc = new Processor(url, lItem);
 
                 if (!lItem.Proc.IsValidated)

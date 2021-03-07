@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using imgLoader_WPF.Windows;
@@ -46,6 +47,13 @@ namespace imgLoader_WPF
                 return;
             }
 
+            SearchList.Remove(searchTxt);
+
+            if (SearchList.Count != 0)
+            {
+                
+            }
+
             foreach (var (key, value) in removed)
             {
                 if (_sender.List.Count < key)
@@ -58,8 +66,6 @@ namespace imgLoader_WPF
             }
             _sender.ShowItems.Clear();
             _sender.PgSvc.Paginate();
-
-            SearchList.Remove(searchTxt);
         }
 
         private void SearchFromAll(List<IndexItem> searchFrom, string search, List<IndexItem> destination, Dictionary<int, IndexItem> removeItem)
@@ -82,7 +88,7 @@ namespace imgLoader_WPF
 
             for (var i = 0; i < searchFrom.Count; i++)
             {
-                foreach (var srch in search.Split(','))             //검색어 나열
+                foreach (var srch in search.Split(','))
                 {
                     if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
                     {
