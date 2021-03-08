@@ -102,7 +102,7 @@ namespace imgLoader_WPF.Windows
             }
 
 #if DEBUG
-            Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+            //Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
 #endif
 #if !DEBUG
             D_Stop.IsEnabled = false;
@@ -136,7 +136,7 @@ namespace imgLoader_WPF.Windows
 
             new Thread(() =>
             {
-                while (false)
+                while (true)
                 {
                     Debug.WriteLine($"_index:{_index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
                     Thread.Sleep(1000);
@@ -451,7 +451,7 @@ namespace imgLoader_WPF.Windows
             {
                 if (item.SizeChange == null) return;
                 item.SizeChange(Scroll.ActualWidth - 10.0);
-                Debug.WriteLine("size");
+                //Debug.WriteLine("size");
             }
         }
 

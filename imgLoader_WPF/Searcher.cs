@@ -51,10 +51,26 @@ namespace imgLoader_WPF
 
             if (SearchList.Count != 0)
             {
+                var sb = new StringBuilder();
                 var searches = SearchList.Keys.ToArray();
+
                 foreach (var s in searches)
                 {
-                    removed = removed.Where(i => i.Value.)
+                    foreach (var removedItem in new Dictionary<int, IndexItem>(removed))
+                    {
+                        var temp = s.Split(':');
+                        if (temp.Length == 1)   //재탐색할 항목이 "모든 항목에서 검색" 일 경우
+                        {
+                            sb.Append(removedItem.Value.Author).Append(removedItem.Value.Number).Append(removedItem.Value.SiteName).Append(removedItem.Value.Title);
+                            foreach (var tag in removedItem.Value.Tags) sb.Append(tag);
+
+                            if (!sb.ToString().Contains(temp[0]))
+                            {
+                                removed.Remove(removedItem.Key);
+                            }
+                            sb.Clear();
+                        }
+                    }
                 }
             }
 
@@ -72,9 +88,7 @@ namespace imgLoader_WPF
             _sender.PgSvc.Paginate();
         }
 
-        //todo:void Search() 를 구현한 후 SearchFromAll이 그것을 호출하는것으로 변경할 것
-
-        private void SearchFromAll(List<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> removeItem)
+        private void SearchFromAll(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> removeItem)
         {
             var sb = new StringBuilder();
 
