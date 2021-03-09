@@ -85,10 +85,6 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            //var temp = new ChangeIP();
-
-            //var a = temp.ChangeMACAddress("2C-F0-5D-0A-B0-25");
-
             Menu.Focus(); //메뉴 미리 로드
             _winSetting = new Settings(this, Scroll, _index);
 
