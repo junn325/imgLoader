@@ -116,10 +116,7 @@ namespace imgLoader_WPF.Windows
             _infSvc = new InfoSavingService(this);
             _idxSvc = new IndexingService(_index, this);
 
-            foreach (var item in _index)
-            {
-                List.Add(item);
-            }
+            foreach (var item in _index) List.Add(item);
 
             PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
             Sorter = new Sorter(this, List);
