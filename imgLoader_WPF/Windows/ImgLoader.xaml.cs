@@ -543,5 +543,12 @@ namespace imgLoader_WPF.Windows
         {
             Sort(Sorter.SortOption.Date);
         }
+
+        private void Random_Click(object sender, RoutedEventArgs e)
+        {
+            //var temp = _index.Keys.ToArray()[new Random().Next(0, _index.Count)];
+            //Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
+
+        }
     }
 }
