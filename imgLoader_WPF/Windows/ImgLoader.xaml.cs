@@ -510,7 +510,7 @@ namespace imgLoader_WPF.Windows
         private void AuthorSort_Click(object sender, RoutedEventArgs e)
         {
             Sort(Sorter.SortOption.Author);
-            //todo: 아예 분류로 넣을것
+            //todo: 분류
         }
 
         private void PageSort_Click(object sender, RoutedEventArgs e)
@@ -546,9 +546,15 @@ namespace imgLoader_WPF.Windows
 
         private void Random_Click(object sender, RoutedEventArgs e)
         {
-            //var temp = _index.Keys.ToArray()[new Random().Next(0, _index.Count)];
-            //Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
+            var img = new BitmapImage();
+            var temp = Directory.GetFiles(Core.GetDirectoryFromFile(_index[new Random().Next(0, _index.Count)].Route), "*.*").Where(f => !f.Contains(".ilif")).ToArray();
 
+            img.BeginInit();
+            img.UriSource = new Uri(temp[0]);
+            img.EndInit();
+
+            var canvas = new CanvasWindow.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
+            canvas.Show();
         }
     }
 }
