@@ -98,7 +98,7 @@ namespace imgLoader_WPF.Windows
             }
 
 #if DEBUG
-            //Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+            Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
 #endif
 #if !DEBUG
             D_Stop.IsEnabled = false;
@@ -547,7 +547,20 @@ namespace imgLoader_WPF.Windows
         private void Random_Click(object sender, RoutedEventArgs e)
         {
             var img = new BitmapImage();
-            var temp = Directory.GetFiles(Core.GetDirectoryFromFile(_index[new Random().Next(0, _index.Count)].Route), "*.*").Where(f => !f.Contains(".ilif")).ToArray();
+            var rand = new Random().Next(0, _index.Count);
+            var temp = Directory.GetFiles(Core.GetDirectoryFromFile(_index[rand].Route), "*.*").Where(f => !f.Contains(".ilif")).ToArray();
+
+            Debug.WriteLine(_index[rand].Title);
+
+            if (ShowItems.Count < rand + 1)
+            {
+                _index[rand].IsRead = true;
+            }
+            else
+            {
+                ShowItems[rand].IsRead = true;
+                ShowItems[rand].ShownChang();
+            }
 
             img.BeginInit();
             img.UriSource = new Uri(temp[0]);

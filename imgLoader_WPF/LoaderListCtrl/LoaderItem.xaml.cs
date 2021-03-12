@@ -25,6 +25,7 @@ namespace imgLoader_WPF.LoaderListCtrl
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
             var data = ((IndexItem)DataContext);
+
             data.ShownChang = () => Background = data.IsRead ? Brushes.LightGray : Brushes.White;
 
             data.ProgPanelVis = (v) => Dispatcher.Invoke(() => ProgPanel.Visibility = v);
@@ -56,6 +57,8 @@ namespace imgLoader_WPF.LoaderListCtrl
                 ProgBar.Value++;
                 ProgBlock.Text = $"{_progVal}/{_progMax}";
             });
+
+            Background = data.IsRead ? Brushes.LightGray : Brushes.White;
 
             if (Tags == null) return;
             foreach (var tag in Tags)

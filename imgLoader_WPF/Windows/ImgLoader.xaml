@@ -35,10 +35,10 @@
                             <MenuItem x:Name="Delete" Header="삭제" IsEnabled="False" Click="Delete_Click"/>
                             <Separator/>
                             <MenuItem x:Name="Search" Header="검색" Click="Search_Click">
+                                <!--<MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>
                                 <MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>
                                 <MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>
-                                <MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>
-                                <MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>
+                                <MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>-->
 
                             </MenuItem>
                             <MenuItem x:Name="SortMenu" Header="정렬">
