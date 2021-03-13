@@ -193,6 +193,7 @@ namespace imgLoader_WPF
         public string Number { get; set; }
         public string[] Tags { get; set; }
         public int Vote { get; set; }
+        public int View { get; set; }
         public bool IsRead { get; set; }
         public string Route { get; set; }
 
