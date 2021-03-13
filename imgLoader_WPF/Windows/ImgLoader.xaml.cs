@@ -337,15 +337,7 @@ namespace imgLoader_WPF.Windows
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            var img = new BitmapImage();
-            var temp = Directory.GetFiles(Core.GetDirectoryFromFile(_clickedItem.Route), "*.*").Where(f => !f.Contains(".ilif")).ToArray();
-
-            img.BeginInit();
-            img.UriSource = new Uri(temp[0]);
-            img.EndInit();
-
-            var canvas = new CanvasWindow.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
-            canvas.Show();
+            Core.OpenOnCanvas(Core.GetDirectoryFromFile(_clickedItem.Route));
 
             _clickedItem.IsRead = true;
             _clickedItem.ShownChang.Invoke();
@@ -546,9 +538,7 @@ namespace imgLoader_WPF.Windows
 
         private void Random_Click(object sender, RoutedEventArgs e)
         {
-            var img = new BitmapImage();
             var rand = new Random().Next(0, _index.Count);
-            var temp = Directory.GetFiles(Core.GetDirectoryFromFile(_index[rand].Route), "*.*").Where(f => !f.Contains(".ilif")).ToArray();
 
             Debug.WriteLine(_index[rand].Title);
 
@@ -562,12 +552,7 @@ namespace imgLoader_WPF.Windows
                 ShowItems[rand].ShownChang();
             }
 
-            img.BeginInit();
-            img.UriSource = new Uri(temp[0]);
-            img.EndInit();
-
-            var canvas = new CanvasWindow.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
-            canvas.Show();
+            Core.OpenOnCanvas(Core.GetDirectoryFromFile(_index[rand].Route));
         }
     }
 }

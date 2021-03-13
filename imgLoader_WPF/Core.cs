@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace imgLoader_WPF
 {
@@ -323,9 +324,17 @@ namespace imgLoader_WPF
             return sb.ToString();
         }
 
-        internal enum SearchOption
+        internal static void OpenOnCanvas(string imgSetPath)
         {
-            
+            var img = new BitmapImage();
+            var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains(".ilif")).ToArray();
+
+            img.BeginInit();
+            img.UriSource = new Uri(temp[0]);
+            img.EndInit();
+
+            var canvas = new CanvasWindow.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
+            canvas.Show();
         }
     }
 }
