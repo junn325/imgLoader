@@ -5,5 +5,8 @@
              StartupUri="Windows/ImgLoader.xaml">
     <Application.Resources>
         <FontFamily x:Key="Wingdings 2">pack://application:,,,/Font/#Wingdings 2</FontFamily>
+        <FontFamily x:Key="IBMPlexSansKR_SB">pack://application:,,,/Font/#IBM Plex Sans KR SemiBold</FontFamily>
+        <FontFamily x:Key="IBMPlexSansKR_R">pack://application:,,,/Font/#IBM Plex Sans KR Regular</FontFamily>
+        <FontFamily x:Key="NanumGothic_R">pack://application:,,,/Font/#나눔고딕</FontFamily>
     </Application.Resources>
 </Application>
