@@ -16,6 +16,7 @@ namespace imgLoader_WPF
         internal Thread _service;
         private readonly ImgLoader _sender;
 
+        private const int InfoCount = 9;
         public InfoSavingService(ImgLoader sender)
         {
             _sender = sender;
@@ -29,7 +30,7 @@ namespace imgLoader_WPF
 
             try
             {
-                if (sender.ItemCtrl.ItemsSource == null) return;
+                if (_stop || sender.ItemCtrl.ItemsSource == null) return;
                 idx = sender.ItemCtrl.ItemsSource.Cast<IndexItem>().ToArray();
             }
             catch (OperationCanceledException) { }
@@ -49,27 +50,26 @@ namespace imgLoader_WPF
                 {
                     using (var sr = new StreamReader(Core.DelayStream(path, FileMode.Open, FileAccess.Read)))
                     {
-                        var info = sr.ReadToEnd();
+                        var infoString = sr.ReadToEnd();
                         sr.Close();
+                        if (string.IsNullOrEmpty(infoString)) continue;
 
-                        if (string.IsNullOrEmpty(info)) continue;
+                        var infoSplit = infoString.Split('\n');
+                        var info = Core.InitializeArray(InfoCount, infoSplit);
 
-                        while (info.Split('\n').Length < 8) info += '\n';
+                        if (string.IsNullOrEmpty(infoSplit[6]) || string.IsNullOrEmpty(infoSplit[7])) goto infoContent;
 
-                        if (string.IsNullOrEmpty(info.Split('\n')[6]) || string.IsNullOrEmpty(info.Split('\n')[7])) goto infoContent;
-
-                        if (int.TryParse(info.Split('\n')[6], out var temp) && temp == item.Vote
-                            && (info.Split('\n')[7] == "1") == item.Show) continue;
+                        if (int.TryParse(infoSplit[6], out var temp) && temp == item.Vote && (infoSplit[7] == "1") == item.Show) continue;
 
                         infoContent:
-                        info = $"{info.Substring(0, info.CountIndexOf('\n', 5))}\n{item.Vote}\n{(item.Show ? 1 : 0)}";
+                        infoString = $"{infoString.Substring(0, infoString.CountIndexOf('\n', 5))}\n{item.Vote}\n{(item.Show ? 1 : 0)}";
 
                         if (_stop) return;
                         using var ds = Core.DelayStream(path, FileMode.OpenOrCreate, FileAccess.Write);
                         if (_stop) return;
 
                         var sw = new StreamWriter(ds);
-                        sw.Write(info);
+                        sw.Write(infoString);
 
                         sw.Flush();
                         ds.SetLength(ds.Position);
