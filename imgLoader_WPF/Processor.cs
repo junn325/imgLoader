@@ -183,7 +183,7 @@ namespace imgLoader_WPF
                     ? temp.Replace(title, title.Substring(0, 80) + "...")
                     : temp;
 
-            return $@"{Core.Route}\{temp}\{Core.EHNumForDir(Number)}.{Core.InfoExt}";
+            return $@"{Core.Route}\{temp}\{Core.EHNumFromRaw(Number)}.{Core.InfoExt}";
         }       //returns info path
 
         private Error CreateInfo()

@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using static imgLoader_WPF.Sorter;
 
 namespace imgLoader_WPF.Windows
 {
@@ -72,7 +73,7 @@ namespace imgLoader_WPF.Windows
             label.Visibility = Visibility.Visible;
         }
 
-        private void Sort(Sorter.SortOption option)
+        private void Sort(SortOption option)
         {
             Sorter.Sort(option);
             ShowItems.Clear();
@@ -144,20 +145,6 @@ namespace imgLoader_WPF.Windows
                 Debug.WriteLine("paginate");
                 PgSvc.Paginate();
             }
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            //var temp = _index.Keys.ToArray()[new Random().Next(0, _index.Count)];
-            //Process.Start("explorer.exe", temp.Substring(0, temp.IndexOf(temp.Split('\\').Last(), StringComparison.Ordinal)));
-        }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            //for (int j = 0; j < 700; j++)
-            //{
-            //var item = new LoaderItem($"Test_test_{i}", $"imgL_{i}", i++.ToString(), "Hiyobi", $"C:\\test{j}", "000000", 0);
-            //LList.Children.Add();
-            //}
         }
 
         private void Setting_Click(object sender, RoutedEventArgs e)
@@ -489,30 +476,25 @@ namespace imgLoader_WPF.Windows
             }
         }
 
-        private void SortMenu_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
         private void TitleSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(Sorter.SortOption.Title);
+            Sort(SortOption.Title);
         }
 
         private void AuthorSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(Sorter.SortOption.Author);
+            Sort(SortOption.Author);
             //todo: 분류
         }
 
         private void PageSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(Sorter.SortOption.Page);
+            Sort(SortOption.Page);
         }
 
         private void NumberSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(Sorter.SortOption.Number);
+            Sort(SortOption.Number);
         }
 
         private void DockPanel_MouseMove(object sender, MouseEventArgs e)
@@ -533,7 +515,7 @@ namespace imgLoader_WPF.Windows
 
         private void DateSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(Sorter.SortOption.Date);
+            Sort(SortOption.Date);
         }
 
         private void Random_Click(object sender, RoutedEventArgs e)

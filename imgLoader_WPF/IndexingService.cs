@@ -111,8 +111,6 @@ namespace imgLoader_WPF
 
                 if (info[2].Contains('|'))
                 {
-                    //if (info[1].Contains("첫사랑"))
-                    //    ;
                     foreach (var s in info[2].Split('|')[0].Split(';'))
                     {
                         if (string.IsNullOrWhiteSpace(s)) continue;
@@ -141,15 +139,18 @@ namespace imgLoader_WPF
                 Index.Add(
                 new IndexItem
                 {
-                    Title = info[1],
                     Author = sb.ToString(),
+
                     SiteName = info[0],
+                    Title    = info[1],
                     ImgCount = info[3],
-                    Number = Core.EHNumForInternal(infoRoute.Split('\\')[^1].Split('.')[0]),
-                    Route = infoRoute,
-                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
-                    Vote = int.Parse(info[6]),
-                    Date = info[5]
+                    Tags     = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
+                    Date     = info[5],
+                    Vote     = int.Parse(info[6]),
+                    //View     = int.Parse(info[8]),
+
+                    Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
+                    Route = infoRoute
                 }
                 );
                 sb.Clear();

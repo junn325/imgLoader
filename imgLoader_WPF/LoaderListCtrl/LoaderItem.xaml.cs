@@ -29,7 +29,7 @@ namespace imgLoader_WPF.LoaderListCtrl
             data.RefreshInfo = () => Dispatcher.Invoke(() =>
             {
                 AuthorBlock.Text = data.Author;
-                ViewCntBlock.Text = $"{data.ImgCount}장";
+                ViewCntBlock.Text = $"{data.ImgCount} Imgs";
                 NumBlock.Text = data.Number;
                 SiteBlock.Text = data.SiteName;
                 TitleBlock.Text = data.Title;

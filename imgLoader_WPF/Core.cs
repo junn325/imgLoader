@@ -90,7 +90,7 @@ namespace imgLoader_WPF
                         : info[i]
                 );
             }
-            sw.Write($"\n{DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture)}\n0\n1"); //0 = Vote, 1 = Show
+            sw.Write($"\n{DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture)}\n0\n1\n0"); //0=Vote, 1=Show, 0=View
 
             sw.Close();
 
@@ -293,6 +293,27 @@ namespace imgLoader_WPF
             return temp;
         }
 
+        internal static T[] InitializeArray<T>(int count)
+        {
+            var temp = new T[count];
+
+            for (var i = 0; i < temp.Length; i++) temp[i] = default;
+
+            return temp;
+        }
+
+        internal static T[] InitializeArray<T>(int count, T[] array)
+        {
+            var temp = new T[count];
+
+            for (var i = 0; i < temp.Length; i++)
+            {
+                temp[i] = array.Length > i ? array[i] : default;
+            }
+
+            return temp;
+        }
+
         internal static string GetDirectoryFromFile(string path)
         {
             return path.Substring(0, path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1);
@@ -303,12 +324,12 @@ namespace imgLoader_WPF
             Process.Start("explorer.exe", path);
         }
 
-        internal static string EHNumForDir(string number)
+        internal static string EHNumFromRaw(string number)
         {
             return number.Contains('/') ? number.Replace('/', '!') : number;
         }
 
-        internal static string EHNumForInternal(string number)
+        internal static string EHNumFromRoute(string number)
         {
             return number.Contains('!') ? number.Replace('!', '/') : number;
         }
