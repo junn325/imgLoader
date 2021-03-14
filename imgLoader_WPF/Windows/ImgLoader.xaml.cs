@@ -66,7 +66,7 @@ namespace imgLoader_WPF.Windows
             InitializeComponent();
         }
 
-        private void HideBorder(Border border, TextBox txtB, TextBlock label)
+        private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
         {
             border.Visibility = Visibility.Hidden;
             Focus();
@@ -531,6 +531,11 @@ namespace imgLoader_WPF.Windows
             }
 
             Core.OpenOnCanvas(Core.GetDirectoryFromFile(_index[rand].Route));
+        }
+
+        private void LabelBlock_Srch_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            TxtSrchAll.Focus();
         }
     }
 }
