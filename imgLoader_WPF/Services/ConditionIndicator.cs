@@ -1,11 +1,10 @@
-﻿using imgLoader_WPF.Windows;
-
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using imgLoader_WPF.Windows;
 
-namespace imgLoader_WPF
+namespace imgLoader_WPF.Services
 {
     internal class ConditionIndicator
     {

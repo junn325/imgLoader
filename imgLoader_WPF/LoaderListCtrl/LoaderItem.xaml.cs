@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Windows;
 using System.Windows.Media;
+using imgLoader_WPF.Services;
 
 namespace imgLoader_WPF.LoaderListCtrl
 {

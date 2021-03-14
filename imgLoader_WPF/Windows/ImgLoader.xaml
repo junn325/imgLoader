@@ -49,9 +49,9 @@
                                 <MenuItem x:Name="DateSort" Header="날짜로 정렬" Click="DateSort_Click"/>
                             </MenuItem>
                             <Separator/>
-                            <MenuItem x:Name="Random" Header="랜덤으로 선택" IsEnabled="False" Click="Random_Click"/>
+                            <MenuItem x:Name="Random" Header="랜덤 선택" IsEnabled="False" Click="Random_Click"/>
                             <MenuItem x:Name="OpenExplorer" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
-                            <MenuItem x:Name="CopyAddress" Header="주소 복사" Click="CopyAddress_Click"/>
+                            <MenuItem x:Name="CopyAddress" Header="링크 복사" Click="CopyAddress_Click"/>
                             <Separator/>
                             <MenuItem x:Name="Setting" Header="설정" Click="Setting_Click"/>
                         </ContextMenu>

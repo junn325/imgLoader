@@ -1,13 +1,10 @@
-﻿using imgLoader_WPF.LoaderListCtrl;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+using imgLoader_WPF.LoaderListCtrl;
 
-namespace imgLoader_WPF
+namespace imgLoader_WPF.Services
 {
     internal class PaginationService
     {

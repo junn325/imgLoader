@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using imgLoader_WPF.Windows;
-
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using imgLoader_WPF.Windows;
 
-namespace imgLoader_WPF
+namespace imgLoader_WPF.Services
 {
     //컬렉션은 IndexItem을 담고있음                        
     //매 /interval/ 밀리초마다 인덱싱

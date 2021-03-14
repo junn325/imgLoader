@@ -1,11 +1,9 @@
-﻿using imgLoader_WPF.Windows;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
 
-namespace imgLoader_WPF
+namespace imgLoader_WPF.Services
 {
     internal class InfoSavingService
     {

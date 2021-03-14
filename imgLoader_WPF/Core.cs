@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using imgLoader_WPF.Services;
 
 namespace imgLoader_WPF
 {

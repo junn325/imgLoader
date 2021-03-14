@@ -14,6 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using imgLoader_WPF.Services;
 using static imgLoader_WPF.Sorter;
 
 namespace imgLoader_WPF.Windows

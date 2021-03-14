@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using imgLoader_WPF.Services;
 using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
