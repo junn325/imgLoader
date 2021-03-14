@@ -20,6 +20,7 @@
     <None Remove="Font\IBMPlexSansKR-Regular.ttf" />
     <None Remove="Font\IBMPlexSansKR-SemiBold.ttf" />
     <None Remove="Font\NanumGothic.ttf" />
+    <None Remove="Font\NanumGothicBold.ttf" />
     <None Remove="Font\Wingdings2.ttf" />
     <None Remove="LoaderListCtrl\Icon\DownOver.png" />
     <None Remove="LoaderListCtrl\Icon\Dwn.png" />
@@ -38,6 +39,7 @@
     <Resource Include="Font\IBMPlexSansKR-Regular.ttf" />
     <Resource Include="Font\IBMPlexSansKR-SemiBold.ttf" />
     <Resource Include="Font\NanumGothic.ttf" />
+    <Resource Include="Font\NanumGothicBold.ttf" />
     <Resource Include="Font\Wingdings2.ttf" />
     <Resource Include="LoaderListCtrl\Icon\DownOver.png" />
     <Resource Include="LoaderListCtrl\Icon\Dwn.png" />

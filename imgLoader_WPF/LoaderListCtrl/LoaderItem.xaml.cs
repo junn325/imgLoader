@@ -28,8 +28,7 @@ namespace imgLoader_WPF.LoaderListCtrl
             data.ShownChang = () => Background = data.IsRead ? Brushes.LightGray : Brushes.White;
             data.ProgPanelVis = (v) => Dispatcher.Invoke(() => ProgPanel.Visibility = v);
 
-            data.SizeChange = (value) =>
-                this.MaxWidth = value;
+            data.SizeChange = (value) => this.MaxWidth = value;
 
             data.RefreshInfo = () => Dispatcher.Invoke(() =>
             {
@@ -69,7 +68,7 @@ namespace imgLoader_WPF.LoaderListCtrl
                 }
 
                 AuthorBlock.Text = sb.ToString();
-                ViewCntBlock.Text = $"{data.ImgCount} Imgs";
+                ImgCntBlock.Text = $"{data.ImgCount} Imgs";
                 NumBlock.Text = data.Number;
                 SiteBlock.Text = data.SiteName;
                 TitleBlock.Text = data.Title;

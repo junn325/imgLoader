@@ -56,9 +56,9 @@
                 </ControlTemplate>
             </Grid.Resources>
 
-            <TextBlock x:Name="TitleBlock" Text="(제목)" FontFamily="{StaticResource NanumGothic_R}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="TitleBlock" Text="(제목)" FontFamily="{StaticResource NanumGothic_B}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="NumBlock" Text="(번호)" FontFamily="{StaticResource IBMPlexSansKR_SB}" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="3" Grid.Row="0" Padding="0"/>
-            <TextBlock x:Name="AuthorBlock" Text="(작가)" FontFamily="{StaticResource IBMPlexSansKR_SB}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="AuthorBlock" Text="(작가)" FontFamily="{StaticResource NanumGothic_R}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="SiteBlock" Text="(사이트)" FontFamily="{StaticResource IBMPlexSansKR_R}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="ImgCntBlock" Text="(이미지 장수)" FontFamily="{StaticResource IBMPlexSansKR_R}"  VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="ViewCntBlock" Text="(조회수)" FontFamily="{StaticResource IBMPlexSansKR_R}"  VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
