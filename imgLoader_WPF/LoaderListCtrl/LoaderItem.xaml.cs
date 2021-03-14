@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Text;
+using System.Windows;
 using System.Windows.Media;
 
 namespace imgLoader_WPF.LoaderListCtrl
@@ -7,6 +8,7 @@ namespace imgLoader_WPF.LoaderListCtrl
     {
         private int _progMax;
         private int _progVal;
+        private Windows.ImgLoader _sender;
 
         public static int MHeight { get; } = 53;
 
@@ -16,8 +18,11 @@ namespace imgLoader_WPF.LoaderListCtrl
         {
             InitializeComponent();
         }
+
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
+            _sender = (Windows.ImgLoader)Window.GetWindow(this);
+
             var data = ((IndexItem)DataContext);
 
             data.ShownChang = () => Background = data.IsRead ? Brushes.LightGray : Brushes.White;
@@ -28,12 +33,48 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             data.RefreshInfo = () => Dispatcher.Invoke(() =>
             {
-                AuthorBlock.Text = data.Author;
+                var sb = new StringBuilder();
+
+                if (data.Author.Contains('|'))
+                {
+                    foreach (var s in data.Author.Split('|')[0].Split(';'))
+                    {
+                        if (string.IsNullOrWhiteSpace(s)) continue;
+                        sb.Append(s).Append(", ");
+                    }
+
+                    if (sb.Length != 0) sb.Remove(sb.Length - 2, 2);
+
+                    if (data.Author.Split('|')[1].Contains(';'))
+                    {
+                        sb.Append(" (");
+                        foreach (var s in data.Author.Split('|')[1].Split(';'))
+                        {
+                            if (string.IsNullOrWhiteSpace(s)) continue;
+                            sb.Append(s).Append(", ");
+                        }
+                        sb.Remove(sb.Length - 2, 2);
+                        sb.Append(')');
+                    }
+                }
+                else
+                {
+                    sb.Append(data.Author);
+
+                    //foreach (var s in data.Author.Split(';'))
+                    //{
+                    //    if (string.IsNullOrWhiteSpace(s)) continue;
+                    //    sb.Append(s).Append(", ");
+                    //}
+                }
+
+                AuthorBlock.Text = sb.ToString();
                 ViewCntBlock.Text = $"{data.ImgCount} Imgs";
                 NumBlock.Text = data.Number;
                 SiteBlock.Text = data.SiteName;
                 TitleBlock.Text = data.Title;
                 LblVote.Text = data.Vote.ToString();
+                ViewCntBlock.Text = $"{data.View} Views";
             });
 
             data.ProgBarMax = value => Dispatcher.Invoke(() =>
@@ -50,18 +91,25 @@ namespace imgLoader_WPF.LoaderListCtrl
             });
 
             Background = data.IsRead ? Brushes.LightGray : Brushes.White;
+            data.RefreshInfo();
         }
 
         private void UpVote_Click(object sender, RoutedEventArgs e)
         {
             var data = ((IndexItem)DataContext);
+
             data.Vote++;
+            _sender.InfSvc.Save(data);
+
             LblVote.Text = data.Vote.ToString();
         }
         private void DownVote_Click(object sender, RoutedEventArgs e)
         {
             var data = ((IndexItem)DataContext);
+
             data.Vote--;
+            _sender.InfSvc.Save(data);
+
             LblVote.Text = data.Vote.ToString();
         }
     }

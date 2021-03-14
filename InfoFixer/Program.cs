@@ -29,10 +29,8 @@ namespace imgL_Fixer
             }
 
             Console.Write("Route: ");
-            //var route = Console.ReadLine();
 
-            //FixInfo_LineBreak(route);
-            FixInfo_Ext_N_Content(route);
+            FixInfo_Content_Count(route);
         }
 
         private static void FixInfo_LineBreak(string route)
@@ -242,6 +240,44 @@ namespace imgL_Fixer
             File.WriteAllText($"{DateTime.Now.Ticks}.txt", sb.ToString());
         }
 
+        private static void FixInfo_Content_Count(string route)
+        {
+            const int infoCount = 9;
+
+            var tp = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".ilif"));
+            var sb = new StringBuilder();
+
+            foreach (var info in tp)
+            {
+                var temp = File.ReadAllText(info);
+                if (temp.StrLen('\n') == infoCount) continue;
+
+                var infos = InitializeArray(infoCount, temp.Split('\n'));
+                /*if (infos[6].Length == 0)*/ infos[6] = "0";
+                /*if (infos[7].Length == 0) */infos[7] = "1";
+                /*if (infos[8].Length == 0) */infos[8] = "0";
+
+                using (var fs = new FileStream(info, FileMode.Open))
+                {
+                    using (TextWriter tw = new StreamWriter(fs, Encoding.UTF8, 1024, true))
+                    {
+                        for (var i = 0; i < infos.Length; i++)
+                        {
+                            var inf = infos[i];
+                            tw.Write(inf);
+                            if (i != infos.Length - 1) tw.Write('\n');
+                        }
+                    }
+                    fs.SetLength(fs.Position);
+                }
+
+                Console.WriteLine($"Modified: {info}");
+                sb.Append("Modified: ").Append(info).Append('\n');
+
+            }
+            File.WriteAllText($"{DateTime.Now.Ticks}.txt", sb.ToString());
+        }
+
         private static void FixInfo_Ext_Only(string route)
         {
             var tp = Directory.EnumerateFiles(route, "*.*", SearchOption.AllDirectories).Where(s => s.EndsWith(".Hiyobi") || s.EndsWith(".Hitomi") || s.EndsWith(".EHentai") || s.EndsWith(".NHentai"));
@@ -251,5 +287,18 @@ namespace imgL_Fixer
                 File.Move(path, $"{route}\\{path.Split('\\')[^2]}\\{path.Split('\\').Last().Split('.')[0]}.ilif");
             }
         }
+
+        internal static T[] InitializeArray<T>(int count, T[] array)
+        {
+            var temp = new T[count];
+
+            for (var i = 0; i < temp.Length; i++)
+            {
+                temp[i] = array.Length > i ? array[i] : default;
+            }
+
+            return temp;
+        }
+
     }
 }

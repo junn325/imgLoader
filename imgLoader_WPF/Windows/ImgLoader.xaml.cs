@@ -24,6 +24,7 @@ namespace imgLoader_WPF.Windows
     //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
     //todo: 조회수
     //todo: 여러 폴더를 탭으로 동시에 관리
+    //todo: 폴더 두 개를 열고 없는 항목 체크
     //todo: 조건이 있는 랜덤
     //todo: 정보 직접 수정
     //todo: 뷰어: 계속 다시 로드하지 말고 배열에 이미지를 담아놓을것
@@ -42,7 +43,7 @@ namespace imgLoader_WPF.Windows
 
     public partial class ImgLoader
     {
-        private InfoSavingService _infSvc;
+        internal InfoSavingService InfSvc;
         private IndexingService _idxSvc;
         internal PaginationService PgSvc;
 
@@ -114,7 +115,7 @@ namespace imgLoader_WPF.Windows
 
             ItemCtrl.ItemsSource = ShowItems;
 
-            _infSvc = new InfoSavingService(this);
+            InfSvc = new InfoSavingService();
             _idxSvc = new IndexingService(_index, this);
 
             foreach (var item in _index) List.Add(item);
@@ -124,7 +125,7 @@ namespace imgLoader_WPF.Windows
             Searcher = new Searcher(this, List);
             CondInd = new ConditionIndicator(this);
 
-            _infSvc.Start();
+            InfSvc.Start();
             _idxSvc.Start();
             PgSvc.Paginate();
 
@@ -136,6 +137,7 @@ namespace imgLoader_WPF.Windows
                     Thread.Sleep(1000);
                 }
             }){IsBackground = true}.Start();
+
         }
 
         private void List_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -169,21 +171,19 @@ namespace imgLoader_WPF.Windows
             {
                 ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
 
-                _infSvc.Stop();
+                InfSvc.Stop();
 
                 lItem.Proc = new Processor(url, lItem);
 
                 if (!lItem.Proc.IsValidated)
                 {
                     ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
-                    _infSvc.Start();
                     return;
                 }
 
                 if (lItem.Proc.CheckDupl())
                 {
                     MessageBox.Show("Already Exists.");
-                    _infSvc.Start();
                     ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
                     return;
                 }
@@ -196,7 +196,6 @@ namespace imgLoader_WPF.Windows
                 lItem.Proc.Load();
 
                 List.Insert(0, lItem);
-                _infSvc.Start();
 
                 Debug.WriteLine(sw.Elapsed.Ticks);
                 sw.Reset();
@@ -209,7 +208,7 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _infSvc.Stop();
+            InfSvc.Stop();
             _idxSvc.Stop();
 
             _winSetting.Close();
@@ -307,15 +306,15 @@ namespace imgLoader_WPF.Windows
             ShowItems.Remove(_clickedItem);
         }
 
-        private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
-        {
-            _clickedItem.Show = false;
+        //private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
+        //{
+        //    _clickedItem.Show = false;
 
-            _infSvc.Save(this);
-            _index.Remove(_clickedItem);
+        //    InfSvc.Save(_clickedItem);
+        //    _index.Remove(_clickedItem);
 
-            _idxSvc.DoIndex(_sb);
-        }
+        //    _idxSvc.DoIndex(_sb);
+        //}
 
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
@@ -338,9 +337,7 @@ namespace imgLoader_WPF.Windows
             _clickedItem.Show = false;
             _clickedItem.IsDownloading = false;
 
-            _infSvc.Stop();
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
-            _infSvc.Start();
 
             _idxSvc.DoIndex(_sb);
         }
@@ -435,10 +432,8 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            foreach (var item in ShowItems)
-            {
-                item.RefreshInfo();
-            }
+            //_index[7].Author = "test:test|test:test";
+            InfSvc.Save(_index[7]);
         }
 
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)

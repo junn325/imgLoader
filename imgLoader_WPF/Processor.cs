@@ -235,7 +235,7 @@ namespace imgLoader_WPF
             }
 
             _item.ProgPanelVis.Invoke(Visibility.Visible);
-            _item.TagPanelVis.Invoke(Visibility.Hidden);
+            //_item.TagPanelVis.Invoke(Visibility.Hidden);
             _item.ProgBarMax.Invoke(imgList.Count);
 
             _tasks = new Task[imgList.Count];
@@ -250,7 +250,7 @@ namespace imgLoader_WPF
             if (success)
             {
                 _item.ProgPanelVis.Invoke(Visibility.Hidden);
-                _item.TagPanelVis.Invoke(Visibility.Visible);
+                //_item.TagPanelVis.Invoke(Visibility.Visible);
             }
             else
             {

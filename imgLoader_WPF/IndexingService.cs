@@ -17,6 +17,7 @@ namespace imgLoader_WPF
     internal class IndexingService
     {
         private const int Interval = 3000;
+        private const int InfoCount = 9;
 
         private readonly Thread _service;
         private bool _stop;
@@ -92,9 +93,9 @@ namespace imgLoader_WPF
                 if (string.IsNullOrWhiteSpace(infos)) continue;
 
                 var info = infos.Split('\n');
-                if (info.Length != 8)
+                if (info.Length != InfoCount)
                 {
-                    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}/{info.Length}");
+                    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}, info.length: {info.Length}");
                     continue;
                 }
 
@@ -109,44 +110,16 @@ namespace imgLoader_WPF
 
                 if (Index.Any(idx => idx.Route == infoRoute)) continue;
 
-                if (info[2].Contains('|'))
-                {
-                    foreach (var s in info[2].Split('|')[0].Split(';'))
-                    {
-                        if (string.IsNullOrWhiteSpace(s)) continue;
-                        sb.Append(s).Append(", ");
-                    }
-
-                    if(sb.Length != 0) sb.Remove(sb.Length - 2, 2);
-
-                    if (info[2].Split('|')[1].Contains(';'))
-                    {
-                        sb.Append(" (");
-                        foreach (var s in info[2].Split('|')[1].Split(';'))
-                        {
-                            if (string.IsNullOrWhiteSpace(s)) continue;
-                            sb.Append(s).Append(", ");
-                        }
-                        sb.Remove(sb.Length - 2, 2);
-                        sb.Append(')');
-                    }
-                }
-                else
-                {
-                    sb.Append(info[2]);
-                }
-
                 Index.Add(
                 new IndexItem
                 {
-                    Author = sb.ToString(),
-
                     SiteName = info[0],
-                    Title    = info[1],
+                    Title = info[1],
+                    Author = info[2],
                     ImgCount = info[3],
-                    Tags     = info[4].Split("tags:")[1].Split('\n')[0].Split(';'),
-                    Date     = info[5],
-                    Vote     = int.Parse(info[6]),
+                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+                    Date = info[5],
+                    Vote = int.Parse(info[6]),
                     //View     = int.Parse(info[8]),
 
                     Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
@@ -209,7 +182,7 @@ namespace imgLoader_WPF
         public NoParam ShownChang;
 
         public VisOne ProgPanelVis;
-        public VisOne TagPanelVis;
+        //public VisOne TagPanelVis;
 
         public IntOne ProgBarMax;
         public NoParam ProgBarVal;
