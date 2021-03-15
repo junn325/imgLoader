@@ -88,7 +88,7 @@ namespace imgLoader_WPF
             _sender.PgSvc.Paginate();
         }
 
-        private void SearchFromAll(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> removeItem)
+        private void SearchFromAll(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> removeItem, SearchOption option)
         {
             var sb = new StringBuilder();
 
@@ -99,11 +99,31 @@ namespace imgLoader_WPF
             {
                 var item = searchFrom[i];
 
-                sb.Append(item.Author).Append(item.Number).Append(item.SiteName).Append(item.Title);
-                foreach (var tag in item.Tags) sb.Append(tag);
+                switch (option)
+                {
+                    case SearchOption.All:
+                        sb.Append(item.Author).Append(item.Number).Append(item.SiteName).Append(item.Title);
+                        foreach (var tag in item.Tags) sb.Append(tag);
+                        temp[i] = sb.ToString();
+                        sb.Clear();
+                        break;
 
-                temp[i] = sb.ToString();
-                sb.Clear();
+                    case SearchOption.Author:
+                        temp[i] = item.Author;
+                        break;
+
+                    case SearchOption.Number:
+                        temp[i] = item.Number;
+                        break;
+
+                    case SearchOption.ImgCount:
+                        temp[i] = item.ImgCount;
+                        break;
+
+                    case SearchOption.Title:
+                        temp[i] = item.Title;
+                        break;
+                }
             }
 
             for (var i = 0; i < searchFrom.Count; i++)
@@ -123,6 +143,15 @@ namespace imgLoader_WPF
             {
                 destination.Add(item);
             }
+        }
+
+        internal enum SearchOption
+        {
+            All,
+            Title,
+            Author,
+            Number,
+            ImgCount
         }
     }
 }
