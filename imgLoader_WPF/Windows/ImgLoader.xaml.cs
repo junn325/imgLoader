@@ -456,7 +456,16 @@ namespace imgLoader_WPF.Windows
             //List.Clear();
             ShowItems.Clear();
 
-            Searcher.Search(TxtSrchAll.Text);
+            Searcher.Search(TxtSrchAll.Text,
+                AllRadio.IsChecked.Value
+                    ? Searcher.SearchOption.All
+                    : AuthorRadio.IsChecked.Value
+                        ? Searcher.SearchOption.Author
+                        : ImgCntRadio.IsChecked.Value
+                            ? Searcher.SearchOption.ImgCount
+                            : NumRadio.IsChecked.Value
+                                ? Searcher.SearchOption.Number
+                                : Searcher.SearchOption.Title);
             //Core.SearchFromAll(_index, TxtSrchAll.Text, List);
             PgSvc.Paginate();
 

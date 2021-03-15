@@ -19,7 +19,7 @@ namespace imgLoader_WPF
             _list = list;
         }
 
-        internal void Search(string search)
+        internal void Search(string search, SearchOption option)
         {
             if (SearchList.ContainsKey(search)) return;
 
@@ -27,7 +27,7 @@ namespace imgLoader_WPF
 
             _sender.Scroll.ScrollToTop();
             _sender.Sorter.ClearSort();
-            SearchFromAll(_list, search, _list, removedItem);
+            SearchFrom(_list, search, _list, removedItem, option);
             SearchList.Add(search, removedItem);
 
             _sender.CondInd.Add(search, ConditionIndicator.Condition.Search);
@@ -88,7 +88,7 @@ namespace imgLoader_WPF
             _sender.PgSvc.Paginate();
         }
 
-        private void SearchFromAll(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> removeItem, SearchOption option)
+        private void SearchFrom(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> removeItem, SearchOption option)
         {
             var sb = new StringBuilder();
 
