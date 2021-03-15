@@ -466,6 +466,7 @@ namespace imgLoader_WPF.Windows
                             : NumRadio.IsChecked.Value
                                 ? Searcher.SearchOption.Number
                                 : Searcher.SearchOption.Title);
+
             //Core.SearchFromAll(_index, TxtSrchAll.Text, List);
             PgSvc.Paginate();
 
