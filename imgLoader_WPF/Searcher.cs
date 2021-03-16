@@ -13,6 +13,13 @@ namespace imgLoader_WPF
         private readonly ImgLoader _sender;
         private readonly List<IndexItem> _list;
 
+        struct SearchItem
+        {
+            internal string searchText;
+            internal SearchOption option;
+            internal Dictionary<int, IndexItem> dict;
+        }
+
         public Searcher(ImgLoader sender, List<IndexItem> list)
         {
             _sender = sender;
@@ -30,7 +37,17 @@ namespace imgLoader_WPF
             SearchFrom(_list, search, _list, removedItem, option);
             SearchList.Add(search, removedItem);
 
-            _sender.CondInd.Add(search, ConditionIndicator.Condition.Search);
+            var label = option switch
+            {
+                SearchOption.All => "",
+                SearchOption.Title => "Title:",
+                SearchOption.Author => "Author:",
+                SearchOption.Number => "Number:",
+                SearchOption.ImgCount => "ImgCount:",
+                _ => "Test:"
+            };
+
+            _sender.CondInd.Add(label + search, ConditionIndicator.Condition.Search);
         }
 
         internal void Remove(string search)

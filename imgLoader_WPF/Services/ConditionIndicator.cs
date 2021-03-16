@@ -20,10 +20,10 @@ namespace imgLoader_WPF.Services
         {
             var tb = new TextBlock
             {
-                Text =
-                    cond == Condition.Search
-                        ? $"Search:{label}"
-                        : $"Sort:{label}",
+                Text = label,
+                    //cond == Condition.Search
+                    //    ? $"Search:{label}"
+                    //    : $"Sort:{label}",
 
                 Height = 20,
                 HorizontalAlignment = HorizontalAlignment.Left,
@@ -54,16 +54,21 @@ namespace imgLoader_WPF.Services
         public void Remove(object sender, MouseEventArgs e)
         {
             var item = (TextBlock)sender;
+            var panel = ((DockPanel)item.Parent).Background;
+            var cond = Condition.Null;
 
-            switch (item.Text.Split(':')[0])
+            if (panel == Brushes.Turquoise) cond = Condition.Sort;
+            if (panel == Brushes.CornflowerBlue) cond = Condition.Search;
+
+            switch (cond)
             {
-                case "Search":
+                case Condition.Search:
                     _sender.Sorter.ClearSort();
                     _sender.CondPanel.Children.Remove((DockPanel)item.Parent);
                     _sender.Searcher.Remove(item.Text);
                     break;
 
-                case "Sort":
+                case Condition.Sort:
                     if(!_sender.Sorter.ClearSort()) _sender.CondPanel.Children.Remove((DockPanel)item.Parent);
                     break;
             }
@@ -72,7 +77,8 @@ namespace imgLoader_WPF.Services
         internal enum Condition
         {
             Sort,
-            Search
+            Search,
+            Null
         }
     }
 }

@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing" WindowStyle="None" ResizeMode="CanResizeWithGrip">
     <WindowChrome.WindowChrome>
-        <WindowChrome NonClientFrameEdges="None"/>
+        <WindowChrome NonClientFrameEdges="None"  CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
 
     <Grid>

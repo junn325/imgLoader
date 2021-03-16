@@ -65,6 +65,11 @@ namespace imgLoader_WPF.Services
                 .Append(item.Show ? "1" : "0").Append('\n')
                 .Append(item.View);
 
+            if (sb.ToString().Split('\n').Length != 8)
+            {
+                ;
+            }
+
             using var sw = new StreamWriter(Core.DelayStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite));
             sw.Write(sb);
             sb.Clear();
