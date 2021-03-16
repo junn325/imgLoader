@@ -21,7 +21,10 @@ namespace TestSite
             //SetIP("111.111.111.111");
             while (true)
             {
-                TwosComplement.Calc(Convert.ToByte(Console.ReadLine(), 2));
+                var isBinary = true;
+                var temp = Console.ReadLine();
+                temp = Convert.ToString(Convert.ToSByte(isBinary? "0b" + temp : temp), 2);
+                TwosComplement.Calc(Convert.ToSByte(temp.Length >= 8 ? temp[8..] : temp.PadLeft(8, '0'), 2));
             }
         }
 
