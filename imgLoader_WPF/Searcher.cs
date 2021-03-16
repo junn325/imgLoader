@@ -9,11 +9,11 @@ namespace imgLoader_WPF
 {
     internal class Searcher
     {
-        internal Dictionary<string, Dictionary<int, IndexItem>> SearchList = new();
+        internal List<SearchItem> SearchList;
         private readonly ImgLoader _sender;
         private readonly List<IndexItem> _list;
 
-        struct SearchItem
+        internal struct SearchItem
         {
             internal string searchText;
             internal SearchOption option;
@@ -28,14 +28,15 @@ namespace imgLoader_WPF
 
         internal void Search(string search, SearchOption option)
         {
-            if (SearchList.ContainsKey(search)) return;
+            if (List_IsContains(search, SearchList)) return;
 
             var removedItem = new Dictionary<int, IndexItem>();
 
             _sender.Scroll.ScrollToTop();
             _sender.Sorter.ClearSort();
             SearchFrom(_list, search, _list, removedItem, option);
-            SearchList.Add(search, removedItem);
+
+            SearchList.Add(new SearchItem { searchText = search, option = option, dict = removedItem });
 
             var label = option switch
             {
@@ -54,15 +55,10 @@ namespace imgLoader_WPF
         {
             var searchTxt = search.Replace("Search:", "");
 
-            Dictionary<int, IndexItem> removed;
-            try
-            {
-                removed = SearchList[searchTxt];
-            }
-            catch
-            {
-                return;
-            }
+            var searchItem = List_SearchForText(searchTxt, SearchList);
+            if (searchItem.searchText == null) return;
+
+            var removed = searchItem.dict;
 
             SearchList.Remove(searchTxt);
 
@@ -162,6 +158,30 @@ namespace imgLoader_WPF
             }
         }
 
+        private SearchItem List_SearchForText(string searchText, List<SearchItem> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (list[i].searchText == searchText) return list[i];
+            }
+
+            return new SearchItem { searchText = null };
+        }
+
+        private bool List_IsContains(string searchText, List<SearchItem> list)
+        {
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (list[i].searchText == searchText) return true;
+            }
+
+            return false;
+        }
+
+        private void List_Remove(string searchText, List<SearchItem> list)
+        {
+
+        }
         internal enum SearchOption
         {
             All,

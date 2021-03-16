@@ -19,6 +19,10 @@ namespace TestSite
             //var summary = BenchmarkRunner.Run<StringLoader>();
 
             //SetIP("111.111.111.111");
+            while (true)
+            {
+                TwosComplement.Calc(Convert.ToByte(Console.ReadLine(), 2));
+            }
         }
 
     }
