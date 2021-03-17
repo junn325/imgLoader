@@ -11,7 +11,7 @@ namespace imgLoader_WPF.Sites
     {
         public string Number { get; }
 
-        private readonly string _src_info, _artist, _group, _title;
+        private readonly string _src_info, _artist = "", _group = "", _title = "";
 
         public Hitomi(string mNumber)
         {

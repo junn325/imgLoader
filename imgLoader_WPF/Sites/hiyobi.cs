@@ -9,7 +9,7 @@ namespace imgLoader_WPF.Sites
     {
         public string Number { get; set; }
 
-        private readonly string _src_cdn, _src_api, _title, _artist, _group;
+        private readonly string _src_cdn, _src_api, _title, _artist = "", _group = "";
 
         public Hiyobi(string mNumber)
         {
