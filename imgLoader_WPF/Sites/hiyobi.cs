@@ -92,6 +92,15 @@ namespace imgLoader_WPF.Sites
                 sb.Append(StrTools.GetStringValue(item.Split('}')[0],"value")).Append(';');
             }
 
+            if (StrTools.GetValue(_src_api, "characters", '[', ']').Length != 0)
+            {
+                foreach (var item in StrTools.GetValue(_src_api, "characters", '[', ']').Split('{'))
+                {
+                    if (item.Length == 0) continue;
+                    sb.Append("character:").Append(StrTools.GetStringValue(item.Split('}')[0], "value")).Append(';');
+                }
+            }
+
             info[4] = sb.ToString().Trim();
 
             return info;

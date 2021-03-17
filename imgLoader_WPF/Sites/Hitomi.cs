@@ -11,16 +11,16 @@ namespace imgLoader_WPF.Sites
     {
         public string Number { get; }
 
-        private readonly string _src_info, _artist = "", _group = "", _title = "";
-
+        private readonly string _src_info, _src_gall, _artist, _group, _title;
         public Hitomi(string mNumber)
         {
+            var wc = new WebClient { Encoding = Encoding.UTF8 };
             var sb = new StringBuilder();
 
             try
             {
                 var temp = StrLoad.LoadAsync($"https://ltn.hitomi.la/galleries/{mNumber}.js");
-                var srcGall = StrLoad.Load(StrLoad.Load($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
+                _src_gall = StrLoad.Load(StrLoad.Load($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
 
                 _src_info = temp.Result;
 
@@ -29,16 +29,16 @@ namespace imgLoader_WPF.Sites
                 if (_src_info.Contains("\\")) _src_info = _src_info.Replace("\\", "");
                 _title = _src_info.Split("title\":\"")[1].Split('\"')[0];
 
-                for (var i = 1; i < srcGall.StrLen("/group/") + 1; i++) sb.Append(srcGall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
+                for (var i = 1; i < _src_gall.StrLen("/group/") + 1; i++) sb.Append(_src_gall.Split("/group/")[i].Split("</a>")[0].Split(">")[1]);
                 _group = sb.ToString();
                 sb.Clear();
 
-                for (var i = 1; i < srcGall.StrLen("/artist/") + 1; i++) sb.Append(srcGall.Split("/artist/")[i].Split("</a>")[0].Split(">")[1]);
+                for (var i = 1; i < _src_gall.StrLen("/artist/") + 1; i++) sb.Append(_src_gall.Split("/artist/")[i].Split("</a>")[0].Split(">")[1]);
                 _artist = sb.ToString();
 
                 Number = mNumber;
             }
-            catch (WebException ex)
+            catch (Exception ex)
             {
                 Core.Log(ex.Message);
             }
@@ -127,6 +127,12 @@ namespace imgLoader_WPF.Sites
                     .Append(':')
                     .Append(StrTools.GetStringValue(item.Split('}')[0], "tag")).Append(';');
             }
+            foreach (var item in _src_gall.Split("Characters</td><td>")[1].Split("</ul>")[0].Split("<li>"))
+            {
+                if (!item.Contains("li")) continue;
+
+                sb.Append("character").Append(':').Append(item.Split("</a></li>")[0].Split('>')[1].Trim()).Append(';');
+            }
 
             info[4] = sb.ToString().Trim();
 
@@ -138,7 +144,7 @@ namespace imgLoader_WPF.Sites
             return Number != null;
         }
 
-        private string Subdomain_from_url(string url, string @base)
+        private static string Subdomain_from_url(string url, string @base)
         {
             var retval = "a";
             var frontendNum = 3;
