@@ -1,14 +1,8 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
+﻿using BenchmarkDotNet.Attributes;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using BenchmarkDotNet.Running;
-using BenchmarkDotNet.Attributes;
-using System.Management;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
 
 namespace TestSite
 {
@@ -19,11 +13,21 @@ namespace TestSite
             //var summary = BenchmarkRunner.Run<StringLoader>();
 
             //SetIP("111.111.111.111");
+            Console.WriteLine("2진수 입력시 0b 접두사 필요; 자리수 구분자 _ 자동으로 무시");
             while (true)
             {
-                var isBinary = true;
-                var temp = Console.ReadLine();
-                temp = Convert.ToString(Convert.ToSByte(isBinary? "0b" + temp : temp), 2);
+                var temp = Console.ReadLine().Replace("_", "");
+
+                try
+                {
+                    temp = Convert.ToString(Convert.ToSByte(temp), 2);
+                }
+                catch
+                {
+                    Console.WriteLine("숫자가 아니거나 너무 큽니다. 다시 시도하세요.");
+                    continue;
+                }
+
                 TwosComplement.Calc(Convert.ToSByte(temp.Length >= 8 ? temp[8..] : temp.PadLeft(8, '0'), 2));
             }
         }

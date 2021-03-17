@@ -9,7 +9,7 @@ namespace imgLoader_WPF
 {
     internal class Searcher
     {
-        internal List<SearchItem> SearchList;
+        internal List<SearchItem> SearchList = new();
         private readonly ImgLoader _sender;
         private readonly List<IndexItem> _list;
 
@@ -36,7 +36,8 @@ namespace imgLoader_WPF
             _sender.Sorter.ClearSort();
             SearchFrom(_list, search, _list, removedItem, option);
 
-            SearchList.Add(new SearchItem { searchText = search, option = option, dict = removedItem });
+            var temp = new SearchItem {searchText = search, option = option, dict = removedItem};
+            SearchList.Add(temp);
 
             var label = option switch
             {
@@ -60,18 +61,17 @@ namespace imgLoader_WPF
 
             var removed = searchItem.dict;
 
-            SearchList.Remove(searchTxt);
+            List_Remove(searchTxt, SearchList);
 
             if (SearchList.Count != 0)
             {
                 var sb = new StringBuilder();
-                var searches = SearchList.Keys.ToArray();
 
-                foreach (var s in searches)
+                foreach (var s in SearchList)
                 {
                     foreach (var removedItem in new Dictionary<int, IndexItem>(removed))
                     {
-                        var temp = s.Split(':');
+                        var temp = s.searchText.Split(':');
                         if (temp.Length == 1)   //재탐색할 항목이 "모든 항목에서 검색" 일 경우
                         {
                             sb.Append(removedItem.Value.Author).Append(removedItem.Value.Number).Append(removedItem.Value.SiteName).Append(removedItem.Value.Title);
@@ -180,7 +180,10 @@ namespace imgLoader_WPF
 
         private void List_Remove(string searchText, List<SearchItem> list)
         {
-
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (list[i].searchText == searchText) list.RemoveAt(i);
+            }
         }
         internal enum SearchOption
         {

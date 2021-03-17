@@ -35,37 +35,34 @@ namespace imgLoader_WPF.LoaderListCtrl
             {
                 var sb = new StringBuilder();
 
-                if (data.Author.Contains('|'))
+                if (data.Author != null)
                 {
-                    foreach (var s in data.Author.Split('|')[0].Split(';'))
+                    if (data.Author.Contains('|'))
                     {
-                        if (string.IsNullOrWhiteSpace(s)) continue;
-                        sb.Append(s).Append(", ");
-                    }
-
-                    if (sb.Length != 0) sb.Remove(sb.Length - 2, 2);
-
-                    if (data.Author.Split('|')[1].Contains(';'))
-                    {
-                        sb.Append(" (");
-                        foreach (var s in data.Author.Split('|')[1].Split(';'))
+                        foreach (var s in data.Author.Split('|')[0].Split(';'))
                         {
                             if (string.IsNullOrWhiteSpace(s)) continue;
                             sb.Append(s).Append(", ");
                         }
-                        sb.Remove(sb.Length - 2, 2);
-                        sb.Append(')');
-                    }
-                }
-                else
-                {
-                    sb.Append(data.Author);
 
-                    //foreach (var s in data.Author.Split(';'))
-                    //{
-                    //    if (string.IsNullOrWhiteSpace(s)) continue;
-                    //    sb.Append(s).Append(", ");
-                    //}
+                        if (sb.Length != 0) sb.Remove(sb.Length - 2, 2);
+
+                        if (data.Author.Split('|')[1].Contains(';'))
+                        {
+                            sb.Append(" (");
+                            foreach (var s in data.Author.Split('|')[1].Split(';'))
+                            {
+                                if (string.IsNullOrWhiteSpace(s)) continue;
+                                sb.Append(s).Append(", ");
+                            }
+                            sb.Remove(sb.Length - 2, 2);
+                            sb.Append(')');
+                        }
+                    }
+                    else
+                    {
+                        sb.Append(data.Author);
+                    }
                 }
 
                 AuthorBlock.Text = sb.ToString();
