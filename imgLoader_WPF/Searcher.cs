@@ -56,36 +56,37 @@ namespace imgLoader_WPF
         {
             var searchTxt = search.Replace("Search:", "");
 
-            var searchItem = List_SearchForText(searchTxt, SearchList);
-            if (searchItem.searchText == null) return;
+            var deleteItem = List_SearchForText(searchTxt, SearchList);
+            if (deleteItem.searchText == null) return;
 
-            var removed = searchItem.dict;
-
-            List_Remove(searchTxt, SearchList);
+            var removed = deleteItem.dict;
 
             if (SearchList.Count != 0)
             {
                 var sb = new StringBuilder();
 
-                foreach (var s in SearchList)
+                foreach (var item in SearchList)
                 {
-                    foreach (var removedItem in new Dictionary<int, IndexItem>(removed))
+                    var temp = item.searchText.Split(':');
+                    if (temp.Length == 1)   //재탐색할 항목이 "모든 항목에서 검색" 일 경우
                     {
-                        var temp = s.searchText.Split(':');
-                        if (temp.Length == 1)   //재탐색할 항목이 "모든 항목에서 검색" 일 경우
+                        foreach (var (key, value) in new Dictionary<int, IndexItem>(removed))
                         {
-                            sb.Append(removedItem.Value.Author).Append(removedItem.Value.Number).Append(removedItem.Value.SiteName).Append(removedItem.Value.Title);
-                            foreach (var tag in removedItem.Value.Tags) sb.Append(tag);
+                            sb.Append(value.Author).Append(value.Number).Append(value.SiteName).Append(value.Title);
+                            foreach (var tag in value.Tags) sb.Append(tag);
 
                             if (!sb.ToString().Contains(temp[0]))
                             {
-                                removed.Remove(removedItem.Key);
+                                removed.Remove(key);
                             }
                             sb.Clear();
                         }
                     }
                 }
             }
+
+            SearchList.Remove(deleteItem);
+            //List_Remove(searchTxt, SearchList);
 
             foreach (var (key, value) in removed)
             {
@@ -97,11 +98,12 @@ namespace imgLoader_WPF
 
                 _sender.List.Insert(key, value);
             }
+
             _sender.ShowItems.Clear();
             _sender.PgSvc.Paginate();
         }
 
-        private void SearchFrom(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> removeItem, SearchOption option)
+        private void SearchFrom(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> list_CopyRemoved, SearchOption option)
         {
             var sb = new StringBuilder();
 
@@ -139,14 +141,17 @@ namespace imgLoader_WPF
                 }
             }
 
-            for (var i = 0; i < searchFrom.Count; i++)
+            if (list_CopyRemoved != null)
             {
-                foreach (var srch in search.Split(','))
+                for (var i = 0; i < searchFrom.Count; i++)
                 {
-                    if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                    foreach (var srch in search.Split(','))
                     {
-                        removeItem.Add(i, searchFrom[i]);
-                        searchResult.Remove(searchFrom[i]);
+                        if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                        {
+                            list_CopyRemoved.Add(i, searchFrom[i]);
+                            searchResult.Remove(searchFrom[i]);
+                        }
                     }
                 }
             }
