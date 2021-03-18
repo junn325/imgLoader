@@ -80,10 +80,12 @@ namespace imgLoader_WPF.Services
                     _sender.Sorter.ClearSort();
                     _sender.CondPanel.Children.Remove(item.Panel);
                     _sender.Searcher.Remove(item);
+                    _list.Remove(item);
                     break;
 
                 case Condition.Sort:
                     if(!_sender.Sorter.ClearSort()) _sender.CondPanel.Children.Remove(item.Panel);
+                    _list.Remove(item);
                     break;
             }
         }

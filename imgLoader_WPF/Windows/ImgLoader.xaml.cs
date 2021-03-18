@@ -54,7 +54,7 @@ namespace imgLoader_WPF.Windows
 
         private Settings _winSetting;
 
-        private readonly List<IndexItem> _index = new();                    //단순 인덱싱 결과
+        internal readonly List<IndexItem> Index = new();                    //단순 인덱싱 결과
         internal List<IndexItem> List = new();                              //표시되어야 할 총 항목
         internal ObservableCollection<IndexItem> ShowItems = new();         //실제 표시되는 항목
 
@@ -89,7 +89,7 @@ namespace imgLoader_WPF.Windows
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
             Menu.Focus(); //메뉴 미리 로드
-            _winSetting = new Settings(this, Scroll, _index);
+            _winSetting = new Settings(this, Scroll, Index);
 
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
             {
@@ -112,14 +112,14 @@ namespace imgLoader_WPF.Windows
 
             Title = Core.Route;
 
-            _winSetting = new Settings(this, Scroll, _index);
+            _winSetting = new Settings(this, Scroll, Index);
 
             ItemCtrl.ItemsSource = ShowItems;
 
             InfSvc = new InfoSavingService();
-            _idxSvc = new IndexingService(_index, this);
+            _idxSvc = new IndexingService(Index, this);
 
-            foreach (var item in _index) List.Add(item);
+            foreach (var item in Index) List.Add(item);
 
             PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
             Sorter = new Sorter(this, List);
@@ -134,7 +134,7 @@ namespace imgLoader_WPF.Windows
             {
                 while (true)
                 {
-                    Debug.WriteLine($"_index:{_index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
+                    Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
                     Thread.Sleep(1000);
                 }
             }){IsBackground = true}.Start();
@@ -409,7 +409,7 @@ namespace imgLoader_WPF.Windows
 
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || _index.Count <= ShowItems.Count || List.Count == 0) return;
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
 
             var sder = ((ScrollViewer)sender);
             PgSvc.Paginate();
@@ -434,7 +434,7 @@ namespace imgLoader_WPF.Windows
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             List.Clear();
-            foreach (var item in _index)
+            foreach (var item in Index)
             {
                 List.Add(item);
             }
@@ -529,13 +529,13 @@ namespace imgLoader_WPF.Windows
 
         private void Random_Click(object sender, RoutedEventArgs e)
         {
-            var rand = new Random().Next(0, _index.Count);
+            var rand = new Random().Next(0, Index.Count);
 
-            Debug.WriteLine(_index[rand].Title);
+            Debug.WriteLine(Index[rand].Title);
 
             if (ShowItems.Count < rand + 1)
             {
-                _index[rand].IsRead = true;
+                Index[rand].IsRead = true;
             }
             else
             {
@@ -543,7 +543,7 @@ namespace imgLoader_WPF.Windows
                 ShowItems[rand].ShownChang();
             }
 
-            Core.OpenOnCanvas(Core.GetDirectoryFromFile(_index[rand].Route));
+            Core.OpenOnCanvas(Core.GetDirectoryFromFile(Index[rand].Route));
         }
 
         private void LabelBlock_Srch_MouseUp(object sender, MouseButtonEventArgs e)

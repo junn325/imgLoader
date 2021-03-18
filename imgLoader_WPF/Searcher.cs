@@ -54,15 +54,9 @@ namespace imgLoader_WPF
 
         internal void Remove(ConditionIndicator.IndItem search)
         {
-            //var searchTxt = search.Replace("Search:", "");
+            var result = new List<IndexItem>(_sender.Index);
 
-            var deleteItem = List_SearchForText(search.Content.Contains(':') ? search.Content.Split(':')[1] : search.Content, (SearchOption)search.Option, SearchList);
-            if (deleteItem.SearchText == null) return;
-
-            var removed = deleteItem.Dict;
-            SearchList.Remove(deleteItem);
-            //List_Remove(searchTxt, SearchList);
-
+            List_Remove(search.Content, SearchList);
             if (SearchList.Count != 0)
             {
                 var sb = new StringBuilder();
@@ -72,24 +66,7 @@ namespace imgLoader_WPF
                     var temp = item.SearchText.Split(':');
                     if (temp.Length == 1)   //재탐색할 항목이 "모든 항목에서 검색" 일 경우
                     {
-                        foreach (var (key, value) in new Dictionary<int, IndexItem>(removed))
-                        {
-                            sb.Append(value.Author).Append(value.Number).Append(value.SiteName).Append(value.Title);
-                            foreach (var tag in value.Tags) sb.Append(tag);
-
-                            if (!sb.ToString().Contains(temp[0]))
-                            {
-                                var nextIndex = key;
-                                while (item.Dict.ContainsKey(nextIndex))
-                                {
-                                    nextIndex = item.Dict.ContainsKey(nextIndex) ? nextIndex + (string.CompareOrdinal(item.Dict[nextIndex].Title, removed[nextIndex].Title) > 0 ? 1 : -1) : nextIndex;
-                                }
-
-                                item.Dict.Add(nextIndex, removed[key]);
-                                removed.Remove(key);
-                            }
-                            sb.Clear();
-                        }
+                        SearchFrom(result, item.SearchText, result, null, SearchOption.All);
                     }
                     else
                     {
@@ -98,15 +75,10 @@ namespace imgLoader_WPF
                 }
             }
 
-            foreach (var (key, value) in removed)
+            _sender.List.Clear();
+            foreach (var item in result)
             {
-                if (_sender.List.Count < key)
-                {
-                    _sender.List.Add(value);
-                    continue;
-                }
-
-                _sender.List.Insert(key, value);
+                _sender.List.Add(item);
             }
 
             _sender.ShowItems.Clear();
@@ -151,17 +123,14 @@ namespace imgLoader_WPF
                 }
             }
 
-            if (list_CopyRemoved != null)
+            for (var i = 0; i < searchFrom.Count; i++)
             {
-                for (var i = 0; i < searchFrom.Count; i++)
+                foreach (var srch in search.Split(','))
                 {
-                    foreach (var srch in search.Split(','))
+                    if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
                     {
-                        if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
-                        {
-                            list_CopyRemoved.Add(i, searchFrom[i]);
-                            searchResult.Remove(searchFrom[i]);
-                        }
+                        list_CopyRemoved?.Add(i, searchFrom[i]);
+                        searchResult.Remove(searchFrom[i]);
                     }
                 }
             }
