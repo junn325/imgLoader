@@ -90,12 +90,12 @@ namespace imgLoader_WPF.Services
                 sr.Close();
                 if (string.IsNullOrWhiteSpace(infos)) continue;
 
-                var info = infos.Split('\n');
-                if (info.Length != InfoCount)
-                {
-                    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}, info.length: {info.Length}");
-                    continue;
-                }
+                var info = Core.InitializeArray(InfoCount, infos.Split('\n'));
+                //if (info.Length != InfoCount)
+                //{
+                //    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}, info.length: {info.Length}");
+                //    continue;
+                //}
 
                 if (info.Length > 7 && info[7] == "0") //목록에서만 제거 처리
                 {
@@ -117,9 +117,9 @@ namespace imgLoader_WPF.Services
                     ImgCount = info[3],
                     Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
                     Date = info[5],
-                    Vote = int.Parse(info[6]),
-                    //View     = int.Parse(info[8]),
-
+                    Vote = info[6] == null ? 0 : int.Parse(info[6]),
+                    Show = info[7] == null || info[7] == "1",
+                    View = info[8] == null ? 0 : int.Parse(info[8]),
                     Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
                     Route = infoRoute
                 }

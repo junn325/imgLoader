@@ -433,8 +433,11 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            //_index[7].Author = "test:test|test:test";
-            InfSvc.Save(_index[7]);
+            List.Clear();
+            foreach (var item in _index)
+            {
+                List.Add(item);
+            }
         }
 
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
@@ -471,7 +474,7 @@ namespace imgLoader_WPF.Windows
             PgSvc.Paginate();
 
             TxtSrchAll.Text = "";
-            SrchBorder.Visibility = Visibility.Collapsed;
+            //SrchBorder.Visibility = Visibility.Collapsed;
         }
 
         private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)

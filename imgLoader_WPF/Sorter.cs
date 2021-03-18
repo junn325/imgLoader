@@ -72,7 +72,7 @@ namespace imgLoader_WPF
                     SortOption.Author => "Author",
                     SortOption.Date => "Date",
                     _ => " -Error"
-                }, ConditionIndicator.Condition.Sort);
+                }, ConditionIndicator.Condition.Sort, (int)sortOption);
         }
 
         internal bool ClearSort()

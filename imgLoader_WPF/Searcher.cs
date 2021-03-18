@@ -15,9 +15,9 @@ namespace imgLoader_WPF
 
         internal struct SearchItem
         {
-            internal string searchText;
-            internal SearchOption option;
-            internal Dictionary<int, IndexItem> dict;
+            internal string SearchText;
+            internal SearchOption Option;
+            internal Dictionary<int, IndexItem> Dict;
         }
 
         public Searcher(ImgLoader sender, List<IndexItem> list)
@@ -36,7 +36,7 @@ namespace imgLoader_WPF
             _sender.Sorter.ClearSort();
             SearchFrom(_list, search, _list, removedItem, option);
 
-            var temp = new SearchItem {searchText = search, option = option, dict = removedItem};
+            var temp = new SearchItem {SearchText = search, Option = option, Dict = removedItem};
             SearchList.Add(temp);
 
             var label = option switch
@@ -49,17 +49,19 @@ namespace imgLoader_WPF
                 _ => "Test:"
             };
 
-            _sender.CondInd.Add(label + search, ConditionIndicator.Condition.Search);
+            _sender.CondInd.Add(label + search, ConditionIndicator.Condition.Search, (int)option);
         }
 
-        internal void Remove(string search)
+        internal void Remove(ConditionIndicator.IndItem search)
         {
-            var searchTxt = search.Replace("Search:", "");
+            //var searchTxt = search.Replace("Search:", "");
 
-            var deleteItem = List_SearchForText(searchTxt, SearchList);
-            if (deleteItem.searchText == null) return;
+            var deleteItem = List_SearchForText(search.Content.Contains(':') ? search.Content.Split(':')[1] : search.Content, (SearchOption)search.Option, SearchList);
+            if (deleteItem.SearchText == null) return;
 
-            var removed = deleteItem.dict;
+            var removed = deleteItem.Dict;
+            SearchList.Remove(deleteItem);
+            //List_Remove(searchTxt, SearchList);
 
             if (SearchList.Count != 0)
             {
@@ -67,7 +69,7 @@ namespace imgLoader_WPF
 
                 foreach (var item in SearchList)
                 {
-                    var temp = item.searchText.Split(':');
+                    var temp = item.SearchText.Split(':');
                     if (temp.Length == 1)   //재탐색할 항목이 "모든 항목에서 검색" 일 경우
                     {
                         foreach (var (key, value) in new Dictionary<int, IndexItem>(removed))
@@ -77,16 +79,24 @@ namespace imgLoader_WPF
 
                             if (!sb.ToString().Contains(temp[0]))
                             {
+                                var nextIndex = key;
+                                while (item.Dict.ContainsKey(nextIndex))
+                                {
+                                    nextIndex = item.Dict.ContainsKey(nextIndex) ? nextIndex + (string.CompareOrdinal(item.Dict[nextIndex].Title, removed[nextIndex].Title) > 0 ? 1 : -1) : nextIndex;
+                                }
+
+                                item.Dict.Add(nextIndex, removed[key]);
                                 removed.Remove(key);
                             }
                             sb.Clear();
                         }
                     }
+                    else
+                    {
+
+                    }
                 }
             }
-
-            SearchList.Remove(deleteItem);
-            //List_Remove(searchTxt, SearchList);
 
             foreach (var (key, value) in removed)
             {
@@ -163,21 +173,21 @@ namespace imgLoader_WPF
             }
         }
 
-        private SearchItem List_SearchForText(string searchText, List<SearchItem> list)
+        private SearchItem List_SearchForText(string searchText, SearchOption option, List<SearchItem> list)
         {
             for (var i = 0; i < list.Count; i++)
             {
-                if (list[i].searchText == searchText) return list[i];
+                if (list[i].SearchText == searchText && list[i].Option == option) return list[i];
             }
 
-            return new SearchItem { searchText = null };
+            return new SearchItem { SearchText = null };
         }
 
         private bool List_IsContains(string searchText, List<SearchItem> list)
         {
             for (var i = 0; i < list.Count; i++)
             {
-                if (list[i].searchText == searchText) return true;
+                if (list[i].SearchText == searchText) return true;
             }
 
             return false;
@@ -187,7 +197,7 @@ namespace imgLoader_WPF
         {
             for (var i = 0; i < list.Count; i++)
             {
-                if (list[i].searchText == searchText) list.RemoveAt(i);
+                if (list[i].SearchText == searchText) list.RemoveAt(i);
             }
         }
         internal enum SearchOption
