@@ -46,6 +46,7 @@ namespace imgLoader_WPF
                 SearchOption.Author => "Author:",
                 SearchOption.Number => "Number:",
                 SearchOption.ImgCount => "ImgCount:",
+                SearchOption.Tag => "Tag:",
                 _ => "Test:"
             };
 
@@ -120,12 +121,21 @@ namespace imgLoader_WPF
                     case SearchOption.Title:
                         temp[i] = item.Title;
                         break;
+
+                    case SearchOption.Tag:
+                        foreach (var tag in item.Tags) sb.Append(tag);
+                        temp[i] = sb.ToString();
+                        sb.Clear();
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(option), option, null);
                 }
             }
 
-            for (var i = 0; i < searchFrom.Count; i++)
+            foreach (var srch in search.Split(','))
             {
-                foreach (var srch in search.Split(','))
+                for (var i = 0; i < searchFrom.Count; i++)
                 {
                     if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
                     {
@@ -169,11 +179,13 @@ namespace imgLoader_WPF
                 if (list[i].SearchText == searchText) list.RemoveAt(i);
             }
         }
+        
         internal enum SearchOption
         {
             All,
             Title,
             Author,
+            Tag,
             Number,
             ImgCount
         }

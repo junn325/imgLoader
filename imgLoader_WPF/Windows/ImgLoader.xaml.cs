@@ -464,8 +464,8 @@ namespace imgLoader_WPF.Windows
                     ? Searcher.SearchOption.All
                     : AuthorRadio.IsChecked.Value
                         ? Searcher.SearchOption.Author
-                        : ImgCntRadio.IsChecked.Value
-                            ? Searcher.SearchOption.ImgCount
+                        : TagRadio.IsChecked.Value
+                            ? Searcher.SearchOption.Tag
                             : NumRadio.IsChecked.Value
                                 ? Searcher.SearchOption.Number
                                 : Searcher.SearchOption.Title);
@@ -549,6 +549,11 @@ namespace imgLoader_WPF.Windows
         private void LabelBlock_Srch_MouseUp(object sender, MouseButtonEventArgs e)
         {
             TxtSrchAll.Focus();
+        }
+
+        private void StackPanel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

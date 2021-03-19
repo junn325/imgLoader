@@ -16,11 +16,6 @@
             <SolidColorBrush x:Key="PBrush" Color="LightGray" Opacity="1"/>
         </Grid.Resources>
 
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
-            <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Width="20" Margin="0,4,10,0" Background="Transparent" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Padding="2" BorderThickness="0,0,0,0" Click="Button_Click_3"/>
-        </Grid>
-
         <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,30,10,20">
             <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged" SizeChanged="Scroll_SizeChanged">
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
@@ -86,12 +81,13 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="20" Background="{StaticResource PBrush}" Orientation="Horizontal">
+            <StackPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="20" Background="{StaticResource PBrush}" Orientation="Horizontal" MouseDown="StackPanel_MouseDown">
                 <RadioButton x:Name="AllRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" IsChecked="True" Content="전체"/>
                 <RadioButton x:Name="TitleRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="제목"/>
                 <RadioButton x:Name="AuthorRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="작가"/>
+                <RadioButton x:Name="TagRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="태그"/>
                 <RadioButton x:Name="NumRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="번호"/>
-                <RadioButton x:Name="ImgCntRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="페이지"/>
+                <!--<RadioButton x:Name="ImgCntRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="페이지"/>-->
             </StackPanel>
 
             <!--<Grid Height="35" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">-->
@@ -99,6 +95,12 @@
                 <TextBlock Grid.Row="1" x:Name="LabelBlock_Srch" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
             <!--</Grid>-->
         </Grid>
+
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
+            <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Width="20" Margin="0,4,10,0" Background="Transparent" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Padding="2" BorderThickness="0,0,0,0" Click="Button_Click_3"/>
+        </Grid>
+
 
         <Button x:Name="D_Stop" Content="정지" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,376,0,0" Height="27" Width="76" Click="Button_Click_5"/>
         <Button x:Name="D_Else1" Content="Button" HorizontalAlignment="Left" Height="27" Margin="230,376,0,0" VerticalAlignment="Top" Width="80" Click="Button_Click_2"/>
