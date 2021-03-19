@@ -17,7 +17,7 @@ namespace imgLoader_WPF
         {
             internal string SearchText;
             internal SearchOption Option;
-            internal Dictionary<int, IndexItem> Dict;
+            //internal Dictionary<int, IndexItem> Dict;
         }
 
         public Searcher(ImgLoader sender, List<IndexItem> list)
@@ -30,27 +30,16 @@ namespace imgLoader_WPF
         {
             if (List_IsContains(search, SearchList)) return;
 
-            var removedItem = new Dictionary<int, IndexItem>();
+            //var removedItem = new Dictionary<int, IndexItem>();
 
             _sender.Scroll.ScrollToTop();
             _sender.Sorter.ClearSort();
-            SearchFrom(_list, search, _list, removedItem, option);
+            SearchFrom(_list, search, _list, null, option);
 
-            var temp = new SearchItem {SearchText = search, Option = option, Dict = removedItem};
+            var temp = new SearchItem {SearchText = search, Option = option};
             SearchList.Add(temp);
 
-            var label = option switch
-            {
-                SearchOption.All => "",
-                SearchOption.Title => "Title:",
-                SearchOption.Author => "Author:",
-                SearchOption.Number => "Number:",
-                SearchOption.ImgCount => "ImgCount:",
-                SearchOption.Tag => "Tag:",
-                _ => "Test:"
-            };
-
-            _sender.CondInd.Add(label + search, ConditionIndicator.Condition.Search, (int)option);
+            _sender.CondInd.Add(search, ConditionIndicator.Condition.Search, (int)option);
         }
 
         internal void Remove(ConditionIndicator.IndItem search)
@@ -100,8 +89,8 @@ namespace imgLoader_WPF
                 switch (option)
                 {
                     case SearchOption.All:
-                        sb.Append(item.Author).Append(item.Number).Append(item.SiteName).Append(item.Title);
-                        foreach (var tag in item.Tags) sb.Append(tag);
+                        sb.Append(item.Author).Append(';').Append(item.Number).Append(';').Append(item.SiteName).Append(';').Append(item.Title).Append(';');
+                        foreach (var tag in item.Tags) sb.Append(tag).Append(';');
                         temp[i] = sb.ToString();
                         sb.Clear();
                         break;
@@ -123,7 +112,7 @@ namespace imgLoader_WPF
                         break;
 
                     case SearchOption.Tag:
-                        foreach (var tag in item.Tags) sb.Append(tag);
+                        foreach (var tag in item.Tags) sb.Append(tag).Append(';');
                         temp[i] = sb.ToString();
                         sb.Clear();
                         break;
@@ -141,6 +130,10 @@ namespace imgLoader_WPF
                     {
                         list_CopyRemoved?.Add(i, searchFrom[i]);
                         searchResult.Remove(searchFrom[i]);
+                    }
+                    else
+                    {
+                        ;
                     }
                 }
             }
@@ -174,6 +167,20 @@ namespace imgLoader_WPF
 
         private void List_Remove(string searchText, List<SearchItem> list)
         {
+            //var option = searchText.Split(':')[0] switch
+            //{
+            //    "Tag" => SearchOption.Tag,
+            //    "Title" => SearchOption.Title,
+            //    "Author" => SearchOption.Author,
+
+            //        SearchOption.All => "",
+            //    SearchOption.Title => "Title:",
+            //    SearchOption.Author => "Author:",
+            //    SearchOption.Number => "Number:",
+            //    SearchOption.ImgCount => "ImgCount:",
+            //    SearchOption.Tag => "Tag:",
+            //    _ => "Test:"
+            //}
             for (var i = 0; i < list.Count; i++)
             {
                 if (list[i].SearchText == searchText) list.RemoveAt(i);

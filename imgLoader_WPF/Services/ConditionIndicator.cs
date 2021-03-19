@@ -9,7 +9,7 @@ namespace imgLoader_WPF.Services
 {
     internal class ConditionIndicator
     {
-        private List<IndItem> _list = new();
+        private readonly List<IndItem> _list = new();
         private readonly ImgLoader _sender;
 
         public ConditionIndicator(ImgLoader sender)
@@ -20,15 +20,26 @@ namespace imgLoader_WPF.Services
         public void Add(string label, Condition cond, int option)
         {
             var item = new IndItem();
-            item.Content = label;
+
+            var tag = cond switch
+            {
+                Condition.Search => option switch
+                {
+                    0 => "",
+                    1 => "Title:",
+                    2 => "Author:",
+                    3 => "Number:",
+                    4 => "ImgCount:",
+                    5 => "Tag:",
+                    _ => ""
+                },
+                Condition.Sort => "Sort:",
+                _ => ""
+            };
 
             var tb = new TextBlock
             {
-                Text = label,
-                    //cond == Condition.Search
-                    //    ? $"Search:{label}"
-                    //    : $"Sort:{label}",
-
+                Text = tag + label,
                 Height = 20,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment  = VerticalAlignment.Center,
@@ -51,6 +62,7 @@ namespace imgLoader_WPF.Services
                 },
             };
 
+            item.Content = label;
             item.Condition = cond;
             item.Option = option;
 
