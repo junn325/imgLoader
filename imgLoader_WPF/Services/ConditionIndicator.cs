@@ -117,6 +117,9 @@ namespace imgLoader_WPF.Services
 
             _sender.ShowItems.Clear();
             var tempList = new List<IndItem>(_list);
+
+            //todo: 속도를 위해 같은 searchoption끼리 "검색어,검색어,검색어" 식으로 묶어서 넘기는것 구현할것
+            var searchText = "";
             foreach (var indItem in tempList.Where(indItem => indItem.Condition == Condition.Search))
             {
                 _sender.Searcher.Search(indItem.Content, (Searcher.SearchOption)indItem.Option);

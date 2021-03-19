@@ -21,7 +21,14 @@ namespace imgLoader_WPF
         {
             _sender.Scroll.ScrollToTop();
 
-            SearchFrom(_sender.Index, search, _list, null, option);
+            SearchFrom(_list, search, _list, null, option);
+        }
+
+        internal void Search(string search, List<IndexItem> where, SearchOption option)
+        {
+            _sender.Scroll.ScrollToTop();
+
+            SearchFrom(where, search, _list, null, option);
         }
 
         private void SearchFrom(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> list_CopyRemoved, SearchOption option)

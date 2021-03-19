@@ -19,7 +19,7 @@ namespace imgLoader_WPF.Windows
     {
         private readonly List<IndexItem> _index;
         private readonly ImgLoader _sender;
-        private ScrollViewer _scroll;
+        private readonly ScrollViewer _scroll;
 
         internal Settings(Windows.ImgLoader sender, ScrollViewer scroll, List<IndexItem> index)
         {
@@ -64,11 +64,11 @@ namespace imgLoader_WPF.Windows
 
             //_sender.PgSvc.Paginate();
 
-            while (a == _index.Count)
-            {
-                Task.Delay(500).Wait();
-                Debug.WriteLine("Settings: wait");
-            }
+            //while (a == _index.Count)
+            //{
+            //    Task.Delay(500).Wait();
+            //    Debug.WriteLine("Settings: wait");
+            //}
 
             if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))
             {
