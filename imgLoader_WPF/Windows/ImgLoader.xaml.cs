@@ -75,12 +75,6 @@ namespace imgLoader_WPF.Windows
             label.Visibility = Visibility.Visible;
         }
 
-        private void Sort(SortOption option)
-        {
-            Sorter.Sort(option);
-            ShowItems.Clear();
-            PgSvc.Paginate();
-        }
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             ;
@@ -433,11 +427,13 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            ShowItems.Clear();
             List.Clear();
             foreach (var item in Index)
             {
                 List.Add(item);
             }
+            PgSvc.Paginate();
         }
 
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
@@ -459,8 +455,8 @@ namespace imgLoader_WPF.Windows
             //List.Clear();
             ShowItems.Clear();
 
-            Searcher.Search(TxtSrchAll.Text,
-                AllRadio.IsChecked.Value
+            CondInd.Add(TxtSrchAll.Text, ConditionIndicator.Condition.Search,
+                (int)(AllRadio.IsChecked.Value
                     ? Searcher.SearchOption.All
                     : AuthorRadio.IsChecked.Value
                         ? Searcher.SearchOption.Author
@@ -468,8 +464,8 @@ namespace imgLoader_WPF.Windows
                             ? Searcher.SearchOption.Tag
                             : NumRadio.IsChecked.Value
                                 ? Searcher.SearchOption.Number
-                                : Searcher.SearchOption.Title);
-
+                                : Searcher.SearchOption.Title)
+                );
             //Core.SearchFromAll(_index, TxtSrchAll.Text, List);
             PgSvc.Paginate();
 
@@ -487,23 +483,22 @@ namespace imgLoader_WPF.Windows
 
         private void TitleSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(SortOption.Title);
+            CondInd.Add("Title", ConditionIndicator.Condition.Sort, (int)SortOption.Title);
         }
 
         private void AuthorSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(SortOption.Author);
-            //todo: 분류
+            CondInd.Add("Author", ConditionIndicator.Condition.Sort, (int)SortOption.Author);
         }
 
         private void PageSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(SortOption.Page);
+            CondInd.Add("Page", ConditionIndicator.Condition.Sort, (int)SortOption.Page);
         }
 
         private void NumberSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(SortOption.Number);
+            CondInd.Add("Number", ConditionIndicator.Condition.Sort, (int)SortOption.Number);
         }
 
         private void DockPanel_MouseMove(object sender, MouseEventArgs e)
@@ -524,7 +519,7 @@ namespace imgLoader_WPF.Windows
 
         private void DateSort_Click(object sender, RoutedEventArgs e)
         {
-            Sort(SortOption.Date);
+            CondInd.Add("Date", ConditionIndicator.Condition.Sort, (int)SortOption.Date);
         }
 
         private void Random_Click(object sender, RoutedEventArgs e)

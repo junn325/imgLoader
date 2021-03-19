@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,6 +21,17 @@ namespace imgLoader_WPF.Services
 
         public void Add(string label, Condition cond, int option)
         {
+            if (_list.Any(indItem => indItem.Condition == cond && indItem.Content == label && indItem.Option == option)) return;
+
+            switch (cond)
+            {
+                case Condition.Sort:
+                    _sender.Sorter.Sort((Sorter.SortOption)option);
+                    break;
+                case Condition.Search:
+                    _sender.Searcher.Search(label, (Searcher.SearchOption)option);
+                    break;
+            }
             var item = new IndItem();
 
             var tag = cond switch
@@ -28,9 +41,9 @@ namespace imgLoader_WPF.Services
                     0 => "",
                     1 => "Title:",
                     2 => "Author:",
-                    3 => "Number:",
-                    4 => "ImgCount:",
-                    5 => "Tag:",
+                    3 => "Tag:",
+                    4 => "Number:",
+                    5 => "ImgCount:",
                     _ => ""
                 },
                 Condition.Sort => "Sort:",
@@ -77,29 +90,43 @@ namespace imgLoader_WPF.Services
             var item = new IndItem();
             foreach (var indItem in _list)
             {
-                if ((TextBlock)indItem.Panel.Children[0] == (TextBlock)sender) item = indItem;
+                if ((TextBlock)indItem.Panel.Children[0] == (TextBlock)sender)
+                {
+                    item = indItem;
+                    break;
+                }
             }
 
-            var panel = item.Panel.Background;
-            var cond = Condition.Null;
+            _sender.CondPanel.Children.Remove(item.Panel);
+            _list.Remove(item);
 
-            if (panel == Brushes.Turquoise) cond = Condition.Sort;
-            if (panel == Brushes.CornflowerBlue) cond = Condition.Search;
-
-            switch (cond)
+            if (_list.Count == 0)
             {
-                case Condition.Search:
-                    _sender.Sorter.ClearSort();
-                    _sender.CondPanel.Children.Remove(item.Panel);
-                    _sender.Searcher.Remove(item);
-                    _list.Remove(item);
-                    break;
+                _sender.List.Clear();
+                _sender.ShowItems.Clear();
 
-                case Condition.Sort:
-                    if(!_sender.Sorter.ClearSort()) _sender.CondPanel.Children.Remove(item.Panel);
-                    _list.Remove(item);
-                    break;
+                foreach (var indexItem in _sender.Index)
+                {
+                    _sender.List.Add(indexItem);
+                }
+
+                _sender.PgSvc.Paginate();
+
+                return;
             }
+
+            _sender.ShowItems.Clear();
+            var tempList = new List<IndItem>(_list);
+            foreach (var indItem in tempList.Where(indItem => indItem.Condition == Condition.Search))
+            {
+                _sender.Searcher.Search(indItem.Content, (Searcher.SearchOption)indItem.Option);
+            }
+
+            foreach (var indItem in tempList.Where(indItem => indItem.Condition == Condition.Sort))
+            {
+                _sender.Sorter.Sort((Sorter.SortOption)indItem.Option);
+            }
+            _sender.PgSvc.Paginate();
         }
 
         internal struct IndItem
@@ -114,7 +141,6 @@ namespace imgLoader_WPF.Services
         {
             Sort,
             Search,
-            Null
         }
     }
 }

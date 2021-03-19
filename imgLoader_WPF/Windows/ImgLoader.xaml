@@ -21,20 +21,20 @@
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
-                            <MenuItem x:Name="Open" Header="열기" IsEnabled="False" Click="Open_Click"/>
-                            <MenuItem x:Name="Manage" Header="관리" IsEnabled="False" Click="Manage_Click"/>
+                            <MenuItem x:Name="OpenMenu" Header="열기" IsEnabled="False" Click="Open_Click"/>
+                            <MenuItem x:Name="ManageMenu" Header="관리" IsEnabled="False" Click="Manage_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="Add" Header="항목 추가" Click="AddItem_Click"/>
+                            <MenuItem x:Name="AddMenu" Header="항목 추가" Click="AddItem_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="Cancel" Header="취소" IsEnabled="False" Click="Cancel_Click"/>
-                            <MenuItem x:Name="Pause" Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
-                            <MenuItem x:Name="Resume" Header="재개" IsEnabled="False" Click="Resume_Click"/>
+                            <MenuItem x:Name="CancelMenu" Header="취소" IsEnabled="False" Click="Cancel_Click"/>
+                            <MenuItem x:Name="PauseMenu" Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
+                            <MenuItem x:Name="ResumeMenu" Header="재개" IsEnabled="False" Click="Resume_Click"/>
                             <!--<Separator/>
                             <MenuItem Header="목록에서만 제거" IsEnabled="False" Click="RemoveOnlyList_Click"/>-->
                             <Separator/>
-                            <MenuItem x:Name="Delete" Header="삭제" IsEnabled="False" Click="Delete_Click"/>
+                            <MenuItem x:Name="DeleteMenu" Header="삭제" IsEnabled="False" Click="Delete_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="Search" Header="검색" Click="Search_Click">
+                            <MenuItem x:Name="SearchMenu" Header="검색" Click="Search_Click">
                             </MenuItem>
                             <MenuItem x:Name="SortMenu" Header="정렬">
                                 <MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>
@@ -44,11 +44,11 @@
                                 <MenuItem x:Name="DateSort" Header="날짜로 정렬" Click="DateSort_Click"/>
                             </MenuItem>
                             <Separator/>
-                            <MenuItem x:Name="Random" Header="랜덤 선택" IsEnabled="False" Click="Random_Click"/>
-                            <MenuItem x:Name="OpenExplorer" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
-                            <MenuItem x:Name="CopyAddress" Header="링크 복사" Click="CopyAddress_Click"/>
+                            <MenuItem x:Name="RandomMenu" Header="랜덤 선택" IsEnabled="False" Click="Random_Click"/>
+                            <MenuItem x:Name="OpenExplorerMenu" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
+                            <MenuItem x:Name="CopyAddressMenu" Header="링크 복사" Click="CopyAddress_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="Setting" Header="설정" Click="Setting_Click"/>
+                            <MenuItem x:Name="SettingMenu" Header="설정" Click="Setting_Click"/>
                         </ContextMenu>
                     </ItemsControl.ContextMenu>
                     <ItemsControl.ItemsPanel>

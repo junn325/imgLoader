@@ -1,20 +1,14 @@
-﻿using imgLoader_WPF.Windows;
-
+﻿using imgLoader_WPF.Services;
+using imgLoader_WPF.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Controls;
-using imgLoader_WPF.Services;
 
 namespace imgLoader_WPF
 {
     internal class Sorter
     {
-        internal SortOption Option = SortOption.Title;
-        internal bool IsSorting;
-
         private readonly ImgLoader _sender;
-        private List<IndexItem> _oriItem;
         private readonly List<IndexItem> _list;
 
         public Sorter(ImgLoader sender, List<IndexItem> list)
@@ -25,13 +19,7 @@ namespace imgLoader_WPF
 
         internal void Sort(SortOption sortOption)
         {
-            ClearSort();
             _sender.Scroll.ScrollToTop();
-
-            _oriItem = new List<IndexItem>(_list);
-
-            IsSorting = true;
-            Option = sortOption;
 
             List<IndexItem> temp;
             switch (sortOption)
@@ -63,45 +51,8 @@ namespace imgLoader_WPF
                 _list.Add(item);
             }
 
-            _sender.CondInd.Add(
-                sortOption switch
-                {
-                    SortOption.Number => "Number",
-                    SortOption.Page => "Page",
-                    SortOption.Title => "Title",
-                    SortOption.Author => "Author",
-                    SortOption.Date => "Date",
-                    _ => " -Error"
-                }, ConditionIndicator.Condition.Sort, (int)sortOption);
-        }
-
-        internal bool ClearSort()
-        {
-            if (_oriItem == null) return false;
-
-            _list.Clear();
             _sender.ShowItems.Clear();
-
-            foreach (var item in _oriItem)
-            {
-                _list.Add(item);
-            }
-
-            var temp = new DockPanel[_sender.CondPanel.Children.Count];
-            _sender.CondPanel.Children.CopyTo(temp, 0);
-
-            foreach (DockPanel item in temp)
-            {
-                if (!((TextBlock)item.Children[0]).Text.Contains("Sort")) continue;
-
-                _sender.CondPanel.Children.Remove(item);
-            }
-
-            IsSorting = false;
-            Option = SortOption.Null;
-            _oriItem = null;
-
-            return true;
+            _sender.PgSvc.Paginate();
         }
 
         internal enum SortOption
@@ -110,8 +61,7 @@ namespace imgLoader_WPF
             Page,
             Title,
             Author,
-            Date,
-            Null
+            Date
         }
     }
 }
