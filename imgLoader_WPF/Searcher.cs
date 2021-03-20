@@ -8,6 +8,7 @@ namespace imgLoader_WPF
 {
     internal class Searcher
     {
+        private const int IndexCount = 6;
         private readonly ImgLoader _sender;
         private readonly List<IndexItem> _list;
 
@@ -21,82 +22,91 @@ namespace imgLoader_WPF
         {
             _sender.Scroll.ScrollToTop();
 
-            SearchFrom(_list, search, _list, null, option);
+            SearchFrom(_list, search, _list, option);
         }
 
         internal void Search(string search, List<IndexItem> where, SearchOption option)
         {
             _sender.Scroll.ScrollToTop();
 
-            SearchFrom(where, search, _list, null, option);
+            SearchFrom(where, search, _list, option);
         }
 
-        private void SearchFrom(IReadOnlyList<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, Dictionary<int, IndexItem> list_CopyRemoved, SearchOption option)
+        private static string[,] SearchIndex(IReadOnlyList<IndexItem> searchFrom)
         {
+            var result = new string[searchFrom.Count, IndexCount];
             var sb = new StringBuilder();
-
-            var temp = new string[searchFrom.Count];
-            var searchResult = new List<IndexItem>(searchFrom);
 
             for (var i = 0; i < searchFrom.Count; i++)
             {
-                var item = searchFrom[i];
+                var indexItem = searchFrom[i];
+                result[i, 0] = indexItem.Author;
+                result[i, 1] = indexItem.Number;
 
-                switch (option)
-                {
-                    case SearchOption.All:
-                        sb.Append(item.Author).Append(';').Append(item.Number).Append(';').Append(item.SiteName).Append(';').Append(item.Title).Append(';');
-                        foreach (var tag in item.Tags) sb.Append(tag).Append(';');
-                        temp[i] = sb.ToString();
-                        sb.Clear();
-                        break;
+                foreach (var tag in indexItem.Tags) sb.Append(tag).Append(';');
+                result[i, 2] = sb.ToString();
+                sb.Clear();
 
-                    case SearchOption.Author:
-                        temp[i] = item.Author;
-                        break;
-
-                    case SearchOption.Number:
-                        temp[i] = item.Number;
-                        break;
-
-                    case SearchOption.ImgCount:
-                        temp[i] = item.ImgCount;
-                        break;
-
-                    case SearchOption.Title:
-                        temp[i] = item.Title;
-                        break;
-
-                    case SearchOption.Tag:
-                        foreach (var tag in item.Tags) sb.Append(tag).Append(';');
-                        temp[i] = sb.ToString();
-                        sb.Clear();
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(option), option, null);
-                }
+                result[i, 3] = indexItem.SiteName;
+                result[i, 4] = indexItem.Title;
+                result[i, 5] = indexItem.ImgCount;
             }
 
-            foreach (var srch in search.Split(','))
+            return result;
+        }
+
+        private void SearchFrom(List<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, SearchOption option)
+        {
+            var index = SearchIndex(searchFrom);
+            var searchResult = Core.InitializeArray(searchFrom.Count, searchFrom.ToArray());
+
+            switch (option)
             {
-                for (var i = 0; i < searchFrom.Count; i++)
-                {
-                    if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                case SearchOption.All:  //이미지 장수는 제외
+                    foreach (var srch in search.Split(','))
                     {
-                        list_CopyRemoved?.Add(i, searchFrom[i]);
-                        searchResult.Remove(searchFrom[i]);
+                        for (var i = 0; i < index.Length; i++)
+                        {
+                            if (!index[i, 0].Contains(srch, StringComparison.OrdinalIgnoreCase)
+                                && !index[i, 1].Contains(srch, StringComparison.OrdinalIgnoreCase)
+                                && !index[i, 2].Contains(srch, StringComparison.OrdinalIgnoreCase)
+                                && !index[i, 3].Contains(srch, StringComparison.OrdinalIgnoreCase)
+                                && !index[i, 4].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            {
+                                searchResult[i] = null;
+                            }
+                        }
                     }
-                    else
-                    {
-                        ;
-                    }
-                }
+
+                    break;
+                case SearchOption.Title:
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 4].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    break;
+
+                case SearchOption.Author:
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 0].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    break;
+
+                case SearchOption.Tag:
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 2].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    break;
+
+                case SearchOption.Number:
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 1].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    break;
+
+                case SearchOption.ImgCount:
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 5].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(option), option, null);
             }
 
             destination.Clear();
             foreach (var item in searchResult)
             {
+                if (item == null) continue;
                 destination.Add(item);
             }
         }
