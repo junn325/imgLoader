@@ -224,10 +224,10 @@ namespace imgLoader_WPF.Windows
 
                 switch (item.Name)
                 {
-                    case "Cancel":
+                    case "CancelMenu":
                         item.IsEnabled = _clickedItem.IsDownloading;
                         break;
-                    case "Resume":
+                    case "ResumeMenu":
                         if (!_clickedItem.IsDownloading)
                         {
                             item.IsEnabled = false;
@@ -241,7 +241,7 @@ namespace imgLoader_WPF.Windows
                         }
 
                         break;
-                    case "Pause":
+                    case "PauseMenu":
                         if (!_clickedItem.IsDownloading)
                         {
                             item.IsEnabled = false;
@@ -257,7 +257,7 @@ namespace imgLoader_WPF.Windows
 
                         item.IsEnabled = true;
                         break;
-                    case "Manage":
+                    case "ManageMenu":
                         item.IsEnabled = false;
                         break;
                     default:

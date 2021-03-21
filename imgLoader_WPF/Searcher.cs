@@ -65,7 +65,7 @@ namespace imgLoader_WPF
                 case SearchOption.All:  //이미지 장수는 제외
                     foreach (var srch in search.Split(','))
                     {
-                        for (var i = 0; i < index.Length; i++)
+                        for (var i = 0; i < index.Length / IndexCount; i++)
                         {
                             if (!index[i, 0].Contains(srch, StringComparison.OrdinalIgnoreCase)
                                 && !index[i, 1].Contains(srch, StringComparison.OrdinalIgnoreCase)
