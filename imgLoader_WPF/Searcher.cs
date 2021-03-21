@@ -22,17 +22,18 @@ namespace imgLoader_WPF
         {
             _sender.Scroll.ScrollToTop();
 
-            SearchFrom(_list, search, _list, option);
+            var index = SearchIndex(_list);
+            SearchFrom(_list, index, search, _list, option);
         }
 
-        internal void Search(string search, List<IndexItem> where, SearchOption option)
-        {
-            _sender.Scroll.ScrollToTop();
+        //internal void Search(string search, List<IndexItem> where, SearchOption option)
+        //{
+        //    _sender.Scroll.ScrollToTop();
 
-            SearchFrom(where, search, _list, option);
-        }
+        //    SearchFrom(where, search, _list, option);
+        //}
 
-        private static string[,] SearchIndex(IReadOnlyList<IndexItem> searchFrom)
+        internal string[,] SearchIndex(IReadOnlyList<IndexItem> searchFrom)
         {
             var result = new string[searchFrom.Count, IndexCount];
             var sb = new StringBuilder();
@@ -55,9 +56,8 @@ namespace imgLoader_WPF
             return result;
         }
 
-        private void SearchFrom(List<IndexItem> searchFrom, string search, ICollection<IndexItem> destination, SearchOption option)
+        internal void SearchFrom(List<IndexItem> searchFrom, string[,] index, string search, ICollection<IndexItem> destination, SearchOption option)
         {
-            var index = SearchIndex(searchFrom);
             var searchResult = Core.InitializeArray(searchFrom.Count, searchFrom.ToArray());
 
             switch (option)

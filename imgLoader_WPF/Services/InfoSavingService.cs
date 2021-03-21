@@ -42,7 +42,7 @@ namespace imgLoader_WPF.Services
             _saveQueue.Enqueue(item);
         }
 
-        private void PerformSave(IndexItem item, StringBuilder sb)
+        private static void PerformSave(IndexItem item, StringBuilder sb)
         {
             if (string.IsNullOrWhiteSpace(item.Route)) return;
             if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) return;

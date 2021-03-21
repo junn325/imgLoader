@@ -84,6 +84,7 @@ namespace imgLoader_WPF.Services
             foreach (var infoRoute in infoFiles)
             {
                 if (!File.Exists(infoRoute)) continue;
+                if (Index.Any(idx => idx.Route == infoRoute)) continue;
 
                 using var sr = new StreamReader(Core.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
                 var infos = sr.ReadToEnd().Replace("\r\n", "\n");
@@ -105,8 +106,6 @@ namespace imgLoader_WPF.Services
 
                     continue;
                 }
-
-                if (Index.Any(idx => idx.Route == infoRoute)) continue;
 
                 Index.Add(
                 new IndexItem
