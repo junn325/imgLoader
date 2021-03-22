@@ -13,9 +13,9 @@ using Microsoft.Win32;
 
 namespace imgLoader_WPF
 {
-    public class ChangeIP
+    public static class ChangeIP
     {
-        public bool ChangeMACAddress(string mac)
+        public static bool ChangeMACAddress(string mac)
         {
             if (!(mac.Length == 17 && (mac.Length - mac.Replace("-", "").Length) == 5) && mac.Length != 12) return false;
 

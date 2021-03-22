@@ -134,6 +134,7 @@ namespace imgLoader_WPF.Windows
                 if (_index == 0)
                 {
                     _index = FileList.Length - 1;
+                    PBar.Value = FileList.Length - 1;
                 }
                 else
                 {
@@ -146,6 +147,7 @@ namespace imgLoader_WPF.Windows
             if (_index == FileList.Length - 1)
             {
                 _index = 0;
+                PBar.Value = 0;
             }
             else
             {
@@ -155,7 +157,7 @@ namespace imgLoader_WPF.Windows
             return FileList[_index];
         }
 
-
+        //
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)

@@ -303,6 +303,14 @@ namespace imgLoader_WPF
 
             return temp;
         }
+        internal static T[] InitializeArray<T>(int count, T value)
+        {
+            var temp = new T[count];
+
+            for (var i = 0; i < temp.Length; i++) temp[i] = value;
+
+            return temp;
+        }
 
         internal static T[] InitializeArray<T>(int count, T[] array)
         {
@@ -342,7 +350,7 @@ namespace imgLoader_WPF
             foreach (var item in collect1.Where(item => collect2.All(i => i.Title != item.Title)))
             {
                 sb.Append(item.Title).Append(", ");
-                Debug.WriteLine($"{item.Title}");
+                Debug.WriteLine($"Core:CompareCollections: {item.Title}");
             }
             return sb.ToString();
         }

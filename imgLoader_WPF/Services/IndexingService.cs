@@ -44,7 +44,7 @@ namespace imgLoader_WPF.Services
                     if (!string.Equals(route, Core.Route, StringComparison.OrdinalIgnoreCase))
                     {
                         route = Core.Route;
-                        
+
                         DoIndex();
                         foreach (var item in Index)
                         {
@@ -77,7 +77,7 @@ namespace imgLoader_WPF.Services
                     continue;
                 if (infoFiles.Contains(item.Route)) continue;
 
-                Debug.WriteLine($"remove {item.Number}");
+                Debug.WriteLine($"IdxSvc: remove {item.Number}");
                 Index.Remove(item);
             }
 

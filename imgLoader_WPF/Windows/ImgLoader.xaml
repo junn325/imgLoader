@@ -81,7 +81,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <StackPanel Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="20" Background="{StaticResource PBrush}" Orientation="Horizontal" MouseDown="StackPanel_MouseDown">
+            <StackPanel x:Name="RadioPanel" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="20" Background="{StaticResource PBrush}" Orientation="Horizontal" MouseDown="StackPanel_MouseDown" PreviewKeyUp="TxtSrchAll_KeyUp">
                 <RadioButton x:Name="AllRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" IsChecked="True" Content="전체"/>
                 <RadioButton x:Name="TitleRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="제목"/>
                 <RadioButton x:Name="AuthorRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="작가"/>

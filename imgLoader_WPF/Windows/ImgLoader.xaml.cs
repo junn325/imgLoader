@@ -75,6 +75,41 @@ namespace imgLoader_WPF.Windows
             label.Visibility = Visibility.Visible;
         }
 
+        private void DeleteItemDir(IndexItem item)
+        {
+            item.Show = false;
+            item.IsDownloading = false;
+
+            new Thread(() =>
+            {
+                item.Proc?.DoStop();
+
+                var wait = true;
+                do
+                {
+                    if (item.Proc == null) break;
+
+                    foreach (var isLoading in item.Proc.isImgLoading)
+                    {
+                        if (isLoading)
+                        {
+                            wait = true;
+                            break;
+                        }
+
+                        wait = false;
+                    }
+                } while (wait);
+
+                Directory.Delete(Core.GetDirectoryFromFile(item.Route), true);
+
+                _idxSvc.DoIndex();
+
+                List.Remove(_clickedItem);
+                Dispatcher.Invoke(() => ShowItems.Remove(_clickedItem));
+            }).Start();
+        }
+
         private void Button_Click_5(object sender, RoutedEventArgs e)
         {
             ;
@@ -103,6 +138,10 @@ namespace imgLoader_WPF.Windows
             D_Stop.Visibility = Visibility.Collapsed;
             D_Else1.Visibility = Visibility.Collapsed;
 #endif
+            foreach (RadioButton radio in RadioPanel.Children)
+            {
+                radio.PreviewKeyUp += TxtSrchAll_KeyUp;
+            }
 
             Title = Core.Route;
 
@@ -185,14 +224,18 @@ namespace imgLoader_WPF.Windows
 
                 PgSvc.Paginate();
 
-                while (lItem.RefreshInfo == null) Task.Delay(100).Wait();
+                while (lItem.RefreshInfo == null)
+                {
+                    Task.Delay(100).Wait();
+                    Debug.WriteLine("Main: TxtUrl_KeyUp: Wait");
+                }
 
                 lItem.RefreshInfo();
                 lItem.Proc.Load();
 
                 List.Insert(0, lItem);
 
-                Debug.WriteLine(sw.Elapsed.Ticks);
+                Debug.WriteLine("Main: TxtUrl_KeyUp: " + sw.Elapsed.Ticks);
                 sw.Reset();
             });
 
@@ -277,9 +320,10 @@ namespace imgLoader_WPF.Windows
 
                 switch (((MenuItem)item).Name)
                 {
-                    case "Setting":
-                    case "Add":
-                    case "Search":
+                    case "SettingMenu":
+                    case "RandomMenu":
+                    case "AddMenu":
+                    case "SearchMenu":
                         ((MenuItem)item).IsEnabled = true;
                         break;
                     default:
@@ -291,14 +335,7 @@ namespace imgLoader_WPF.Windows
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            _clickedItem.Show = false;
-            _clickedItem.IsDownloading = false;
-
-            Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
-
-            _idxSvc.DoIndex();
-            List.Remove(_clickedItem);
-            ShowItems.Remove(_clickedItem);
+            DeleteItemDir(_clickedItem);
         }
 
         //private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
@@ -326,15 +363,7 @@ namespace imgLoader_WPF.Windows
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
-            if (_clickedItem.Proc != null)
-                _clickedItem.Proc.Stop = true;
-
-            _clickedItem.Show = false;
-            _clickedItem.IsDownloading = false;
-
-            Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
-
-            _idxSvc.DoIndex();
+            DeleteItemDir(_clickedItem);
         }
 
         private void Resume_Click(object sender, RoutedEventArgs e)
@@ -470,6 +499,7 @@ namespace imgLoader_WPF.Windows
             PgSvc.Paginate();
 
             TxtSrchAll.Text = "";
+            TxtSrchAll.Focus();
             //SrchBorder.Visibility = Visibility.Collapsed;
         }
 
@@ -526,7 +556,7 @@ namespace imgLoader_WPF.Windows
         {
             var rand = new Random().Next(0, Index.Count);
 
-            Debug.WriteLine(Index[rand].Title);
+            Debug.WriteLine("Main: Random_Click: " + Index[rand].Title);
 
             if (ShowItems.Count < rand + 1)
             {
