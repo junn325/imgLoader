@@ -485,7 +485,8 @@ namespace imgLoader_WPF.Windows
             ShowItems.Clear();
 
             CondInd.Add(TxtSrchAll.Text, ConditionIndicator.Condition.Search,
-                (int)(AllRadio.IsChecked.Value
+                (int)(
+                    AllRadio.IsChecked.Value
                     ? Searcher.SearchOption.All
                     : AuthorRadio.IsChecked.Value
                         ? Searcher.SearchOption.Author
@@ -493,14 +494,13 @@ namespace imgLoader_WPF.Windows
                             ? Searcher.SearchOption.Tag
                             : NumRadio.IsChecked.Value
                                 ? Searcher.SearchOption.Number
-                                : Searcher.SearchOption.Title)
+                                : Searcher.SearchOption.Title
+                                )
                 );
-            //Core.SearchFromAll(_index, TxtSrchAll.Text, List);
             PgSvc.Paginate();
 
             TxtSrchAll.Text = "";
             TxtSrchAll.Focus();
-            //SrchBorder.Visibility = Visibility.Collapsed;
         }
 
         private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)

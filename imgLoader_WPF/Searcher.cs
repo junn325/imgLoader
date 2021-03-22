@@ -41,16 +41,16 @@ namespace imgLoader_WPF
             for (var i = 0; i < searchFrom.Count; i++)
             {
                 var indexItem = searchFrom[i];
-                result[i, 0] = indexItem.Author;
-                result[i, 1] = indexItem.Number;
+                result[i, (int)SearchOption.Author] = indexItem.Author;
+                result[i, (int)SearchOption.Number] = indexItem.Number;
 
                 foreach (var tag in indexItem.Tags) sb.Append(tag).Append(';');
                 result[i, 2] = sb.ToString();
                 sb.Clear();
 
-                result[i, 3] = indexItem.SiteName;
-                result[i, 4] = indexItem.Title;
-                result[i, 5] = indexItem.ImgCount;
+                result[i, (int)SearchOption.SiteName] = indexItem.SiteName;
+                result[i, (int)SearchOption.Title] = indexItem.Title;
+                result[i, (int)SearchOption.ImgCount] = indexItem.ImgCount;
             }
 
             return result;
@@ -80,23 +80,23 @@ namespace imgLoader_WPF
 
                     break;
                 case SearchOption.Title:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 4].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.Title].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
                     break;
 
                 case SearchOption.Author:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 0].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.Author].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
                     break;
 
                 case SearchOption.Tag:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 2].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.Tag].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
                     break;
 
                 case SearchOption.Number:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 1].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.Number].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
                     break;
 
                 case SearchOption.ImgCount:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, 5].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.ImgCount].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
                     break;
 
                 default:
@@ -113,11 +113,12 @@ namespace imgLoader_WPF
 
         internal enum SearchOption
         {
-            All,
-            Title,
+            All = -1,
             Author,
-            Tag,
             Number,
+            Tag,
+            SiteName,
+            Title,
             ImgCount
         }
     }
