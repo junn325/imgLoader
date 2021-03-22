@@ -51,6 +51,7 @@ namespace imgLoader_WPF.Windows
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (TxtPath.Text == "더블클릭하여 다운로드 경로를 선택하거나 직접 입력" || Core.Route == TxtPath.Text) return;
+            if (!Directory.Exists(TxtPath.Text)) return;
 
             Core.Route = TxtPath.Text;
 

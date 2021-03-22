@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace imgLoader_WPF.CanvasWindow
+namespace imgLoader_WPF.Windows
 {
     /// <summary>
     /// Interaction logic for Canvas.xaml
@@ -43,11 +42,18 @@ namespace imgLoader_WPF.CanvasWindow
 
             _img = new Image();
             _img.Source = Image;
-            //_img.VerticalAlignment = VerticalAlignment.Center;
-            //_img.HorizontalAlignment = HorizontalAlignment.Center;
+            _img.VerticalAlignment = VerticalAlignment.Center;
+            _img.HorizontalAlignment = HorizontalAlignment.Center;
 
             RenderOptions.SetBitmapScalingMode(_img, BitmapScalingMode.Fant);
-            Grid.Children.Add(_img);
+            MPanel.Children.Add(_img);
+            //MPanel.dock
+
+            var pb = new ProgressBar();
+            pb.Maximum = FileList.Length;
+            pb.Value = 1;
+
+            MPanel.Children.Add(pb);
 
             var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
@@ -260,7 +266,7 @@ namespace imgLoader_WPF.CanvasWindow
 
             var imgOffset = _img.TransformToAncestor(this).Transform(new Point(0, 0));
 
-            _img.Measure(new Size(Grid.ActualWidth, Grid.ActualHeight));
+            _img.Measure(new Size(MPanel.ActualWidth, MPanel.ActualHeight));
 
             _relRect.Width = _img.DesiredSize.Width;
             _relRect.Height = _img.DesiredSize.Height;
