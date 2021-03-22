@@ -40,12 +40,12 @@ namespace imgLoader_WPF.Services
 
                     if (Properties.Settings.Default.NoIndex) continue;
 
-                    var sb = new StringBuilder();
+                    //var sb = new StringBuilder();
                     if (!string.Equals(route, Core.Route, StringComparison.OrdinalIgnoreCase))
                     {
                         route = Core.Route;
                         
-                        DoIndex(sb);
+                        DoIndex();
                         foreach (var item in Index)
                         {
                             _sender.List.Add(item);
@@ -55,7 +55,7 @@ namespace imgLoader_WPF.Services
                     }
                     else
                     {
-                        DoIndex(sb);
+                        DoIndex();
                     }
 
                     //RefreshAll();
@@ -63,10 +63,10 @@ namespace imgLoader_WPF.Services
             });
             _service.Name = "IdxSvc";
 
-            DoIndex(new StringBuilder());
+            DoIndex();
         }
 
-        internal void DoIndex(StringBuilder sb)
+        internal void DoIndex()
         {
             if (!Directory.Exists(Core.Route)) return;
 
@@ -116,14 +116,14 @@ namespace imgLoader_WPF.Services
                     ImgCount = info[3],
                     Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
                     Date = info[5],
-                    Vote = info[6] == null ? 0 : int.Parse(info[6]),
+                    Vote = info[6] != null ? int.Parse(info[6]) : 0,
                     Show = info[7] == null || info[7] == "1",
-                    View = info[8] == null ? 0 : int.Parse(info[8]),
+                    View = info[8] != null ? int.Parse(info[8]) : 0,
                     Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
                     Route = infoRoute
                 }
                 );
-                sb.Clear();
+                //sb.Clear();
                 _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
             }
         }

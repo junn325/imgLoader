@@ -32,8 +32,8 @@ namespace imgLoader_WPF.Services
 
             page: _service = new Thread(() =>
             {
-                int oriCnt = _showItems.Count;
-                for (int i = 0; i < Math.Ceiling(_scrollHeight / LoaderItem.MHeight); i++)
+                var oriCnt = _showItems.Count;
+                for (var i = 0; i < Math.Ceiling(_scrollHeight / LoaderItem.MHeight); i++)
                 {
                     var i1 = i;
                     if (oriCnt + i1 + 1 > _list.Count) return;

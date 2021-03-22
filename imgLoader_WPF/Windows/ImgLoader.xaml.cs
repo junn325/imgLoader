@@ -296,7 +296,7 @@ namespace imgLoader_WPF.Windows
 
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
 
-            _idxSvc.DoIndex(_sb);
+            _idxSvc.DoIndex();
             List.Remove(_clickedItem);
             ShowItems.Remove(_clickedItem);
         }
@@ -334,7 +334,7 @@ namespace imgLoader_WPF.Windows
 
             Directory.Delete(Core.GetDirectoryFromFile(_clickedItem.Route), true);
 
-            _idxSvc.DoIndex(_sb);
+            _idxSvc.DoIndex();
         }
 
         private void Resume_Click(object sender, RoutedEventArgs e)

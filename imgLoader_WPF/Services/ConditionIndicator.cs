@@ -100,6 +100,16 @@ namespace imgLoader_WPF.Services
             _sender.CondPanel.Children.Remove(item.Panel);
             _list.Remove(item);
 
+            if (item.Condition == Condition.Sort)
+            {
+                foreach (var indItem in _list.Where(indItem => indItem.Condition == Condition.Sort))
+                {
+                    _sender.Sorter.Sort((Sorter.SortOption)indItem.Option);
+                }
+
+                return;
+            }
+
             if (_list.Count == 0)
             {
                 _sender.List.Clear();
@@ -116,18 +126,13 @@ namespace imgLoader_WPF.Services
             }
 
             _sender.ShowItems.Clear();
-            var tempList = new List<IndItem>(_list);
+            //var tempList = new List<IndItem>(_list);
 
             //todo: 속도를 위해 같은 searchoption끼리 "검색어,검색어,검색어" 식으로 묶어서 넘기는것 구현할것
-            var index = _sender.Searcher.SearchIndex(_sender.List);
-            foreach (var indItem in tempList.Where(indItem => indItem.Condition == Condition.Search))
+            var index = _sender.Searcher.SearchIndex(_sender.Index);
+            foreach (var indItem in _list.Where(indItem => indItem.Condition == Condition.Search))
             {
-                _sender.Searcher.SearchFrom(_sender.List, index, indItem.Content, _sender.List, (Searcher.SearchOption)indItem.Option);
-            }
-
-            foreach (var indItem in tempList.Where(indItem => indItem.Condition == Condition.Sort))
-            {
-                _sender.Sorter.Sort((Sorter.SortOption)indItem.Option);
+                _sender.Searcher.SearchFrom(_sender.Index, index, indItem.Content, _sender.List, (Searcher.SearchOption)indItem.Option);
             }
             _sender.PgSvc.Paginate();
         }
