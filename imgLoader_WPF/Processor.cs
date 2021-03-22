@@ -24,6 +24,8 @@ namespace imgLoader_WPF
         public bool Stop;
         public bool Pause;
 
+        public bool[] isImgLoading;
+
         internal string Route { get; }
         internal string Url { get; }
         internal string Artist { get; }
@@ -53,6 +55,8 @@ namespace imgLoader_WPF
                 if (!Site.IsValidated()) throw new Exception("Failed to Initialize: Processor: Invalidate");
 
                 ImgUrl = Site.GetImgUrls();
+
+                isImgLoading = new bool[ImgUrl.Count];
 
                 Number = Core.GetNumber(url);
                 Artist = GetArtist(Site);
@@ -94,7 +98,7 @@ namespace imgLoader_WPF
             AllocTask(Route, ImgUrl);
             _item.IsDownloading = false;
 
-            Stopping();
+            DoStop();
         }
 
         /// <summary>
@@ -231,7 +235,7 @@ namespace imgLoader_WPF
         {
             while (_item.ProgBarMax == null)
             {
-                Debug.WriteLine("wait");
+                Debug.WriteLine("Proc: wait");
                 Task.Delay(200).Wait();
             }
 
@@ -274,20 +278,26 @@ namespace imgLoader_WPF
                     Task.Delay(500).Wait();
                 }
 
-                _tasks[i++] = Task.Factory.StartNew(() => ThrDownload(value, path, key));
+                var i1 = i;
+                _tasks[i++] = Task.Factory.StartNew(() =>
+                {
+                    isImgLoading[i1] = true;
+                    ThrDownload(value, path, key);
+                    isImgLoading[i1] = false;
+                });
             }
         }
 
         private void ThrDownload(string uri, string path, string fileName)
         {
-            if (Stop)
-            {
-                return;
-            }
+            if (Stop) return;
+
             while (Pause)
             {
                 Task.Delay(500).Wait();
             }
+
+            if (Stop) return;
 
             var req = WebRequest.Create(uri) as HttpWebRequest;
             HttpWebResponse resp;
@@ -298,6 +308,8 @@ namespace imgLoader_WPF
 
             try
             {
+                if (Stop) return;
+
                 resp = req.GetResponse() as HttpWebResponse;
             }
             catch (WebException we)
@@ -322,14 +334,21 @@ namespace imgLoader_WPF
                 return;
             }
 
+            if (Stop) return;
+
             using (var br = resp.GetResponseStream())
             {
                 int count;
                 var buff = new byte[1024];
 
                 using var fs = new FileStream($"{path}\\{fileName}", FileMode.Create);
+
+                if (Stop) return;
+
                 do
                 {
+                    if (Stop) return;
+
                     count = br.Read(buff, 0, buff.Length);
                     fs.Write(buff, 0, count);
                 } while (count > 0);
@@ -370,7 +389,7 @@ namespace imgLoader_WPF
             return true;
         }
 
-        private void Stopping()
+        internal void DoStop()
         {
             new Thread(() =>
             {
