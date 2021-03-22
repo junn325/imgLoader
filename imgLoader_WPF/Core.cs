@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using imgLoader_WPF.Services;
+using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
 {
@@ -355,7 +356,7 @@ namespace imgLoader_WPF
             img.UriSource = new Uri(temp[0]);
             img.EndInit();
 
-            var canvas = new CanvasWindow.CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
+            var canvas = new CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
             canvas.Show();
         }
     }

@@ -27,10 +27,9 @@ namespace imgLoader_WPF.Services
 
         internal void Paginate()
         {
-            if (_service == null) goto page;
-            if (_service.ThreadState != ThreadState.Stopped) return;
+            if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
 
-            page: _service = new Thread(() =>
+            _service = new Thread(() =>
             {
                 var oriCnt = _showItems.Count;
                 for (var i = 0; i < Math.Ceiling(_scrollHeight / LoaderItem.MHeight); i++)

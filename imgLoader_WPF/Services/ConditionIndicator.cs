@@ -26,6 +26,13 @@ namespace imgLoader_WPF.Services
             switch (cond)
             {
                 case Condition.Sort:
+                    var temp = _list.Where(i => i.Condition == Condition.Sort).ToArray();
+                    if (temp.Length > 0)
+                    {
+                        _sender.CondPanel.Children.Remove(temp[0].Panel);
+                        _list.Remove(temp[0]);
+                    }
+
                     _sender.Sorter.Sort((Sorter.SortOption)option);
                     break;
                 case Condition.Search:
@@ -102,11 +109,7 @@ namespace imgLoader_WPF.Services
 
             if (item.Condition == Condition.Sort)
             {
-                foreach (var indItem in _list.Where(indItem => indItem.Condition == Condition.Sort))
-                {
-                    _sender.Sorter.Sort((Sorter.SortOption)indItem.Option);
-                }
-
+                _sender.Sorter.Sort(Sorter.SortOption.Title);
                 return;
             }
 
