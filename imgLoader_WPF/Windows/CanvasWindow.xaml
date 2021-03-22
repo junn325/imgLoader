@@ -7,6 +7,7 @@
         Title="Canvas" Height="450" Width="800" PreviewKeyDown="Window_PreviewKeyDown" PreviewMouseWheel="Window_PreviewMouseWheel" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" MouseUp="Window_MouseUp" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick">
     <Grid>
         <DockPanel x:Name="MPanel" LastChildFill="False">
+            <ProgressBar x:Name="PBar" Height="7" VerticalAlignment="Bottom" DockPanel.Dock="Top"/>
             <!--<Canvas x:Name="Canvas1"/>-->
         </DockPanel>
     </Grid>

@@ -14,7 +14,7 @@ namespace imgLoader_WPF.Windows
     public partial class CanvasWindow
     {
         private const byte Scale = 15; //percent
-        private int MovePix = 50;
+        private int _movePix = 50;
 
         private Rect _oriPosition;
         private Rect _relRect;
@@ -27,7 +27,7 @@ namespace imgLoader_WPF.Windows
 
         private int _index;
         private int _min;
-        private int _thres = 5;
+        private int _thres = 0;
 
         private bool _isMouseDown = false;
 
@@ -42,182 +42,20 @@ namespace imgLoader_WPF.Windows
 
             _img = new Image();
             _img.Source = Image;
-            _img.VerticalAlignment = VerticalAlignment.Center;
-            _img.HorizontalAlignment = HorizontalAlignment.Center;
+            //_img.VerticalAlignment = VerticalAlignment.Center;
+            //_img.HorizontalAlignment = HorizontalAlignment.Center;        //활성화시 확대 안됨 절대 넣지말것
+
+            DockPanel.SetDock(_img, Dock.Top);
 
             RenderOptions.SetBitmapScalingMode(_img, BitmapScalingMode.Fant);
             MPanel.Children.Add(_img);
             //MPanel.dock
 
-            var pb = new ProgressBar();
-            pb.Maximum = FileList.Length;
-            pb.Value = 1;
-
-            MPanel.Children.Add(pb);
+            PBar.Maximum = FileList.Length;
+            PBar.Value = 1;
 
             var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
-        }
-
-        private string GetNextPath(bool left)
-        {
-            if (left)
-            {
-                if (_index == 0)
-                {
-                    _index = FileList.Length - 1;
-                }
-                else
-                {
-                    _index--;
-                }
-
-                return FileList[_index];
-            }
-
-            if (_index == FileList.Length - 1)
-            {
-                _index = 0;
-            }
-            else
-            {
-                _index++;
-            }
-
-            return FileList[_index];
-        }
-
-        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            switch (e.Key)
-            {
-                case Key.G:
-                    ;
-                    break;
-
-                case Key.W:
-                    if (_min != 0)
-                    {
-                        _relRect.Y += MovePix;
-                        _img.Arrange(_relRect);
-                    }
-                    break;
-                case Key.A:
-                    if (_min != 0)
-                    {
-                        _relRect.X += MovePix;
-                        _img.Arrange(_relRect);
-                    }
-                    else
-                    {
-                        ChangeImage(true);
-                    }
-                    break;
-                case Key.S:
-                    if (_min != 0)
-                    {
-                        _relRect.Y -= MovePix;
-                        _img.Arrange(_relRect);
-                    }
-                    break;
-                case Key.D:
-                    if (_min != 0)
-                    {
-                        _relRect.X -= MovePix;
-                        _img.Arrange(_relRect);
-                    }
-                    else
-                    {
-                        ChangeImage(false);
-                    }
-                    break;
-
-                case Key.Left:
-                    ChangeImage(true);
-                    break;
-                case Key.Right:
-                    ChangeImage(false);
-                    break;
-
-                case Key.Q:
-                    SizeChange(false);
-                    break;
-                case Key.E:
-                    SizeChange(true);
-                    break;
-                case Key.R:
-                    _img.Arrange(_oriPosition);
-                    _relRect = new Rect(_oriPosition.Size);
-                    _min = 0;
-                    break;
-            }
-        }
-
-        private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            if (e.MiddleButton == MouseButtonState.Pressed)
-            {
-                _thres = 5;
-                SizeChange(e.Delta > 0);
-            }
-            else
-            {
-                _thres--;
-                if (_thres > 0) return;
-                ChangeImage(e.Delta > 0);
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            _img.Width = _img.ActualWidth + 50;
-        }
-
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //return;
-            if (_img == null) return;
-
-            MovePix = (int)(_img.ActualHeight / 10);
-
-            _relRect = new Rect(0, 0, 0, 0);
-            var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
-            _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
-        }
-
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            _oriPoint = Mouse.GetPosition(this);
-
-            var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
-            _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
-
-            _isMouseDown = true;
-        }
-
-        private void Window_MouseUp(object sender, MouseEventArgs e)
-        {
-            _isMouseDown = false;
-        }
-
-        private void Window_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (!_isMouseDown) return;
-            if (e.LeftButton != MouseButtonState.Pressed && e.MiddleButton != MouseButtonState.Pressed) _isMouseDown = false;
-
-            var mPos = Mouse.GetPosition(this);
-            _relRect.X += mPos.X - _oriPoint.X;
-            _relRect.Y += mPos.Y - _oriPoint.Y;
-
-            _oriPoint = Mouse.GetPosition(this);
-            _img.Arrange(_relRect);
-        }
-
-        private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            _img.Arrange(_oriPosition);
-            _relRect = new Rect(_oriPosition.Size);
-            _min = 0;
         }
 
         private void SizeChange(bool enlarge)
@@ -256,10 +94,8 @@ namespace imgLoader_WPF.Windows
                 _img.Stretch = Stretch.Uniform;
             }
         }
-
-        private void ChangeImage(bool prev)
+        private void ChangeImage(string nextPath)
         {
-            var nextPath = GetNextPath(prev);
             var image = new BitmapImage(new Uri(nextPath));
             _img.Source = image;
             Title = nextPath.Split('\\')[^1];
@@ -278,6 +114,179 @@ namespace imgLoader_WPF.Windows
             _img.UpdateLayout();
             _oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
 
+            _min = 0;
+        }
+        private void ChangeImagePrev()
+        {
+            ChangeImage(GetNextPath(true));
+            PBar.Value--;
+        }
+        private void ChangeImageNext()
+        {
+            ChangeImage(GetNextPath(false));
+            PBar.Value++;
+
+        }
+        private string GetNextPath(bool left)
+        {
+            if (left)
+            {
+                if (_index == 0)
+                {
+                    _index = FileList.Length - 1;
+                }
+                else
+                {
+                    _index--;
+                }
+
+                return FileList[_index];
+            }
+
+            if (_index == FileList.Length - 1)
+            {
+                _index = 0;
+            }
+            else
+            {
+                _index++;
+            }
+
+            return FileList[_index];
+        }
+
+
+        private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.Key)
+            {
+                case Key.G:
+                    ;
+                    break;
+
+                case Key.W:
+                    if (_min != 0)
+                    {
+                        _relRect.Y += _movePix;
+                        _img.Arrange(_relRect);
+                    }
+                    break;
+                case Key.A:
+                    if (_min != 0)
+                    {
+                        _relRect.X += _movePix;
+                        _img.Arrange(_relRect);
+                    }
+                    else
+                    {
+                        ChangeImagePrev();
+                    }
+                    break;
+                case Key.S:
+                    if (_min != 0)
+                    {
+                        _relRect.Y -= _movePix;
+                        _img.Arrange(_relRect);
+                    }
+                    break;
+                case Key.D:
+                    if (_min != 0)
+                    {
+                        _relRect.X -= _movePix;
+                        _img.Arrange(_relRect);
+                    }
+                    else
+                    {
+                        ChangeImageNext();
+                    }
+                    break;
+
+                case Key.Left:
+                    ChangeImagePrev();
+                    break;
+                case Key.Right:
+                    ChangeImageNext();
+                    break;
+
+                case Key.Q:
+                    SizeChange(false);
+                    break;
+                case Key.E:
+                    SizeChange(true);
+                    break;
+                case Key.R:
+                    _img.Arrange(_oriPosition);
+                    _relRect = new Rect(_oriPosition.Size);
+                    _min = 0;
+                    _thres = 0;
+                    break;
+            }
+        }
+        private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.MiddleButton == MouseButtonState.Pressed)
+            {
+                _thres = 5;
+                SizeChange(e.Delta > 0);
+            }
+            else
+            {
+                _thres--;
+                if (_thres > 0) return;
+                if (e.Delta > 0)
+                {
+                    ChangeImagePrev();
+                }
+                else
+                {
+                    ChangeImageNext();
+                }
+            }
+        }
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            _img.Width = _img.ActualWidth + 50;
+        }
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            //return;
+            if (_img == null) return;
+
+            _movePix = (int)(_img.ActualHeight / 10);
+
+            _relRect = new Rect(0, 0, 0, 0);
+            var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
+            _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
+        }
+        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _oriPoint = Mouse.GetPosition(this);
+
+            var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
+            _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
+
+            _isMouseDown = true;
+        }
+        private void Window_MouseUp(object sender, MouseEventArgs e)
+        {
+            _isMouseDown = false;
+        }
+        private void Window_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!_isMouseDown) return;
+            if (e.LeftButton != MouseButtonState.Pressed && e.MiddleButton != MouseButtonState.Pressed) _isMouseDown = false;
+
+            var mPos = Mouse.GetPosition(this);
+            _relRect.X += mPos.X - _oriPoint.X;
+            _relRect.Y += mPos.Y - _oriPoint.Y;
+
+            _oriPoint = Mouse.GetPosition(this);
+            _img.Arrange(_relRect);
+        }
+        private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            _img.Arrange(_oriPosition);
+            _relRect = new Rect(_oriPosition.Size);
             _min = 0;
         }
     }
