@@ -31,6 +31,7 @@ namespace imgLoader_WPF
         private static readonly string[] DFilter = {"|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
 
+        //internal const string PreparationText = "준비 중...";
         //internal static List<string> PrevAddress = new List<string>(5);
 
         //private static readonly List<ListViewItem> LvItem = new List<ListViewItem>();

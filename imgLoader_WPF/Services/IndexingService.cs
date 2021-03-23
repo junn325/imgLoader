@@ -75,6 +75,7 @@ namespace imgLoader_WPF.Services
             {
                 if (item.IsDownloading) continue;
                 if (infoFiles.Contains(item.Route)) continue;
+                if (item.ImgCount == "\n") continue;                //새로 다운로드 중인 항목 무시
 
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
                 Index.Remove(item);

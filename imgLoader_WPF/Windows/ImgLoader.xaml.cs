@@ -204,6 +204,8 @@ namespace imgLoader_WPF.Windows
             var thrTemp = new Thread(() =>
             {
                 ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
+                Index.Insert(0, lItem);
+                List.Insert(0, lItem);
 
                 InfSvc.Stop();
 
@@ -212,6 +214,8 @@ namespace imgLoader_WPF.Windows
                 if (!lItem.Proc.IsValidated)
                 {
                     ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
                     return;
                 }
 
@@ -219,6 +223,8 @@ namespace imgLoader_WPF.Windows
                 {
                     MessageBox.Show("Already Exists.");
                     ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
                     return;
                 }
 
@@ -233,8 +239,9 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.Load();
 
-                List.Insert(0, lItem);
+                //List.Insert(0, lItem);
 
+                //todo: 다운로드 완료 후 정렬될 위치로 삽입
                 Debug.WriteLine("Main: TxtUrl_KeyUp: " + sw.Elapsed.Ticks);
                 sw.Reset();
             });
