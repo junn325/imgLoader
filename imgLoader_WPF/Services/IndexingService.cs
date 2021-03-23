@@ -81,10 +81,9 @@ namespace imgLoader_WPF.Services
                 Index.Remove(item);
             }
 
-            foreach (var infoRoute in infoFiles)
+            foreach (var infoRoute in infoFiles.Where(item => Index.All(i => i.Route != item)))
             {
                 if (!File.Exists(infoRoute)) continue;
-                if (Index.Any(idx => idx.Route == infoRoute)) continue;
 
                 using var sr = new StreamReader(Core.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
                 var infos = sr.ReadToEnd().Replace("\r\n", "\n");
@@ -92,20 +91,21 @@ namespace imgLoader_WPF.Services
                 if (string.IsNullOrWhiteSpace(infos)) continue;
 
                 var info = Core.InitializeArray(InfoCount, infos.Split('\n'));
+
                 //if (info.Length != InfoCount)
                 //{
                 //    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}, info.length: {info.Length}");
                 //    continue;
                 //}
 
-                if (info.Length > 7 && info[7] == "0") //목록에서만 제거 처리
-                {
-                    var temp = Index.Where(t => t.Number == infoRoute.Split('\\')[^1].Split('.')[0]).ToArray();
+                //if (info.Length > 7 && info[7] == "0") //목록에서만 제거 처리
+                //{
+                //    var temp = Index.Where(t => t.Number == infoRoute.Split('\\')[^1].Split('.')[0]).ToArray();
 
-                    if (temp.Length > 0) foreach (var item in temp) Index.Remove(item);
+                //    if (temp.Length > 0) foreach (var item in temp) Index.Remove(item);
 
-                    continue;
-                }
+                //    continue;
+                //}
 
                 Index.Add(
                 new IndexItem
