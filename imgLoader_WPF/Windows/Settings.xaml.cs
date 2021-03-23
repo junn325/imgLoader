@@ -63,6 +63,7 @@ namespace imgLoader_WPF.Windows
             _sender.ShowItems.Clear();
             _scroll.ScrollToTop();
 
+            _sender.IdxSvc.DoIndex();
             //_sender.PgSvc.Paginate();
 
             //while (a == _index.Count)

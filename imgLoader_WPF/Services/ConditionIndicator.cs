@@ -11,7 +11,7 @@ namespace imgLoader_WPF.Services
 {
     internal class ConditionIndicator
     {
-        private readonly List<IndItem> _list = new();
+        internal readonly List<IndItem> IndicatorList = new();
         private readonly ImgLoader _sender;
 
         public ConditionIndicator(ImgLoader sender)
@@ -21,16 +21,16 @@ namespace imgLoader_WPF.Services
 
         public void Add(string label, Condition cond, int option)
         {
-            if (_list.Any(indItem => indItem.Condition == cond && indItem.Content == label && indItem.Option == option)) return;
+            if (IndicatorList.Any(indItem => indItem.Condition == cond && indItem.Content == label && indItem.Option == option)) return;
 
             switch (cond)
             {
                 case Condition.Sort:
-                    var temp = _list.Where(i => i.Condition == Condition.Sort).ToArray();
+                    var temp = IndicatorList.Where(i => i.Condition == Condition.Sort).ToArray();
                     if (temp.Length > 0)
                     {
                         _sender.CondPanel.Children.Remove(temp[0].Panel);
-                        _list.Remove(temp[0]);
+                        IndicatorList.Remove(temp[0]);
                     }
 
                     _sender.Sorter.Sort((Sorter.SortOption)option);
@@ -89,13 +89,13 @@ namespace imgLoader_WPF.Services
             item.Panel.Children.Add(tb);
             _sender.CondPanel.Children.Add(item.Panel);
 
-            _list.Add(item);
+            IndicatorList.Add(item);
         }
 
         public void Remove(object sender, MouseEventArgs e)
         {
             var item = new IndItem();
-            foreach (var indItem in _list)
+            foreach (var indItem in IndicatorList)
             {
                 if ((TextBlock)indItem.Panel.Children[0] == (TextBlock)sender)
                 {
@@ -105,7 +105,7 @@ namespace imgLoader_WPF.Services
             }
 
             _sender.CondPanel.Children.Remove(item.Panel);
-            _list.Remove(item);
+            IndicatorList.Remove(item);
 
             if (item.Condition == Condition.Sort)
             {
@@ -113,7 +113,7 @@ namespace imgLoader_WPF.Services
                 return;
             }
 
-            if (_list.Count == 0)
+            if (IndicatorList.Count == 0)
             {
                 _sender.List.Clear();
                 _sender.ShowItems.Clear();
@@ -133,7 +133,7 @@ namespace imgLoader_WPF.Services
 
             //todo: 속도를 위해 같은 searchoption끼리 "검색어,검색어,검색어" 식으로 묶어서 넘기는것 구현할것
             var index = _sender.Searcher.SearchIndex(_sender.Index);
-            foreach (var indItem in _list.Where(indItem => indItem.Condition == Condition.Search))
+            foreach (var indItem in IndicatorList.Where(indItem => indItem.Condition == Condition.Search))
             {
                 _sender.Searcher.SearchFrom(_sender.Index, index, indItem.Content, _sender.List, (Searcher.SearchOption)indItem.Option);
             }

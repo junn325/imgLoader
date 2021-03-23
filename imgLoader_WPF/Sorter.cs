@@ -19,7 +19,7 @@ namespace imgLoader_WPF
 
         internal void Sort(SortOption sortOption)
         {
-            _sender.Scroll.ScrollToTop();
+            //_sender.Scroll.ScrollToTop();
 
             List<IndexItem> temp;
             switch (sortOption)
@@ -51,15 +51,22 @@ namespace imgLoader_WPF
                 _list.Add(item);
             }
 
-            _sender.ShowItems.Clear();
+            if (!_sender.Dispatcher.CheckAccess())
+            {
+                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Clear());
+            }
+            else
+            {
+                _sender.ShowItems.Clear();
+            }
             _sender.PgSvc.Paginate();
         }
 
         internal enum SortOption
         {
+            Title,
             Number,
             Page,
-            Title,
             Author,
             Date
         }

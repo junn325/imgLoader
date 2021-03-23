@@ -73,15 +73,17 @@ namespace imgLoader_WPF.Services
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
             foreach (var item in new List<IndexItem>(Index))
             {
-                if (item.IsDownloading)
-                    continue;
+                if (item.IsDownloading) continue;
                 if (infoFiles.Contains(item.Route)) continue;
 
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
                 Index.Remove(item);
+                _sender.List.Remove(item);
+                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Remove(item));
             }
 
-            foreach (var infoRoute in infoFiles.Where(item => Index.All(i => i.Route != item)))
+            var newFiles = infoFiles.Where(item => Index.All(i => i.Route != item)).ToArray();
+            foreach (var infoRoute in newFiles)
             {
                 if (!File.Exists(infoRoute)) continue;
 
@@ -107,24 +109,33 @@ namespace imgLoader_WPF.Services
                 //    continue;
                 //}
 
-                Index.Add(
-                new IndexItem
-                {
-                    SiteName = info[0],
-                    Title = info[1],
-                    Author = info[2],
-                    ImgCount = info[3],
-                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
-                    Date = info[5],
-                    Vote = info[6] != null ? int.Parse(info[6]) : 0,
-                    Show = info[7] == null || info[7] == "1",
-                    View = info[8] != null ? int.Parse(info[8]) : 0,
-                    Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
-                    Route = infoRoute
-                }
-                );
+                var item = new IndexItem
+                    {
+                        SiteName = info[0],
+                        Title = info[1],
+                        Author = info[2],
+                        ImgCount = info[3],
+                        Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+                        Date = info[5],
+                        Vote = info[6] != null ? int.Parse(info[6]) : 0,
+                        Show = info[7] == null || info[7] == "1",
+                        View = info[8] != null ? int.Parse(info[8]) : 0,
+                        Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
+                        Route = infoRoute
+                    };
+
+                Index.Add(item);
+                _sender.List.Add(item);
+                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
+
                 //sb.Clear();
                 _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
+            }
+
+            if (newFiles.Length != 0)
+            {
+                var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
+                _sender.Sorter.Sort(temp);
             }
         }
 

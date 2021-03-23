@@ -45,7 +45,7 @@ namespace imgLoader_WPF.Windows
     public partial class ImgLoader
     {
         internal InfoSavingService InfSvc;
-        private IndexingService _idxSvc;
+        internal IndexingService IdxSvc;
         internal PaginationService PgSvc;
 
         internal Sorter Sorter;
@@ -104,7 +104,7 @@ namespace imgLoader_WPF.Windows
 
                 Directory.Delete(Core.GetDirectoryFromFile(item.Route), true);
 
-                _idxSvc.DoIndex();
+                IdxSvc.DoIndex();
 
                 List.Remove(_clickedItem);
                 Dispatcher.Invoke(() => ShowItems.Remove(_clickedItem));
@@ -146,22 +146,21 @@ namespace imgLoader_WPF.Windows
 
             Title = Core.Route;
 
+
             _winSetting = new Settings(this, Scroll, Index);
 
             ItemCtrl.ItemsSource = ShowItems;
 
-            InfSvc = new InfoSavingService();
-            _idxSvc = new IndexingService(Index, this);
-
-            foreach (var item in Index) List.Add(item);
-
-            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
+            CondInd = new ConditionIndicator(this);
             Sorter = new Sorter(this, List);
             Searcher = new Searcher(this, List);
-            CondInd = new ConditionIndicator(this);
+
+            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
+            InfSvc = new InfoSavingService();
+            IdxSvc = new IndexingService(Index, this);
 
             InfSvc.Start();
-            _idxSvc.Start();
+            IdxSvc.Start();
             PgSvc.Paginate();
 
             new Thread(() =>
@@ -248,7 +247,7 @@ namespace imgLoader_WPF.Windows
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             InfSvc.Stop();
-            _idxSvc.Stop();
+            IdxSvc.Stop();
 
             _winSetting.Close();
             _winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
