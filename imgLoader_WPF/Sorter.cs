@@ -24,6 +24,8 @@ namespace imgLoader_WPF
             List<IndexItem> temp;
             switch (sortOption)
             {
+                //todo: OrderBy로 새 리스트를 만들지 말고 insert로 구현하는 정렬 알고리즘 제작할 것
+
                 case SortOption.Number:
                     temp = new List<IndexItem>(_list.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
                     break;

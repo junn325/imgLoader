@@ -122,15 +122,12 @@ namespace imgLoader_WPF
             }
         }
 
-        /// <summary>
-        ///  Can be null
-        /// </summary>
         private static string GetArtist(ISite site)
         {
             var sb = new StringBuilder();
             string temp;
 
-            if (site.GetArtist() == "|") return null;
+            if (site.GetArtist() == "|") return "";
             if (site.GetArtist().Split('|')[0].Length != 0)
             {
                 foreach (var s in site.GetArtist().Split('|')[0].Split(';'))
