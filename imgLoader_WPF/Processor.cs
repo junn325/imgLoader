@@ -176,7 +176,7 @@ namespace imgLoader_WPF
         private string Getpath(string artist, string title)
         {
             var temp =
-                artist == "N/A"
+                artist?.Length == 0
                     ? $"{title}"
                     : $"{title} ({artist})";
 
