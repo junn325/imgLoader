@@ -94,6 +94,7 @@ namespace imgLoader_WPF.Windows
                         if (isLoading)
                         {
                             wait = true;
+                            Thread.Sleep(50);
                             break;
                         }
 
@@ -170,7 +171,7 @@ namespace imgLoader_WPF.Windows
                     Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
                     Thread.Sleep(1000);
                 }
-            }){IsBackground = true}.Start();
+            }) { IsBackground = true }.Start();
 
         }
 

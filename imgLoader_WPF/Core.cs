@@ -344,15 +344,9 @@ namespace imgLoader_WPF
             return number.Contains('!') ? number.Replace('!', '/') : number;
         }
 
-        internal static string CompareCollections(IEnumerable<IndexItem> collect1, IEnumerable<IndexItem> collect2)
+        internal static IEnumerable<IndexItem> CompareCollections(IEnumerable<IndexItem> collect1, IEnumerable<IndexItem> collect2)
         {
-            var sb = new StringBuilder();
-            foreach (var item in collect1.Where(item => collect2.All(i => i.Title != item.Title)))
-            {
-                sb.Append(item.Title).Append(", ");
-                Debug.WriteLine($"Core:CompareCollections: {item.Title}");
-            }
-            return sb.ToString();
+            return collect1.Where(item => collect2.All(i => i.Title != item.Title));
         }
 
         internal static void OpenOnCanvas(string imgSetPath)
