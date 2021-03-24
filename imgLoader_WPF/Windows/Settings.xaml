@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:imgLoader_WPF.Windows"
         mc:Ignorable="d"
-        Title="Settings" Width="724" Height="154" MinWidth="724" MinHeight="128" Loaded="Window_Loaded" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
+        Title="Settings" Width="724" Height="175" MinWidth="724" MinHeight="160" Loaded="Window_Loaded" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="59" />
@@ -16,17 +16,32 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <Label Content="다운로드할 경로" HorizontalAlignment="Left" Margin="20,-20,0,0" VerticalAlignment="Center" Padding="0,0,0,0"/>
-        <TextBox x:Name="TxtPath" Text="더블클릭하여 다운로드 경로를 선택하거나 직접 입력" Grid.Column="0" Grid.ColumnSpan="2" Margin="115,-20,20,0" VerticalAlignment="Center" MouseDoubleClick="TextBox_MouseDoubleClick" TextChanged="TextBox_TextChanged" Height="18"/>
-        <CheckBox x:Name="CheckNoIndex" Content="경로 인덱싱을 사용하지 않고 직접 새로고침만 사용" Grid.Row="0" Grid.Column="0" Margin="20,15,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Click="CheckNoIndex_Click" />
+        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <DockPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <Label Content="다운로드할 경로" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0" Padding="0,0,0,0"/>
+                <TextBox x:Name="TxtPath" Text="더블클릭하여 다운로드 경로를 선택하거나 직접 입력" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,5,5" MouseDoubleClick="TextBox_MouseDoubleClick" TextChanged="TextBox_TextChanged"/>
+            </DockPanel>
+        </DockPanel>
+        <CheckBox Grid.Row="0" Grid.Column="0" x:Name="CheckNoIndex" Content="경로 인덱싱을 사용하지 않고 직접 새로고침만 사용" VerticalAlignment="Bottom" Click="CheckNoIndex_Click" Margin="5,0,0,0"/>
 
-        <CheckBox x:Name="CheckAuthorName" Content="폴더명에 작가 이름을 표시하지 않음" Grid.Row="1" Grid.Column="0" Margin="20,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckAuthorName_Click"/>
-        <CheckBox x:Name="CheckDupl" Content="중복 작품 다운로드 시 물어보지 않음" Grid.Row="1" Grid.Column="0" Margin="20,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckDupl_Click"/>
-        <CheckBox x:Name="CheckTagSex" Content="태그의 성별을 항상 텍스트로 표시함" Grid.Row="1" Grid.Column="0" Margin="20,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>
-        <CheckBox x:Name="CheckTagAlways" Content="태그를 항상 표시 (성능 저하)" Grid.Row="1" Grid.Column="0" Margin="20,50,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <StackPanel Grid.Column="0" Margin="5">
+                <CheckBox x:Name="CheckAuthorName" Content="폴더명에 작가 이름을 표시하지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckAuthorName_Click"/>
+                <CheckBox x:Name="CheckDupl" Content="중복 작품 다운로드 시 물어보지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckDupl_Click"/>
+                <!--<CheckBox x:Name="CheckTagSex" Content="태그의 성별을 항상 텍스트로 표시함" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>
+                <CheckBox x:Name="CheckTagAlways" Content="태그를 항상 표시 (성능 저하)" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>-->
+            </StackPanel>
 
-        <CheckBox x:Name="CheckImmid" Content="항목 모두 즉시 다운로드 시작" Grid.Row="1" Grid.Column="1" Margin="10,5,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckImmid_Click"/>
-        <CheckBox x:Name="CheckFolder" Content="북마크에서 로드한 항목은 북마크 제목으로 폴더명을 정함" Grid.Row="1" Grid.Column="1" Margin="10,20,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>
-        <CheckBox x:Name="CheckScroll" Content="항목의 태그를 마우스로 스크롤하지 않음" Grid.Row="1" Grid.Column="1" Margin="10,35,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckScroll_Click"/>
+            <StackPanel Grid.Column="1" Margin="5">
+                <CheckBox x:Name="CheckImmid" Content="항목 모두 즉시 다운로드 시작" IsChecked="True" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckImmid_Click"/>
+                <!--<CheckBox x:Name="CheckFolder" Content="북마크에서 로드한 항목은 북마크 제목으로 폴더명을 정함" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>-->
+                <!--<CheckBox x:Name="CheckScroll" Content="항목의 태그를 마우스로 스크롤하지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckScroll_Click"/>-->
+                <CheckBox x:Name="CheckSearch" Content="검색: 검색 창을 종료하는 한 번만 검색을 수행" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckScroll_Click"/>
+            </StackPanel>
+        </Grid>
     </Grid>
 </Window>

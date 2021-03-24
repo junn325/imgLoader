@@ -332,6 +332,7 @@ namespace imgLoader_WPF
 
         internal static void OpenDir(string path)
         {
+            if (!File.Exists(path)) return;
             Process.Start("explorer.exe", path);
         }
 
@@ -352,6 +353,8 @@ namespace imgLoader_WPF
 
         internal static void OpenOnCanvas(string imgSetPath)
         {
+            if (!File.Exists(imgSetPath)) return;
+
             var img = new BitmapImage();
             var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains(".ilif")).ToArray();
 

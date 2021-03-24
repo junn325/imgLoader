@@ -34,10 +34,10 @@ namespace imgLoader_WPF.Windows
             TxtPath.Text = Core.Route.Length == 0 ? TxtPath.Text : Core.Route;
 
             CheckAuthorName.IsChecked = Properties.Settings.Default.ShowAuthor_Folder;
-            CheckFolder.IsChecked = Properties.Settings.Default.BookMark_Name;
+            //CheckFolder.IsChecked = Properties.Settings.Default.BookMark_Name;
             CheckDupl.IsChecked = Properties.Settings.Default.NoAsk_Dupl;
             CheckImmid.IsChecked = Properties.Settings.Default.Down_Immid;
-            CheckScroll.IsChecked = Properties.Settings.Default.NoScrollTag;
+            //CheckScroll.IsChecked = Properties.Settings.Default.NoScrollTag;
             CheckNoIndex.IsChecked = Properties.Settings.Default.NoIndex;
         }
 
@@ -87,7 +87,7 @@ namespace imgLoader_WPF.Windows
 
         private void CheckFolder_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.BookMark_Name = CheckFolder.IsChecked.GetValueOrDefault();
+            //Properties.Settings.Default.BookMark_Name = CheckFolder.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
         }
 
@@ -117,7 +117,7 @@ namespace imgLoader_WPF.Windows
 
         private void CheckScroll_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.NoScrollTag = CheckScroll.IsChecked.GetValueOrDefault();
+            //Properties.Settings.Default.NoScrollTag = CheckScroll.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
         }
 

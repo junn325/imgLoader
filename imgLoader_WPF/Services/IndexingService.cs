@@ -45,11 +45,11 @@ namespace imgLoader_WPF.Services
                     {
                         route = Core.Route;
 
-                        DoIndex();
-                        foreach (var item in Index)
-                        {
-                            _sender.List.Add(item);
-                        }
+                        //DoIndex();
+                        //foreach (var item in Index)
+                        //{
+                        //    _sender.List.Add(item);
+                        //}
 
                         _sender.PgSvc.Paginate();
                     }

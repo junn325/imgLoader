@@ -16,7 +16,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Dd = new string[]{ "d", "dd", "ddd", "dddd", "ddddd"};
+            Dd = new string[] { "d", "dd", "ddd", "dddd", "ddddd" };
 
             //List.DataContext = new BaseViewModel();
         }
