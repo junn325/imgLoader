@@ -111,19 +111,19 @@ namespace imgLoader_WPF.Services
                 //}
 
                 var item = new IndexItem
-                    {
-                        SiteName = info[0],
-                        Title = info[1],
-                        Author = info[2],
-                        ImgCount = info[3],
-                        Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
-                        Date = info[5],
-                        Vote = info[6] != null ? int.Parse(info[6]) : 0,
-                        Show = info[7] == null || info[7] == "1",
-                        View = info[8] != null ? int.Parse(info[8]) : 0,
-                        Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
-                        Route = infoRoute
-                    };
+                {
+                    SiteName = info[0],
+                    Title = info[1],
+                    Author = info[2],
+                    ImgCount = info[3],
+                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
+                    Date = info[5],
+                    Vote = info[6] != null ? int.Parse(info[6]) : 0,
+                    Show = info[7] == null || info[7] == "1",
+                    View = info[8] != null ? int.Parse(info[8]) : 0,
+                    Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
+                    Route = infoRoute
+                };
 
                 Index.Add(item);
                 _sender.List.Add(item);

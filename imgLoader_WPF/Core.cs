@@ -28,7 +28,7 @@ namespace imgLoader_WPF
 
         internal const string InfoExt = "ilif";
 
-        private static readonly string[] DFilter = {"|", ":", "?", "\"", "<", ">", "/", "*", "..." };
+        private static readonly string[] DFilter = { "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
 
         //internal const string PreparationText = "준비 중...";

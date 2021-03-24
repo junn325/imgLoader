@@ -97,7 +97,7 @@ namespace imgLoader_WPF.Sites
 
             for (var i = 0; i < pageCount; i++)
             {
-                rtnVal[i] = tasks[i].Result; 
+                rtnVal[i] = tasks[i].Result;
                 var url = tasks[i].Result.Split("\"img\\\" src=\\\"")[1].Split("\\\"")[0].Replace("\\/", "/");
                 imgList.Add(url.Split("/").Last(), url);
             }
@@ -143,7 +143,8 @@ namespace imgLoader_WPF.Sites
         /// </summary>
         private static async Task<string> XmlHttpRequest_ItemAsync(string gid, string reqPage, string imgKey, string showKey, string pageNum)
         {
-            return await Task.Run(() => {
+            return await Task.Run(() =>
+            {
                 HttpWebRequest rq = null;
                 WebResponse resp = null;
                 try

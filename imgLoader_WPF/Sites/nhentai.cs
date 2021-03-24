@@ -77,7 +77,7 @@ namespace imgLoader_WPF.Sites
 
             for (var i = 1; i <= _imgNum; i++)
             {
-                ext = StrTools.GetStringValue(StrTools.GetValue(_source, "pages").Split('{')[i],"t");
+                ext = StrTools.GetStringValue(StrTools.GetValue(_source, "pages").Split('{')[i], "t");
                 switch (ext)
                 {
                     case "j":

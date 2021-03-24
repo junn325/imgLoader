@@ -80,6 +80,7 @@ namespace imgLoader_WPF.LoaderListCtrl
                 ProgBlock.Text = $"0/{value}";
                 ProgBar.Maximum = value;
             });
+
             data.ProgBarVal = () => Dispatcher.Invoke(() =>
             {
                 _progVal++;

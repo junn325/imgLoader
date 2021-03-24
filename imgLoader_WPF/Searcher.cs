@@ -79,24 +79,23 @@ namespace imgLoader_WPF
                     }
 
                     break;
+
                 case SearchOption.Title:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.Title].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
-                    break;
-
                 case SearchOption.Author:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.Author].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
-                    break;
-
                 case SearchOption.Tag:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.Tag].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
-                    break;
-
                 case SearchOption.Number:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.Number].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
-                    break;
-
                 case SearchOption.ImgCount:
-                    foreach (var srch in search.Split(',')) for (var i = 0; i < index.Length / IndexCount; i++) if (!index[i, (int)SearchOption.ImgCount].Contains(srch, StringComparison.OrdinalIgnoreCase)) searchResult[i] = null;
+                    foreach (var srch in search.Split(','))
+                    {
+                        for (var i = 0; i < index.Length / IndexCount; i++)
+                        {
+                            if (!index[i, (int)option].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            {
+                                searchResult[i] = null;
+                            }
+                        }
+                    }
+
                     break;
 
                 default:
@@ -106,7 +105,11 @@ namespace imgLoader_WPF
             destination.Clear();
             foreach (var item in searchResult)
             {
-                if (item == null) continue;
+                if (item == null)
+                {
+                    continue;
+                }
+
                 destination.Add(item);
             }
         }

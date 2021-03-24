@@ -89,7 +89,7 @@ namespace imgLoader_WPF.Sites
             foreach (var item in StrTools.GetValue(_src_api, "tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
-                sb.Append(StrTools.GetStringValue(item.Split('}')[0],"value")).Append(';');
+                sb.Append(StrTools.GetStringValue(item.Split('}')[0], "value")).Append(';');
             }
 
             if (StrTools.GetValue(_src_api, "characters", '[', ']').Length != 0)
