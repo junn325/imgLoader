@@ -26,8 +26,16 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             var data = ((IndexItem)DataContext);
 
-            data.ShownChang = () => Background = data.IsRead ? Brushes.LightGray : Brushes.White;
-            data.ProgPanelVis = (v) => Dispatcher.Invoke(() => ProgPanel.Visibility = v);
+            data.ShownChang = () =>
+            {
+                Background = data.IsRead ? Brushes.LightGray : Brushes.White;
+                ViewCntBlock.Text = $"{data.View} Views";
+            };
+            data.ProgPanelVis = (v) => Dispatcher.Invoke(() =>
+            {
+                ProgPanel.Visibility = v;
+                ViewCntBlock.Visibility = v == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+            });
 
             data.SizeChange = (value) => this.MaxWidth = value;
 

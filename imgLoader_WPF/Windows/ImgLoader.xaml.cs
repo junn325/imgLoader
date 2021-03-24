@@ -149,7 +149,6 @@ namespace imgLoader_WPF.Windows
 
             Title = Core.Route;
 
-
             _winSetting = new Settings(this, Scroll, Index);
 
             ItemCtrl.ItemsSource = ShowItems;
@@ -210,7 +209,7 @@ namespace imgLoader_WPF.Windows
                 Index.Insert(0, lItem);
                 List.Insert(0, lItem);
 
-                InfSvc.Stop();
+                //InfSvc.Stop();
 
                 lItem.Proc = new Processor(url, lItem);
                 lItem.Proc.Pause = !Properties.Settings.Default.Down_Immid;
@@ -372,8 +371,10 @@ namespace imgLoader_WPF.Windows
         {
             Core.OpenOnCanvas(Core.GetDirectoryFromFile(_clickedItem.Route));
 
+            _clickedItem.View++;
             _clickedItem.IsRead = true;
             _clickedItem.ShownChang.Invoke();
+            InfSvc.Save(_clickedItem);
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

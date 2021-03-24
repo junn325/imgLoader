@@ -61,7 +61,7 @@
             <TextBlock x:Name="AuthorBlock" Text="(작가)" FontFamily="{StaticResource NanumGothic_R}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="SiteBlock" Text="(사이트)" FontFamily="{StaticResource IBMPlexSansKR_R}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="ImgCntBlock" Text="(이미지 장수)" FontFamily="{StaticResource IBMPlexSansKR_R}"  VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
-            <TextBlock x:Name="ViewCntBlock" Text="(조회수)" FontFamily="{StaticResource IBMPlexSansKR_R}"  VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="ViewCntBlock" Text="(조회수)" FontFamily="{StaticResource IBMPlexSansKR_R}" Visibility="Visible" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
             <!--<Rectangle Fill="Gray" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3"/>
             <Rectangle Fill="LightGray" Grid.Row="1" Grid.Column="3"/>-->
 

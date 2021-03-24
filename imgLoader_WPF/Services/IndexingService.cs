@@ -15,7 +15,6 @@ namespace imgLoader_WPF.Services
     internal class IndexingService
     {
         private const int Interval = 3000;
-        private const int InfoCount = 9;
 
         private readonly Thread _service;
         private bool _stop;
@@ -93,7 +92,7 @@ namespace imgLoader_WPF.Services
                 sr.Close();
                 if (string.IsNullOrWhiteSpace(infos)) continue;
 
-                var info = Core.InitializeArray(InfoCount, infos.Split('\n'));
+                var info = Core.InitializeArray(Core.InfoCount, infos.Split('\n'));
 
                 //if (info.Length != InfoCount)
                 //{

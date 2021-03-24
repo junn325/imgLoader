@@ -74,7 +74,7 @@
             </Grid>
         </Border>
 
-        <Grid x:Name="SrchBorder" Background="{StaticResource BBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Visible" MouseDown="SrchBorder_MouseDown">
+        <Grid x:Name="SrchBorder" Background="{StaticResource BBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Hidden" MouseDown="SrchBorder_MouseDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="25"/>

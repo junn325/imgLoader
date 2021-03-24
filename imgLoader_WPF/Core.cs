@@ -28,6 +28,8 @@ namespace imgLoader_WPF
 
         internal const string InfoExt = "ilif";
 
+        internal const int InfoCount = 9;
+
         private static readonly string[] DFilter = { "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
 
@@ -82,7 +84,7 @@ namespace imgLoader_WPF
             var file = new FileInfo(infoFileName);
             if (file.Exists && (file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
 
-            using var sw = new StreamWriter(new FileStream(infoFileName, FileMode.Create, FileAccess.ReadWrite), Encoding.UTF8);
+            using var sw = new StreamWriter(new FileStream(infoFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
             var info = site.ReturnInfo();
 
             for (var i = 0; i < info.Length; i++)
@@ -332,7 +334,7 @@ namespace imgLoader_WPF
 
         internal static void OpenDir(string path)
         {
-            if (!File.Exists(path)) return;
+            if (!Directory.Exists(path)) return;
             Process.Start("explorer.exe", path);
         }
 
@@ -353,7 +355,7 @@ namespace imgLoader_WPF
 
         internal static void OpenOnCanvas(string imgSetPath)
         {
-            if (!File.Exists(imgSetPath)) return;
+            if (!Directory.Exists(imgSetPath)) return;
 
             var img = new BitmapImage();
             var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains(".ilif")).ToArray();
@@ -364,6 +366,21 @@ namespace imgLoader_WPF
 
             var canvas = new CanvasWindow { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
             canvas.Show();
+        }
+
+        internal static int[] TestRead(string route)
+        {
+            using var sr = new StreamReader(Core.DelayStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite));
+            var temp = new int[1000];
+            var count = 0;
+            var itr = 0;
+            do
+            {
+                count = sr.Read();
+                temp[itr++] = count;
+            } while (count > 0);
+
+            return temp;
         }
     }
 }
