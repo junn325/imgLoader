@@ -75,7 +75,7 @@ namespace imgLoader_WPF.Services
             {
                 if (item.IsDownloading) continue;
                 if (infoFiles.Contains(item.Route)) continue;
-                if (item.ImgCount == "\n") continue;                //새로 다운로드 중인 항목 무시
+                if (item.ImgCount == -1) continue;                //새로 다운로드 중인 항목 무시
 
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
                 Index.Remove(item);
@@ -115,7 +115,7 @@ namespace imgLoader_WPF.Services
                     SiteName = info[0],
                     Title = info[1],
                     Author = info[2],
-                    ImgCount = info[3],
+                    ImgCount = int.TryParse(info[3],out var parse) ? parse : -1,
                     Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
                     Date = info[5],
                     Vote = info[6] != null ? int.Parse(info[6]) : 0,

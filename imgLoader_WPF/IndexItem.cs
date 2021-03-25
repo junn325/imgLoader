@@ -12,7 +12,7 @@
         public string Title { get; set; }
         public string Author { get; set; }
         public string SiteName { get; set; }
-        public string ImgCount { get; set; }
+        public int ImgCount { get; set; }
         public string Number { get; set; }
         public string[] Tags { get; set; }
         public int Vote { get; set; }

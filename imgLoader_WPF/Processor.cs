@@ -64,14 +64,16 @@ namespace imgLoader_WPF
                 Route = Getpath(Artist, Title);
                 Info = Site.ReturnInfo();
 
-                item.ImgCount = ImgUrl.Count.ToString();
+                item.ImgCount = ImgUrl.Count;
                 item.Author = Artist;
                 item.Title = Title;
                 item.Route = Route;
                 item.SiteName = Site.GetType().Name;
                 item.Number = Number;
                 item.Date = DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';');
+                item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
+                item.Vote = 0;
+                item.View = 0;
 
                 _item = item;
             //}

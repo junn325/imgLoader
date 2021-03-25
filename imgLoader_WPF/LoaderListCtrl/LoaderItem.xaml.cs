@@ -29,7 +29,7 @@ namespace imgLoader_WPF.LoaderListCtrl
             data.ShownChang = () =>
             {
                 Background = data.IsRead ? Brushes.LightGray : Brushes.White;
-                ViewCntBlock.Text = $"{data.View} Views";
+                ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
             };
             data.ProgPanelVis = (v) => Dispatcher.Invoke(() =>
             {
@@ -74,12 +74,12 @@ namespace imgLoader_WPF.LoaderListCtrl
                 }
 
                 AuthorBlock.Text = sb.ToString();
-                ImgCntBlock.Text = $"{data.ImgCount} Imgs";
+                ImgCntBlock.Text = data.ImgCount == -1 ? "" : $"{data.ImgCount} Imgs";
                 NumBlock.Text = data.Number;
                 SiteBlock.Text = data.SiteName;
                 TitleBlock.Text = data.Title;
                 LblVote.Text = data.Vote.ToString();
-                ViewCntBlock.Text = $"{data.View} Views";
+                ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
             });
 
             data.ProgBarMax = value => Dispatcher.Invoke(() =>
