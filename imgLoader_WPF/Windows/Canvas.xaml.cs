@@ -11,7 +11,7 @@ namespace imgLoader_WPF.Windows
     /// <summary>
     /// Interaction logic for Canvas.xaml
     /// </summary>
-    public partial class CanvasWindow
+    public partial class Canvas
     {
         private const byte Scale = 15; //percent
         private int _movePix = 50;
@@ -31,7 +31,7 @@ namespace imgLoader_WPF.Windows
 
         private bool _isMouseDown = false;
 
-        public CanvasWindow()
+        public Canvas()
         {
             InitializeComponent();
         }
