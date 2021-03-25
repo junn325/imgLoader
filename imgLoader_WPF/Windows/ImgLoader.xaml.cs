@@ -122,7 +122,7 @@ namespace imgLoader_WPF.Windows
         }
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            var ttemp = Core.TestRead(@"D:\문서\사진\Saved Pictures\고니\i\새 폴더 (5)\Soku Ochi Sensei Saimin Commentary │ 즉흥 선생 최면 코멘터리 (f4u (naitou2))\1873917.ilif");
+            Properties.Settings.Default.Upgrade();
 
             Menu.Focus(); //메뉴 미리 로드
             _winSetting = new Settings(this, Scroll, Index);

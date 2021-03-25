@@ -32,7 +32,6 @@ namespace imgLoader_WPF.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             TxtPath.Text = Core.Route.Length == 0 ? TxtPath.Text : Core.Route;
-            Properties.Settings.Default.Upgrade();
 
             CheckAuthorName.IsChecked = Properties.Settings.Default.ShowAuthor_Folder;
             //CheckFolder.IsChecked = Properties.Settings.Default.BookMark_Name;
