@@ -21,7 +21,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="CacheSize" Type="System.Int64" Scope="User">
-      <Value Profile="(Default)">500000</Value>
+      <Value Profile="(Default)">500000000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

@@ -109,7 +109,22 @@ namespace imgLoader_WPF.Windows
         }
         private void ChangeImage(string nextPath)
         {
-            _imgList[--_index].;
+            _size -= new FileInfo(FileList[_index == 0 ? FileList.Length - 1 : _index - 1]).Length;
+
+            _imgList[_index == 0 ? FileList.Length - 1 : _index - 1] = null;
+
+            if (_imgList[_index] == null)
+            {
+                var bitmapImage = new BitmapImage();
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.UriSource = new Uri(FileList[_index]);
+                bitmapImage.EndInit();
+
+                _imgList[_index] = bitmapImage;
+            }
+
+            _size += new FileInfo(FileList[_index]).Length;
             _img.Source = _imgList[_index];
 
             Title = nextPath.Split('\\')[^1];
@@ -174,19 +189,26 @@ namespace imgLoader_WPF.Windows
         {
             var service = new Thread(() =>
             {
+                if (_imgList[index] != null) return;
+
                 while (_size >= Properties.Settings.Default.CacheSize)
                 {
                     Thread.Sleep(200);
                 }
+                _size += new FileInfo(FileList[index]).Length;
 
-                if (_imgList[index] != null) return;
                 Dispatcher.Invoke(() =>
                 {
-                    _imgList[index] = new BitmapImage(new Uri(FileList[index]));
-                    _imgList[index].Freeze();
+                    var bitmapImage = new BitmapImage();
+                    bitmapImage.BeginInit();
+                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmapImage.UriSource = new Uri(FileList[index]);
+                    bitmapImage.EndInit();
+
+                    _imgList[index] = bitmapImage;
+                    //_imgList[index].Freeze();
 
                     //_imgSizeList[index] = new FileInfo(FileList[index]).Length;
-                    _size += new FileInfo(FileList[index]).Length;
                 });
             });
 
@@ -202,7 +224,7 @@ namespace imgLoader_WPF.Windows
             switch (e.Key)
             {
                 case Key.G:
-                    ;
+
                     break;
 
                 case Key.W:
@@ -325,6 +347,14 @@ namespace imgLoader_WPF.Windows
             _img.Arrange(_oriPosition);
             _relRect = new Rect(_oriPosition.Size);
             _min = 0;
+        }
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            for (var i = 0; i < _imgList.Length; i++)
+            {
+                _imgList[i] = null;
+            }
+            GC.Collect();
         }
     }
 }

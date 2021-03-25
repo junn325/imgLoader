@@ -97,7 +97,7 @@ namespace imgLoader_WPF.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("500000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("500000000")]
         public long CacheSize {
             get {
                 return ((long)(this["CacheSize"]));
