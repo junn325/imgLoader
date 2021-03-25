@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,6 +25,7 @@ namespace imgLoader_WPF.Windows
         public BitmapImage Image;
 
         public string[] FileList;
+        public BitmapImage[] ImgList;
 
         private int _index;
         private int _min;
@@ -39,11 +41,19 @@ namespace imgLoader_WPF.Windows
         {
             //FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
             FileList = FileList.OrderBy(i => int.TryParse(i.Split('\\')[^1].Split('.')[0], out var result) ? result : int.MaxValue).ToArray();
+            ImgList = new BitmapImage[FileList.Length];
+
+            for (var i = 1; i < FileList.Length; i++)
+            {
+                LoadImage(i);
+            }
+
+            ImgList[0] = Image;
 
             _img = new Image();
-            _img.Source = Image;
+            _img.Source = ImgList[0];
             //_img.VerticalAlignment = VerticalAlignment.Center;
-            //_img.HorizontalAlignment = HorizontalAlignment.Center;        //활성화시 확대 안됨 절대 넣지말것
+            //_img.HorizontalAlignment = HorizontalAlignment.Center;        //활성화시 확대 안됨 넣지말것
 
             DockPanel.SetDock(_img, Dock.Top);
 
@@ -96,8 +106,8 @@ namespace imgLoader_WPF.Windows
         }
         private void ChangeImage(string nextPath)
         {
-            var image = new BitmapImage(new Uri(nextPath));
-            _img.Source = image;
+            _img.Source = ImgList[_index];
+
             Title = nextPath.Split('\\')[^1];
 
             var imgOffset = _img.TransformToAncestor(this).Transform(new Point(0, 0));
@@ -155,6 +165,19 @@ namespace imgLoader_WPF.Windows
             }
 
             return FileList[_index];
+        }
+        private void LoadImage(int index)
+        {
+            var service = new Thread(() =>
+            {
+                if (ImgList[index] != null) return;
+                Dispatcher.Invoke(() => ImgList[index] = new BitmapImage(new Uri(FileList[index])));
+            });
+
+            service.IsBackground = true;
+            service.Name = "Load_Img";
+
+            service.Start();
         }
 
         //

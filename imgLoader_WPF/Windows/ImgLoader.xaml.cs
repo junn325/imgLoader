@@ -428,7 +428,7 @@ namespace imgLoader_WPF.Windows
             _clickedItem.IsRead = true;
             _clickedItem.ShownChang.Invoke();
             InfSvc.Save(_clickedItem);
-        }
+         }
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             DeleteItemDir(_clickedItem);

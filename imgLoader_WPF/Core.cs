@@ -364,7 +364,7 @@ namespace imgLoader_WPF
             img.UriSource = new Uri(temp[0]);
             img.EndInit();
 
-            var canvas = new Canvas { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp };
+            var canvas = new Canvas { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
             canvas.Show();
         }
 
