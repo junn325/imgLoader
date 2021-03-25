@@ -26,15 +26,19 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             var data = ((IndexItem)DataContext);
 
+            if (data.IsDownloading) VoteGrid.Visibility = Visibility.Hidden;
+
             data.ShownChang = () =>
             {
                 Background = data.IsRead ? Brushes.LightGray : Brushes.White;
                 ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
             };
+
             data.ProgPanelVis = (v) => Dispatcher.Invoke(() =>
             {
                 ProgPanel.Visibility = v;
                 ViewCntBlock.Visibility = v == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                VoteGrid.Visibility = v == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
             });
 
             data.SizeChange = (value) => this.MaxWidth = value;
