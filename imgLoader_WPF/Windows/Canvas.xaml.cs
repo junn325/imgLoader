@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows;
@@ -22,10 +23,12 @@ namespace imgLoader_WPF.Windows
         private Point _oriPoint;
 
         private Image _img;
+        private long _size;
         public BitmapImage Image;
 
         public string[] FileList;
-        public BitmapImage[] ImgList;
+        private BitmapImage[] _imgList;
+        //private long[] _imgSizeList;
 
         private int _index;
         private int _min;
@@ -41,17 +44,17 @@ namespace imgLoader_WPF.Windows
         {
             //FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
             FileList = FileList.OrderBy(i => int.TryParse(i.Split('\\')[^1].Split('.')[0], out var result) ? result : int.MaxValue).ToArray();
-            ImgList = new BitmapImage[FileList.Length];
+            _imgList = new BitmapImage[FileList.Length];
 
             for (var i = 1; i < FileList.Length; i++)
             {
                 LoadImage(i);
             }
 
-            ImgList[0] = Image;
+            _imgList[0] = Image;
 
             _img = new Image();
-            _img.Source = ImgList[0];
+            _img.Source = _imgList[0];
             //_img.VerticalAlignment = VerticalAlignment.Center;
             //_img.HorizontalAlignment = HorizontalAlignment.Center;        //활성화시 확대 안됨 넣지말것
 
@@ -106,7 +109,8 @@ namespace imgLoader_WPF.Windows
         }
         private void ChangeImage(string nextPath)
         {
-            _img.Source = ImgList[_index];
+            _imgList[--_index].;
+            _img.Source = _imgList[_index];
 
             Title = nextPath.Split('\\')[^1];
 
@@ -170,8 +174,20 @@ namespace imgLoader_WPF.Windows
         {
             var service = new Thread(() =>
             {
-                if (ImgList[index] != null) return;
-                Dispatcher.Invoke(() => ImgList[index] = new BitmapImage(new Uri(FileList[index])));
+                while (_size >= Properties.Settings.Default.CacheSize)
+                {
+                    Thread.Sleep(200);
+                }
+
+                if (_imgList[index] != null) return;
+                Dispatcher.Invoke(() =>
+                {
+                    _imgList[index] = new BitmapImage(new Uri(FileList[index]));
+                    _imgList[index].Freeze();
+
+                    //_imgSizeList[index] = new FileInfo(FileList[index]).Length;
+                    _size += new FileInfo(FileList[index]).Length;
+                });
             });
 
             service.IsBackground = true;
@@ -267,10 +283,6 @@ namespace imgLoader_WPF.Windows
                     ChangeImageNext();
                 }
             }
-        }
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            _img.Width = _img.ActualWidth + 50;
         }
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {

@@ -94,5 +94,17 @@ namespace imgLoader_WPF.Properties {
                 this["NoIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500000")]
+        public long CacheSize {
+            get {
+                return ((long)(this["CacheSize"]));
+            }
+            set {
+                this["CacheSize"] = value;
+            }
+        }
     }
 }
