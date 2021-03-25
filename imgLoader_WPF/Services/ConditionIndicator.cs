@@ -19,7 +19,7 @@ namespace imgLoader_WPF.Services
             _sender = sender;
         }
 
-        public void Add(string label, Condition cond, int option)
+        internal void Add(string label, Condition cond, int option)
         {
             if (IndicatorList.Any(indItem => indItem.Condition == cond && indItem.Content == label && indItem.Option == option)) return;
 
@@ -66,7 +66,7 @@ namespace imgLoader_WPF.Services
                 Margin  = new Thickness(2,1,2,1),
                 Padding = new Thickness(2,1,2,1),
             };
-            tb.MouseUp += Remove;
+            tb.MouseUp += RemoveHandler;
 
             tb.Measure(_sender.CondPanel.DesiredSize);
 
@@ -92,7 +92,7 @@ namespace imgLoader_WPF.Services
             IndicatorList.Add(item);
         }
 
-        public void Remove(object sender, MouseEventArgs e)
+        internal void RemoveHandler(object sender, MouseEventArgs e)
         {
             var item = new IndItem();
             foreach (var indItem in IndicatorList)
@@ -104,6 +104,11 @@ namespace imgLoader_WPF.Services
                 }
             }
 
+            Remove(item);
+        }
+
+        internal void Remove(IndItem item)
+        {
             _sender.CondPanel.Children.Remove(item.Panel);
             IndicatorList.Remove(item);
 
@@ -113,7 +118,13 @@ namespace imgLoader_WPF.Services
                 return;
             }
 
-            if (IndicatorList.Count == 0)
+            foreach (var indItem in IndicatorList.Where(indItem => indItem.Condition == Condition.Sort))
+            {
+                _sender.Sorter.Sort((Sorter.SortOption)indItem.Option);
+            }
+
+            var searchItem = IndicatorList.Where(indItem => indItem.Condition == Condition.Search).ToArray();
+            if (searchItem.Length == 0)
             {
                 _sender.List.Clear();
                 _sender.ShowItems.Clear();
@@ -133,13 +144,21 @@ namespace imgLoader_WPF.Services
 
             //todo: 속도를 위해 같은 searchoption끼리 "검색어,검색어,검색어" 식으로 묶어서 넘기는것 구현할것
             var index = _sender.Searcher.SearchIndex(_sender.Index);
-            foreach (var indItem in IndicatorList.Where(indItem => indItem.Condition == Condition.Search))
+            foreach (var indItem in searchItem)
             {
                 _sender.Searcher.SearchFrom(_sender.Index, index, indItem.Content, _sender.List, (Searcher.SearchOption)indItem.Option);
             }
+
             _sender.PgSvc.Paginate();
         }
 
+        internal void Clear()
+        {
+            foreach (var indItem in new List<IndItem>(IndicatorList))
+            {
+                Remove(indItem);
+            }
+        }
         internal struct IndItem
         {
             internal string Content;

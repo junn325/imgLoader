@@ -1,10 +1,9 @@
-﻿using imgLoader_WPF.Services;
-using imgLoader_WPF.Windows;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using imgLoader_WPF.Windows;
 
-namespace imgLoader_WPF
+namespace imgLoader_WPF.Services
 {
     internal class Sorter
     {
@@ -27,19 +26,25 @@ namespace imgLoader_WPF
                 //todo: OrderBy로 새 리스트를 만들지 말고 insert로 구현하는 정렬 알고리즘 제작할 것
 
                 case SortOption.Number:
-                    temp = new List<IndexItem>(_list.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+                    temp = new List<IndexItem>(_list.OrderBy(i => int.TryParse((string?)i.Number, out var result) ? result : int.MaxValue));
                     break;
                 case SortOption.Title:
                     temp = new List<IndexItem>(_list.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
                     break;
                 case SortOption.Page:
-                    temp = new List<IndexItem>(_list.OrderBy(i => int.TryParse(i.ImgCount, out var result) ? result : int.MaxValue));
+                    temp = new List<IndexItem>(_list.OrderBy(i => i.ImgCount));
                     break;
                 case SortOption.Author:
                     temp = new List<IndexItem>(_list.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
                     break;
                 case SortOption.Date:
                     temp = new List<IndexItem>(_list.OrderByDescending(i => i.Date, StringComparer.OrdinalIgnoreCase));
+                    break;
+                case SortOption.Vote:
+                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.Vote));
+                    break;
+                case SortOption.View:
+                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.View));
                     break;
 
                 default:
@@ -61,7 +66,6 @@ namespace imgLoader_WPF
             {
                 _sender.ShowItems.Clear();
             }
-            _sender.PgSvc.Paginate();
         }
 
         internal enum SortOption
@@ -70,7 +74,9 @@ namespace imgLoader_WPF
             Number,
             Page,
             Author,
-            Date
+            Date,
+            Vote,
+            View
         }
     }
 }

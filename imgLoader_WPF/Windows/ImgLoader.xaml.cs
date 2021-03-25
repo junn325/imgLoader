@@ -15,7 +15,7 @@ using System.Windows.Input;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using imgLoader_WPF.Services;
-using static imgLoader_WPF.Sorter;
+using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
 {
@@ -118,7 +118,6 @@ namespace imgLoader_WPF.Windows
         {
             ;
         }
-
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
             var ttemp = Core.TestRead(@"D:\문서\사진\Saved Pictures\고니\i\새 폴더 (5)\Soku Ochi Sensei Saimin Commentary │ 즉흥 선생 최면 코멘터리 (f4u (naitou2))\1873917.ilif");
@@ -174,22 +173,9 @@ namespace imgLoader_WPF.Windows
                     Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
                     Thread.Sleep(1000);
                 }
-            }) { IsBackground = true }.Start();
+            })
+            { IsBackground = true }.Start();
 
-        }
-
-        private void List_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            if (PgSvc != null && List.Count != 0 && ShowItems.Count == 0)
-            {
-                Debug.WriteLine("paginate");
-                PgSvc.Paginate();
-            }
-        }
-
-        private void Setting_Click(object sender, RoutedEventArgs e)
-        {
-            _winSetting.ShowDialog();
         }
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
@@ -198,7 +184,7 @@ namespace imgLoader_WPF.Windows
             if (TxtUrl.Text.Length == 0) return;
 
             var url = TxtUrl.Text;
-            var lItem = new IndexItem() { Author = "준비 중...", ImgCount = "\n" }; //imgcount = "\n" => hides "장"
+            var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1 };
 
             var sw = new Stopwatch();
             sw.Start();
@@ -254,6 +240,76 @@ namespace imgLoader_WPF.Windows
             thrTemp.Name = "AddItem";
             thrTemp.SetApartmentState(ApartmentState.STA);
             thrTemp.Start();
+        }
+        private void TxtUrl_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TxtUrl.Text.Length == 0)
+            {
+                LabelBlock_Add.Visibility = Visibility.Visible;
+                return;
+            }
+
+            LabelBlock_Add.Visibility = Visibility.Collapsed;
+        }
+        private void TxtUrl_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TxtSrchAll.Text.Length == 0)
+            {
+                LabelBlock_Srch.Visibility = Visibility.Visible;
+                return;
+            }
+
+            LabelBlock_Srch.Visibility = Visibility.Collapsed;
+        }
+
+        private void TxtSrchAll_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+            if (TxtSrchAll.Text.Length == 0) return;
+
+            //List.Clear();
+            ShowItems.Clear();
+
+            CondInd.Add(TxtSrchAll.Text, ConditionIndicator.Condition.Search,
+                (int)(
+                    AllRadio.IsChecked.Value
+                        ? Searcher.SearchOption.All
+                        : AuthorRadio.IsChecked.Value
+                            ? Searcher.SearchOption.Author
+                            : TagRadio.IsChecked.Value
+                                ? Searcher.SearchOption.Tag
+                                : NumRadio.IsChecked.Value
+                                    ? Searcher.SearchOption.Number
+                                    : Searcher.SearchOption.Title
+                )
+            );
+            PgSvc.Paginate();
+
+            TxtSrchAll.Text = "";
+            TxtSrchAll.Focus();
+        }
+
+        private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
+
+            var sder = ((ScrollViewer)sender);
+            PgSvc.Paginate();
+        }
+
+        private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            foreach (var item in ShowItems)
+            {
+                if (item.SizeChange == null) return;
+                item.SizeChange(Scroll.ActualWidth - 10.0);
+                //Debug.WriteLine("size");
+            }
         }
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -349,11 +405,11 @@ namespace imgLoader_WPF.Windows
             }
         }
 
+        #region MenuItem
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             DeleteItemDir(_clickedItem);
         }
-
         //private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
         //{
         //    _clickedItem.Show = false;
@@ -363,12 +419,10 @@ namespace imgLoader_WPF.Windows
 
         //    _idxSvc.DoIndex(_sb);
         //}
-
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
             Core.OpenDir(Core.GetDirectoryFromFile(_clickedItem.Route));
         }
-
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             Core.OpenOnCanvas(Core.GetDirectoryFromFile(_clickedItem.Route));
@@ -378,52 +432,23 @@ namespace imgLoader_WPF.Windows
             _clickedItem.ShownChang.Invoke();
             InfSvc.Save(_clickedItem);
         }
-
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             DeleteItemDir(_clickedItem);
         }
-
         private void Resume_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Proc.Pause = false;
         }
-
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Proc.Pause = true;
         }
-
         private void AddItem_Click(object sender, RoutedEventArgs e)
         {
             AddBorder.Visibility = Visibility.Visible;
             TxtUrl.Focus();
         }
-
-        private void AddBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
-            }
-        }
-
-        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void TxtUrl_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (TxtUrl.Text.Length == 0)
-            {
-                LabelBlock_Add.Visibility = Visibility.Visible;
-                return;
-            }
-
-            LabelBlock_Add.Visibility = Visibility.Collapsed;
-        }
-
         private void CopyAddress_Click(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(_clickedItem.Route)) return;
@@ -444,135 +469,36 @@ namespace imgLoader_WPF.Windows
                     break;
             }
         }
-
-        private void TxtUrl_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
-        {
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
-
-            var sder = ((ScrollViewer)sender);
-            PgSvc.Paginate();
-        }
-
-        private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            foreach (var item in ShowItems)
-            {
-                if (item.SizeChange == null) return;
-                item.SizeChange(Scroll.ActualWidth - 10.0);
-                //Debug.WriteLine("size");
-            }
-        }
-
         private void Search_Click(object sender, RoutedEventArgs e)
         {
             SrchBorder.Visibility = Visibility.Visible;
             TxtSrchAll.Focus();
         }
-
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            ShowItems.Clear();
-            List.Clear();
-            foreach (var item in Index)
-            {
-                List.Add(item);
-            }
-            PgSvc.Paginate();
-        }
-
-        private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            if (TxtSrchAll.Text.Length == 0)
-            {
-                LabelBlock_Srch.Visibility = Visibility.Visible;
-                return;
-            }
-
-            LabelBlock_Srch.Visibility = Visibility.Collapsed;
-        }
-
-        private void TxtSrchAll_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter) return;
-            if (TxtSrchAll.Text.Length == 0) return;
-
-            //List.Clear();
-            ShowItems.Clear();
-
-            CondInd.Add(TxtSrchAll.Text, ConditionIndicator.Condition.Search,
-                (int)(
-                    AllRadio.IsChecked.Value
-                    ? Searcher.SearchOption.All
-                    : AuthorRadio.IsChecked.Value
-                        ? Searcher.SearchOption.Author
-                        : TagRadio.IsChecked.Value
-                            ? Searcher.SearchOption.Tag
-                            : NumRadio.IsChecked.Value
-                                ? Searcher.SearchOption.Number
-                                : Searcher.SearchOption.Title
-                                )
-                );
-            PgSvc.Paginate();
-
-            TxtSrchAll.Text = "";
-            TxtSrchAll.Focus();
-        }
-
-        private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                HideBorder(SrchBorder, TxtSrchAll, LabelBlock_Srch);
-            }
-        }
-
         private void TitleSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Title", ConditionIndicator.Condition.Sort, (int)SortOption.Title);
         }
-
         private void AuthorSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Author", ConditionIndicator.Condition.Sort, (int)SortOption.Author);
         }
-
         private void PageSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Page", ConditionIndicator.Condition.Sort, (int)SortOption.Page);
         }
-
         private void NumberSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Number", ConditionIndicator.Condition.Sort, (int)SortOption.Number);
         }
-
-        private void DockPanel_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-                DragMove();
-        }
-
-        private void Button_Click_3(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
         private void Manage_Click(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(_clickedItem.Route)) return;
 
         }
-
         private void DateSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Date", ConditionIndicator.Condition.Sort, (int)SortOption.Date);
         }
-
         private void Random_Click(object sender, RoutedEventArgs e)
         {
             var rand = new Random().Next(0, Index.Count);
@@ -590,6 +516,61 @@ namespace imgLoader_WPF.Windows
             }
 
             Core.OpenOnCanvas(Core.GetDirectoryFromFile(Index[rand].Route));
+        }
+        private void VoteSort_Click(object sender, RoutedEventArgs e)
+        {
+            CondInd.Add("Vote", ConditionIndicator.Condition.Sort, (int)SortOption.Vote);
+        }
+        private void ViewSort_Click(object sender, RoutedEventArgs e)
+        {
+            CondInd.Add("View", ConditionIndicator.Condition.Sort, (int)SortOption.View);
+        }
+        private void Setting_Click(object sender, RoutedEventArgs e)
+        {
+            _winSetting.ShowDialog();
+        }
+        #endregion
+        private void AddBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
+            }
+        }
+
+        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            ShowItems.Clear();
+            List.Clear();
+            foreach (var item in Index)
+            {
+                List.Add(item);
+            }
+            PgSvc.Paginate();
+        }
+
+        private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                HideBorder(SrchBorder, TxtSrchAll, LabelBlock_Srch);
+            }
+        }
+
+        private void DockPanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
+
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
 
         private void LabelBlock_Srch_MouseUp(object sender, MouseButtonEventArgs e)

@@ -42,6 +42,8 @@
                                 <MenuItem x:Name="PageSort" Header="페이지수로 정렬" Click="PageSort_Click"/>
                                 <MenuItem x:Name="NumberSort" Header="번호로 정렬" Click="NumberSort_Click"/>
                                 <MenuItem x:Name="DateSort" Header="날짜로 정렬" Click="DateSort_Click"/>
+                                <MenuItem x:Name="VoteSort" Header="점수로 정렬" Click="VoteSort_Click"/>
+                                <MenuItem x:Name="ViewSort" Header="조회수로 정렬" Click="ViewSort_Click"/>
                             </MenuItem>
                             <Separator/>
                             <MenuItem x:Name="RandomMenu" Header="랜덤 선택" IsEnabled="False" Click="Random_Click"/>

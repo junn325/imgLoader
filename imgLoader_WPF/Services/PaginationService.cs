@@ -42,6 +42,7 @@ namespace imgLoader_WPF.Services
                 }
             });
             _service.Name = "PgSvc";
+            _service.IsBackground = true;
             _service.Start();
         }
 

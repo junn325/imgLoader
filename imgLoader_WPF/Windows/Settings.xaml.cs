@@ -32,6 +32,7 @@ namespace imgLoader_WPF.Windows
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             TxtPath.Text = Core.Route.Length == 0 ? TxtPath.Text : Core.Route;
+            Properties.Settings.Default.Upgrade();
 
             CheckAuthorName.IsChecked = Properties.Settings.Default.ShowAuthor_Folder;
             //CheckFolder.IsChecked = Properties.Settings.Default.BookMark_Name;
@@ -64,6 +65,7 @@ namespace imgLoader_WPF.Windows
             _scroll.ScrollToTop();
 
             _sender.IdxSvc.DoIndex();
+            _sender.CondInd.Clear();
             //_sender.PgSvc.Paginate();
 
             //while (a == _index.Count)
@@ -125,6 +127,17 @@ namespace imgLoader_WPF.Windows
         {
             Properties.Settings.Default.NoIndex = CheckNoIndex.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
+        }
+
+        private void CheckSearch_Click(object sender, RoutedEventArgs e)
+        {
+            //Properties.Settings.Default.see = CheckNoIndex.IsChecked.GetValueOrDefault();
+            //Properties.Settings.Default.Save();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.Upgrade();
         }
     }
 }

@@ -1,10 +1,9 @@
-﻿using imgLoader_WPF.Services;
-using imgLoader_WPF.Windows;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using imgLoader_WPF.Windows;
 
-namespace imgLoader_WPF
+namespace imgLoader_WPF.Services
 {
     internal class Searcher
     {
