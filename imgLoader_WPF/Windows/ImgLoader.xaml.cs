@@ -42,6 +42,8 @@ namespace imgLoader_WPF.Windows
     //todo: 특정 이미지 숨기기(삭제x)
     //todo: 아무 값 없는 분류(그냥 빨주노초파남보) 분류 기능
     //todo: 우클릭 시 해당 항목 작가명/기타로 검색
+    //todo: 더블클릭으로 열기
+    //todo: 드래그로 사용자 정의 순서
 
     public partial class ImgLoader
     {
@@ -55,9 +57,9 @@ namespace imgLoader_WPF.Windows
 
         private Settings _winSetting;
 
-        internal readonly List<IndexItem> Index = new();                    //인덱싱 결과
-        internal List<IndexItem> List = new();                              //표시되어야 할 총 항목
-        internal ObservableCollection<IndexItem> ShowItems = new();         //실제 표시되는 항목
+        internal readonly List<IndexItem> Index = new();                             //인덱싱 결과
+        internal readonly List<IndexItem> List = new();                              //표시되어야 할 총 항목
+        internal readonly ObservableCollection<IndexItem> ShowItems = new();         //실제 표시되는 항목
 
         private IndexItem _clickedItem;
         private readonly StringBuilder _sb = new();
@@ -160,7 +162,7 @@ namespace imgLoader_WPF.Windows
 
             PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
             InfSvc = new InfoSavingService();
-            IdxSvc = new IndexingService(Index, this);
+            IdxSvc = new IndexingService(this, Index);
 
             InfSvc.Start();
             IdxSvc.Start();

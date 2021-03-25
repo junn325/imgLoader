@@ -11,7 +11,7 @@ namespace imgLoader_WPF.Services
         private const int Interval = 3000;
 
         private bool _stop;
-        internal Thread _service;
+        private readonly Thread _service;
         private readonly StringBuilder _sb = new();
 
         private readonly Queue<IndexItem> _saveQueue = new();

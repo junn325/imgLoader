@@ -23,7 +23,7 @@ namespace imgLoader_WPF.Services
 
         private readonly ImgLoader _sender;
 
-        public IndexingService(List<IndexItem> index, ImgLoader sender)
+        public IndexingService(ImgLoader sender, List<IndexItem> index)
         {
             Index = index;
             _sender = sender;

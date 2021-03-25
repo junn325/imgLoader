@@ -57,6 +57,7 @@ namespace imgLoader_WPF.Services
         internal void SearchFrom(List<IndexItem> searchFrom, string[,] index, string search, ICollection<IndexItem> destination, SearchOption option)
         {
             var searchResult = Core.InitializeArray(searchFrom.Count, searchFrom.ToArray());
+            var opt = (int)option;
 
             switch (option)
             {
@@ -87,7 +88,19 @@ namespace imgLoader_WPF.Services
                     {
                         for (var i = 0; i < index.Length / IndexCount; i++)
                         {
-                            if (!index[i, (int)option].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            if (srch.Contains("//count:"))
+                            {
+                                _ = int.TryParse(srch.Split("//count:")[1].Split('/')[0], out var temp);
+
+                                if (index[i, opt].StrLen(';') != temp)
+                                {
+                                    searchResult[i] = null;
+                                }
+
+                                continue;
+                            }
+
+                            if (!index[i, opt].Contains(srch, StringComparison.OrdinalIgnoreCase))
                             {
                                 searchResult[i] = null;
                             }
@@ -101,7 +114,7 @@ namespace imgLoader_WPF.Services
                     {
                         for (var i = 0; i < index.Length / IndexCount; i++)
                         {
-                            if (!index[i, (int)option].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            if (!index[i, opt].Contains(srch, StringComparison.OrdinalIgnoreCase))
                             {
                                 searchResult[i] = null;
                             }
