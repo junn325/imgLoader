@@ -19,13 +19,12 @@ namespace imgLoader_WPF.Services
         private readonly Thread _service;
         private bool _stop;
 
-        public List<IndexItem> Index;
+        //public readonly List<IndexItem> Index;
 
         private readonly ImgLoader _sender;
 
         public IndexingService(ImgLoader sender, List<IndexItem> index)
         {
-            Index = index;
             _sender = sender;
             var route = Core.Route;
 
@@ -71,19 +70,19 @@ namespace imgLoader_WPF.Services
             if (!Directory.Exists(Core.Route)) return;
 
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-            foreach (var item in new List<IndexItem>(Index))
+            foreach (var item in new List<IndexItem>(_sender.Index))
             {
                 if (item.IsDownloading) continue;
                 if (infoFiles.Contains(item.Route)) continue;
                 if (item.ImgCount == -1) continue;                //새로 다운로드 중인 항목 무시
 
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
-                Index.Remove(item);
+                _sender.Index.Remove(item);
                 _sender.List.Remove(item);
                 _sender.Dispatcher.Invoke(() => _sender.ShowItems.Remove(item));
             }
 
-            var newFiles = infoFiles.Where(item => Index.All(i => i.Route != item)).ToArray();
+            var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
             foreach (var infoRoute in newFiles)
             {
                 if (!File.Exists(infoRoute)) continue;
@@ -125,7 +124,7 @@ namespace imgLoader_WPF.Services
                     Route = infoRoute
                 };
 
-                Index.Add(item);
+                _sender.Index.Add(item);
                 _sender.List.Add(item);
                 _sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
 
@@ -142,7 +141,7 @@ namespace imgLoader_WPF.Services
 
         internal void RefreshAll()
         {
-            foreach (var item in Index)
+            foreach (var item in _sender.Index)
             {
                 item.RefreshInfo?.Invoke();
             }

@@ -1,20 +1,17 @@
 ﻿using imgLoader_WPF.LoaderListCtrl;
-
+using imgLoader_WPF.Services;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using imgLoader_WPF.Services;
 using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
@@ -62,7 +59,6 @@ namespace imgLoader_WPF.Windows
         internal readonly ObservableCollection<IndexItem> ShowItems = new();         //실제 표시되는 항목
 
         private IndexItem _clickedItem;
-        private readonly StringBuilder _sb = new();
 
         public ImgLoader()
         {
@@ -94,7 +90,7 @@ namespace imgLoader_WPF.Windows
                 {
                     if (item.Proc == null) break;
 
-                    foreach (var isLoading in item.Proc.isImgLoading)
+                    foreach (var isLoading in item.Proc.IsImgLoading)
                     {
                         if (isLoading)
                         {
@@ -300,7 +296,6 @@ namespace imgLoader_WPF.Windows
         {
             if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
 
-            var sder = ((ScrollViewer)sender);
             PgSvc.Paginate();
         }
 
@@ -388,7 +383,7 @@ namespace imgLoader_WPF.Windows
 
         private void LList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            foreach (var item in ItemCtrl.ContextMenu.Items)
+            foreach (var item in ItemCtrl.ContextMenu?.Items)
             {
                 if (item.GetType() == typeof(Separator)) continue;
 

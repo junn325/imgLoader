@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using imgLoader_WPF.Services;
 
 namespace imgLoader_WPF
 {
@@ -18,16 +17,15 @@ namespace imgLoader_WPF
         private Task[] _tasks;
 
         //private int _index;
-        private IndexItem _item;
+        private readonly IndexItem _item;
         //private Windows.ImgLoader _sender;
 
-        public bool Stop;
+        private bool _stop;
         public bool Pause;
 
-        public bool[] isImgLoading;
+        public readonly bool[] IsImgLoading;
 
         internal string Route { get; }
-        internal string Url { get; }
         internal string Artist { get; }
         internal string Title { get; }
         internal string[] Info { get; }
@@ -44,7 +42,6 @@ namespace imgLoader_WPF
 
                 item.IsDownloading = true;
 
-                Url = url;
                 Site = Load(url);
                 if (Site == null)
                 {
@@ -56,7 +53,7 @@ namespace imgLoader_WPF
 
                 ImgUrl = Site.GetImgUrls();
 
-                isImgLoading = new bool[ImgUrl.Count];
+                IsImgLoading = new bool[ImgUrl.Count];
 
                 Number = Core.GetNumber(url);
                 Artist = GetArtist(Site);
@@ -270,7 +267,7 @@ namespace imgLoader_WPF
             var i = 0;
             foreach (var (key, value) in urlList)
             {
-                if (Stop) break;
+                if (_stop) break;
 
                 while (Pause)
                 {
@@ -280,23 +277,23 @@ namespace imgLoader_WPF
                 var i1 = i;
                 _tasks[i++] = Task.Factory.StartNew(() =>
                 {
-                    isImgLoading[i1] = true;
+                    IsImgLoading[i1] = true;
                     ThrDownload(value, path, key);
-                    isImgLoading[i1] = false;
+                    IsImgLoading[i1] = false;
                 });
             }
         }
 
         private void ThrDownload(string uri, string path, string fileName)
         {
-            if (Stop) return;
+            if (_stop) return;
 
             while (Pause)
             {
                 Task.Delay(500).Wait();
             }
 
-            if (Stop) return;
+            if (_stop) return;
 
             var req = WebRequest.Create(uri) as HttpWebRequest;
             HttpWebResponse resp;
@@ -307,7 +304,7 @@ namespace imgLoader_WPF
 
             try
             {
-                if (Stop) return;
+                if (_stop) return;
 
                 resp = req.GetResponse() as HttpWebResponse;
             }
@@ -333,7 +330,7 @@ namespace imgLoader_WPF
                 return;
             }
 
-            if (Stop) return;
+            if (_stop) return;
 
             using (var br = resp.GetResponseStream())
             {
@@ -342,11 +339,11 @@ namespace imgLoader_WPF
 
                 using var fs = new FileStream($"{path}\\{fileName}", FileMode.Create);
 
-                if (Stop) return;
+                if (_stop) return;
 
                 do
                 {
-                    if (Stop) return;
+                    if (_stop) return;
 
                     count = br.Read(buff, 0, buff.Length);
                     fs.Write(buff, 0, count);
@@ -396,9 +393,9 @@ namespace imgLoader_WPF
 
                 if (_tasks == null) return;
 
-                Stop = true;
+                _stop = true;
                 Task.WaitAll(_tasks);
-                Stop = false;
+                _stop = false;
 
                 _tasks = null;
             }).Start();
