@@ -36,6 +36,7 @@ namespace imgLoader_WPF.Services
                 }
             });
             _service.Name = "vtSvc";
+            _service.IsBackground = true;
         }
 
         internal void Save(IndexItem item)

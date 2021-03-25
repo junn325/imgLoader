@@ -55,7 +55,7 @@ namespace imgLoader_WPF.Windows
 
         private Settings _winSetting;
 
-        internal readonly List<IndexItem> Index = new();                    //단순 인덱싱 결과
+        internal readonly List<IndexItem> Index = new();                    //인덱싱 결과
         internal List<IndexItem> List = new();                              //표시되어야 할 총 항목
         internal ObservableCollection<IndexItem> ShowItems = new();         //실제 표시되는 항목
 
@@ -121,6 +121,8 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            var ttemp = Core.TestRead(@"D:\문서\사진\Saved Pictures\고니\i\새 폴더 (5)\Soku Ochi Sensei Saimin Commentary │ 즉흥 선생 최면 코멘터리 (f4u (naitou2))\1873917.ilif");
+
             Menu.Focus(); //메뉴 미리 로드
             _winSetting = new Settings(this, Scroll, Index);
 
@@ -256,11 +258,11 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            InfSvc.Stop();
-            IdxSvc.Stop();
-
             _winSetting.Close();
             _winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
+
+            //InfSvc.Stop();
+            //IdxSvc.Stop();
         }
 
         private void LItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)

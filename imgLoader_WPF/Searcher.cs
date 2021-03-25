@@ -8,7 +8,7 @@ namespace imgLoader_WPF
 {
     internal class Searcher
     {
-        private const int IndexCount = 6;
+        private const int IndexCount = 5;
         private readonly ImgLoader _sender;
         private readonly List<IndexItem> _list;
 
@@ -45,12 +45,11 @@ namespace imgLoader_WPF
                 result[i, (int)SearchOption.Number] = indexItem.Number;
 
                 foreach (var tag in indexItem.Tags) sb.Append(tag).Append(';');
-                result[i, 2] = sb.ToString();
+                result[i, (int)SearchOption.Tag] = sb.ToString();
                 sb.Clear();
 
                 result[i, (int)SearchOption.SiteName] = indexItem.SiteName;
                 result[i, (int)SearchOption.Title] = indexItem.Title;
-                result[i, (int)SearchOption.ImgCount] = indexItem.ImgCount;
             }
 
             return result;
@@ -84,7 +83,7 @@ namespace imgLoader_WPF
                 case SearchOption.Author:
                 case SearchOption.Tag:
                 case SearchOption.Number:
-                case SearchOption.ImgCount:
+                case SearchOption.SiteName:
                     foreach (var srch in search.Split(','))
                     {
                         for (var i = 0; i < index.Length / IndexCount; i++)
@@ -95,7 +94,20 @@ namespace imgLoader_WPF
                             }
                         }
                     }
+                    break;
 
+                case SearchOption.ImgCount:
+                case SearchOption.Vote:
+                    foreach (var srch in search.Split(','))
+                    {
+                        for (var i = 0; i < index.Length / IndexCount; i++)
+                        {
+                            if (!index[i, (int)option].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            {
+                                searchResult[i] = null;
+                            }
+                        }
+                    }
                     break;
 
                 default:
@@ -122,7 +134,8 @@ namespace imgLoader_WPF
             Tag,
             SiteName,
             Title,
-            ImgCount
+            ImgCount,
+            Vote
         }
     }
 }

@@ -61,6 +61,7 @@ namespace imgLoader_WPF.Services
                 }
             });
             _service.Name = "IdxSvc";
+            _service.IsBackground = true;
 
             DoIndex();
         }
@@ -158,44 +159,4 @@ namespace imgLoader_WPF.Services
             while (_service.IsAlive) Thread.Sleep(100);
         }
     }
-
-    internal class IndexItem
-    {
-        public delegate void NoParam();
-        public delegate void IntOne(int value);
-        public delegate void DblOne(double value);
-        public delegate void VisOne(System.Windows.Visibility value);
-
-        public Processor Proc;
-
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string SiteName { get; set; }
-        public string ImgCount { get; set; }
-        public string Number { get; set; }
-        public string[] Tags { get; set; }
-        public int Vote { get; set; }
-        public int View { get; set; }
-        public bool IsRead { get; set; }
-        public string Route { get; set; }
-
-        public string Date;
-
-        //public bool Selected = false;
-        public bool Show = true;
-        public bool IsDownloading;
-
-        public NoParam RefreshInfo;
-
-        public NoParam ShownChang;
-
-        public VisOne ProgPanelVis;
-        //public VisOne TagPanelVis;
-
-        public IntOne ProgBarMax;
-        public NoParam ProgBarVal;
-
-        public DblOne SizeChange;
-    }
-
 }

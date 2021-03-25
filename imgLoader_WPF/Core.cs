@@ -370,7 +370,7 @@ namespace imgLoader_WPF
 
         internal static int[] TestRead(string route)
         {
-            using var sr = new StreamReader(Core.DelayStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite));
+            using var sr = new StreamReader(Core.DelayStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
             var temp = new int[1000];
             var count = 0;
             var itr = 0;
