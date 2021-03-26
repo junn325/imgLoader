@@ -115,6 +115,7 @@ namespace imgLoader_WPF.Windows
         }
         private void ChangeImage(string nextPath, int index)
         {
+            //todo: 현재 인덱스가 아닌 다음 인덱스를 받음 :: 1번에서 마지막번 갈때 오류
             ReleaseImage(index == 0 ? FileList.Length - 1 : index - 1);
 
             if (_imgList[index] == null)
@@ -212,15 +213,21 @@ namespace imgLoader_WPF.Windows
         }
         private void LoadImage(int index)
         {
-            _size += new FileInfo(FileList[index]).Length;
-            Debug.WriteLine($"+{FileList[index]}");
+            var temp = new FileInfo(FileList[index]).Length;
+            _size += temp;
+            Debug.WriteLine($"+{temp}");
 
             Dispatcher.Invoke(() => _imgList[index] = ImageLoad(FileList[index]));
         }
         private void ReleaseImage(int index)
         {
             _imgList[index] = null;
-            _size -= new FileInfo(FileList[index]).Length;
+
+            var temp = new FileInfo(FileList[index]).Length;
+            _size -= temp;
+            Debug.WriteLine($"-{temp}");
+
+            //_size -= new FileInfo(FileList[index]).Length;
         }
         //
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
