@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,7 +26,7 @@ namespace imgLoader_WPF.Windows
 
         private Image _img;
         private long _size;
-        public BitmapImage Image;
+        //public BitmapImage Image;
 
         public string[] FileList;
         private BitmapImage[] _imgList;
@@ -46,12 +48,16 @@ namespace imgLoader_WPF.Windows
             FileList = FileList.OrderBy(i => int.TryParse(i.Split('\\')[^1].Split('.')[0], out var result) ? result : int.MaxValue).ToArray();
             _imgList = new BitmapImage[FileList.Length];
 
+            _imgList[0] = ImageLoad(FileList[0]);
+
             for (var i = 1; i < FileList.Length; i++)
             {
-                LoadImage(i);
+                CacheImage(i);
             }
 
-            _imgList[0] = Image;
+            var len = new FileInfo(FileList[0]).Length;
+            _size += len;
+            Debug.WriteLine($"+{len}");
 
             _img = new Image();
             _img.Source = _imgList[0];
@@ -107,25 +113,19 @@ namespace imgLoader_WPF.Windows
                 _img.Stretch = Stretch.Uniform;
             }
         }
-        private void ChangeImage(string nextPath)
+        private void ChangeImage(string nextPath, int index)
         {
-            _size -= new FileInfo(FileList[_index == 0 ? FileList.Length - 1 : _index - 1]).Length;
+            ReleaseImage(index == 0 ? FileList.Length - 1 : index - 1);
 
-            _imgList[_index == 0 ? FileList.Length - 1 : _index - 1] = null;
-
-            if (_imgList[_index] == null)
+            if (_imgList[index] == null)
             {
-                var bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.UriSource = new Uri(FileList[_index]);
-                bitmapImage.EndInit();
-
-                _imgList[_index] = bitmapImage;
+                LoadImage(index);
             }
 
-            _size += new FileInfo(FileList[_index]).Length;
-            _img.Source = _imgList[_index];
+            //todo:이미지 추가 삭제를 함수로 묶어서 제대로 빼고 덧셈이 되게 할 것
+            //todo:메모리가 지정된 양을 벗어났을 때만 리스트에서 지울 것
+
+            _img.Source = _imgList[index];
 
             Title = nextPath.Split('\\')[^1];
 
@@ -147,14 +147,13 @@ namespace imgLoader_WPF.Windows
         }
         private void ChangeImagePrev()
         {
-            ChangeImage(GetNextPath(true));
+            ChangeImage(GetNextPath(true), _index);
             PBar.Value--;
         }
         private void ChangeImageNext()
         {
-            ChangeImage(GetNextPath(false));
+            ChangeImage(GetNextPath(false), _index);
             PBar.Value++;
-
         }
         private string GetNextPath(bool left)
         {
@@ -185,7 +184,17 @@ namespace imgLoader_WPF.Windows
 
             return FileList[_index];
         }
-        private void LoadImage(int index)
+        private static BitmapImage ImageLoad(string path)
+        {
+            var bitmapImage = new BitmapImage();
+            bitmapImage.BeginInit();
+            bitmapImage.CacheOption = BitmapCacheOption.OnDemand;
+            bitmapImage.UriSource = new Uri(path);
+            bitmapImage.EndInit();
+
+            return bitmapImage;
+        }
+        private void CacheImage(int index)
         {
             var service = new Thread(() =>
             {
@@ -193,38 +202,32 @@ namespace imgLoader_WPF.Windows
 
                 while (_size >= Properties.Settings.Default.CacheSize)
                 {
-                    Thread.Sleep(200);
+                    Task.Delay(200).Wait();
                 }
-                _size += new FileInfo(FileList[index]).Length;
 
-                Dispatcher.Invoke(() =>
-                {
-                    var bitmapImage = new BitmapImage();
-                    bitmapImage.BeginInit();
-                    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmapImage.UriSource = new Uri(FileList[index]);
-                    bitmapImage.EndInit();
-
-                    _imgList[index] = bitmapImage;
-                    //_imgList[index].Freeze();
-
-                    //_imgSizeList[index] = new FileInfo(FileList[index]).Length;
-                });
+                LoadImage(index);
             });
-
-            service.IsBackground = true;
-            service.Name = "Load_Img";
 
             service.Start();
         }
+        private void LoadImage(int index)
+        {
+            _size += new FileInfo(FileList[index]).Length;
+            Debug.WriteLine($"+{FileList[index]}");
 
+            Dispatcher.Invoke(() => _imgList[index] = ImageLoad(FileList[index]));
+        }
+        private void ReleaseImage(int index)
+        {
+            _imgList[index] = null;
+            _size -= new FileInfo(FileList[index]).Length;
+        }
         //
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
             {
                 case Key.G:
-
                     break;
 
                 case Key.W:

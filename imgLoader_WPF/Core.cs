@@ -357,14 +357,14 @@ namespace imgLoader_WPF
         {
             if (!Directory.Exists(imgSetPath)) return;
 
-            var img = new BitmapImage();
+            //var img = new BitmapImage();
             var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains(".ilif")).ToArray();
 
-            img.BeginInit();
-            img.UriSource = new Uri(temp[0]);
-            img.EndInit();
+            //img.BeginInit();
+            //img.UriSource = new Uri(temp[0]);
+            //img.EndInit();
 
-            var canvas = new Canvas { Image = img, Title = img.UriSource.LocalPath.Split('\\')[^1], FileList = temp};
+            var canvas = new Canvas { Title = temp[0].Split('\\')[^1], FileList = temp};
             canvas.Show();
         }
 

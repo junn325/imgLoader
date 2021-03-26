@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -166,7 +167,7 @@ namespace imgLoader_WPF.Windows
 
             new Thread(() =>
             {
-                while (true)
+                while (false)
                 {
                     Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
                     Thread.Sleep(1000);
