@@ -84,11 +84,11 @@
             </Grid.RowDefinitions>
 
             <StackPanel x:Name="RadioPanel" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="20" Background="{StaticResource PBrush}" Orientation="Horizontal" MouseDown="StackPanel_MouseDown" PreviewKeyUp="TxtSrchAll_KeyUp">
-                <RadioButton x:Name="AllRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" IsChecked="True" Content="전체"/>
-                <RadioButton x:Name="TitleRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="제목"/>
-                <RadioButton x:Name="AuthorRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="작가"/>
-                <RadioButton x:Name="TagRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="태그"/>
-                <RadioButton x:Name="NumRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="번호"/>
+                <RadioButton x:Name="AllRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" IsChecked="True" Content="전체" Click="AllRadio_Click"/>
+                <RadioButton x:Name="TitleRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="제목" Click="AllRadio_Click"/>
+                <RadioButton x:Name="AuthorRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="작가" Click="AllRadio_Click"/>
+                <RadioButton x:Name="TagRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="태그" Click="AllRadio_Click"/>
+                <RadioButton x:Name="NumRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="번호" Click="AllRadio_Click"/>
                 <!--<RadioButton x:Name="ImgCntRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="페이지"/>-->
             </StackPanel>
 

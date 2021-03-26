@@ -167,7 +167,7 @@ namespace imgLoader_WPF.Windows
 
             new Thread(() =>
             {
-                while (false)
+                while (true)
                 {
                     Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
                     Thread.Sleep(1000);
@@ -183,12 +183,15 @@ namespace imgLoader_WPF.Windows
             if (TxtUrl.Text.Length == 0) return;
 
             var url = TxtUrl.Text;
+            TxtUrl.Text = "";
+            LabelBlock_Add.Visibility = Visibility.Visible;
+
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1 };
 
             var sw = new Stopwatch();
             sw.Start();
 
-            HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
+            //HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
 
             var thrTemp = new Thread(() =>
             {
@@ -406,6 +409,8 @@ namespace imgLoader_WPF.Windows
         #region MenuItem
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
+            if (MessageBox.Show("Are you sure you want to delete it?", "Confirm", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+
             DeleteItemDir(_clickedItem);
         }
         //private void RemoveOnlyList_Click(object sender, RoutedEventArgs e)
@@ -579,6 +584,11 @@ namespace imgLoader_WPF.Windows
         private void StackPanel_MouseDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void AllRadio_Click(object sender, RoutedEventArgs e)
+        {
+            TxtSrchAll.Focus();
         }
     }
 }

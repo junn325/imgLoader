@@ -45,12 +45,14 @@ namespace imgLoader_WPF.Services
             {
                 Condition.Search => option switch
                 {
-                    0 => "",
-                    1 => "Title:",
-                    2 => "Author:",
-                    3 => "Tag:",
-                    4 => "Number:",
+                    -1 => "All:",
+                    0 => "Author:",
+                    1 => "Number:",
+                    2 => "Tag:",
+                    3 => "SiteName:",
+                    4 => "Title:",
                     5 => "ImgCount:",
+                    6 => "Vote:",
                     _ => ""
                 },
                 Condition.Sort => "Sort:",
