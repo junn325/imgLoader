@@ -31,7 +31,6 @@ namespace imgLoader_WPF.LoaderListCtrl
             data.ShownChang = () =>
             {
                 Background = data.IsRead ? Brushes.LightGray : Brushes.White;
-                ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
             };
 
             data.ProgPanelVis = (v) => Dispatcher.Invoke(() =>
@@ -84,6 +83,10 @@ namespace imgLoader_WPF.LoaderListCtrl
                 TitleBlock.Text = data.Title;
                 LblVote.Text = data.Vote.ToString();
                 ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
+
+                if (data.ImgCount == -1) ImgCntBlock.Visibility = Visibility.Hidden;
+                if (data.Vote == -1) VoteGrid.Visibility = Visibility.Hidden;
+                if (data.View == -1) ViewCntBlock.Visibility = Visibility.Hidden;
             });
 
             data.ProgBarMax = value => Dispatcher.Invoke(() =>
