@@ -113,20 +113,35 @@ namespace imgLoader_WPF.Windows
                 _img.Stretch = Stretch.Uniform;
             }
         }
-        private void ChangeImage(string nextPath, int index)
+        private void ChangeImage(string nextPath, bool next)
         {
-            //todo: 현재 인덱스가 아닌 다음 인덱스를 받음 :: 1번에서 마지막번 갈때 오류
-            ReleaseImage(index == 0 ? FileList.Length - 1 : index - 1);
+            int prevIndex;
 
-            if (_imgList[index] == null)
+            if (next)
             {
-                LoadImage(index);
+                prevIndex =
+                    _index == 0
+                        ? FileList.Length - 1
+                        : _index - 1;
+            }
+            else
+            {
+                prevIndex =
+                    _index == FileList.Length - 1
+                        ? 0
+                        : _index + 1;
             }
 
-            //todo:이미지 추가 삭제를 함수로 묶어서 제대로 빼고 덧셈이 되게 할 것
+            if(_size >= Properties.Settings.Default.CacheSize) ReleaseImage(prevIndex);
+
+            if (_imgList[_index] == null)
+            {
+                LoadImage(_index);
+            }
+
             //todo:메모리가 지정된 양을 벗어났을 때만 리스트에서 지울 것
 
-            _img.Source = _imgList[index];
+            _img.Source = _imgList[_index];
 
             Title = nextPath.Split('\\')[^1];
 
@@ -148,17 +163,17 @@ namespace imgLoader_WPF.Windows
         }
         private void ChangeImagePrev()
         {
-            ChangeImage(GetNextPath(true), _index);
+            ChangeImage(GetNextPath(true), false);
             PBar.Value--;
         }
         private void ChangeImageNext()
         {
-            ChangeImage(GetNextPath(false), _index);
+            ChangeImage(GetNextPath(false), true);
             PBar.Value++;
         }
-        private string GetNextPath(bool left)
+        private string GetNextPath(bool prev)
         {
-            if (left)
+            if (prev)
             {
                 if (_index == 0)
                 {
@@ -189,8 +204,9 @@ namespace imgLoader_WPF.Windows
         {
             var bitmapImage = new BitmapImage();
             bitmapImage.BeginInit();
-            bitmapImage.CacheOption = BitmapCacheOption.OnDemand;
+            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
             bitmapImage.UriSource = new Uri(path);
+            //bitmapImage.StreamSource = 
             bitmapImage.EndInit();
 
             return bitmapImage;
