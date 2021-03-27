@@ -18,15 +18,14 @@ using static imgLoader_WPF.Services.Sorter;
 namespace imgLoader_WPF.Windows
 {
     //todo: 서로 다른 작품 자동 연결
-    //todo: 자체 탐색기 만들기
     //todo: 완전히 같은 이미지 탐색
     //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
-    //todo: 조회수
+    //조회수
     //todo: 여러 폴더를 탭으로 동시에 관리
     //todo: 폴더 두 개를 열고 없는 항목 체크
     //todo: 조건이 있는 랜덤
     //todo: 정보 직접 수정
-    //todo: 뷰어: 계속 다시 로드하지 말고 배열에 이미지를 담아놓을것
+    //뷰어: 계속 다시 로드하지 말고 배열에 이미지를 담아놓을것
     //todo: 단행본 나누기
 
     //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
@@ -34,14 +33,16 @@ namespace imgLoader_WPF.Windows
     //numericupdown 같은것으로 작품별로 순위 매기는 시스템
     //todo: 작가, 태그 등으로 자동으로 폴더로 나눠주는 시스템
     //todo: 항상 위로 상태로 떠 있다가 인터넷 창에서 누르면 자동으로 해당 작품 다운로드 
-    //todo: 작가별 트리식 정렬
     //todo: 작가/태그 분포, 주로 보는 작품 등 분석 기능
     //todo: 여러 폴더를 지정해 동시에 관리
-    //todo: 특정 이미지 숨기기(삭제x)
     //todo: 아무 값 없는 분류(그냥 빨주노초파남보) 분류 기능
     //todo: 우클릭 시 해당 항목 작가명/기타로 검색
     //todo: 더블클릭으로 열기
     //todo: 드래그로 사용자 정의 순서
+
+    //todo: 자체 탐색기 만들기
+    //todo: 작가별 트리식 정렬
+    //todo: 특정 이미지 숨기기(삭제x)
 
     public partial class ImgLoader
     {
