@@ -50,17 +50,13 @@ namespace imgLoader_WPF.Windows
 
             _imgList[0] = ImageLoad(FileList[0]);
 
-            for (var i = 1; i < FileList.Length; i++)
-            {
-                CacheImage(i);
-            }
-
             var len = new FileInfo(FileList[0]).Length;
             _size += len;
             Debug.WriteLine($"+{len}");
 
             _img = new Image();
             _img.Source = _imgList[0];
+            _img.UpdateLayout();
             //_img.VerticalAlignment = VerticalAlignment.Center;
             //_img.HorizontalAlignment = HorizontalAlignment.Center;        //활성화시 확대 안됨 넣지말것
 
@@ -116,6 +112,7 @@ namespace imgLoader_WPF.Windows
         private void ChangeImage(string nextPath, bool next)
         {
             int prevIndex;
+            int nextIndex;
 
             if (next)
             {
@@ -123,6 +120,10 @@ namespace imgLoader_WPF.Windows
                     _index == 0
                         ? FileList.Length - 1
                         : _index - 1;
+                nextIndex =
+                    _index == FileList.Length - 1
+                        ? 0
+                        : _index + 1;
             }
             else
             {
@@ -130,13 +131,27 @@ namespace imgLoader_WPF.Windows
                     _index == FileList.Length - 1
                         ? 0
                         : _index + 1;
+                nextIndex =
+                    _index == 0
+                        ? FileList.Length - 1
+                        : _index - 1;
             }
 
-            if(_size >= Properties.Settings.Default.CacheSize) ReleaseImage(prevIndex);
+            //if (_size >= Properties.Settings.Default.CacheSize) ReleaseImage(prevIndex);
 
             if (_imgList[_index] == null)
             {
                 LoadImage(_index);
+            }
+
+            if (_imgList[nextIndex] == null)
+            {
+                CacheImage(nextIndex);
+            }
+
+            if (_imgList[prevIndex] == null)
+            {
+                CacheImage(prevIndex);
             }
 
             //todo:메모리가 지정된 양을 벗어났을 때만 리스트에서 지울 것
@@ -156,7 +171,6 @@ namespace imgLoader_WPF.Windows
 
             //_img.Arrange(_relRect);
 
-            _img.UpdateLayout();
             _oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
 
             _min = 0;
@@ -206,7 +220,6 @@ namespace imgLoader_WPF.Windows
             bitmapImage.BeginInit();
             bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
             bitmapImage.UriSource = new Uri(path);
-            //bitmapImage.StreamSource = 
             bitmapImage.EndInit();
 
             return bitmapImage;
@@ -229,10 +242,11 @@ namespace imgLoader_WPF.Windows
         }
         private void LoadImage(int index)
         {
-            var temp = new FileInfo(FileList[index]).Length;
-            _size += temp;
-            Debug.WriteLine($"+{temp}");
+            var length = new FileInfo(FileList[index]).Length;
+            _size += length;
+            Debug.WriteLine($"+{length}");
 
+            //_imgList[index] = ImageLoad(FileList[index]);
             Dispatcher.Invoke(() => _imgList[index] = ImageLoad(FileList[index]));
         }
         private void ReleaseImage(int index)
