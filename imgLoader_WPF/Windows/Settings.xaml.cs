@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -59,19 +60,20 @@ namespace imgLoader_WPF.Windows
 
             _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = Visibility.Visible);
 
+            _sender.CondInd.Clear();
+
+            _sender.Index.Clear();
             _sender.List.Clear();
             _sender.ShowItems.Clear();
+
             _scroll.ScrollToTop();
 
-            _sender.IdxSvc.DoIndex();
-            _sender.CondInd.Clear();
-            //_sender.PgSvc.Paginate();
-
-            //while (a == _index.Count)
-            //{
-            //    Task.Delay(500).Wait();
-            //    Debug.WriteLine("Settings: wait");
-            //}
+            _sender.IdxSvc.Pause();
+            new Thread(() => {
+                _sender.IdxSvc.DoIndex();
+                _sender.PgSvc.Paginate();
+                _sender.IdxSvc.Resume();
+            }).Start();
 
             if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))
             {

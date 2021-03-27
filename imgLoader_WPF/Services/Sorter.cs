@@ -70,9 +70,9 @@ namespace imgLoader_WPF.Services
 
         internal enum SortOption
         {
+            Title,
             Author,
             Number,
-            Title,
             Vote,
             Page,
             Date,

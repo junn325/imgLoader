@@ -18,6 +18,7 @@ namespace imgLoader_WPF.Services
 
         private readonly Thread _service;
         private bool _stop;
+        private bool _pause;
 
         //public readonly List<IndexItem> Index;
 
@@ -26,7 +27,6 @@ namespace imgLoader_WPF.Services
         public IndexingService(ImgLoader sender, List<IndexItem> index)
         {
             _sender = sender;
-            var route = Core.Route;
 
             _service = new Thread(() =>
             {
@@ -35,28 +35,11 @@ namespace imgLoader_WPF.Services
                     //Debug.WriteLine("IdxSvc");
 
                     Thread.Sleep(Interval);
+                    if (_pause) continue;
 
                     if (Properties.Settings.Default.NoIndex) continue;
 
-                    //var sb = new StringBuilder();
-                    if (!string.Equals(route, Core.Route, StringComparison.OrdinalIgnoreCase))
-                    {
-                        route = Core.Route;
-
-                        //DoIndex();
-                        //foreach (var item in Index)
-                        //{
-                        //    _sender.List.Add(item);
-                        //}
-
-                        _sender.PgSvc.Paginate();
-                    }
-                    else
-                    {
-                        DoIndex();
-                    }
-
-                    //RefreshAll();
+                    DoIndex();
                 }
             });
             _service.Name = "IdxSvc";
@@ -79,7 +62,7 @@ namespace imgLoader_WPF.Services
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
                 _sender.Index.Remove(item);
                 _sender.List.Remove(item);
-                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Remove(item));
+                //_sender.Dispatcher.Invoke(() => _sender.ShowItems.Remove(item));
             }
 
             var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
@@ -126,7 +109,7 @@ namespace imgLoader_WPF.Services
 
                 _sender.Index.Add(item);
                 _sender.List.Add(item);
-                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
+                //_sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
 
                 //sb.Clear();
                 _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
@@ -150,6 +133,16 @@ namespace imgLoader_WPF.Services
         {
             _stop = false;
             _service.Start();
+        }
+
+        internal void Pause()
+        {
+            _pause = true;
+        }
+
+        internal void Resume()
+        {
+            _pause = false;
         }
 
         internal void Stop()

@@ -119,6 +119,16 @@ namespace imgLoader_WPF.Windows
         }
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            new Thread(() =>
+                {
+                    while (true)
+                    {
+                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
+                        Thread.Sleep(1000);
+                    }
+                })
+            { IsBackground = true }.Start();
+
             Properties.Settings.Default.Upgrade();
 
             Menu.Focus(); //메뉴 미리 로드
@@ -164,17 +174,6 @@ namespace imgLoader_WPF.Windows
             InfSvc.Start();
             IdxSvc.Start();
             PgSvc.Paginate();
-
-            new Thread(() =>
-            {
-                while (true)
-                {
-                    Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
-                    Thread.Sleep(1000);
-                }
-            })
-            { IsBackground = true }.Start();
-
         }
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
