@@ -6,8 +6,9 @@
         x:Class="imgLoader_WPF.Windows.ImgLoader"
         mc:Ignorable="d"
         Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing" WindowStyle="None" ResizeMode="CanResizeWithGrip">
+    
     <WindowChrome.WindowChrome>
-        <WindowChrome NonClientFrameEdges="None"  CaptionHeight="0"/>
+        <WindowChrome NonClientFrameEdges="None" CaptionHeight="25" GlassFrameThickness="5" />
     </WindowChrome.WindowChrome>
 
     <Grid>
@@ -17,7 +18,7 @@
         </Grid.Resources>
 
         <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,30,10,20">
-            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged" SizeChanged="Scroll_SizeChanged">
+            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged">
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
@@ -34,16 +35,20 @@
                             <Separator/>
                             <MenuItem x:Name="DeleteMenu" Header="삭제" IsEnabled="False" Click="Delete_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="SearchMenu" Header="검색" Click="Search_Click">
+                            <MenuItem x:Name="SearchMenu" Header="검색" >
+                                <MenuItem x:Name="SearchSMenu" Header="직접 검색" Click="SearchSMenu_Click"/>
+                                <MenuItem x:Name="AuthorSrch" Header="작가로 검색" Click="AuthorSrch_Click"/>
+                                <MenuItem x:Name="TitleSrch" Header="사이트로 검색" Click="SiteSrch_Click"/>
+                                <MenuItem x:Name="TagSrch" Header="태그로 검색" Click="TagSrch_Click"/>
                             </MenuItem>
                             <MenuItem x:Name="SortMenu" Header="정렬">
                                 <MenuItem x:Name="TitleSort" Header="제목으로 정렬" Click="TitleSort_Click"/>
                                 <MenuItem x:Name="AuthorSort" Header="작가로 정렬" Click="AuthorSort_Click"/>
-                                <MenuItem x:Name="PageSort" Header="페이지수로 정렬" Click="PageSort_Click"/>
-                                <MenuItem x:Name="NumberSort" Header="번호로 정렬" Click="NumberSort_Click"/>
                                 <MenuItem x:Name="DateSort" Header="날짜로 정렬" Click="DateSort_Click"/>
                                 <MenuItem x:Name="VoteSort" Header="점수로 정렬" Click="VoteSort_Click"/>
                                 <MenuItem x:Name="ViewSort" Header="조회수로 정렬" Click="ViewSort_Click"/>
+                                <MenuItem x:Name="PageSort" Header="페이지수로 정렬" Click="PageSort_Click"/>
+                                <MenuItem x:Name="NumberSort" Header="번호로 정렬" Click="NumberSort_Click"/>
                             </MenuItem>
                             <Separator/>
                             <MenuItem x:Name="RandomMenu" Header="랜덤 선택" IsEnabled="False" Click="Random_Click"/>
@@ -98,11 +103,23 @@
             <!--</Grid>-->
         </Grid>
 
-        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
+        <Grid x:Name="TitleGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Width" Value="20"/>
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>     <!--Windowchrome위에서 클릭 허용-->
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="2"/>
+                </Style>
+                <Style TargetType="{x:Type DockPanel}">
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+                </Style>
+            </Grid.Resources>
             <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Width="20" Margin="0,4,10,0" Background="Transparent" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Padding="2" BorderThickness="0,0,0,0" Click="Button_Click_3"/>
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Margin="0,4,10,0" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_3"/>
         </Grid>
-
 
         <Button x:Name="D_Stop" Content="정지" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,376,0,0" Height="27" Width="76" Click="Button_Click_5"/>
         <Button x:Name="D_Else1" Content="Button" HorizontalAlignment="Left" Height="27" Margin="230,376,0,0" VerticalAlignment="Top" Width="80" Click="Button_Click_2"/>

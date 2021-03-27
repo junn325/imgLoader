@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,7 +22,6 @@ namespace imgLoader_WPF.Windows
     //todo: 여러 폴더를 탭으로 동시에 관리
     //todo: 폴더 두 개를 열고 없는 항목 체크
     //todo: 조건이 있는 랜덤
-    //todo: 정보 직접 수정
     //뷰어: 계속 다시 로드하지 말고 배열에 이미지를 담아놓을것
     //todo: 단행본 나누기
 
@@ -40,7 +37,9 @@ namespace imgLoader_WPF.Windows
     //todo: 더블클릭으로 열기
     //todo: 드래그로 사용자 정의 순서
 
-    //todo: 자체 탐색기 만들기
+    //todo: 자체 탐색기 만들기(메뉴-관리)
+    //todo: 정보 복구
+    //todo: 정보 직접 수정
     //todo: 작가별 트리식 정렬
     //todo: 특정 이미지 숨기기(삭제x)
 
@@ -273,11 +272,10 @@ namespace imgLoader_WPF.Windows
         {
             if (e.Key != Key.Enter) return;
             if (TxtSrchAll.Text.Length == 0) return;
-
             //List.Clear();
             ShowItems.Clear();
 
-            CondInd.Add(TxtSrchAll.Text, ConditionIndicator.Condition.Search,
+            Search(TxtSrchAll.Text, ConditionIndicator.Condition.Search,
                 (int)(
                     AllRadio.IsChecked.Value
                         ? Searcher.SearchOption.All
@@ -288,16 +286,23 @@ namespace imgLoader_WPF.Windows
                                 : NumRadio.IsChecked.Value
                                     ? Searcher.SearchOption.Number
                                     : Searcher.SearchOption.Title
-                )
-            );
-            PgSvc.Paginate();
+                ));
 
             TxtSrchAll.Text = "";
             TxtSrchAll.Focus();
         }
 
+        private void Search(string label, ConditionIndicator.Condition cond, int option)
+        {
+            //List.Clear();
+            ShowItems.Clear();
+
+            CondInd.Add(label, cond, option);
+            PgSvc.Paginate();
+        }
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
+            //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
             if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
 
             PgSvc.Paginate();
@@ -305,12 +310,12 @@ namespace imgLoader_WPF.Windows
 
         private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            foreach (var item in ShowItems)
-            {
-                if (item.SizeChange == null) return;
-                item.SizeChange(Scroll.ActualWidth - 10.0);
-                //Debug.WriteLine("size");
-            }
+            //foreach (var item in ShowItems)
+            //{
+            //    if (item.SizeChange == null) return;
+            //    item.SizeChange(Scroll.ActualWidth - 10.0);
+            //    //Debug.WriteLine("size");
+            //}
         }
 
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -340,6 +345,9 @@ namespace imgLoader_WPF.Windows
 
                 switch (item.Name)
                 {
+                    case "OpenMenu":
+                        item.IsEnabled = !_clickedItem.IsDownloading;
+                        break;
                     case "CancelMenu":
                         item.IsEnabled = _clickedItem.IsDownloading;
                         break;
@@ -409,7 +417,7 @@ namespace imgLoader_WPF.Windows
         #region MenuItem
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to delete it?", "Confirm", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+            if (MessageBox.Show($"Are you sure you want to delete {_clickedItem.Number}?", "Confirm", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
 
             DeleteItemDir(_clickedItem);
         }
@@ -474,8 +482,6 @@ namespace imgLoader_WPF.Windows
         }
         private void Search_Click(object sender, RoutedEventArgs e)
         {
-            SrchBorder.Visibility = Visibility.Visible;
-            TxtSrchAll.Focus();
         }
         private void TitleSort_Click(object sender, RoutedEventArgs e)
         {
@@ -588,6 +594,27 @@ namespace imgLoader_WPF.Windows
 
         private void AllRadio_Click(object sender, RoutedEventArgs e)
         {
+            TxtSrchAll.Focus();
+        }
+
+        private void AuthorSrch_Click(object sender, RoutedEventArgs e)
+        {
+            Search(_clickedItem.Author, ConditionIndicator.Condition.Search, (int)Searcher.SearchOption.Author);
+        }
+
+        private void SiteSrch_Click(object sender, RoutedEventArgs e)
+        {
+            Search(_clickedItem.SiteName, ConditionIndicator.Condition.Search, (int)Searcher.SearchOption.SiteName);
+        }
+
+        private void TagSrch_Click(object sender, RoutedEventArgs e)
+        {
+            //CondInd.Add(_clickedItem.Tags, ConditionIndicator.Condition.Search, (int)Searcher.SearchOption.Tag);
+        }
+
+        private void SearchSMenu_Click(object sender, RoutedEventArgs e)
+        {
+            SrchBorder.Visibility = Visibility.Visible;
             TxtSrchAll.Focus();
         }
     }

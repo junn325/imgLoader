@@ -137,7 +137,15 @@ namespace imgLoader_WPF.Windows
                         : _index - 1;
             }
 
-            //if (_size >= Properties.Settings.Default.CacheSize) ReleaseImage(prevIndex);
+            if (_size >= Properties.Settings.Default.CacheSize)
+            {
+                for (int i = 0; i < _imgList.Length; i++)
+                {
+                    if (i == _index) continue;
+                    ReleaseImage(i);
+                    if (_size < Properties.Settings.Default.CacheSize) break;
+                }
+            }
 
             if (_imgList[_index] == null)
             {

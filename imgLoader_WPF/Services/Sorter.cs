@@ -38,7 +38,7 @@ namespace imgLoader_WPF.Services
                     temp = new List<IndexItem>(_list.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
                     break;
                 case SortOption.Date:
-                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.Date, StringComparer.OrdinalIgnoreCase));
+                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.Date, StringComparer.InvariantCultureIgnoreCase));
                     break;
                 case SortOption.Vote:
                     temp = new List<IndexItem>(_list.OrderByDescending(i => i.Vote));

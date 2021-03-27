@@ -79,7 +79,7 @@ namespace imgLoader_WPF.Sites
             sw.Restart();
 
             var sb = new StringBuilder(pages);
-            for (var i = 1; i < (pageCount / 40) + 1; i++)
+            for (var i = 1; i < (pageCount / 40) + 1; i++)      //이미지가 40장 이상이어서 여러 페이지일 때 수행 (한 페이지에 40장씩 보임)
             {
                 sb.Append(StrLoad.Load($"{BaseUrl}g/{Number}?p={i}").Split("<div id=\"gdt\">")[1].Split("<div class=\"gtb\">")[0]);
             }
