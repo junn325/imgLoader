@@ -77,7 +77,7 @@ namespace imgLoader_WPF.Sites
 
             for (var i = 1; i <= _imgNum; i++)
             {
-                ext = StrTools.GetStringValue(StrTools.GetValue(_source, "pages").Split('{')[i], "t");
+                ext = StrTools.GetStringValue(_source.Split("\"pages\":[")[1].Split(']')[0].Split('{')[i], "t");
                 switch (ext)
                 {
                     case "j":
@@ -90,7 +90,7 @@ namespace imgLoader_WPF.Sites
                         ext = "gif";
                         break;
                 }
-                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/{Number}/{i}.{ext}");
+                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/{HitomiNumber}/{i}.{ext}");
             }
 
             return temp;
