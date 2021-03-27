@@ -92,20 +92,32 @@ namespace imgLoader_WPF.Services
                 //    continue;
                 //}
 
-                var item = new IndexItem
+                var item = new IndexItem();
+                try
                 {
-                    SiteName = info[0],
-                    Title = info[1],
-                    Author = info[2],
-                    ImgCount = int.TryParse(info[3],out var parse) ? parse : -1,
-                    Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries),
-                    Date = info[5],
-                    Vote = info[6] != null ? int.Parse(info[6]) : 0,
-                    Show = info[7] == null || info[7] == "1",
-                    View = info[8] != null ? int.Parse(info[8]) : 0,
-                    Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]),
-                    Route = infoRoute
-                };
+                    item.Route = infoRoute;
+                    item.Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]);
+
+                    item.SiteName = info[0];
+                    item.Title = info[1];
+                    item.Author = info[2];
+                    item.ImgCount = int.TryParse(info[3], out var parse) ? parse : -1;
+                    item.Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                    item.Date = info[5];
+                    item.Vote = info[6] != null ? int.Parse(info[6]) : 0;
+                    item.Show = info[7] == null || info[7] == "1";
+                    item.View = info[8] != null ? int.Parse(info[8]) : 0;
+                }
+                catch
+                {
+                    item.SiteName = "Error";
+                    item.Title = "";
+                    item.Author = "Info read error. Recovery is required.";
+                    item.Vote = -1;
+                    item.View = -1;
+                    item.ImgCount = -1;
+                    //continue;
+                }
 
                 _sender.Index.Add(item);
                 _sender.List.Add(item);

@@ -8,7 +8,7 @@ namespace imgLoader_WPF.Services
 {
     internal class InfoSavingService
     {
-        private const int Interval = 3000;
+        private const int Interval = 1000;
 
         private bool _stop;
         private readonly Thread _service;
@@ -28,10 +28,7 @@ namespace imgLoader_WPF.Services
                         continue;
                     }
 
-                    var item = _saveQueue.Peek();
-
-                    PerformSave(item, _sb);
-
+                    PerformSave(_saveQueue.Peek(), _sb);
                     _saveQueue.Dequeue();
                 }
             });
@@ -54,14 +51,15 @@ namespace imgLoader_WPF.Services
             {
                 sb.Append(t).Append(';');
             }
-            var tag = sb.ToString();
+
+            var tags = sb.ToString();
             sb.Clear();
 
             sb.Append(item.SiteName).Append('\n')
                     .Append(item.Title).Append('\n')
                     .Append(item.Author).Append('\n')
                     .Append(item.ImgCount).Append('\n')
-                    .Append(tag).Append('\n')
+                    .Append(tags).Append('\n')
                     .Append(item.Date).Append('\n')
                     .Append(item.Vote).Append('\n')
                     .Append(item.Show ? "1" : "0").Append('\n')

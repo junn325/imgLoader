@@ -40,6 +40,8 @@ namespace imgLoader_WPF.Services
             for (var i = 0; i < searchFrom.Count; i++)
             {
                 var indexItem = searchFrom[i];
+                if (indexItem.Tags == null || indexItem.Title == "") continue;
+
                 result[i, (int)SearchOption.Author] = indexItem.Author;
                 result[i, (int)SearchOption.Number] = indexItem.Number;
 
@@ -66,11 +68,11 @@ namespace imgLoader_WPF.Services
                     {
                         for (var i = 0; i < index.Length / IndexCount; i++)
                         {
-                            if (!index[i, 0].Contains(srch, StringComparison.OrdinalIgnoreCase)
-                                && !index[i, 1].Contains(srch, StringComparison.OrdinalIgnoreCase)
-                                && !index[i, 2].Contains(srch, StringComparison.OrdinalIgnoreCase)
-                                && !index[i, 3].Contains(srch, StringComparison.OrdinalIgnoreCase)
-                                && !index[i, 4].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            if (index[i, 0]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true
+                                && index[i, 1]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true
+                                && index[i, 2]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true
+                                && index[i, 3]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true
+                                && index[i, 4]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true)
                             {
                                 searchResult[i] = null;
                             }
@@ -100,7 +102,7 @@ namespace imgLoader_WPF.Services
                                 continue;
                             }
 
-                            if (!index[i, opt].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            if (index[i, opt]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true)
                             {
                                 searchResult[i] = null;
                             }
@@ -114,7 +116,7 @@ namespace imgLoader_WPF.Services
                     {
                         for (var i = 0; i < index.Length / IndexCount; i++)
                         {
-                            if (!index[i, opt].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            if (index[i, opt]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true)
                             {
                                 searchResult[i] = null;
                             }
