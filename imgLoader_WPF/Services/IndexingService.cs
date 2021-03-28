@@ -110,7 +110,8 @@ namespace imgLoader_WPF.Services
                 }
                 catch
                 {
-                    item.SiteName = "Error";
+                    item.IsError = true;
+                    //item.SiteName = "Error";
                     item.Title = "";
                     item.Author = "Info read error. Recovery is required.";
                     item.Vote = -1;

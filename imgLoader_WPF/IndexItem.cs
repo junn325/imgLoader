@@ -4,7 +4,7 @@
     {
         public delegate void NoParam();
         public delegate void IntOne(int value);
-        public delegate void DblOne(double value);
+        //public delegate void DblOne(double value);
         public delegate void VisOne(System.Windows.Visibility value);
 
         public Processor Proc;
@@ -25,6 +25,7 @@
         //public bool Selected = false;
         public bool Show = true;
         public bool IsDownloading;
+        public bool IsError = false;
 
         public NoParam RefreshInfo;
 
@@ -36,6 +37,6 @@
         public IntOne ProgBarMax;
         public NoParam ProgBarVal;
 
-        public DblOne SizeChange;
+        //public DblOne SizeChange;
     }
 }

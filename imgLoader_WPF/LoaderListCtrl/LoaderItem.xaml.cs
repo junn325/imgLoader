@@ -40,7 +40,7 @@ namespace imgLoader_WPF.LoaderListCtrl
                 VoteGrid.Visibility = v == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
             });
 
-            data.SizeChange = (value) => this.MaxWidth = value;
+            //data.SizeChange = (value) => this.MaxWidth = value;
 
             data.RefreshInfo = () => Dispatcher.Invoke(() =>
             {

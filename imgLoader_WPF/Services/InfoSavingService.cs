@@ -46,10 +46,16 @@ namespace imgLoader_WPF.Services
             if (string.IsNullOrWhiteSpace(item.Route)) return;
             if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) return;
 
+            if (item.IsError) return;
+
             sb.Append("tags:");
-            foreach (var t in item.Tags)
+
+            if (item.Tags != null)
             {
-                sb.Append(t).Append(';');
+                foreach (var t in item.Tags)
+                {
+                    sb.Append(t).Append(';');
+                }
             }
 
             var tags = sb.ToString();
