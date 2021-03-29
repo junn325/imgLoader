@@ -30,7 +30,8 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             data.ShownChang = () =>
             {
-                Background = data.IsRead ? Brushes.LightGray : Brushes.White;
+                Background = data.IsRead ? Brushes.LightGray : Brushes.White; 
+                ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";    //'열기' 시 조회수 새로고침
             };
 
             data.ProgPanelVis = (v) => Dispatcher.Invoke(() =>

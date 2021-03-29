@@ -337,7 +337,7 @@ namespace imgLoader_WPF.Windows
         {
             if (e.MiddleButton == MouseButtonState.Pressed)
             {
-                _thres = 5;
+                _thres = 3;
                 SizeChange(e.Delta > 0);
             }
             else

@@ -38,6 +38,7 @@ namespace imgLoader_WPF.Windows
     //todo: 더블클릭으로 열기
     //todo: 드래그로 사용자 정의 순서
     //todo: 검색 조건에 AND, OR 추가
+    //todo: 작가명에 ;| 없는것들 고칠것
 
     //todo: 자체 탐색기 만들기(메뉴-관리)
     //todo: 정보 복구
@@ -297,9 +298,15 @@ namespace imgLoader_WPF.Windows
             TxtSrchAll.Focus();
         }
 
-        private void block_ClickHandler(object sender, MouseButtonEventArgs e)
+        private void Block_ClickHandler(object sender, MouseButtonEventArgs e)
         {
             if (sender == null) return;
+
+            if (e.RightButton == MouseButtonState.Pressed)
+            {
+                RecentPanel.Children.Remove((TextBlock)sender);
+                return;
+            }
 
             var finalText = ((TextBlock)sender).Text;
             if (finalText.Contains(':'))
@@ -377,13 +384,12 @@ namespace imgLoader_WPF.Windows
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
-            block.MouseDown += block_ClickHandler;
+            block.MouseDown += Block_ClickHandler;
 
             RecentPanel.Children.Insert(0, block);
 
             PgSvc.Paginate();
         }
-
         private void Search(string searchTxt, int option, string label)
         {
             //List.Clear();
@@ -415,12 +421,13 @@ namespace imgLoader_WPF.Windows
                 VerticalAlignment = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
-            block.MouseDown += block_ClickHandler;
+            block.MouseDown += Block_ClickHandler;
 
             RecentPanel.Children.Insert(0, block);
 
             PgSvc.Paginate();
         }
+
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
@@ -563,7 +570,24 @@ namespace imgLoader_WPF.Windows
             _clickedItem.IsRead = true;
             _clickedItem.ShownChang.Invoke();
             InfSvc.Save(_clickedItem);
-         }
+        }
+        private void AuthorSrch_Click(object sender, RoutedEventArgs e)
+        {
+            Search(_clickedItem.Author, (int)Searcher.SearchOption.Author, "Author:" + Core.GetArtistFromRaw(_clickedItem.Author));
+        }
+        private void SiteSrch_Click(object sender, RoutedEventArgs e)
+        {
+            Search(_clickedItem.SiteName, (int)Searcher.SearchOption.SiteName);
+        }
+        private void TagSrch_Click(object sender, RoutedEventArgs e)
+        {
+            //CondInd.Add(_clickedItem.Tags, ConditionIndicator.Condition.Search, (int)Searcher.SearchOption.Tag);
+        }
+        private void SearchSMenu_Click(object sender, RoutedEventArgs e)
+        {
+            SrchBorder.Visibility = Visibility.Visible;
+            TxtSrchAll.Focus();
+        }
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             DeleteItemDir(_clickedItem);
@@ -600,10 +624,7 @@ namespace imgLoader_WPF.Windows
                     Clipboard.SetText($"https://nhentai.net/g/{_clickedItem.Number}");
                     break;
             }
-        }
-        private void Search_Click(object sender, RoutedEventArgs e)
-        {
-        }
+        } 
         private void TitleSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Title", ConditionIndicator.Condition.Sort, (int)SortOption.Title);
@@ -675,14 +696,14 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show($"{this.Left}, {this.Top}");
-            //ShowItems.Clear();
-            //List.Clear();
-            //foreach (var item in Index)
-            //{
-            //    List.Add(item);
-            //}
-            //PgSvc.Paginate();
+            //MessageBox.Show($"{this.Left}, {this.Top}");
+            ShowItems.Clear();
+            List.Clear();
+            foreach (var item in Index)
+            {
+                List.Add(item);
+            }
+            PgSvc.Paginate();
         }
 
         private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)
@@ -716,27 +737,6 @@ namespace imgLoader_WPF.Windows
 
         private void AllRadio_Click(object sender, RoutedEventArgs e)
         {
-            TxtSrchAll.Focus();
-        }
-
-        private void AuthorSrch_Click(object sender, RoutedEventArgs e)
-        {
-            Search(_clickedItem.Author, (int)Searcher.SearchOption.Author, "Author:" + Core.GetArtistFromRaw(_clickedItem.Author));
-        }
-
-        private void SiteSrch_Click(object sender, RoutedEventArgs e)
-        {
-            Search(_clickedItem.SiteName, (int)Searcher.SearchOption.SiteName);
-        }
-
-        private void TagSrch_Click(object sender, RoutedEventArgs e)
-        {
-            //CondInd.Add(_clickedItem.Tags, ConditionIndicator.Condition.Search, (int)Searcher.SearchOption.Tag);
-        }
-
-        private void SearchSMenu_Click(object sender, RoutedEventArgs e)
-        {
-            SrchBorder.Visibility = Visibility.Visible;
             TxtSrchAll.Focus();
         }
     }

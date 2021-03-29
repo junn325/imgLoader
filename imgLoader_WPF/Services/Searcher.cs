@@ -114,9 +114,9 @@ namespace imgLoader_WPF.Services
                                 continue;
                             }
 
-                            if (srch.Contains("//count:"))
+                            if (srch.Contains("//count="))
                             {
-                                _ = int.TryParse(srch.Split("//count:")[1].Split('/')[0], out var temp);
+                                _ = int.TryParse(srch.Split("//count=")[1].Split('/')[0], out var temp);
 
                                 if (index[i, opt].StrLen(';') != temp)
                                 {

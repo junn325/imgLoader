@@ -102,9 +102,8 @@
                 <TextBlock Grid.Row="1" x:Name="LabelBlock_Srch" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
             <!--</Grid>-->
 
-            <DockPanel x:Name="RecentPanel" Grid.Row="2">
-
-            </DockPanel>
+            <WrapPanel x:Name="RecentPanel" Grid.Row="2">
+            </WrapPanel>
         </Grid>
 
         <Grid x:Name="TitleGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">

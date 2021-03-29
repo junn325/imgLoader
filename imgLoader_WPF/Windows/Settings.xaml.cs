@@ -56,8 +56,6 @@ namespace imgLoader_WPF.Windows
 
             Core.Route = TxtPath.Text;
 
-            var a = _index.Count;
-
             _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = Visibility.Visible);
 
             _sender.CondInd.Clear();
