@@ -40,7 +40,7 @@ namespace imgLoader_WPF.Services
             for (var i = 0; i < searchFrom.Count; i++)
             {
                 var indexItem = searchFrom[i];
-                if (indexItem.Tags == null || indexItem.Title == "") continue;
+                if (indexItem.Tags == null || indexItem.Title?.Length == 0) continue;
 
                 result[i, (int)SearchOption.Author] = indexItem.Author;
                 result[i, (int)SearchOption.Number] = indexItem.Number;
@@ -82,14 +82,38 @@ namespace imgLoader_WPF.Services
                     break;
 
                 case SearchOption.Title:
-                case SearchOption.Author:
-                case SearchOption.Tag:
                 case SearchOption.Number:
                 case SearchOption.SiteName:
                     foreach (var srch in search.Split(','))
                     {
                         for (var i = 0; i < index.Length / IndexCount; i++)
                         {
+                            if (index[i, opt] == null)
+                            {
+                                searchResult[i] = null;
+                                continue;
+                            }
+
+                            if (!index[i, opt].Contains(srch, StringComparison.OrdinalIgnoreCase))
+                            {
+                                searchResult[i] = null;
+                            }
+                        }
+                    }
+                    break;
+
+                case SearchOption.Author:
+                case SearchOption.Tag:
+                    foreach (var srch in search.Split(','))
+                    {
+                        for (var i = 0; i < index.Length / IndexCount; i++)
+                        {
+                            if (index[i, opt] == null)
+                            {
+                                searchResult[i] = null;
+                                continue;
+                            }
+
                             if (srch.Contains("//count:"))
                             {
                                 _ = int.TryParse(srch.Split("//count:")[1].Split('/')[0], out var temp);
@@ -102,7 +126,7 @@ namespace imgLoader_WPF.Services
                                 continue;
                             }
 
-                            if (index[i, opt]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true)
+                            if (!index[i, opt].Contains(srch, StringComparison.OrdinalIgnoreCase))
                             {
                                 searchResult[i] = null;
                             }
@@ -116,7 +140,13 @@ namespace imgLoader_WPF.Services
                     {
                         for (var i = 0; i < index.Length / IndexCount; i++)
                         {
-                            if (index[i, opt]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true)
+                            if (index[i, opt] == null)
+                            {
+                                searchResult[i] = null;
+                                continue;
+                            }
+
+                            if (!index[i, opt].Contains(srch, StringComparison.OrdinalIgnoreCase))
                             {
                                 searchResult[i] = null;
                             }

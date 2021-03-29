@@ -94,7 +94,7 @@ namespace imgLoader_WPF.Services
             IndicatorList.Add(item);
         }
 
-        internal void RemoveHandler(object sender, MouseEventArgs e)
+        private void RemoveHandler(object sender, MouseEventArgs e)
         {
             var item = new IndItem();
             foreach (var indItem in IndicatorList)
