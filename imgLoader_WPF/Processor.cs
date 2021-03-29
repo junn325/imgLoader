@@ -67,7 +67,7 @@ namespace imgLoader_WPF
                 item.Route = Route;
                 item.SiteName = Site.GetType().Name;
                 item.Number = Number;
-                item.Date = DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                item.Date = DateTime.Now;
                 item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
                 item.Vote = 0;
                 item.View = 0;

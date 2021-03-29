@@ -1,4 +1,6 @@
-﻿namespace imgLoader_WPF
+﻿using System;
+
+namespace imgLoader_WPF
 {
     internal class IndexItem
     {
@@ -20,7 +22,7 @@
         public bool IsRead { get; set; }
         public string Route { get; set; }
 
-        public string Date;
+        public DateTime Date;
 
         //public bool Selected = false;
         public bool Show = true;
