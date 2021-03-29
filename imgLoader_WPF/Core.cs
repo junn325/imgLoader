@@ -204,6 +204,7 @@ namespace imgLoader_WPF
             string temp;
 
             if (rawArtist == "|") return "";
+            if (!rawArtist.Contains('|') && !rawArtist.Contains(';')) return rawArtist;
             if (rawArtist.Split('|')[0].Length != 0)
             {
                 foreach (var s in rawArtist.Split('|')[0].Split(';'))
