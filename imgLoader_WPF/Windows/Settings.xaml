@@ -5,10 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:imgLoader_WPF.Windows"
         mc:Ignorable="d"
-        Title="Settings" Width="724" Height="175" MinWidth="724" MinHeight="160" Loaded="Window_Loaded" Closing="Window_Closing" WindowStartupLocation="CenterScreen">
+        Title="Settings" Width="724" Height="175" MinWidth="724" MinHeight="160" Loaded="Window_Loaded" Closing="Window_Closing" WindowStyle="None" WindowStartupLocation="CenterScreen">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome NonClientFrameEdges="None" CaptionHeight="25" GlassFrameThickness="5" />
+    </WindowChrome.WindowChrome>
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="59" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -16,15 +22,36 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <DockPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-            <DockPanel VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <Label Content="다운로드할 경로" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0" Padding="0,0,0,0"/>
-                <TextBox x:Name="TxtPath" Text="더블클릭하여 다운로드 경로를 선택하거나 직접 입력" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,5,5" MouseDoubleClick="TextBox_MouseDoubleClick" TextChanged="TextBox_TextChanged"/>
-            </DockPanel>
-        </DockPanel>
-        <CheckBox Grid.Row="0" Grid.Column="0" x:Name="CheckNoIndex" Content="경로 인덱싱을 사용하지 않고 직접 새로고침만 사용" VerticalAlignment="Bottom" Click="CheckNoIndex_Click" Margin="5,0,0,0"/>
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" MouseMove="Grid_MouseMove" Background="Transparent">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Width" Value="20"/>
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+                    <!--Windowchrome위에서 클릭 허용-->
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="Padding" Value="2"/>
+                </Style>
+                <Style TargetType="{x:Type DockPanel}">
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+                </Style>
+            </Grid.Resources>
+            <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Margin="0,4,10,0" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_1"/>
+        </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <DockPanel>
+                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                    <Label Content="다운로드할 경로" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0" Padding="0,0,0,0"/>
+                    <TextBox x:Name="TxtPath" Text="더블클릭하여 다운로드 경로를 선택하거나 직접 입력" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,5,5" MouseDoubleClick="TextBox_MouseDoubleClick" TextChanged="TextBox_TextChanged"/>
+                </DockPanel>
+            </DockPanel>
+            <CheckBox  x:Name="CheckNoIndex" Content="경로 인덱싱을 사용하지 않고 직접 새로고침만 사용" VerticalAlignment="Bottom" Click="CheckNoIndex_Click" Margin="5,0,0,0"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>

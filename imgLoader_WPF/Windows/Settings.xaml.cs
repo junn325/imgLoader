@@ -140,5 +140,16 @@ namespace imgLoader_WPF.Windows
         {
             Properties.Settings.Default.Upgrade();
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void Grid_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+                DragMove();
+        }
     }
 }
