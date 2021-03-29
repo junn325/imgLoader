@@ -24,7 +24,7 @@ namespace imgLoader_WPF.Services
 
         private readonly ImgLoader _sender;
 
-        public IndexingService(ImgLoader sender, List<IndexItem> index)
+        public IndexingService(ImgLoader sender)
         {
             _sender = sender;
 
@@ -62,7 +62,6 @@ namespace imgLoader_WPF.Services
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
                 _sender.Index.Remove(item);
                 _sender.List.Remove(item);
-                //_sender.Dispatcher.Invoke(() => _sender.ShowItems.Remove(item));
             }
 
             var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
@@ -76,21 +75,6 @@ namespace imgLoader_WPF.Services
                 if (string.IsNullOrWhiteSpace(infos)) continue;
 
                 var info = Core.InitializeArray(Core.InfoCount, infos.Split('\n'));
-
-                //if (info.Length != InfoCount)
-                //{
-                //    Debug.WriteLine($"Insufficient Info: {infoRoute.Split('\\')[^1].Split('.')[0]}, info.length: {info.Length}");
-                //    continue;
-                //}
-
-                //if (info.Length > 7 && info[7] == "0") //목록에서만 제거 처리
-                //{
-                //    var temp = Index.Where(t => t.Number == infoRoute.Split('\\')[^1].Split('.')[0]).ToArray();
-
-                //    if (temp.Length > 0) foreach (var item in temp) Index.Remove(item);
-
-                //    continue;
-                //}
 
                 var item = new IndexItem();
                 try
@@ -123,20 +107,16 @@ namespace imgLoader_WPF.Services
                 catch
                 {
                     item.IsError = true;
-                    //item.SiteName = "Error";
                     item.Title = "";
                     item.Author = "Info read error. Recovery is required.";
                     item.Vote = -1;
                     item.View = -1;
                     item.ImgCount = -1;
-                    //continue;
                 }
 
                 _sender.Index.Add(item);
                 _sender.List.Add(item);
-                //_sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
 
-                //sb.Clear();
                 _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
             }
 

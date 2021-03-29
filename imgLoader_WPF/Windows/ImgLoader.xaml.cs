@@ -169,7 +169,7 @@ namespace imgLoader_WPF.Windows
 
             PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
             InfSvc = new InfoSavingService();
-            IdxSvc = new IndexingService(this, Index);
+            IdxSvc = new IndexingService(this);
 
             InfSvc.Start();
             IdxSvc.Start();
