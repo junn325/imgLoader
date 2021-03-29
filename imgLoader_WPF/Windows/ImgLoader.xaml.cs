@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Threading;
 using static imgLoader_WPF.Services.Sorter;
 
@@ -36,6 +37,7 @@ namespace imgLoader_WPF.Windows
     //todo: 우클릭 시 해당 항목 작가명/기타로 검색
     //todo: 더블클릭으로 열기
     //todo: 드래그로 사용자 정의 순서
+    //todo: 검색 조건에 AND, OR 추가
 
     //todo: 자체 탐색기 만들기(메뉴-관리)
     //todo: 정보 복구
@@ -64,6 +66,7 @@ namespace imgLoader_WPF.Windows
         public ImgLoader()
         {
             InitializeComponent();
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
         }
 
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
@@ -132,6 +135,7 @@ namespace imgLoader_WPF.Windows
             Properties.Settings.Default.Upgrade();
 
             Menu.Focus(); //메뉴 미리 로드
+
             _winSetting = new Settings(this, Scroll, Index);
 
             if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
@@ -140,11 +144,12 @@ namespace imgLoader_WPF.Windows
             }
             else
             {
+                IdxBlock.Visibility = Visibility.Hidden;
                 _winSetting.Show();
             }
 
 #if DEBUG
-            Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+            //Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
 #endif
 #if !DEBUG
             D_Stop.IsEnabled = false;
@@ -275,7 +280,7 @@ namespace imgLoader_WPF.Windows
             //List.Clear();
             ShowItems.Clear();
 
-            Search(TxtSrchAll.Text, ConditionIndicator.Condition.Search,
+            Search(TxtSrchAll.Text,
                 (int)(
                     AllRadio.IsChecked.Value
                         ? Searcher.SearchOption.All
@@ -292,12 +297,128 @@ namespace imgLoader_WPF.Windows
             TxtSrchAll.Focus();
         }
 
-        private void Search(string label, ConditionIndicator.Condition cond, int option)
+        private void block_ClickHandler(object sender, MouseButtonEventArgs e)
+        {
+            if (sender == null) return;
+
+            var finalText = ((TextBlock)sender).Text;
+            if (finalText.Contains(':'))
+            {
+                switch (finalText.Split(':')[0])
+                {
+                    case "All":
+                        AllRadio.IsChecked = true;
+                        break;
+
+                    case "Author":
+                        AuthorRadio.IsChecked = true;
+                        break;
+
+                    case "Number":
+                        NumRadio.IsChecked = true;
+                        break;
+
+                    case "Tag":
+                        TagRadio.IsChecked = true;
+                        break;
+
+                    case "SiteName":
+                        break;
+
+                    case "Title":
+                        TitleRadio.IsChecked = true;
+                        break;
+
+                    case "ImgCount":
+                        break;
+
+                    case "Vote":
+                        break;
+                }
+            }
+
+            finalText = finalText.Split(':')[1];
+
+            TxtSrchAll.Text += (TxtSrchAll.Text.Length == 0 ? "" : ",") + finalText;
+            TxtSrchAll.Select(TxtSrchAll.Text.Length, 0);
+            //TxtSrchAll.Focus();
+
+            e.Handled = true;
+        }
+
+        private void Search(string searchTxt, int option)
         {
             //List.Clear();
             ShowItems.Clear();
 
-            CondInd.Add(label, cond, option);
+            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
+
+            var tag = option switch
+            {
+                -1 => "All:",
+                0 => "Author:",
+                1 => "Number:",
+                2 => "Tag:",
+                3 => "SiteName:",
+                4 => "Title:",
+                5 => "ImgCount:",
+                6 => "Vote:",
+                _ => ""
+            };
+
+            var block = new TextBlock
+            {
+                Text = tag + searchTxt,
+                Background = Brushes.White,
+
+                Margin = new Thickness(2),
+                Padding = new Thickness(4, 2, 4, 2),
+
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            block.MouseDown += block_ClickHandler;
+
+            RecentPanel.Children.Insert(0, block);
+
+            PgSvc.Paginate();
+        }
+
+        private void Search(string searchTxt, int option, string label)
+        {
+            //List.Clear();
+            ShowItems.Clear();
+
+            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
+
+            var tag = option switch
+            {
+                -1 => "All:",
+                0 => "Author:",
+                1 => "Number:",
+                2 => "Tag:",
+                3 => "SiteName:",
+                4 => "Title:",
+                5 => "ImgCount:",
+                6 => "Vote:",
+                _ => ""
+            };
+
+            var block = new TextBlock
+            {
+                Text = tag + searchTxt,
+                Background = Brushes.White,
+
+                Margin = new Thickness(2),
+                Padding = new Thickness(4, 2, 4, 2),
+
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            block.MouseDown += block_ClickHandler;
+
+            RecentPanel.Children.Insert(0, block);
+
             PgSvc.Paginate();
         }
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -554,13 +675,14 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            ShowItems.Clear();
-            List.Clear();
-            foreach (var item in Index)
-            {
-                List.Add(item);
-            }
-            PgSvc.Paginate();
+            MessageBox.Show($"{this.Left}, {this.Top}");
+            //ShowItems.Clear();
+            //List.Clear();
+            //foreach (var item in Index)
+            //{
+            //    List.Add(item);
+            //}
+            //PgSvc.Paginate();
         }
 
         private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)
@@ -599,12 +721,12 @@ namespace imgLoader_WPF.Windows
 
         private void AuthorSrch_Click(object sender, RoutedEventArgs e)
         {
-            Search(_clickedItem.Author, ConditionIndicator.Condition.Search, (int)Searcher.SearchOption.Author);
+            Search(_clickedItem.Author, (int)Searcher.SearchOption.Author, "Author:" + Core.GetArtistFromRaw(_clickedItem.Author));
         }
 
         private void SiteSrch_Click(object sender, RoutedEventArgs e)
         {
-            Search(_clickedItem.SiteName, ConditionIndicator.Condition.Search, (int)Searcher.SearchOption.SiteName);
+            Search(_clickedItem.SiteName, (int)Searcher.SearchOption.SiteName);
         }
 
         private void TagSrch_Click(object sender, RoutedEventArgs e)

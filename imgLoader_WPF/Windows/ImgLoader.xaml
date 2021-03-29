@@ -81,7 +81,7 @@
             </Grid>
         </Border>
 
-        <Grid x:Name="SrchBorder" Background="{StaticResource BBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Hidden" MouseDown="SrchBorder_MouseDown">
+        <Grid x:Name="SrchBorder" Background="{StaticResource BBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Visible" MouseDown="SrchBorder_MouseDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="25"/>
@@ -101,6 +101,10 @@
                 <TextBox Grid.Row="1" x:Name="TxtSrchAll" Height="21" VerticalAlignment="Center" KeyUp="TxtSrchAll_KeyUp" TextChanged="TxtSrchAll_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
                 <TextBlock Grid.Row="1" x:Name="LabelBlock_Srch" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
             <!--</Grid>-->
+
+            <DockPanel x:Name="RecentPanel" Grid.Row="2">
+
+            </DockPanel>
         </Grid>
 
         <Grid x:Name="TitleGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">

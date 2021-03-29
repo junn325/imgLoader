@@ -19,9 +19,9 @@ namespace imgLoader_WPF.Services
             _sender = sender;
         }
 
-        internal void Add(string label, Condition cond, int option)
+        internal void Add(string srchText, Condition cond, int option)
         {
-            if (IndicatorList.Any(indItem => indItem.Condition == cond && indItem.Content == label && indItem.Option == option)) return;
+            if (IndicatorList.Any(indItem => indItem.Condition == cond && indItem.Content == srchText && indItem.Option == option)) return;
 
             switch (cond)
             {
@@ -36,7 +36,7 @@ namespace imgLoader_WPF.Services
                     _sender.Sorter.Sort((Sorter.SortOption)option);
                     break;
                 case Condition.Search:
-                    _sender.Searcher.Search(label, (Searcher.SearchOption)option);
+                    _sender.Searcher.Search(srchText, (Searcher.SearchOption)option);
                     break;
             }
             var item = new IndItem();
@@ -61,7 +61,7 @@ namespace imgLoader_WPF.Services
 
             var tb = new TextBlock
             {
-                Text = tag + label,
+                Text = tag + srchText,
                 Height = 20,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment  = VerticalAlignment.Center,
@@ -84,7 +84,63 @@ namespace imgLoader_WPF.Services
                 },
             };
 
-            item.Content = label;
+            item.Content = srchText;
+            item.Condition = cond;
+            item.Option = option;
+
+            item.Panel.Children.Add(tb);
+            _sender.CondPanel.Children.Add(item.Panel);
+
+            IndicatorList.Add(item);
+        }
+        internal void Add(string srchText, Condition cond, int option, string label)
+        {
+            if (IndicatorList.Any(indItem => indItem.Condition == cond && indItem.Content == srchText && indItem.Option == option)) return;
+
+            switch (cond)
+            {
+                case Condition.Sort:
+                    var temp = IndicatorList.Where(i => i.Condition == Condition.Sort).ToArray();
+                    if (temp.Length > 0)
+                    {
+                        _sender.CondPanel.Children.Remove(temp[0].Panel);
+                        IndicatorList.Remove(temp[0]);
+                    }
+
+                    _sender.Sorter.Sort((Sorter.SortOption)option);
+                    break;
+                case Condition.Search:
+                    _sender.Searcher.Search(srchText, (Searcher.SearchOption)option);
+                    break;
+            }
+            var item = new IndItem();
+
+            var tb = new TextBlock
+            {
+                Text = label,
+                Height = 20,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment  = VerticalAlignment.Center,
+                Margin  = new Thickness(2,1,2,1),
+                Padding = new Thickness(2,1,2,1),
+            };
+            tb.MouseUp += RemoveHandler;
+
+            tb.Measure(_sender.CondPanel.DesiredSize);
+
+            item.Panel = new DockPanel
+            {
+                Margin = new Thickness(2, 1, 2, 1),
+
+                Background = cond switch
+                {
+                    Condition.Sort => Brushes.Turquoise,
+                    Condition.Search => Brushes.CornflowerBlue,
+                    _ => Brushes.Gray
+                },
+            };
+
+            item.Content = srchText;
             item.Condition = cond;
             item.Option = option;
 

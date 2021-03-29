@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -95,7 +96,7 @@ namespace imgLoader_WPF
                         : info[i]
                 );
             }
-            sw.Write($"\n{DateTime.Now.ToString(System.Globalization.CultureInfo.InvariantCulture)}\n0\n1\n0"); //0=Vote, 1=Show, 0=View
+            sw.Write($"\n{DateTime.Now.ToString(CultureInfo.InvariantCulture)}\n0\n1\n0"); //0=Vote, 1=Show, 0=View
 
             sw.Close();
 
@@ -193,6 +194,48 @@ namespace imgLoader_WPF
             if (url.Contains("exhentai.org", StringComparison.OrdinalIgnoreCase)) return null;
 
             return null;
+        }
+
+        internal static string GetArtistFromRaw(string rawArtist)
+        {
+            var sb = new StringBuilder();
+            string temp;
+
+            if (rawArtist == "|") return "";
+            if (rawArtist.Split('|')[0].Length != 0)
+            {
+                foreach (var s in rawArtist.Split('|')[0].Split(';'))
+                {
+                    if (s.Length == 0) continue;
+                    sb.Append(s).Append(", ");
+                }
+                temp = sb.ToString().Substring(0, sb.Length - 2);
+
+                sb.Clear();
+
+                foreach (var s in rawArtist.Split('|')[1].Split(';'))
+                {
+                    if (s.Length == 0) continue;
+                    sb.Append(s).Append(", ");
+                }
+
+                temp =
+                    sb.Length != 0
+                        ? $"{temp} ({sb.ToString().Substring(0, sb.Length - 2)})"
+                        : temp;
+            }
+            else
+            {
+                foreach (var s in rawArtist.Split('|')[1].Split(';'))
+                {
+                    if (s.Length == 0) continue;
+                    sb.Append(s).Append(", ");
+                }
+
+                temp = sb.ToString().Substring(0, sb.Length - 2);
+            }
+
+            return temp;
         }
 
         internal static FileStream DelayStream(string route, FileMode mode, FileAccess access)

@@ -56,7 +56,7 @@ namespace imgLoader_WPF
                 IsImgLoading = new bool[ImgUrl.Count];
 
                 Number = Core.GetNumber(url);
-                Artist = GetArtist(Site);
+                Artist = Core.GetArtistFromRaw(Site.GetArtist());
                 Title = GetTitle(Site.GetTitle());
                 Route = Getpath(Artist, Title);
                 Info = Site.ReturnInfo();
@@ -121,47 +121,6 @@ namespace imgLoader_WPF
             }
         }
 
-        private static string GetArtist(ISite site)
-        {
-            var sb = new StringBuilder();
-            string temp;
-
-            if (site.GetArtist() == "|") return "";
-            if (site.GetArtist().Split('|')[0].Length != 0)
-            {
-                foreach (var s in site.GetArtist().Split('|')[0].Split(';'))
-                {
-                    if (s.Length == 0) continue;
-                    sb.Append(s).Append(", ");
-                }
-                temp = sb.ToString().Substring(0, sb.Length - 2);
-
-                sb.Clear();
-
-                foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
-                {
-                    if (s.Length == 0) continue;
-                    sb.Append(s).Append(", ");
-                }
-
-                temp =
-                    sb.Length != 0
-                        ? $"{temp} ({sb.ToString().Substring(0, sb.Length - 2)})"
-                        : temp;
-            }
-            else
-            {
-                foreach (var s in site.GetArtist().Split('|')[1].Split(';'))
-                {
-                    if (s.Length == 0) continue;
-                    sb.Append(s).Append(", ");
-                }
-
-                temp = sb.ToString().Substring(0, sb.Length - 2);
-            }
-
-            return temp;
-        }
 
         private static string GetTitle(string title)
         {
