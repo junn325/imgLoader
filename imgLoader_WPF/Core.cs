@@ -88,6 +88,8 @@ namespace imgLoader_WPF
             using var sw = new StreamWriter(new FileStream(infoFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
             var info = site.ReturnInfo();
 
+            Debug.Assert(info[2].Contains('|'));
+
             for (var i = 0; i < info.Length; i++)
             {
                 sw.Write(
@@ -424,6 +426,19 @@ namespace imgLoader_WPF
             } while (count > 0);
 
             return temp;
+        }
+
+        internal static List<IndexItem> Find(IEnumerable<IndexItem> where, string find)
+        {
+            var result = new List<IndexItem>();
+
+            foreach (IndexItem item in where)
+            {
+                if (item.Author.Contains("|")) continue;
+                result.Add(item);
+            }
+
+            return result;
         }
     }
 }

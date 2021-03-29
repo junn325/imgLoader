@@ -62,7 +62,7 @@ namespace imgLoader_WPF
                 Info = Site.ReturnInfo();
 
                 item.ImgCount = ImgUrl.Count;
-                item.Author = Artist;
+                item.Author = Site.GetArtist();
                 item.Title = Title;
                 item.Route = Route;
                 item.SiteName = Site.GetType().Name;
