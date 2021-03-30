@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Threading;
@@ -66,7 +67,7 @@ namespace imgLoader_WPF.Services
                     .Append(item.Author).Append('\n')
                     .Append(item.ImgCount).Append('\n')
                     .Append(tags).Append('\n')
-                    .Append(item.Date).Append('\n')
+                    .Append(item.Date.ToString(CultureInfo.InvariantCulture)).Append('\n')
                     .Append(item.Vote).Append('\n')
                     .Append(item.Show ? "1" : "0").Append('\n')
                     .Append(item.View);
