@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 
 namespace imgLoader_WPF
 {
@@ -23,6 +24,8 @@ namespace imgLoader_WPF
         public string Route { get; set; }
 
         public DateTime Date;
+
+        public Thread ThrLoad;
 
         //public bool Selected = false;
         public bool Show = true;

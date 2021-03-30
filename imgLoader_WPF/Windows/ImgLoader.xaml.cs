@@ -195,62 +195,68 @@ namespace imgLoader_WPF.Windows
             TxtUrl.Text = "";
             LabelBlock_Add.Visibility = Visibility.Visible;
 
-            var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1 };
+            var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNumber(url) };
 
             var sw = new Stopwatch();
             sw.Start();
 
             //HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
 
-            var thrTemp = new Thread(() =>
+            lItem.ThrLoad = new Thread(() =>
             {
-                ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
-                Index.Insert(0, lItem);
-                List.Insert(0, lItem);
-
-                //InfSvc.Stop();
-
-                lItem.Proc = new Processor(url, lItem);
-                lItem.Proc.Pause = !Properties.Settings.Default.Down_Immid;
-
-                if (!lItem.Proc.IsValidated)
+                try
                 {
-                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
-                    Index.Remove(lItem);
-                    List.Remove(lItem);
-                    return;
+                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
+                    Index.Insert(0, lItem);
+                    List.Insert(0, lItem);
+
+                    //InfSvc.Stop();
+
+                    lItem.Proc = new Processor(url, lItem);
+                    lItem.Proc.Pause = !Properties.Settings.Default.Down_Immid;
+
+                    if (!lItem.Proc.IsValidated)
+                    {
+                        ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                        Index.Remove(lItem);
+                        List.Remove(lItem);
+                        return;
+                    }
+
+                    if (lItem.Proc.CheckDupl())
+                    {
+                        MessageBox.Show("Already Exists.");
+                        ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                        Index.Remove(lItem);
+                        List.Remove(lItem);
+                        return;
+                    }
+
+                    PgSvc.Paginate();
+
+                    while (lItem.RefreshInfo == null)
+                    {
+                        Task.Delay(100).Wait();
+                        Debug.WriteLine("Main: TxtUrl_KeyUp: Wait");
+                    }
+
+                    lItem.RefreshInfo();
+                    lItem.Proc.Load();
+
+                    //List.Insert(0, lItem);
+
+                    //todo: 다운로드 완료 후 정렬될 위치로 삽입
+                    Debug.WriteLine("Main: TxtUrl_KeyUp: " + sw.Elapsed.Ticks);
+                    sw.Reset();
+
+                    lItem.ThrLoad = null;
                 }
-
-                if (lItem.Proc.CheckDupl())
-                {
-                    MessageBox.Show("Already Exists.");
-                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
-                    Index.Remove(lItem);
-                    List.Remove(lItem);
-                    return;
-                }
-
-                PgSvc.Paginate();
-
-                while (lItem.RefreshInfo == null)
-                {
-                    Task.Delay(100).Wait();
-                    Debug.WriteLine("Main: TxtUrl_KeyUp: Wait");
-                }
-
-                lItem.RefreshInfo();
-                lItem.Proc.Load();
-
-                //List.Insert(0, lItem);
-
-                //todo: 다운로드 완료 후 정렬될 위치로 삽입
-                Debug.WriteLine("Main: TxtUrl_KeyUp: " + sw.Elapsed.Ticks);
-                sw.Reset();
+                catch (ThreadInterruptedException) { }
             });
 
-            thrTemp.Name = "AddItem";
-            thrTemp.SetApartmentState(ApartmentState.STA);
-            thrTemp.Start();
+            lItem.ThrLoad.Name = "AddItem";
+            lItem.ThrLoad.SetApartmentState(ApartmentState.STA);
+            lItem.ThrLoad.Start();
         }
         private void TxtUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -266,7 +272,6 @@ namespace imgLoader_WPF.Windows
         {
             e.Handled = true;
         }
-
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (TxtSrchAll.Text.Length == 0)
@@ -277,7 +282,6 @@ namespace imgLoader_WPF.Windows
 
             LabelBlock_Srch.Visibility = Visibility.Collapsed;
         }
-
         private void TxtSrchAll_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
@@ -301,7 +305,6 @@ namespace imgLoader_WPF.Windows
             TxtSrchAll.Text = "";
             TxtSrchAll.Focus();
         }
-
         private void Block_ClickHandler(object sender, MouseButtonEventArgs e)
         {
             if (sender == null) return;
@@ -356,7 +359,6 @@ namespace imgLoader_WPF.Windows
 
             e.Handled = true;
         }
-
         private void Search(string searchTxt, int option)
         {
             //List.Clear();
@@ -431,7 +433,6 @@ namespace imgLoader_WPF.Windows
 
             PgSvc.Paginate();
         }
-
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
@@ -439,7 +440,6 @@ namespace imgLoader_WPF.Windows
 
             PgSvc.Paginate();
         }
-
         private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             //foreach (var item in ShowItems)
@@ -449,7 +449,6 @@ namespace imgLoader_WPF.Windows
             //    //Debug.WriteLine("size");
             //}
         }
-
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _winSetting.Close();
@@ -458,7 +457,6 @@ namespace imgLoader_WPF.Windows
             //InfSvc.Stop();
             //IdxSvc.Stop();
         }
-
         private void LItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (sender == null || ItemCtrl.ContextMenu == null) return;
@@ -524,7 +522,6 @@ namespace imgLoader_WPF.Windows
 
             e.Handled = true;
         }
-
         private void LList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             foreach (var item in ItemCtrl.ContextMenu?.Items)
@@ -594,7 +591,14 @@ namespace imgLoader_WPF.Windows
         }
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
+            _clickedItem.Proc?.DoStop();
+            _clickedItem.ThrLoad.Interrupt();
+
             DeleteItemDir(_clickedItem);
+
+            ShowItems.Remove(_clickedItem);
+            List.Remove(_clickedItem);
+            Index.Remove(_clickedItem);
         }
         private void Resume_Click(object sender, RoutedEventArgs e)
         {
