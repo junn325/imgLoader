@@ -20,59 +20,73 @@ namespace imgLoader_WPF
         private readonly IndexItem _item;
         //private Windows.ImgLoader _sender;
 
+        private string _url;
+
         private bool _stop;
         public bool Pause;
 
-        public readonly bool[] IsImgLoading;
+        public bool[] IsImgLoading;
 
-        internal string Route { get; }
-        internal string Artist { get; }
-        internal string Title { get; }
-        internal string[] Info { get; }
-        internal string Number { get; }
-        internal Dictionary<string, string> ImgUrl { get; }
-        internal ISite Site { get; }
-        internal bool IsValidated { get; }
+        internal string Route { get; private set; }
+        internal string Artist { get; private set; }
+        internal string Title { get; private set; }
+        internal string[] Info { get; private set; }
+        internal string Number { get; private set; }
+        internal Dictionary<string, string> ImgUrl { get; private set; }
+        internal ISite Site { get; private set; }
+        internal bool IsValidated { get; private set; }
 
         public Processor(string url, IndexItem item)
         {
             //try
             //{
-                if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
+            if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
+            _item = item;
+            _url = url;
 
-                item.IsDownloading = true;
+            item.IsDownloading = true;
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception($"Failed to Initialize: Processor: {ex.StackTrace}");
+            //}
+        }
 
-                Site = Load(url);
-                if (Site == null)
-                {
-                    MessageBox.Show("주소에 연결할 수 없음.");
-                    return;
-                }
+        internal void Load()
+        {
+            _stop = false;
+            _item.IsDownloading = true;
 
-                if (!Site.IsValidated()) throw new Exception("Failed to Initialize: Processor: Invalidate");
+            Site = Load(_url);
+            if (Site == null)
+            {
+                if(!_stop) MessageBox.Show("주소에 연결할 수 없음.");
+                return;
+            }
 
-                ImgUrl = Site.GetImgUrls();
+            if (!Site.IsValidated()) throw new Exception("Failed to Initialize: Processor: Invalidate");
 
-                IsImgLoading = new bool[ImgUrl.Count];
+            ImgUrl = Site.GetImgUrls();
 
-                Number = Core.GetNumber(url);
-                Artist = Core.GetArtistFromRaw(Site.GetArtist());
-                Title = GetTitle(Site.GetTitle());
-                Route = Getpath(Artist, Title);
-                Info = Site.ReturnInfo();
+            IsImgLoading = new bool[ImgUrl.Count];
 
-                item.ImgCount = ImgUrl.Count;
-                item.Author = Site.GetArtist();
-                item.Title = Title;
-                item.Route = Route;
-                item.SiteName = Site.GetType().Name;
-                item.Number = Number;
-                item.Date = DateTime.Now;
-                item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
-                item.Vote = 0;
-                item.View = 0;
+            Number = Core.GetNumber(_url);
+            Artist = Core.GetArtistFromRaw(Site.GetArtist());
+            Title = GetTitle(Site.GetTitle());
+            Route = Getpath(Artist, Title);
+            Info = Site.ReturnInfo();
 
-                _item = item;
+            _item.ImgCount = ImgUrl.Count;
+            _item.Author = Site.GetArtist();
+            _item.Title = Title;
+            _item.Route = Route;
+            _item.SiteName = Site.GetType().Name;
+            _item.Number = Number;
+            _item.Date = DateTime.Now;
+            _item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
+            _item.Vote = 0;
+            _item.View = 0;
+
             //}
             //catch (Exception ex)
             //{
@@ -82,8 +96,10 @@ namespace imgLoader_WPF
             IsValidated = Site.IsValidated();
         }
 
-        internal void Load()
+        internal void StartDownload()
         {
+            _stop = false;
+
             var temp = CreateInfo();
 
             if (temp != Error.End)
@@ -349,12 +365,12 @@ namespace imgLoader_WPF
             new Thread(() =>
             {
                 _failed.Clear();
+                _stop = true;
 
                 if (_tasks == null) return;
 
-                _stop = true;
                 Task.WaitAll(_tasks);
-                _stop = false;
+                //_stop = false;
 
                 _tasks = null;
             }).Start();
