@@ -18,7 +18,7 @@ namespace imgLoader_WPF
         internal int ImgCount { get; set; }
         internal string Number { get; set; }
         internal string[] Tags { get; set; }
-        internal int Vote { get; set; }
+        public int Vote { get; set; }
         internal int View { get; set; }
         internal bool IsRead { get; set; }
         internal string Route { get; set; }
@@ -30,10 +30,9 @@ namespace imgLoader_WPF
         //internal bool Selected = false;
         internal bool Show = true;
         internal bool IsDownloading;
-        internal bool IsError = false;
+        internal bool IsError;
 
         internal NoParam RefreshInfo;
-
         internal NoParam ShownChang;
 
         internal VisOne ProgPanelVis;

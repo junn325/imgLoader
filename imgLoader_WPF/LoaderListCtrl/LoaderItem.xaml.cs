@@ -61,7 +61,8 @@ namespace imgLoader_WPF.LoaderListCtrl
 
                         if (data.Author.Split('|')[1].Contains(';'))
                         {
-                            sb.Append(" (");
+                            if (sb.Length != 0) sb.Append(" ");
+                            sb.Append("(");
                             foreach (var s in data.Author.Split('|')[1].Split(';'))
                             {
                                 if (string.IsNullOrWhiteSpace(s)) continue;
@@ -85,9 +86,9 @@ namespace imgLoader_WPF.LoaderListCtrl
                 LblVote.Text = data.Vote.ToString();
                 ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
 
-                if (data.ImgCount == -1) ImgCntBlock.Visibility = Visibility.Hidden;
-                if (data.Vote == -1) VoteGrid.Visibility = Visibility.Hidden;
-                if (data.View == -1) ViewCntBlock.Visibility = Visibility.Hidden;
+                ImgCntBlock.Visibility = data.ImgCount == -1 ? Visibility.Hidden : Visibility.Visible;
+                VoteGrid.Visibility = data.Vote == -1 ? Visibility.Hidden : Visibility.Visible;
+                ViewCntBlock.Visibility = data.View == -1 ? Visibility.Hidden : Visibility.Visible;
             });
 
             data.ProgBarMax = value => Dispatcher.Invoke(() =>
