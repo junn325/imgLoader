@@ -204,55 +204,59 @@ namespace imgLoader_WPF.Windows
 
             lItem.ThrLoad = new Thread(() =>
             {
-                try
+                ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
+                Index.Insert(0, lItem);
+                List.Insert(0, lItem);
+
+                //InfSvc.Stop();
+
+                lItem.Proc = new Processor(url, lItem);
+                lItem.Proc.LoadInfo();
+                lItem.Proc.Pause = !Properties.Settings.Default.Down_Immid;
+
+                if (!lItem.Proc.IsValidated)
                 {
-                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
-                    Index.Insert(0, lItem);
-                    List.Insert(0, lItem);
-
-                    //InfSvc.Stop();
-
-                    lItem.Proc = new Processor(url, lItem);
-                    lItem.Proc.LoadInfo();
-                    lItem.Proc.Pause = !Properties.Settings.Default.Down_Immid;
-
-                    if (!lItem.Proc.IsValidated)
-                    {
-                        ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
-                        Index.Remove(lItem);
-                        List.Remove(lItem);
-                        return;
-                    }
-
-                    if (lItem.Proc.CheckDupl())
-                    {
-                        MessageBox.Show("Already Exists.");
-                        ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
-                        Index.Remove(lItem);
-                        List.Remove(lItem);
-                        return;
-                    }
-
-                    PgSvc.Paginate();
-
-                    while (lItem.RefreshInfo == null)
-                    {
-                        Task.Delay(100).Wait();
-                        Debug.WriteLine("Main: TxtUrl_KeyUp: Wait");
-                    }
-
-                    lItem.RefreshInfo();
-                    lItem.Proc.StartDownload();
-
-                    //List.Insert(0, lItem);
-
-                    //todo: 다운로드 완료 후 정렬될 위치로 삽입
-                    Debug.WriteLine("Main: TxtUrl_KeyUp: " + sw.Elapsed.Ticks);
-                    sw.Reset();
-
-                    lItem.ThrLoad = null;
+                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
+                    return;
                 }
-                catch (ThreadInterruptedException) { }
+
+                if (lItem.Proc.CheckDupl())
+                {
+                    MessageBox.Show("Already Exists.");
+                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
+                    return;
+                }
+
+                //PgSvc.Paginate();
+
+                while (lItem.RefreshInfo == null)
+                {
+                    Task.Delay(100).Wait();
+                    Debug.WriteLine("Main: TxtUrl_KeyUp: Wait");
+                }
+
+                if (lItem.Proc.IsStop)
+                {
+                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
+                    return;
+                }
+
+                lItem.RefreshInfo();
+                lItem.Proc.StartDownload();
+
+                //List.Insert(0, lItem);
+
+                //todo: 다운로드 완료 후 정렬될 위치로 삽입
+                Debug.WriteLine("Main: TxtUrl_KeyUp: " + sw.Elapsed.Ticks);
+                sw.Reset();
+
+                lItem.ThrLoad = null;
             });
 
             lItem.ThrLoad.Name = "AddItem";
@@ -593,7 +597,6 @@ namespace imgLoader_WPF.Windows
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Proc?.DoStop();
-            _clickedItem.ThrLoad.Interrupt();
 
             DeleteItemDir(_clickedItem);
 

@@ -12,20 +12,17 @@ namespace imgLoader_WPF
 {
     internal class Processor
     {
-        private readonly Dictionary<string, string> _failed = new();
-
-        private Task[] _tasks;
-
-        //private int _index;
-        private readonly IndexItem _item;
-        //private Windows.ImgLoader _sender;
-
-        private string _url;
-
-        private bool _stop;
+        public bool[] IsImgLoading;
         public bool Pause;
 
-        public bool[] IsImgLoading;
+        private readonly Dictionary<string, string> _failed = new();
+        private readonly IndexItem _item;
+        private Task[] _tasks;
+
+        private readonly string _url;
+        private int _thres = 10;
+
+        public bool IsStop;
 
         internal string Route { get; private set; }
         internal string Artist { get; private set; }
@@ -54,13 +51,13 @@ namespace imgLoader_WPF
 
         internal void LoadInfo()
         {
-            _stop = false;
+            IsStop = false;
             _item.IsDownloading = true;
 
             Site = Load(_url);
             if (Site == null)
             {
-                if(!_stop) MessageBox.Show("주소에 연결할 수 없음.");
+                if(!IsStop) MessageBox.Show("주소에 연결할 수 없음.");
                 return;
             }
 
@@ -98,7 +95,7 @@ namespace imgLoader_WPF
 
         internal void StartDownload()
         {
-            _stop = false;
+            IsStop = false;
 
             var temp = CreateInfo();
 
@@ -242,7 +239,7 @@ namespace imgLoader_WPF
             var i = 0;
             foreach (var (key, value) in urlList)
             {
-                if (_stop) break;
+                if (IsStop) break;
 
                 while (Pause)
                 {
@@ -261,14 +258,14 @@ namespace imgLoader_WPF
 
         private void ThrDownload(string uri, string path, string fileName)
         {
-            if (_stop) return;
+            if (IsStop) return;
 
             while (Pause)
             {
                 Task.Delay(500).Wait();
             }
 
-            if (_stop) return;
+            if (IsStop) return;
 
             var req = WebRequest.Create(uri) as HttpWebRequest;
             HttpWebResponse resp;
@@ -279,7 +276,7 @@ namespace imgLoader_WPF
 
             try
             {
-                if (_stop) return;
+                if (IsStop) return;
 
                 resp = req.GetResponse() as HttpWebResponse;
             }
@@ -305,7 +302,7 @@ namespace imgLoader_WPF
                 return;
             }
 
-            if (_stop) return;
+            if (IsStop) return;
 
             using (var br = resp.GetResponseStream())
             {
@@ -314,11 +311,11 @@ namespace imgLoader_WPF
 
                 using var fs = new FileStream($"{path}\\{fileName}", FileMode.Create);
 
-                if (_stop) return;
+                if (IsStop) return;
 
                 do
                 {
-                    if (_stop) return;
+                    if (IsStop) return;
 
                     count = br.Read(buff, 0, buff.Length);
                     fs.Write(buff, 0, count);
@@ -341,7 +338,6 @@ namespace imgLoader_WPF
             resp.Close();
         }
 
-        private int thres = 10;
         private bool HandleFail(string path)
         {
             if (_failed.Count == 0) return true;
@@ -351,9 +347,9 @@ namespace imgLoader_WPF
 
             Task.WaitAll(_tasks);
 
-            thres--;
+            _thres--;
 
-            if (thres > 0 && _failed.Count != 0) HandleFail(path);
+            if (_thres > 0 && _failed.Count != 0) HandleFail(path);
 
             _failed.Clear();
 
@@ -362,10 +358,11 @@ namespace imgLoader_WPF
 
         internal void DoStop()
         {
+            IsStop = true;
+
             new Thread(() =>
             {
                 _failed.Clear();
-                _stop = true;
 
                 if (_tasks == null) return;
 
