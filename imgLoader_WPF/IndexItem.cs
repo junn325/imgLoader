@@ -5,43 +5,43 @@ namespace imgLoader_WPF
 {
     internal class IndexItem
     {
-        public delegate void NoParam();
-        public delegate void IntOne(int value);
-        //public delegate void DblOne(double value);
-        public delegate void VisOne(System.Windows.Visibility value);
+        internal delegate void NoParam();
+        internal delegate void IntOne(int value);
+        //internal delegate void DblOne(double value);
+        internal delegate void VisOne(System.Windows.Visibility value);
 
-        public Processor Proc;
+        internal Processor Proc;
 
-        public string Title { get; set; }
-        public string Author { get; set; }
-        public string SiteName { get; set; }
-        public int ImgCount { get; set; }
-        public string Number { get; set; }
-        public string[] Tags { get; set; }
-        public int Vote { get; set; }
-        public int View { get; set; }
-        public bool IsRead { get; set; }
-        public string Route { get; set; }
+        internal string Title { get; set; }
+        internal string Author { get; set; }
+        internal string SiteName { get; set; }
+        internal int ImgCount { get; set; }
+        internal string Number { get; set; }
+        internal string[] Tags { get; set; }
+        internal int Vote { get; set; }
+        internal int View { get; set; }
+        internal bool IsRead { get; set; }
+        internal string Route { get; set; }
 
-        public DateTime Date;
+        internal DateTime Date;
 
-        //public Thread ThrLoad;
+        //internal Thread ThrLoad;
 
-        //public bool Selected = false;
-        public bool Show = true;
-        public bool IsDownloading;
-        public bool IsError = false;
+        //internal bool Selected = false;
+        internal bool Show = true;
+        internal bool IsDownloading;
+        internal bool IsError = false;
 
-        public NoParam RefreshInfo;
+        internal NoParam RefreshInfo;
 
-        public NoParam ShownChang;
+        internal NoParam ShownChang;
 
-        public VisOne ProgPanelVis;
-        //public VisOne TagPanelVis;
+        internal VisOne ProgPanelVis;
+        //internal VisOne TagPanelVis;
 
-        public IntOne ProgBarMax;
-        public NoParam ProgBarVal;
+        internal IntOne ProgBarMax;
+        internal NoParam ProgBarVal;
 
-        //public DblOne SizeChange;
+        //internal DblOne SizeChange;
     }
 }
