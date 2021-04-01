@@ -248,7 +248,7 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
-                //todo: 다운로드 완료 후 정렬될 위치로 삽입
+                Sorter.Sort((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);
                 //sw.Reset();
             });
 

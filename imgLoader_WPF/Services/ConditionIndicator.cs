@@ -176,10 +176,7 @@ namespace imgLoader_WPF.Services
                 return;
             }
 
-            foreach (var indItem in IndicatorList.Where(indItem => indItem.Condition == Condition.Sort))
-            {
-                _sender.Sorter.Sort((Sorter.SortOption)indItem.Option);
-            }
+            _sender.Sorter.Sort((Sorter.SortOption)IndicatorList.Find(i => i.Condition == Condition.Sort).Option);
 
             var searchItem = IndicatorList.Where(indItem => indItem.Condition == Condition.Search).ToArray();
             if (searchItem.Length == 0)
