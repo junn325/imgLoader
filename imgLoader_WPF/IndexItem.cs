@@ -25,7 +25,7 @@ namespace imgLoader_WPF
 
         public DateTime Date;
 
-        public Thread ThrLoad;
+        //public Thread ThrLoad;
 
         //public bool Selected = false;
         public bool Show = true;

@@ -81,6 +81,7 @@ namespace imgLoader_WPF.Services
 
             fs.Close();
             sw.Close();
+
             sb.Clear();
         }
 

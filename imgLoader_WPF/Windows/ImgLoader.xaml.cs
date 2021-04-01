@@ -195,12 +195,12 @@ namespace imgLoader_WPF.Windows
 
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNumber(url) };
 
-            var sw = new Stopwatch();
-            sw.Start();
+            //var sw = new Stopwatch();
+            //sw.Start();
 
             //HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
 
-            lItem.ThrLoad = new Thread(() =>
+            var service = new Thread(() =>
             {
                 ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
                 Index.Insert(0, lItem);
@@ -248,18 +248,13 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
-                //List.Insert(0, lItem);
-
                 //todo: 다운로드 완료 후 정렬될 위치로 삽입
-                Debug.WriteLine("Main: TxtUrl_KeyUp: " + sw.Elapsed.Ticks);
-                sw.Reset();
-
-                lItem.ThrLoad = null;
+                //sw.Reset();
             });
 
-            lItem.ThrLoad.Name = "AddItem";
-            lItem.ThrLoad.SetApartmentState(ApartmentState.STA);
-            lItem.ThrLoad.Start();
+            service.Name = "AddItem";
+            service.SetApartmentState(ApartmentState.STA);
+            service.Start();
         }
         private void TxtUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
