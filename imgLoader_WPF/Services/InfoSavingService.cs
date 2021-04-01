@@ -72,10 +72,14 @@ namespace imgLoader_WPF.Services
                     .Append(item.Show ? "1" : "0").Append('\n')
                     .Append(item.View);
 
-            using var sw = new StreamWriter(Core.DelayStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
+            using var fs = Core.DelayStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            using var sw = new StreamWriter(fs, Encoding.UTF8);
             sw.Write(sb.ToString());
 
-            sw.Flush(); //오류 등으로 원래 담겨야할 줄 수 이상의 줄이 있을 때 지움
+            sw.Flush();                 //
+            fs.SetLength(fs.Position);  //오류 등으로 원래 담겨야할 줄 수 이상의 줄이 있을 때 지움
+
+            fs.Close();
             sw.Close();
             sb.Clear();
         }
