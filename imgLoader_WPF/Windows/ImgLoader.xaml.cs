@@ -74,6 +74,70 @@ namespace imgLoader_WPF.Windows
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
         }
 
+        private void Button_Click_5(object sender, RoutedEventArgs e)
+        {
+            ;
+        }
+        private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
+        {
+            new Thread(() =>
+                {
+                    while (true)
+                    {
+                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
+                        Thread.Sleep(1000);
+                    }
+                })
+            { IsBackground = true }.Start();
+
+            Properties.Settings.Default.Upgrade();
+
+            Menu.Focus(); //메뉴 미리 로드
+
+            _winSetting = new Settings(this, Scroll, Index);
+
+            if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
+            {
+                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
+            }
+            else
+            {
+                IdxBlock.Visibility = Visibility.Hidden;
+                _winSetting.Show();
+            }
+
+#if DEBUG
+            Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+#endif
+#if !DEBUG
+            D_Stop.IsEnabled = false;
+            D_Else1.IsEnabled = false;
+            D_Stop.Visibility = Visibility.Collapsed;
+            D_Else1.Visibility = Visibility.Collapsed;
+#endif
+            foreach (RadioButton radio in RadioPanel.Children)
+            {
+                radio.PreviewKeyUp += TxtSrchAll_KeyUp;
+            }
+
+            Title = Core.Route;
+
+            _winSetting = new Settings(this, Scroll, Index);
+
+            ItemCtrl.ItemsSource = ShowItems;
+
+            CondInd = new ConditionIndicator(this);
+            Sorter = new Sorter(this, List);
+            Searcher = new Searcher(this, List);
+
+            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
+            InfSvc = new InfoSavingService();
+            IdxSvc = new IndexingService(this);
+
+            InfSvc.Start();
+            IdxSvc.Start();
+            PgSvc.Paginate();
+        }
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
         {
             border.Visibility = Visibility.Hidden;
@@ -82,7 +146,6 @@ namespace imgLoader_WPF.Windows
             txtB.Text = "";
             label.Visibility = Visibility.Visible;
         }
-
         private void DeleteItemDir(IndexItem item)
         {
             if (!File.Exists(item.Route)) return;
@@ -119,71 +182,6 @@ namespace imgLoader_WPF.Windows
                 List.Remove(_clickedItem);
                 Dispatcher.Invoke(() => ShowItems.Remove(_clickedItem));
             }).Start();
-        }
-
-        private void Button_Click_5(object sender, RoutedEventArgs e)
-        {
-            ;
-        }
-        private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
-        {
-            new Thread(() =>
-                {
-                    while (true)
-                    {
-                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
-                        Thread.Sleep(1000);
-                    }
-                })
-            { IsBackground = true }.Start();
-
-            Properties.Settings.Default.Upgrade();
-
-            Menu.Focus(); //메뉴 미리 로드
-
-            _winSetting = new Settings(this, Scroll, Index);
-
-            if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
-            {
-                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
-            }
-            else
-            {
-                IdxBlock.Visibility = Visibility.Hidden;
-                _winSetting.Show();
-            }
-
-#if DEBUG
-            //Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
-#endif
-#if !DEBUG
-            D_Stop.IsEnabled = false;
-            D_Else1.IsEnabled = false;
-            D_Stop.Visibility = Visibility.Collapsed;
-            D_Else1.Visibility = Visibility.Collapsed;
-#endif
-            foreach (RadioButton radio in RadioPanel.Children)
-            {
-                radio.PreviewKeyUp += TxtSrchAll_KeyUp;
-            }
-
-            Title = Core.Route;
-
-            _winSetting = new Settings(this, Scroll, Index);
-
-            ItemCtrl.ItemsSource = ShowItems;
-
-            CondInd = new ConditionIndicator(this);
-            Sorter = new Sorter(this, List);
-            Searcher = new Searcher(this, List);
-
-            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
-            InfSvc = new InfoSavingService();
-            IdxSvc = new IndexingService(this);
-
-            InfSvc.Start();
-            IdxSvc.Start();
-            PgSvc.Paginate();
         }
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
