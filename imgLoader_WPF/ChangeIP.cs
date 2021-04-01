@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using Microsoft.Win32;
 using System.Linq;
 using System.Management;
-using System.Management.Automation;
-using System.Management.Automation.Runspaces;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
 using System.Net.NetworkInformation;
-using Microsoft.Win32;
 
 namespace imgLoader_WPF
 {

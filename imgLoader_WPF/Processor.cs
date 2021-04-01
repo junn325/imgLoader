@@ -52,7 +52,7 @@ namespace imgLoader_WPF
             //}
         }
 
-        internal void Load()
+        internal void LoadInfo()
         {
             _stop = false;
             _item.IsDownloading = true;

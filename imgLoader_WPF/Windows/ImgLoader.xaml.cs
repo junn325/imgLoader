@@ -213,7 +213,7 @@ namespace imgLoader_WPF.Windows
                     //InfSvc.Stop();
 
                     lItem.Proc = new Processor(url, lItem);
-                    lItem.Proc.Load();
+                    lItem.Proc.LoadInfo();
                     lItem.Proc.Pause = !Properties.Settings.Default.Down_Immid;
 
                     if (!lItem.Proc.IsValidated)
