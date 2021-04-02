@@ -15,12 +15,12 @@ namespace imgLoader_WPF.Services
         private const int Interval = 3000;
 
         private Thread _service;
-        private Action _PaginateEnded;
+        //private Action _PaginateEnded;
         //public event EventHandler PaginateDone;
         //private DispatcherProcessingDisabled _disableProcessing;
 
         private readonly Windows.ImgLoader _sender;
-        private readonly double _scrollHeight;
+        public double ScrollHeight;
         private readonly ObservableCollection<IndexItem> _showItems;
         private readonly List<IndexItem> _list;
 
@@ -29,7 +29,7 @@ namespace imgLoader_WPF.Services
             _sender = sender;
             _showItems = showItems;
             _list = list;
-            _scrollHeight = scrollHeight;
+            ScrollHeight = scrollHeight;
         }
 
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
@@ -38,7 +38,7 @@ namespace imgLoader_WPF.Services
 
             _service = new Thread(() =>
             {
-                var num = (int)Math.Ceiling(_scrollHeight / LoaderItem.MHeight);
+                var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
 
                 var oriCnt = _showItems.Count;
                 var listCount = _list.Count;
@@ -65,7 +65,14 @@ namespace imgLoader_WPF.Services
             _service.Start();
             _service.Join();
 
-            disableProcessing.Dispose();
+            if (Dispatcher.CurrentDispatcher.CheckAccess())
+            {
+                _sender.Dispatcher.Invoke(disableProcessing.Dispose);
+            }
+            else
+            {
+                disableProcessing.Dispose();
+            }
         }
 
         internal void Paginate()
@@ -78,7 +85,7 @@ namespace imgLoader_WPF.Services
 
                 _sender.Dispatcher.Invoke(() =>
                 {
-                    for (var i = 0; i < Math.Ceiling(_scrollHeight / LoaderItem.MHeight); i++)
+                    for (var i = 0; i < Math.Ceiling(ScrollHeight / LoaderItem.MHeight); i++)
                     {
                         var i1 = i;
                         if (oriCnt + i1 + 1 > _list.Count) return;
