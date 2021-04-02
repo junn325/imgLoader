@@ -58,6 +58,8 @@ namespace imgLoader_WPF.Windows
 
             _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = Visibility.Visible);
 
+            var disableProcessing = _sender.Dispatcher.DisableProcessing();
+
             _sender.CondInd.Clear();
 
             _sender.Index.Clear();
@@ -65,11 +67,12 @@ namespace imgLoader_WPF.Windows
             _sender.ShowItems.Clear();
 
             _scroll.ScrollToTop();
-
             _sender.IdxSvc.Pause();
-            new Thread(() => {
+
+            new Thread(() =>
+            {
                 _sender.IdxSvc.DoIndex();
-                _sender.PgSvc.Paginate();
+                _sender.PgSvc.Paginate(disableProcessing);
                 _sender.IdxSvc.Resume();
             }).Start();
 

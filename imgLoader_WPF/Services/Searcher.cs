@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using imgLoader_WPF.Windows;
+using System.Windows.Threading;
 
 namespace imgLoader_WPF.Services
 {
@@ -17,12 +20,25 @@ namespace imgLoader_WPF.Services
             _list = list;
         }
 
-        internal void Search(string search, SearchOption option)
+        internal void SearchRefresh(string search, SearchOption option, DispatcherProcessingDisabled disableProcessing)
         {
             _sender.Scroll.ScrollToTop();
+            _sender.ShowItems.Clear();
 
             var index = SearchIndex(_list);
-            SearchFrom(_list, index, search, _list, option);
+            var result = SearchFrom(_list, index, search, option);
+
+            //var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
+            _list.Clear();
+
+            foreach (var item in result)
+            {
+                if (item == null) continue;
+
+                _list.Add(item);
+            }
+
+            _sender.PgSvc.Paginate(disableProcessing);
         }
 
         //internal void Search(string search, List<IndexItem> where, SearchOption option)
@@ -32,7 +48,7 @@ namespace imgLoader_WPF.Services
         //    SearchFrom(where, search, _list, option);
         //}
 
-        internal string[,] SearchIndex(IReadOnlyList<IndexItem> searchFrom)
+        internal static string[,] SearchIndex(IReadOnlyList<IndexItem> searchFrom)
         {
             var result = new string[searchFrom.Count, IndexCount];
             var sb = new StringBuilder();
@@ -56,9 +72,10 @@ namespace imgLoader_WPF.Services
             return result;
         }
 
-        internal void SearchFrom(List<IndexItem> searchFrom, string[,] index, string search, ICollection<IndexItem> destination, SearchOption option)
+        internal static IndexItem[] SearchFrom(IEnumerable<IndexItem> searchFrom, string[,] index, string search, SearchOption option)
         {
-            var searchResult = Core.InitializeArray(searchFrom.Count, searchFrom.ToArray());
+            //var searchResult = Core.InitializeArray(searchFrom.Count, searchFrom.ToArray());
+            var searchResult = searchFrom.ToArray();
             var opt = (int)option;
 
             switch (option)
@@ -158,16 +175,7 @@ namespace imgLoader_WPF.Services
                     throw new ArgumentOutOfRangeException(nameof(option), option, null);
             }
 
-            destination.Clear();
-            foreach (var item in searchResult)
-            {
-                if (item == null)
-                {
-                    continue;
-                }
-
-                destination.Add(item);
-            }
+            return searchResult;
         }
 
         internal enum SearchOption

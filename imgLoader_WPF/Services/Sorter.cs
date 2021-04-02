@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows.Threading;
 using imgLoader_WPF.Windows;
+using Dispatcher = System.Windows.Threading.Dispatcher;
 
 namespace imgLoader_WPF.Services
 {
@@ -16,7 +19,7 @@ namespace imgLoader_WPF.Services
             _sender = sender;
         }
 
-        internal void Sort(SortOption sortOption)
+        internal void DoSortList(SortOption sortOption)
         {
             //_sender.Scroll.ScrollToTop();
 
@@ -57,15 +60,27 @@ namespace imgLoader_WPF.Services
             {
                 _list.Add(item);
             }
+        }
 
-            if (!_sender.Dispatcher.CheckAccess())
-            {
-                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Clear());
-            }
-            else
+        internal void SortRefresh(SortOption sortOption, DispatcherProcessingDisabled disableProcessing)
+        {
+            DoSortList(sortOption);
+            _sender.Dispatcher.Invoke(() =>
             {
                 _sender.ShowItems.Clear();
-            }
+                _sender.PgSvc.Paginate(disableProcessing);
+            });
+        }
+
+        internal void SortRefresh(SortOption sortOption)
+        {
+            DoSortList(sortOption);
+            _sender.Dispatcher.Invoke(() =>
+            {
+                var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
+                _sender.ShowItems.Clear();
+                _sender.PgSvc.Paginate(disableProcessing);
+            });
         }
 
         internal enum SortOption

@@ -270,11 +270,6 @@ namespace imgLoader_WPF
             return file;
         }
 
-        internal static async void Wait(int msec)
-        {
-            await Task.Delay(msec).ConfigureAwait(false);
-        }
-
         internal static int CountIndexOf(this string target, char find, int count)
         {
             for (int i = 0; i < target.Length; i++)
@@ -440,6 +435,16 @@ namespace imgLoader_WPF
             }
 
             return result;
+        }
+
+        internal static void RefreshList(List<IndexItem> list, IEnumerable<IndexItem> newContent)
+        {
+            list.Clear();
+
+            foreach (var item in newContent)
+            {
+                list.Add(item);
+            }
         }
     }
 }

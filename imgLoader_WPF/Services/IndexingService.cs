@@ -62,6 +62,7 @@ namespace imgLoader_WPF.Services
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
                 _sender.Index.Remove(item);
                 _sender.List.Remove(item);
+                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Remove(item));
             }
 
             var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
@@ -116,14 +117,16 @@ namespace imgLoader_WPF.Services
 
                 _sender.Index.Add(item);
                 _sender.List.Add(item);
+                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
 
                 _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
             }
 
             if (newFiles.Length != 0)
             {
+                var disableProcessing = System.Windows.Threading.Dispatcher.CurrentDispatcher.DisableProcessing();
                 var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
-                _sender.Sorter.Sort(temp);
+                _sender.Sorter.SortRefresh(temp, disableProcessing);
             }
         }
 

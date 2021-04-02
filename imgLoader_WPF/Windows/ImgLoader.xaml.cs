@@ -134,9 +134,10 @@ namespace imgLoader_WPF.Windows
             InfSvc = new InfoSavingService();
             IdxSvc = new IndexingService(this);
 
+            //var disableProcessing = Dispatcher.DisableProcessing();
             InfSvc.Start();
             IdxSvc.Start();
-            PgSvc.Paginate();
+            //PgSvc.Paginate(disableProcessing);
         }
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
         {
@@ -248,7 +249,7 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
-                Sorter.Sort((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);
+                Sorter.SortRefresh((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
                 //sw.Reset();
             });
 
@@ -284,8 +285,6 @@ namespace imgLoader_WPF.Windows
         {
             if (e.Key != Key.Enter) return;
             if (TxtSrchAll.Text.Length == 0) return;
-            //List.Clear();
-            ShowItems.Clear();
 
             Search(TxtSrchAll.Text,
                 (int)(
@@ -359,9 +358,6 @@ namespace imgLoader_WPF.Windows
         }
         private void Search(string searchTxt, int option)
         {
-            //List.Clear();
-            ShowItems.Clear();
-
             CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
 
             var tag = option switch
@@ -391,12 +387,10 @@ namespace imgLoader_WPF.Windows
             block.MouseDown += Block_ClickHandler;
 
             RecentPanel.Children.Insert(0, block);
-
-            PgSvc.Paginate();
         }
         private void Search(string searchTxt, int option, string label)
         {
-            //List.Clear();
+            var disableProcessing = Dispatcher.DisableProcessing();
             ShowItems.Clear();
 
             CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
@@ -429,13 +423,14 @@ namespace imgLoader_WPF.Windows
 
             RecentPanel.Children.Insert(0, block);
 
-            PgSvc.Paginate();
+            PgSvc.Paginate(disableProcessing);
         }
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
             if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
 
+            Debug.Write("Main: Scroll_ScrollChanged: Paginate\n");
             PgSvc.Paginate();
         }
         private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -702,13 +697,15 @@ namespace imgLoader_WPF.Windows
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             //MessageBox.Show($"{this.Left}, {this.Top}");
+            var disableProcessing = ItemCtrl.Dispatcher.DisableProcessing();
+
             ShowItems.Clear();
             List.Clear();
             foreach (var item in Index)
             {
                 List.Add(item);
             }
-            PgSvc.Paginate();
+            PgSvc.Paginate(disableProcessing);
         }
 
         private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)

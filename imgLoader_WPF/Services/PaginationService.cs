@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 using imgLoader_WPF.LoaderListCtrl;
+using ThreadState = System.Threading.ThreadState;
 
 namespace imgLoader_WPF.Services
 {
@@ -25,6 +29,50 @@ namespace imgLoader_WPF.Services
             _scrollHeight = scrollHeight;
         }
 
+        internal void Paginate(DispatcherProcessingDisabled disableProcessing)
+        {
+            if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
+
+            var b = false;
+            _service = new Thread(() =>
+            {
+                var num = (int)Math.Ceiling(_scrollHeight / LoaderItem.MHeight);
+
+                var oriCnt = _showItems.Count;
+                var listCount = _list.Count;
+
+                var itemToAdd = new IndexItem[num];
+                for (var i = 0; i < num; i++)
+                {
+                    var i1 = i;
+                    if (oriCnt + i1 + 1 > listCount) return;
+
+                    itemToAdd[i] = _list[oriCnt + i1];
+                }
+
+                _sender.Dispatcher.BeginInvoke(() =>
+                {
+                    foreach (var item in itemToAdd)
+                    {
+                        _showItems.Add(item);
+                    }
+                });
+
+                b = true;
+            });
+            _service.Name = "PgSvc";
+            _service.IsBackground = true;
+            _service.Start();
+
+            while (!b)
+            {
+                Task.Delay(5).Wait();
+                Debug.Write("PgSvc: Wait\n");
+            }
+
+            disableProcessing.Dispose();
+        }
+
         internal void Paginate()
         {
             if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
@@ -41,7 +89,7 @@ namespace imgLoader_WPF.Services
                     _sender.Dispatcher.Invoke(() => _showItems.Add(temp));
                 }
             });
-            _service.Name = "PgSvc";
+            _service.Name = "PgSvc_NoDisableDispatcher";
             _service.IsBackground = true;
             _service.Start();
         }
@@ -53,12 +101,15 @@ namespace imgLoader_WPF.Services
 
             page: _service = new Thread(() =>
             {
-                _sender.Dispatcher.Invoke(() => _showItems.Clear());
-
-                foreach (var item in _list)
+                _sender.Dispatcher.Invoke(() =>
                 {
-                    _sender.Dispatcher.Invoke(() => _showItems.Add(item));
-                }
+                    _showItems.Clear();
+                    foreach (var item in _list)
+                    {
+                        _showItems.Add(item);
+                    }
+                });
+
             });
             _service.Name = "PgSvc";
             _service.Start();
