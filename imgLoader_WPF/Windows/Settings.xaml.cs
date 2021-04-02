@@ -68,13 +68,13 @@ namespace imgLoader_WPF.Windows
 
             _scroll.ScrollToTop();
             _sender.IdxSvc.Pause();
+            _sender.IdxSvc.DoIndex();
 
-            new Thread(() =>
-            {
-                _sender.IdxSvc.DoIndex();
+            //new Thread(() =>
+            //{
                 _sender.PgSvc.Paginate(disableProcessing);
                 _sender.IdxSvc.Resume();
-            }).Start();
+            //}).Start();
 
             if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))
             {
