@@ -15,6 +15,9 @@ namespace imgLoader_WPF.Services
         private const int Interval = 3000;
 
         private Thread _service;
+        private Action _PaginateEnded;
+        //public event EventHandler PaginateDone;
+        //private DispatcherProcessingDisabled _disableProcessing;
 
         private readonly Windows.ImgLoader _sender;
         private readonly double _scrollHeight;
@@ -33,7 +36,6 @@ namespace imgLoader_WPF.Services
         {
             if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
 
-            var b = false;
             _service = new Thread(() =>
             {
                 var num = (int)Math.Ceiling(_scrollHeight / LoaderItem.MHeight);
@@ -57,18 +59,11 @@ namespace imgLoader_WPF.Services
                         _showItems.Add(item);
                     }
                 });
-
-                b = true;
             });
             _service.Name = "PgSvc";
             _service.IsBackground = true;
             _service.Start();
-
-            while (!b)
-            {
-                Task.Delay(5).Wait();
-                Debug.Write("PgSvc: Wait\n");
-            }
+            _service.Join();
 
             disableProcessing.Dispose();
         }
@@ -80,14 +75,18 @@ namespace imgLoader_WPF.Services
             _service = new Thread(() =>
             {
                 var oriCnt = _showItems.Count;
-                for (var i = 0; i < Math.Ceiling(_scrollHeight / LoaderItem.MHeight); i++)
-                {
-                    var i1 = i;
-                    if (oriCnt + i1 + 1 > _list.Count) return;
 
-                    var temp = _list[oriCnt + i1];
-                    _sender.Dispatcher.Invoke(() => _showItems.Add(temp));
-                }
+                _sender.Dispatcher.Invoke(() =>
+                {
+                    for (var i = 0; i < Math.Ceiling(_scrollHeight / LoaderItem.MHeight); i++)
+                    {
+                        var i1 = i;
+                        if (oriCnt + i1 + 1 > _list.Count) return;
+
+                        var temp = _list[oriCnt + i1];
+                        _showItems.Add(temp);
+                    }
+                });
             });
             _service.Name = "PgSvc_NoDisableDispatcher";
             _service.IsBackground = true;
