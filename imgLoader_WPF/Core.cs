@@ -376,7 +376,7 @@ namespace imgLoader_WPF
         internal static void OpenDir(string path)
         {
             if (!Directory.Exists(path)) return;
-            Process.Start("explorer.exe", path);
+            Process.Start("Explorer.exe", @"/open,""" + path);
         }
 
         internal static string EHNumFromRaw(string number)

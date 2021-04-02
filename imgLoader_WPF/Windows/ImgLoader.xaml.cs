@@ -37,6 +37,7 @@ namespace imgLoader_WPF.Windows
     //todo: 우클릭 시 해당 항목 작가명/기타로 검색
     //todo: 더블클릭으로 열기
     //todo: 드래그로 사용자 정의 순서
+    //todo: CondInd 객체 새로고침, 수정 추가
 
     //  검색
     //todo: 검색 조건에 AND, OR 추가
@@ -430,7 +431,7 @@ namespace imgLoader_WPF.Windows
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
             if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
 
-            Debug.Write("Main: Scroll_ScrollChanged: Paginate\n");
+            PgSvc.ScrollHeight = Scroll.ActualHeight;
             PgSvc.Paginate();
         }
         private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
