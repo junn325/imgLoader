@@ -81,6 +81,8 @@ namespace imgLoader_WPF.Windows
         }
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            Thread.CurrentThread.Name = "Main";
+
             new Thread(() =>
                 {
                     while (true)
@@ -438,8 +440,9 @@ namespace imgLoader_WPF.Windows
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
             if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
 
+            var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.ScrollHeight = Scroll.ActualHeight;
-            PgSvc.Paginate();
+            PgSvc.Paginate(disableProcessing);
         }
         private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
         {

@@ -34,39 +34,33 @@ namespace imgLoader_WPF.Services
 
         internal void Paginate(Dispatcher dispatcher, DispatcherProcessingDisabled disableProcessing)
         {
-            if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
+            //if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
 
-            _service = new Thread(() =>
+            //_service = new Thread(() =>
+            //{
+            var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
+
+            var oriCnt = _showItems.Count;
+            var listCount = _list.Count;
+
+            var itemToAdd = new IndexItem[num];
+            for (var i = 0; i < num; i++)
             {
-                var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
+                var i1 = i;
+                if (oriCnt + i1 + 1 > listCount) return;
 
-                var oriCnt = _showItems.Count;
-                var listCount = _list.Count;
+                itemToAdd[i] = _list[oriCnt + i1];
+            }
 
-                var itemToAdd = new IndexItem[num];
-                for (var i = 0; i < num; i++)
+            //var temp = dispatcher.Thread.Priority;
+            //dispatcher.Thread.Priority = ThreadPriority.Highest;
+            _sender.Dispatcher.BeginInvoke(() =>
+            {
+                foreach (var item in itemToAdd)
                 {
-                    var i1 = i;
-                    if (oriCnt + i1 + 1 > listCount) return;
-
-                    itemToAdd[i] = _list[oriCnt + i1];
-                } 
-
-                var temp = dispatcher.Thread.Priority;
-                dispatcher.Thread.Priority = ThreadPriority.Highest;
-                dispatcher.BeginInvoke(() =>
-                {
-                    foreach (var item in itemToAdd)
-                    {
-                        _showItems.Add(item);
-                    }
-                });
-                 dispatcher.Thread.Priority = temp;
-             });
-            _service.Name = "PgSvc";
-            _service.IsBackground = true;
-            _service.Start();
-            _service.Join();
+                    _showItems.Add(item);
+                }
+            });
 
             if (!dispatcher.CheckAccess())
             {
@@ -76,6 +70,14 @@ namespace imgLoader_WPF.Services
             {
                 disableProcessing.Dispose();
             }
+
+            //});
+            // dispatcher.Thread.Priority = temp;
+            // });
+            //_service.Name = "PgSvc";
+            //_service.IsBackground = true;
+            //_service.Start();
+            //_service.Join();
         }
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
         {

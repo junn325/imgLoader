@@ -131,7 +131,7 @@ namespace imgLoader_WPF.Services
                 Debug.WriteLine(Dispatcher.CurrentDispatcher.Thread.Name);
                 var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
                 _sender.Sorter.SortRefresh(temp, Dispatcher.CurrentDispatcher, disableProcessing);
-            }
+            }   
         }
 
         internal void RefreshAll()
