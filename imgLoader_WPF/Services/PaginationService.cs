@@ -31,7 +31,7 @@ namespace imgLoader_WPF.Services
 
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
         {
-            Debug.WriteLine("Paginate");
+            Debug.WriteLine("Paginate_DisableDispatcher");
             var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
 
             var oriCnt = _showItems.Count;
@@ -54,6 +54,7 @@ namespace imgLoader_WPF.Services
                     _showItems.Add(item);
                 }
 
+                _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;
                 _sender.ShowItemCount();
             });
 

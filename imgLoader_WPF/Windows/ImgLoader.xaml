@@ -18,7 +18,7 @@
         </Grid.Resources>
 
         <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".6" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,30,10,20">
-            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" IsTabStop="False" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged">
+            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" IsTabStop="False" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged">
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}" IsTabStop="False">
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">

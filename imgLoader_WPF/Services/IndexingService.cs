@@ -130,10 +130,12 @@ namespace imgLoader_WPF.Services
                 if (item.ImgCount == -1) continue;                //새로 다운로드 중인 항목 무시
 
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
+
                 _sender.Index.Remove(item);
                 _sender.List.Remove(item);
                 _sender.Dispatcher.Invoke(() =>
                 {
+                    _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Visible;
                     _sender.ShowItems.Remove(item);
                     _sender.ShowItemCount();
                 });
