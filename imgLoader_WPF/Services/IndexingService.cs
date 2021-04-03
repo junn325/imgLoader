@@ -63,7 +63,11 @@ namespace imgLoader_WPF.Services
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
                 _sender.Index.Remove(item);
                 _sender.List.Remove(item);
-                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Remove(item));
+                _sender.Dispatcher.Invoke(() =>
+                {
+                    _sender.ShowItems.Remove(item);
+                    _sender.ShowItemCount();
+                });
             }
 
             var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
@@ -118,12 +122,12 @@ namespace imgLoader_WPF.Services
 
                 _sender.Index.Add(item);
                 _sender.List.Add(item);
-                _sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
-
-                _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
+                _sender.Dispatcher.Invoke(() =>
+                {
+                    _sender.ShowItems.Add(item);
+                    _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden;
+                });
             }
-
-            _sender.Dispatcher.Invoke(() => _sender.ShowItemCount());
 
             if (newFiles.Length != 0)
             {
@@ -131,7 +135,7 @@ namespace imgLoader_WPF.Services
                 Debug.WriteLine(Dispatcher.CurrentDispatcher.Thread.Name);
                 var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
                 _sender.Sorter.SortRefresh(temp, Dispatcher.CurrentDispatcher, disableProcessing);
-            }   
+            }
         }
 
         internal void RefreshAll()

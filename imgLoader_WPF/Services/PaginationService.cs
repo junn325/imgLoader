@@ -44,7 +44,7 @@ namespace imgLoader_WPF.Services
             for (var i = 0; i < num; i++)
             {
                 var i1 = i;
-                if (oriCnt + i1 + 1 > listCount) return;
+                if (oriCnt + i1 + 1 > listCount) break;
 
                 itemToAdd[i] = _list[oriCnt + i1];
             }
@@ -53,8 +53,11 @@ namespace imgLoader_WPF.Services
             {
                 foreach (var item in itemToAdd)
                 {
+                    if (item == null) continue;
                     _showItems.Add(item);
                 }
+
+                _sender.ShowItemCount();
             });
 
             if (!dispatcher.CheckAccess())
@@ -73,36 +76,39 @@ namespace imgLoader_WPF.Services
         }
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
         {
-            if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
+            //if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
 
-            _service = new Thread(() =>
+            //_service = new Thread(() =>
+            //{
+            var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
+
+            var oriCnt = _showItems.Count;
+            var listCount = _list.Count;
+
+            var itemToAdd = new IndexItem[num];
+            for (var i = 0; i < num; i++)
             {
-                var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
+                var i1 = i;
+                if (oriCnt + i1 + 1 > listCount) break;
 
-                var oriCnt = _showItems.Count;
-                var listCount = _list.Count;
+                itemToAdd[i] = _list[oriCnt + i1];
+            }
 
-                var itemToAdd = new IndexItem[num];
-                for (var i = 0; i < num; i++)
+            _sender.Dispatcher.BeginInvoke(() =>
+            {
+                foreach (var item in itemToAdd)
                 {
-                    var i1 = i;
-                    if (oriCnt + i1 + 1 > listCount) return;
-
-                    itemToAdd[i] = _list[oriCnt + i1];
+                    if (item == null) continue;
+                    _showItems.Add(item);
                 }
 
-                _sender.Dispatcher.BeginInvoke(() =>
-                {
-                    foreach (var item in itemToAdd)
-                    {
-                        _showItems.Add(item);
-                    }
-                });
+                _sender.ShowItemCount();
             });
-            _service.Name = "PgSvc";
-            _service.IsBackground = true;
-            _service.Start();
-            _service.Join();
+            //});
+            //_service.Name = "PgSvc";
+            //_service.IsBackground = true;
+            //_service.Start();
+            //_service.Join();
 
             if (!_sender.Dispatcher.CheckAccess())
             {

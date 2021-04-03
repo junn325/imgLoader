@@ -22,15 +22,15 @@ namespace imgLoader_WPF.Services
 
         internal void Add(string srchText, Condition cond, int option)
         {
-            HandleLeftover(srchText, cond, option);
+            ProcessRequest(srchText, cond, option);
             AddIndicator(srchText, cond, option);
         }
         internal void Add(string srchText, Condition cond, int option, string label)
         {
-            HandleLeftover(srchText, cond, option);
+            ProcessRequest(srchText, cond, option);
             AddIndicator(srchText, cond, option, label);
         }
-        private void HandleLeftover(string srchText, Condition cond, int option)
+        private void ProcessRequest(string srchText, Condition cond, int option)
         {
             if (IndicatorList.Any(indItem => indItem.Condition == cond && indItem.Content == srchText && indItem.Option == option)) return;
 
@@ -52,8 +52,6 @@ namespace imgLoader_WPF.Services
                     _sender.Searcher.SearchRefresh(srchText, (Searcher.SearchOption)option, disableProcessing);
                     break;
             }
-
-            _sender.ShowItemCount();
         }
         private void AddIndicator(string srchText, Condition cond, int option, string label)
         {

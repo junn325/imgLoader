@@ -38,6 +38,7 @@ namespace imgLoader_WPF.Windows
     //todo: 더블클릭으로 열기
     //todo: 드래그로 사용자 정의 순서
     //todo: CondInd 객체 새로고침, 수정 추가
+    //todo: 5항목마다 한칸씩 공백 삽입(아무 컨트롤 없는 LoaderItem 삽입?)
 
     //  검색
     //todo: 검색 조건에 AND, OR 추가
@@ -190,6 +191,8 @@ namespace imgLoader_WPF.Windows
 
         internal void ShowItemCount()
         {
+            Debug.WriteLine("ShowItemCount: Call");
+
             CountBlock.Text = $"{List.Count} items";
         }
 
@@ -400,11 +403,12 @@ namespace imgLoader_WPF.Windows
         }
         private void Search(string searchTxt, int option, string label)
         {
-            var disableProcessing = Dispatcher.DisableProcessing();
-            ShowItems.Clear();
-
             CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
+            AddRecent(searchTxt, option);
+        }
 
+        private void AddRecent(string searchTxt, int option)
+        {
             var tag = option switch
             {
                 -1 => "All:",
@@ -432,9 +436,8 @@ namespace imgLoader_WPF.Windows
             block.MouseDown += Block_ClickHandler;
 
             RecentPanel.Children.Insert(0, block);
-
-            PgSvc.Paginate(disableProcessing);
         }
+
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
