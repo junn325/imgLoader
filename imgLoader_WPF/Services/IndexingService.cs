@@ -25,6 +25,11 @@ namespace imgLoader_WPF.Services
 
         private readonly ImgLoader _sender;
 
+        internal struct IndexReturn
+        {
+            internal string[] infoFiles;
+            internal string[] newFiles;
+        }
         public IndexingService(ImgLoader sender)
         {
             _sender = sender;
@@ -40,36 +45,26 @@ namespace imgLoader_WPF.Services
 
                     if (Properties.Settings.Default.NoIndex) continue;
 
-                    DoIndex();
+                    Indexing();
                 }
             });
             _service.Name = "IdxSvc";
             _service.IsBackground = true;
 
-            DoIndex();
+            Indexing();
         }
 
-        internal void DoIndex()
+        private void Indexing()
         {
-            if (!Directory.Exists(Core.Route)) return;
+            var result = DoIndex();
+            Refresh(result.infoFiles, result.newFiles);
+        }
+
+        internal IndexReturn DoIndex()
+        {
+            if (!Directory.Exists(Core.Route)) return new IndexReturn { infoFiles = null };
 
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-            foreach (var item in new List<IndexItem>(_sender.Index))
-            {
-                if (item.IsDownloading) continue;
-                if (infoFiles.Contains(item.Route)) continue;
-                if (item.ImgCount == -1) continue;                //새로 다운로드 중인 항목 무시
-
-                Debug.WriteLine($"IdxSvc: remove {item.Number}");
-                _sender.Index.Remove(item);
-                _sender.List.Remove(item);
-                _sender.Dispatcher.Invoke(() =>
-                {
-                    _sender.ShowItems.Remove(item);
-                    _sender.ShowItemCount();
-                });
-            }
-
             var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
             foreach (var infoRoute in newFiles)
             {
@@ -122,15 +117,37 @@ namespace imgLoader_WPF.Services
 
                 _sender.Index.Add(item);
                 _sender.List.Add(item);
+            }
+
+            return new IndexReturn { infoFiles = infoFiles, newFiles = newFiles };
+        }
+        internal void Refresh(string[] infoFiles, string[] newFiles)
+        {
+            foreach (var item in new List<IndexItem>(_sender.Index))
+            {
+                if (item.IsDownloading) continue;
+                if (infoFiles.Contains(item.Route)) continue;
+                if (item.ImgCount == -1) continue;                //새로 다운로드 중인 항목 무시
+
+                Debug.WriteLine($"IdxSvc: remove {item.Number}");
+                _sender.Index.Remove(item);
+                _sender.List.Remove(item);
                 _sender.Dispatcher.Invoke(() =>
                 {
-                    _sender.ShowItems.Add(item);
-                    _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden;
+                    _sender.ShowItems.Remove(item);
+                    _sender.ShowItemCount();
                 });
             }
 
             if (newFiles.Length != 0)
             {
+                _sender.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
+
+                //foreach (var item in newFiles)
+                //{
+                //    _sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
+                //}
+
                 var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
                 Debug.WriteLine(Dispatcher.CurrentDispatcher.Thread.Name);
                 var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
