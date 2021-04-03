@@ -22,6 +22,7 @@ namespace imgLoader_WPF.Services
         internal void DoSortList(SortOption sortOption)
         {
             //_sender.Scroll.ScrollToTop();
+            Core.ShowDate = false;
 
             List<IndexItem> temp;
             switch (sortOption)
@@ -41,6 +42,7 @@ namespace imgLoader_WPF.Services
                     temp = new List<IndexItem>(_list.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
                     break;
                 case SortOption.Date:
+                    Core.ShowDate = true;
                     temp = new List<IndexItem>(_list.OrderByDescending(i => i.Date));
                     break;
                 case SortOption.Vote:

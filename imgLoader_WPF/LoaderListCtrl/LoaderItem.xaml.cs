@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 using imgLoader_WPF.Services;
@@ -61,8 +62,8 @@ namespace imgLoader_WPF.LoaderListCtrl
 
                         if (data.Author.Split('|')[1].Contains(';'))
                         {
-                            if (sb.Length != 0) sb.Append(" ");
-                            sb.Append("(");
+                            if (sb.Length != 0) sb.Append(' ');
+                            sb.Append('(');
                             foreach (var s in data.Author.Split('|')[1].Split(';'))
                             {
                                 if (string.IsNullOrWhiteSpace(s)) continue;
@@ -85,6 +86,7 @@ namespace imgLoader_WPF.LoaderListCtrl
                 TitleBlock.Text = data.Title;
                 LblVote.Text = data.Vote.ToString();
                 ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
+                DateBlock.Text = Core.ShowDate ? data.Date.ToString(CultureInfo.CurrentCulture) : "";
 
                 ImgCntBlock.Visibility = data.ImgCount == -1 ? Visibility.Hidden : Visibility.Visible;
                 VoteGrid.Visibility = data.Vote == -1 ? Visibility.Hidden : Visibility.Visible;

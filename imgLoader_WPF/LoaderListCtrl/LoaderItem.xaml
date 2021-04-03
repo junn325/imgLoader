@@ -62,6 +62,7 @@
             <TextBlock x:Name="SiteBlock" Text="(사이트)" FontFamily="{StaticResource IBMPlexSansKR_R}" Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Row="2" Grid.Column="0" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="ImgCntBlock" Text="(이미지 장수)" FontFamily="{StaticResource IBMPlexSansKR_R}"  VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="2" Grid.Column="1" Padding="0" TextTrimming="WordEllipsis"/>
             <TextBlock x:Name="ViewCntBlock" Text="(조회수)" FontFamily="{StaticResource IBMPlexSansKR_R}" Visibility="Visible" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" Padding="0" TextTrimming="WordEllipsis"/>
+            <TextBlock x:Name="DateBlock" Text="(날짜)" FontFamily="{StaticResource IBMPlexSansKR_R}" Visibility="Visible" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Grid.Row="2" Grid.Column="3" Padding="0" TextTrimming="WordEllipsis"/>
             <!--<Rectangle Fill="Gray" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3"/>-->
             <!--<Rectangle Fill="LightGray" Grid.Row="1" Grid.Column="3"/>-->
 
@@ -84,14 +85,14 @@
                 <DockPanel x:Name="TagPanel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="5,0,0,0" LastChildFill="False" Visibility="Visible"/>
             </ScrollViewer>-->
 
-            <Grid x:Name="VoteGrid" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="3" Margin="0,0,0,0">
+            <Grid x:Name="VoteGrid" HorizontalAlignment="Right" Grid.Row="1" Grid.Column="3" Margin="0,0,5,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock x:Name="LblVote" Text="(점수)" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,5,0"/>
-                <Button x:Name="DownVote" Template="{StaticResource BtnDown}" Grid.Column="2" BorderThickness="0" Margin="0,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Width="15" Click="DownVote_Click" TabIndex="-1"/>
+                <TextBlock x:Name="LblVote" Text="(점수)" Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="0,0,2,0"/>
+                <Button x:Name="DownVote" Template="{StaticResource BtnDown}" Grid.Column="2" BorderThickness="0" Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Width="15" Click="DownVote_Click" TabIndex="-1"/>
                 <Button x:Name="UpVote" Template="{StaticResource BtnUp}" Grid.Column="1" BorderThickness="0" Margin="0,0,2,0" VerticalAlignment="Center" HorizontalAlignment="Right" Height="15" Width="15" Click="UpVote_Click" TabIndex="-1"/>
             </Grid>
         </Grid>

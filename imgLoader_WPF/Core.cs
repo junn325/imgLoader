@@ -31,6 +31,8 @@ namespace imgLoader_WPF
 
         internal const int InfoCount = 9;
 
+        internal static bool ShowDate = false;
+
         private static readonly string[] DFilter = { "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
 
