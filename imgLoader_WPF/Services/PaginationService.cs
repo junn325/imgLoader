@@ -15,9 +15,6 @@ namespace imgLoader_WPF.Services
         private const int Interval = 3000;
 
         private Thread _service;
-        //private Action _PaginateEnded;
-        //public event EventHandler PaginateDone;
-        //private DispatcherProcessingDisabled _disableProcessing;
 
         private readonly Windows.ImgLoader _sender;
         public double ScrollHeight;
@@ -52,8 +49,6 @@ namespace imgLoader_WPF.Services
                 itemToAdd[i] = _list[oriCnt + i1];
             }
 
-            //var temp = dispatcher.Thread.Priority;
-            //dispatcher.Thread.Priority = ThreadPriority.Highest;
             _sender.Dispatcher.BeginInvoke(() =>
             {
                 foreach (var item in itemToAdd)
@@ -70,9 +65,6 @@ namespace imgLoader_WPF.Services
             {
                 disableProcessing.Dispose();
             }
-
-            //});
-            // dispatcher.Thread.Priority = temp;
             // });
             //_service.Name = "PgSvc";
             //_service.IsBackground = true;
@@ -114,10 +106,7 @@ namespace imgLoader_WPF.Services
 
             if (!_sender.Dispatcher.CheckAccess())
             {
-                _sender.Dispatcher.Invoke(() =>
-                {
-                    disableProcessing.Dispose();
-                });
+                _sender.Dispatcher.Invoke(disableProcessing.Dispose);
             }
             else
             {
