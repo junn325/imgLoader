@@ -41,6 +41,7 @@ namespace imgLoader_WPF
         internal IntOne ProgBarMax;
         internal NoParam ProgBarVal;
 
+        //todo: 델리게이트들을 Core로 옮길 수 있는가?
         //internal DblOne SizeChange;
     }
 }

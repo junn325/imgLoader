@@ -34,7 +34,7 @@ namespace imgLoader_WPF.Services
         {
             if (IndicatorList.Any(indItem => indItem.Condition == cond && indItem.Content == srchText && indItem.Option == option)) return;
 
-            var disableProcessing = System.Windows.Threading.Dispatcher.CurrentDispatcher.DisableProcessing();
+            //var disableProcessing = System.Windows.Threading.Dispatcher.CurrentDispatcher.DisableProcessing();
             switch (cond)
             {
                 case Condition.Sort:
@@ -45,11 +45,11 @@ namespace imgLoader_WPF.Services
                         IndicatorList.Remove(temp[0]);
                     }
 
-                    _sender.Sorter.SortRefresh((Sorter.SortOption)option, disableProcessing);
+                    _sender.Sorter.SortRefresh((Sorter.SortOption)option);
                     break;
 
                 case Condition.Search:
-                    _sender.Searcher.SearchRefresh(srchText, (Searcher.SearchOption)option, disableProcessing);
+                    _sender.Searcher.SearchRefresh(srchText, (Searcher.SearchOption)option);
                     break;
             }
         }

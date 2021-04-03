@@ -20,7 +20,7 @@ namespace imgLoader_WPF.Services
             _list = list;
         }
 
-        internal void SearchRefresh(string search, SearchOption option, DispatcherProcessingDisabled disableProcessing)
+        internal void SearchRefresh(string search, SearchOption option)
         {
             _sender.Scroll.ScrollToTop();
             _sender.ShowItems.Clear();
@@ -29,6 +29,28 @@ namespace imgLoader_WPF.Services
             var result = SearchFrom(_list, index, search, option);
 
             //var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
+            _list.Clear();
+
+            foreach (var item in result)
+            {
+                if (item == null) continue;
+
+                _list.Add(item);
+            }
+
+            _sender.PgSvc.Paginate();
+        }
+
+        internal void SearchRefresh(string search, SearchOption option, DispatcherProcessingDisabled disableProcessing)
+        {
+            _sender.Scroll.ScrollToTop();
+
+            //var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
+            _sender.ShowItems.Clear();
+
+            var index = SearchIndex(_list);
+            var result = SearchFrom(_list, index, search, option);
+
             _list.Clear();
 
             foreach (var item in result)
