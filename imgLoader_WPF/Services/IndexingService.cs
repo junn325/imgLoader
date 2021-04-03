@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using imgLoader_WPF.Windows;
+using System.Windows.Threading;
 
 namespace imgLoader_WPF.Services
 {
@@ -122,11 +123,14 @@ namespace imgLoader_WPF.Services
                 _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
             }
 
+            _sender.Dispatcher.Invoke(() => _sender.ShowItemCount());
+
             if (newFiles.Length != 0)
             {
-                var disableProcessing = System.Windows.Threading.Dispatcher.CurrentDispatcher.DisableProcessing();
+                var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
+                Debug.WriteLine(Dispatcher.CurrentDispatcher.Thread.Name);
                 var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
-                _sender.Sorter.SortRefresh(temp, disableProcessing);
+                _sender.Sorter.SortRefresh(temp, Dispatcher.CurrentDispatcher, disableProcessing);
             }
         }
 
