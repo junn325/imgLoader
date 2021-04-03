@@ -182,7 +182,8 @@ namespace imgLoader_WPF.Windows
 
                 Directory.Delete(Core.GetDirectoryFromFile(item.Route), true);
 
-                IdxSvc.DoIndex();
+                //var result = IdxSvc.DoIndex();
+                //IdxSvc.Refresh(result.infoFiles, result.newFiles);
 
                 List.Remove(_clickedItem);
                 Dispatcher.Invoke(() => ShowItems.Remove(_clickedItem));
@@ -262,7 +263,7 @@ namespace imgLoader_WPF.Windows
 
                 Sorter.SortRefresh((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
 
-                ShowItemCount();
+                Dispatcher.Invoke(ShowItemCount);
                 //sw.Reset();
             });
 
@@ -553,7 +554,7 @@ namespace imgLoader_WPF.Windows
         #region MenuItem
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show($"Are you sure you want to delete {_clickedItem.Number}?", "Confirm", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
+            if (MessageBox.Show($"Are you sure want to delete {_clickedItem.Number}?", "Confirm", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
 
             DeleteItemDir(_clickedItem);
         }

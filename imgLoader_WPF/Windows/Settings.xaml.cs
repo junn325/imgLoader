@@ -58,23 +58,28 @@ namespace imgLoader_WPF.Windows
 
             _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = Visibility.Visible);
 
-            var disableProcessing = _sender.Dispatcher.DisableProcessing();
 
             _sender.CondInd.Clear();
 
             _sender.Index.Clear();
             _sender.List.Clear();
-            _sender.ShowItems.Clear();
 
             _scroll.ScrollToTop();
             _sender.IdxSvc.Pause();
-            _sender.IdxSvc.DoIndex();
 
-            //new Thread(() =>
-            //{
-                _sender.PgSvc.Paginate(disableProcessing);
-                _sender.IdxSvc.Resume();
-            //}).Start();
+            new Thread(() =>
+            {
+                _sender.IdxSvc.DoIndex();
+
+                new Thread(() =>
+                {
+                    //var disableProcessing = _sender.Dispatcher.DisableProcessing();
+                    _sender.Dispatcher.Invoke(() => _sender.ShowItems.Clear());
+
+                    _sender.PgSvc.Paginate(/*disableProcessing*/);
+                    _sender.IdxSvc.Resume();
+                }).Start();
+            }).Start();
 
             if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))
             {
