@@ -52,6 +52,8 @@ namespace imgLoader_WPF.Services
                     _sender.Searcher.SearchRefresh(srchText, (Searcher.SearchOption)option, disableProcessing);
                     break;
             }
+
+            _sender.ShowItemCount();
         }
         private void AddIndicator(string srchText, Condition cond, int option, string label)
         {

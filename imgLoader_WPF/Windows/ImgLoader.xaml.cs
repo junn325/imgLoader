@@ -186,6 +186,11 @@ namespace imgLoader_WPF.Windows
             }).Start();
         }
 
+        internal void ShowItemCount()
+        {
+            CountBlock.Text = $"{List.Count} items";
+        }
+
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
@@ -251,6 +256,8 @@ namespace imgLoader_WPF.Windows
                 lItem.Proc.StartDownload();
 
                 Sorter.SortRefresh((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
+
+                ShowItemCount();
                 //sw.Reset();
             });
 
