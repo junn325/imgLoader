@@ -64,13 +64,6 @@ namespace imgLoader_WPF.Services
             }
         }
 
-        internal void SortRefresh(SortOption sortOption, Dispatcher dispatcher, DispatcherProcessingDisabled disableProcessing)
-        {
-            DoSortList(sortOption);
-            _sender.Dispatcher.Invoke(() => _sender.ShowItems.Clear());
-            _sender.PgSvc.Paginate(dispatcher, disableProcessing);
-        }
-
         internal void SortRefresh(SortOption sortOption, DispatcherProcessingDisabled disableProcessing)
         {
             DoSortList(sortOption);

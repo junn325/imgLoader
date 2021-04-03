@@ -141,17 +141,14 @@ namespace imgLoader_WPF.Services
 
             if (newFiles.Length != 0)
             {
-                _sender.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden);
+                _sender.Dispatcher.Invoke(() =>
+                {
+                    _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden;
+                    var disableProcessing = _sender.Dispatcher.DisableProcessing();
+                    var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
+                    _sender.Sorter.SortRefresh(temp, disableProcessing);
+                });
 
-                //foreach (var item in newFiles)
-                //{
-                //    _sender.Dispatcher.Invoke(() => _sender.ShowItems.Add(item));
-                //}
-
-                var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
-                Debug.WriteLine(Dispatcher.CurrentDispatcher.Thread.Name);
-                var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
-                _sender.Sorter.SortRefresh(temp, Dispatcher.CurrentDispatcher, disableProcessing);
             }
         }
 

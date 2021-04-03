@@ -29,57 +29,9 @@ namespace imgLoader_WPF.Services
             ScrollHeight = scrollHeight;
         }
 
-        internal void Paginate(Dispatcher dispatcher, DispatcherProcessingDisabled disableProcessing)
-        {
-            //if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
-
-            //_service = new Thread(() =>
-            //{
-            var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
-
-            var oriCnt = _showItems.Count;
-            var listCount = _list.Count;
-
-            var itemToAdd = new IndexItem[num];
-            for (var i = 0; i < num; i++)
-            {
-                var i1 = i;
-                if (oriCnt + i1 + 1 > listCount) break;
-
-                itemToAdd[i] = _list[oriCnt + i1];
-            }
-
-            _sender.Dispatcher.BeginInvoke(() =>
-            {
-                foreach (var item in itemToAdd)
-                {
-                    if (item == null) continue;
-                    _showItems.Add(item);
-                }
-
-                _sender.ShowItemCount();
-            });
-
-            if (!dispatcher.CheckAccess())
-            {
-                dispatcher.Invoke(disableProcessing.Dispose);
-            }
-            else
-            {
-                disableProcessing.Dispose();
-            }
-            // });
-            //_service.Name = "PgSvc";
-            //_service.IsBackground = true;
-            //_service.Start();
-            //_service.Join();
-        }
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
         {
-            //if (_service != null && _service.ThreadState != ThreadState.Stopped) return;
-
-            //_service = new Thread(() =>
-            //{
+            Debug.WriteLine("Paginate");
             var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
 
             var oriCnt = _showItems.Count;
@@ -104,20 +56,8 @@ namespace imgLoader_WPF.Services
 
                 _sender.ShowItemCount();
             });
-            //});
-            //_service.Name = "PgSvc";
-            //_service.IsBackground = true;
-            //_service.Start();
-            //_service.Join();
 
-            if (!_sender.Dispatcher.CheckAccess())
-            {
-                _sender.Dispatcher.Invoke(disableProcessing.Dispose);
-            }
-            else
-            {
-                disableProcessing.Dispose();
-            }
+            disableProcessing.Dispose();
         }
 
         internal void Paginate()

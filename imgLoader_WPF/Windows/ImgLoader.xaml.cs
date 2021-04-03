@@ -444,6 +444,7 @@ namespace imgLoader_WPF.Windows
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
             if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
 
+            Debug.WriteLine("ScrollChanged: Paginate");
             var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.ScrollHeight = Scroll.ActualHeight;
             PgSvc.Paginate(disableProcessing);
