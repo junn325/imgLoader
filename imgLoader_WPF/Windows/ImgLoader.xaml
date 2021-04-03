@@ -17,9 +17,9 @@
             <SolidColorBrush x:Key="PBrush" Color="LightGray" Opacity="1"/>
         </Grid.Resources>
 
-        <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".5" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,30,10,20">
-            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TabIndex="-1" ScrollChanged="Scroll_ScrollChanged">
-                <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}">
+        <Border x:Name="Bdr" BorderBrush="Black" BorderThickness=".6" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="10,30,10,20">
+            <ScrollViewer x:Name="Scroll" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" HorizontalAlignment="Stretch" IsTabStop="False" VerticalAlignment="Stretch" ScrollChanged="Scroll_ScrollChanged">
+                <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}" IsTabStop="False">
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
                             <MenuItem x:Name="OpenMenu" Header="열기" IsEnabled="False" Click="Open_Click"/>
@@ -65,7 +65,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <loaderListCtrl:LoaderItem MouseRightButtonDown="LItem_MouseRightButtonDown" TabIndex="-1"/>
+                            <loaderListCtrl:LoaderItem MouseRightButtonDown="LItem_MouseRightButtonDown" IsTabStop="False"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -81,7 +81,7 @@
             </Grid>
         </Border>
 
-        <Grid x:Name="SrchBorder" Background="{StaticResource BBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Visible" MouseDown="SrchBorder_MouseDown">
+        <Grid x:Name="SrchBorder" Background="{StaticResource BBrush}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Hidden" MouseDown="SrchBorder_MouseDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="25"/>
