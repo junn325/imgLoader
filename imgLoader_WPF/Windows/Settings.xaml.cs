@@ -58,7 +58,6 @@ namespace imgLoader_WPF.Windows
 
             _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = Visibility.Visible);
 
-
             _sender.CondInd.Clear();
 
             _sender.Index.Clear();
@@ -74,7 +73,11 @@ namespace imgLoader_WPF.Windows
                 new Thread(() =>
                 {
                     //var disableProcessing = _sender.Dispatcher.DisableProcessing();
-                    _sender.Dispatcher.Invoke(() => _sender.ShowItems.Clear());
+                    _sender.Dispatcher.Invoke(() =>
+                    {
+                        _sender.ShowItems.Clear();
+                        _sender.IdxBlock.Visibility = Visibility.Hidden;
+                    });
 
                     _sender.PgSvc.Paginate(/*disableProcessing*/);
                     _sender.IdxSvc.Resume();

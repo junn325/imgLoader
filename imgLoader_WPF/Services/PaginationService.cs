@@ -79,6 +79,7 @@ namespace imgLoader_WPF.Services
                         var temp = _list[oriCnt + i1];
                         _showItems.Add(temp);
                     }
+                    _sender.ShowItemCount();
                 });
             });
             _service.Name = "PgSvc_NoDisableDispatcher";

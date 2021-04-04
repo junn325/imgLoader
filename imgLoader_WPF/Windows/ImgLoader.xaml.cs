@@ -194,7 +194,7 @@ namespace imgLoader_WPF.Windows
         {
             Debug.WriteLine("ShowItemCount: Call");
 
-            CountBlock.Text = $"{List.Count} items";
+            CountBlock.Text = $"{List.Count} items | {Core.Route}";
         }
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
