@@ -82,6 +82,7 @@ namespace imgLoader_WPF.Windows
         }
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            Core.CompareWorkspace(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (5)", @"F:\문서\사진\Saved Pictures\고니\manga");
             Thread.CurrentThread.Name = "Main";
 
             new Thread(() =>
@@ -111,7 +112,7 @@ namespace imgLoader_WPF.Windows
             }
 
 #if DEBUG
-            Core.Route = "D:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+            Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
 #endif
 #if !DEBUG
             D_Stop.IsEnabled = false;

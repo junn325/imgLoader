@@ -448,5 +448,28 @@ namespace imgLoader_WPF
                 list.Add(item);
             }
         }
+
+        internal static void CompareWorkspace(string firstPath, string secondPath)
+        {
+            var first = Directory.GetFiles(firstPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+            var second = Directory.GetFiles(secondPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+
+            string[] longer, shorter;
+            if (first.Length > second.Length)
+            {
+                longer = first;
+                shorter = second;
+            }
+            else
+            {
+                longer = second;
+                shorter = first;
+            }
+
+            var result = longer.Where(i => shorter.All(j => j == Path.GetFileNameWithoutExtension(i))).ToList();
+            result.AddRange(shorter.Where(i => longer.All(j => j == Path.GetFileNameWithoutExtension(i))));
+
+            ;
+        }
     }
 }
