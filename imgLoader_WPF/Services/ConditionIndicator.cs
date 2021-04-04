@@ -22,15 +22,15 @@ namespace imgLoader_WPF.Services
 
         internal void Add(string srchText, Condition cond, int option)
         {
-            ProcessRequest(srchText, cond, option);
+            DoRequest(srchText, cond, option);
             AddIndicator(srchText, cond, option);
         }
         internal void Add(string srchText, Condition cond, int option, string label)
         {
-            ProcessRequest(srchText, cond, option);
+            DoRequest(srchText, cond, option);
             AddIndicator(srchText, cond, option, label);
         }
-        private void ProcessRequest(string srchText, Condition cond, int option)
+        private void DoRequest(string srchText, Condition cond, int option)
         {
             if (IndicatorList.Any(indItem => indItem.Condition == cond && indItem.Content == srchText && indItem.Option == option)) return;
 

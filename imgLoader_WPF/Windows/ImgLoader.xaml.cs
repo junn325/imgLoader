@@ -374,6 +374,7 @@ namespace imgLoader_WPF.Windows
         {
             CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
 
+            ShowItemCount();
             var tag = option switch
             {
                 -1 => "All:",
@@ -448,15 +449,6 @@ namespace imgLoader_WPF.Windows
             var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.ScrollHeight = Scroll.ActualHeight;
             PgSvc.Paginate(disableProcessing);
-        }
-        private void Scroll_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //foreach (var item in ShowItems)
-            //{
-            //    if (item.SizeChange == null) return;
-            //    item.SizeChange(Scroll.ActualWidth - 10.0);
-            //    //Debug.WriteLine("size");
-            //}
         }
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {

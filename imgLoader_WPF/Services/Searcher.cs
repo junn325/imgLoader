@@ -1,10 +1,8 @@
-﻿using System;
+﻿using imgLoader_WPF.Windows;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using imgLoader_WPF.Windows;
-using System.Windows.Threading;
 
 namespace imgLoader_WPF.Services
 {
@@ -28,7 +26,6 @@ namespace imgLoader_WPF.Services
             var index = SearchIndex(_list);
             var result = SearchFrom(_list, index, search, option);
 
-            //var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
             _list.Clear();
 
             foreach (var item in result)
@@ -41,35 +38,25 @@ namespace imgLoader_WPF.Services
             _sender.PgSvc.Paginate();
         }
 
-        internal void SearchRefresh(string search, SearchOption option, DispatcherProcessingDisabled disableProcessing)
-        {
-            _sender.Scroll.ScrollToTop();
-
-            //var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
-            _sender.ShowItems.Clear();
-
-            var index = SearchIndex(_list);
-            var result = SearchFrom(_list, index, search, option);
-
-            _list.Clear();
-
-            foreach (var item in result)
-            {
-                if (item == null) continue;
-
-                _list.Add(item);
-            }
-
-            _sender.PgSvc.Paginate(disableProcessing);
-        }
-
-        //internal void Search(string search, List<IndexItem> where, SearchOption option)
+        //internal void SearchRefresh(string search, SearchOption option, DispatcherProcessingDisabled disableProcessing)
         //{
         //    _sender.Scroll.ScrollToTop();
+        //    _sender.ShowItems.Clear();
 
-        //    SearchFrom(where, search, _list, option);
+        //    var index = SearchIndex(_list);
+        //    var result = SearchFrom(_list, index, search, option);
+
+        //    _list.Clear();
+
+        //    foreach (var item in result)
+        //    {
+        //        if (item == null) continue;
+
+        //        _list.Add(item);
+        //    }
+
+        //    _sender.PgSvc.Paginate(disableProcessing);
         //}
-
         internal static string[,] SearchIndex(IReadOnlyList<IndexItem> searchFrom)
         {
             var result = new string[searchFrom.Count, IndexCount];
