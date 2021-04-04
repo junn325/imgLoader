@@ -72,14 +72,14 @@ namespace imgLoader_WPF.Windows
 
                 new Thread(() =>
                 {
-                    //var disableProcessing = _sender.Dispatcher.DisableProcessing();
                     _sender.Dispatcher.Invoke(() =>
                     {
                         _sender.ShowItems.Clear();
                         _sender.IdxBlock.Visibility = Visibility.Hidden;
                     });
 
-                    _sender.PgSvc.Paginate(/*disableProcessing*/);
+                    _sender.PgSvc.Paginate();
+                    _sender.ShowItemCount();
                     _sender.IdxSvc.Resume();
                 }).Start();
             }).Start();

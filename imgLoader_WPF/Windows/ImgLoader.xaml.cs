@@ -373,8 +373,7 @@ namespace imgLoader_WPF.Windows
         private void Search(string searchTxt, int option)
         {
             CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
-
-            ShowItemCount();
+            
             var tag = option switch
             {
                 -1 => "All:",

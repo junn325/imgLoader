@@ -31,7 +31,6 @@ namespace imgLoader_WPF.Services
 
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
         {
-            Debug.WriteLine("Paginate_DisableDispatcher");
             var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
 
             var oriCnt = _showItems.Count;
@@ -55,7 +54,6 @@ namespace imgLoader_WPF.Services
                 }
 
                 _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;
-                _sender.ShowItemCount();
             });
 
             disableProcessing.Dispose();
@@ -79,7 +77,6 @@ namespace imgLoader_WPF.Services
                         var temp = _list[oriCnt + i1];
                         _showItems.Add(temp);
                     }
-                    //_sender.ShowItemCount();
                 });
             });
             _service.Name = "PgSvc_NoDisableDispatcher";

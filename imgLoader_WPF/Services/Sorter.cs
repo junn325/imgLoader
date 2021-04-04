@@ -69,6 +69,7 @@ namespace imgLoader_WPF.Services
             DoSortList(sortOption);
             _sender.Dispatcher.Invoke(() => _sender.ShowItems.Clear());
             _sender.PgSvc.Paginate(disableProcessing);
+            _sender.ShowItemCount();
         }
 
         internal void SortRefresh(SortOption sortOption)
@@ -79,6 +80,7 @@ namespace imgLoader_WPF.Services
                 var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
                 _sender.ShowItems.Clear();
                 _sender.PgSvc.Paginate(disableProcessing);
+                _sender.ShowItemCount();
             });
         }
 
