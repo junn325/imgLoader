@@ -93,6 +93,19 @@ namespace imgLoader_WPF.Services
                 case SearchOption.All:  //이미지 장수는 제외
                     foreach (var srch in search.Split(','))
                     {
+                        if (srch.Contains("//seen/"))
+                        {
+                            for (var i = 0; i < searchResult.Length; i++)
+                            {
+                                if (!searchResult[i].IsRead)
+                                {
+                                    searchResult[i] = null;
+                                }
+                            }
+
+                            continue;
+                        }
+
                         for (var i = 0; i < index.Length / IndexCount; i++)
                         {
                             if (index[i, 0]?.Contains(srch, StringComparison.OrdinalIgnoreCase) != true
