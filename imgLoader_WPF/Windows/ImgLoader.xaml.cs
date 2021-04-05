@@ -49,6 +49,7 @@ namespace imgLoader_WPF.Windows
     //todo: 자체 탐색기 만들기(메뉴-관리)
     //todo: 정보 복구
     //todo: 정보 직접 수정
+    //todo: 특정 정보 자동 치환 (ex: 작가명이 A에서 B로 바뀜 -> A = B로 자동 치환)
     //todo: 작가별 트리식 정렬
     //todo: 특정 이미지 숨기기(삭제x)
 
@@ -566,7 +567,7 @@ namespace imgLoader_WPF.Windows
         }
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            Core.OpenOnCanvas(Core.GetDirectoryFromFile(_clickedItem.Route));
+            Core.OpenOnCanvas(Core.GetDirectoryFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
 
             _clickedItem.View++;
             _clickedItem.IsRead = true;
@@ -660,13 +661,13 @@ namespace imgLoader_WPF.Windows
         }
         private void Random_Click(object sender, RoutedEventArgs e)
         {
-            var rand = new Random().Next(0, Index.Count);
+            var rand = new Random().Next(0, List.Count);
 
-            Debug.WriteLine("Main: Random_Click: " + Index[rand].Title);
+            Debug.WriteLine("Main: Random_Click: " + List[rand].Title);
 
             if (ShowItems.Count < rand + 1)
             {
-                Index[rand].IsRead = true;
+                List[rand].IsRead = true;
             }
             else
             {
@@ -674,7 +675,7 @@ namespace imgLoader_WPF.Windows
                 ShowItems[rand].ShownChang();
             }
 
-            Core.OpenOnCanvas(Core.GetDirectoryFromFile(Index[rand].Route));
+            Core.OpenOnCanvas(Core.GetDirectoryFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
         }
         private void VoteSort_Click(object sender, RoutedEventArgs e)
         {

@@ -28,13 +28,16 @@ namespace imgLoader_WPF.Windows
         private long _size;
         //public BitmapImage Image;
 
-        public string[] FileList;
+        internal string[] FileList;
         private BitmapImage[] _imgList;
         //private long[] _imgSizeList;
 
         private int _index;
         private int _min;
         private int _thres = 0;
+
+        internal string TTitle = "";
+        internal string Author = "";
 
         private bool _isMouseDown = false;
 
@@ -44,6 +47,8 @@ namespace imgLoader_WPF.Windows
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Title = GetTitle(FileList[0]);
+
             //FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
             FileList = FileList.OrderBy(i => int.TryParse(i.Split('\\')[^1].Split('.')[0], out var result) ? result : int.MaxValue).ToArray();
             _imgList = new BitmapImage[FileList.Length];
@@ -166,7 +171,7 @@ namespace imgLoader_WPF.Windows
 
             _img.Source = _imgList[_index];
 
-            Title = nextPath.Split('\\')[^1];
+            Title = GetTitle(nextPath);
 
             var imgOffset = _img.TransformToAncestor(this).Transform(new Point(0, 0));
 
@@ -182,6 +187,11 @@ namespace imgLoader_WPF.Windows
             _oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
 
             _min = 0;
+        }
+
+        private string GetTitle(string nextPath)
+        {
+            return $"{TTitle}{(Author != "|" ? " :by " + Core.GetArtistFromRaw(Author) : "")} || {nextPath.Split('\\')[^1]}";
         }
         private void ChangeImagePrev()
         {
@@ -225,10 +235,18 @@ namespace imgLoader_WPF.Windows
         private static BitmapImage ImageLoad(string path)
         {
             var bitmapImage = new BitmapImage();
-            bitmapImage.BeginInit();
-            bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-            bitmapImage.UriSource = new Uri(path);
-            bitmapImage.EndInit();
+
+            try
+            {
+                bitmapImage.BeginInit();
+                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                bitmapImage.UriSource = new Uri(path);
+                bitmapImage.EndInit();
+            }
+            catch
+            {
+                return null;
+            }
 
             return bitmapImage;
         }

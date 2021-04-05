@@ -396,7 +396,7 @@ namespace imgLoader_WPF
             return collect1.Where(item => collect2.All(i => i.Title != item.Title));
         }
 
-        internal static void OpenOnCanvas(string imgSetPath)
+        internal static void OpenOnCanvas(string imgSetPath, string title, string author)
         {
             if (!Directory.Exists(imgSetPath)) return;
 
@@ -407,7 +407,7 @@ namespace imgLoader_WPF
             //img.UriSource = new Uri(temp[0]);
             //img.EndInit();
 
-            var canvas = new Canvas { Title = temp[0].Split('\\')[^1], FileList = temp};
+            var canvas = new Canvas { TTitle = title, Author = author, FileList = temp};
             canvas.Show();
         }
 
