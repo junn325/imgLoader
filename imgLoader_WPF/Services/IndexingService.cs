@@ -69,7 +69,7 @@ namespace imgLoader_WPF.Services
             {
                 if (!File.Exists(infoRoute)) continue;
 
-                using var sr = new StreamReader(Core.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+                using var sr = new StreamReader(Core.Dir.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
                 var infos = sr.ReadToEnd().Replace("\r\n", "\n");
                 sr.Close();
                 if (string.IsNullOrWhiteSpace(infos)) continue;
@@ -80,7 +80,7 @@ namespace imgLoader_WPF.Services
                 try
                 {
                     item.Route = infoRoute;
-                    item.Number = Core.EHNumFromPath(infoRoute.Split('\\')[^1].Split('.')[0]);
+                    item.Number = Core.Dir.EHNumFromInternal(infoRoute.Split('\\')[^1].Split('.')[0]);
 
                     item.SiteName = info[0];
                     item.Title = info[1];

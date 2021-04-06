@@ -44,7 +44,7 @@ namespace imgLoader_WPF.Services
         private static void PerformSave(IndexItem item, StringBuilder sb)
         {
             if (string.IsNullOrWhiteSpace(item.Route)) return;
-            if (!Directory.Exists(Core.GetDirFromFile(item.Route))) return;
+            if (!Directory.Exists(Core.Dir.GetDirFromFile(item.Route))) return;
 
             if (item.IsError) return;
 
@@ -71,7 +71,7 @@ namespace imgLoader_WPF.Services
                     .Append(item.Show ? "1" : "0").Append('\n')
                     .Append(item.View);
 
-            using var fs = Core.DelayStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            using var fs = Core.Dir.DelayStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             using var sw = new StreamWriter(fs, Encoding.UTF8);
             sw.Write(sb.ToString());
 

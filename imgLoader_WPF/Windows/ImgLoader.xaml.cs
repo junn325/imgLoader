@@ -83,7 +83,7 @@ namespace imgLoader_WPF.Windows
         }
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            Core.CompareWorkspace(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (5)", @"F:\문서\사진\Saved Pictures\고니\manga");
+            Core.Dir.CompareWorkspace(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (5)", @"F:\문서\사진\Saved Pictures\고니\manga");
             Thread.CurrentThread.Name = "Main";
 
             new Thread(() =>
@@ -182,7 +182,7 @@ namespace imgLoader_WPF.Windows
                     }
                 } while (wait);
 
-                Directory.Delete(Core.GetDirFromFile(item.Route), true);
+                Directory.Delete(Core.Dir.GetDirFromFile(item.Route), true);
 
                 //var result = IdxSvc.DoIndex();
                 //IdxSvc.Refresh(result.infoFiles, result.newFiles);
@@ -562,11 +562,11 @@ namespace imgLoader_WPF.Windows
         //}
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
-            Core.OpenDir(Core.GetDirFromFile(_clickedItem.Route));
+            Core.Dir.OpenDir(Core.Dir.GetDirFromFile(_clickedItem.Route));
         }
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            Core.OpenOnCanvas(Core.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
+            Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
 
             _clickedItem.View++;
             _clickedItem.IsRead = true;
@@ -674,7 +674,7 @@ namespace imgLoader_WPF.Windows
                 ShowItems[rand].ShownChang();
             }
 
-            Core.OpenOnCanvas(Core.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
+            Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
         }
         private void VoteSort_Click(object sender, RoutedEventArgs e)
         {

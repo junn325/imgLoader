@@ -79,7 +79,7 @@ namespace imgLoader_WPF
 
         internal static void CreateInfo(string infoFileName, ISite site)
         {
-            if (!Directory.Exists(GetDirFromFile(infoFileName)))
+            if (!Directory.Exists(Dir.GetDirFromFile(infoFileName)))
                 throw new DirectoryNotFoundException();
             if (site == null)
                 throw new NullReferenceException("\"site\" is null.");
@@ -105,63 +105,6 @@ namespace imgLoader_WPF
             sw.Close();
 
             File.SetAttributes(infoFileName, FileAttributes.Hidden);
-        }
-
-        private static void InfoEncrypt(string path, string[] info)
-        {
-            var stream = new FileStream(path, FileMode.Create);
-            var writer = new BinaryWriter(stream);
-
-            try
-            {
-                foreach (var s in info)
-                {
-                    if (s == null)
-                    {
-                        writer.Write('\0');
-                        continue;
-                    }
-
-                    writer.Write(StringCipher.Encrypt(s + "\n"));
-                }
-            }
-            finally
-            {
-                writer.Close();
-                stream.Close();
-            }
-        }
-
-        private static void InfoDecrypt(string path)
-        {
-            var stream = new FileStream(path, FileMode.Open);
-            var reader = new BinaryReader(stream);
-
-            try
-            {
-                var sb = new StringBuilder();
-
-                do
-                {
-                    sb.Append(StringCipher.Decrypt(reader.ReadString()));
-                } while (reader.PeekChar() != -1);
-
-                MessageBox.Show(sb.ToString());
-            }
-            finally
-            {
-                reader.Close();
-                stream.Close();
-            }
-        }
-
-        internal static string DirFilter(string dirName)
-        {
-            for (byte i = 0; i < DFilter.Length; i++)
-                if (dirName.Contains(DFilter[i]))
-                    dirName = dirName.Replace(DFilter[i], DReplace[i]);
-
-            return dirName;
         }
 
         internal static string GetNum(string url)
@@ -241,35 +184,6 @@ namespace imgLoader_WPF
             }
 
             return temp;
-        }
-
-        internal static FileStream DelayStream(string route, FileMode mode, FileAccess access)
-        {
-            FileStream file = null;
-
-            var temp = false;
-            var thres = 0;
-
-            while (!temp)
-            {
-                try
-                {
-                    file = new FileStream(route, mode, access);
-                    temp = true;
-                }
-                catch (Exception ex)
-                {
-                    if (thres++ > 100) break;
-
-                    temp = false;
-                    Log($"{route} wait: {ex.Message}");
-                    Thread.Sleep(20);
-                }
-            }
-
-            //if (file == null) throw new Exception("stream is null");
-
-            return file;
         }
 
         internal static int CountIndexOf(this string target, char find, int count)
@@ -366,60 +280,9 @@ namespace imgLoader_WPF
             return temp;
         }
 
-        internal static string GetDirFromFile(string path)
-        {
-            return path.Substring(0, path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1);
-        }
-
-        internal static void OpenDir(string path)
-        {
-            if (!Directory.Exists(path)) return;
-            Process.Start("Explorer.exe", @"/open,""" + path);
-        }
-
-        internal static string EHNumFromRaw(string number)
-        {
-            return number.Contains('/') ? number.Replace('/', '!') : number;
-        }
-
-        internal static string EHNumFromPath(string number)
-        {
-            return number.Contains('!') ? number.Replace('!', '/') : number;
-        }
-
         internal static IEnumerable<IndexItem> CompareCollections(IEnumerable<IndexItem> collect1, IEnumerable<IndexItem> collect2)
         {
             return collect1.Where(item => collect2.All(i => i.Title != item.Title));
-        }
-
-        internal static void OpenOnCanvas(string imgSetPath, string title, string author)
-        {
-            if (!Directory.Exists(imgSetPath)) return;
-
-            //var img = new BitmapImage();
-            var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains(".ilif")).ToArray();
-
-            //img.BeginInit();
-            //img.UriSource = new Uri(temp[0]);
-            //img.EndInit();
-
-            var canvas = new Canvas { TTitle = title, Author = author, FileList = temp};
-            canvas.Show();
-        }
-
-        internal static int[] TestRead(string route)
-        {
-            using var sr = new StreamReader(Core.DelayStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
-            var temp = new int[1000];
-            var count = 0;
-            var itr = 0;
-            do
-            {
-                count = sr.Read();
-                temp[itr++] = count;
-            } while (count > 0);
-
-            return temp;
         }
 
         internal static List<IndexItem> Find(IEnumerable<IndexItem> where, string find)
@@ -445,27 +308,167 @@ namespace imgLoader_WPF
             }
         }
 
-        internal static void CompareWorkspace(string firstPath, string secondPath)
+        internal static class Dir
         {
-            var first = Directory.GetFiles(firstPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-            var second = Directory.GetFiles(secondPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-
-            string[] longer, shorter;
-            if (first.Length > second.Length)
+            internal static string GetDirFromFile(string path)
             {
-                longer = first;
-                shorter = second;
-            }
-            else
-            {
-                longer = second;
-                shorter = first;
+                return path.Substring(0, path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1);
             }
 
-            var result = longer.Where(i => shorter.All(j => j == Path.GetFileNameWithoutExtension(i))).ToList();
-            result.AddRange(shorter.Where(i => longer.All(j => j == Path.GetFileNameWithoutExtension(i))));
+            private static void InfoEncrypt(string path, string[] info)
+            {
+                var stream = new FileStream(path, FileMode.Create);
+                var writer = new BinaryWriter(stream);
 
-            ;
+                try
+                {
+                    foreach (var s in info)
+                    {
+                        if (s == null)
+                        {
+                            writer.Write('\0');
+                            continue;
+                        }
+
+                        writer.Write(StringCipher.Encrypt(s + "\n"));
+                    }
+                }
+                finally
+                {
+                    writer.Close();
+                    stream.Close();
+                }
+            }
+
+            private static void InfoDecrypt(string path)
+            {
+                var stream = new FileStream(path, FileMode.Open);
+                var reader = new BinaryReader(stream);
+
+                try
+                {
+                    var sb = new StringBuilder();
+
+                    do
+                    {
+                        sb.Append(StringCipher.Decrypt(reader.ReadString()));
+                    } while (reader.PeekChar() != -1);
+
+                    MessageBox.Show(sb.ToString());
+                }
+                finally
+                {
+                    reader.Close();
+                    stream.Close();
+                }
+            }
+
+            internal static string DirFilter(string dirName)
+            {
+                for (byte i = 0; i < DFilter.Length; i++)
+                    if (dirName.Contains(DFilter[i]))
+                        dirName = dirName.Replace(DFilter[i], DReplace[i]);
+
+                return dirName;
+            }
+
+            internal static FileStream DelayStream(string route, FileMode mode, FileAccess access)
+            {
+                FileStream file = null;
+
+                var temp = false;
+                var thres = 0;
+
+                while (!temp)
+                {
+                    try
+                    {
+                        file = new FileStream(route, mode, access);
+                        temp = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (thres++ > 100) break;
+
+                        temp = false;
+                        Log($"{route} wait: {ex.Message}");
+                        Thread.Sleep(20);
+                    }
+                }
+
+                //if (file == null) throw new Exception("stream is null");
+
+                return file;
+            }
+
+            internal static void OpenDir(string path)
+            {
+                if (!Directory.Exists(path)) return;
+                Process.Start("Explorer.exe", @"/open,""" + path);
+            }
+
+            internal static string EHNumFromRaw(string number)
+            {
+                return number.Contains('/') ? number.Replace('/', '!') : number;
+            }
+
+            internal static string EHNumFromInternal(string number)
+            {
+                return number.Contains('!') ? number.Replace('!', '/') : number;
+            }
+
+            internal static void OpenOnCanvas(string imgSetPath, string title, string author)
+            {
+                if (!Directory.Exists(imgSetPath)) return;
+
+                //var img = new BitmapImage();
+                var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains(".ilif")).ToArray();
+
+                //img.BeginInit();
+                //img.UriSource = new Uri(temp[0]);
+                //img.EndInit();
+
+                var canvas = new Canvas { TTitle = title, Author = author, FileList = temp};
+                canvas.Show();
+            }
+
+            internal static void CompareWorkspace(string firstPath, string secondPath)
+            {
+                var first = Directory.GetFiles(firstPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+                var second = Directory.GetFiles(secondPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+
+                string[] longer, shorter;
+                if (first.Length > second.Length)
+                {
+                    longer = first;
+                    shorter = second;
+                }
+                else
+                {
+                    longer = second;
+                    shorter = first;
+                }
+
+                var result = longer.Where(i => shorter.All(j => j == Path.GetFileNameWithoutExtension(i))).ToList();
+                result.AddRange(shorter.Where(i => longer.All(j => j == Path.GetFileNameWithoutExtension(i))));
+
+                ;
+            }
+
+            internal static int[] TestRead(string route)
+            {
+                using var sr = new StreamReader(Dir.DelayStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
+                var temp = new int[1000];
+                var count = 0;
+                var itr = 0;
+                do
+                {
+                    count = sr.Read();
+                    temp[itr++] = count;
+                } while (count > 0);
+
+                return temp;
+            }
         }
     }
 }

@@ -137,7 +137,7 @@ namespace imgLoader_WPF
 
         private static string GetTitle(string title)
         {
-            var temp = Core.DirFilter(title);
+            var temp = Core.Dir.DirFilter(title);
 
             return Encoding.Unicode.GetByteCount(temp) > 255
                         ? temp.Substring(0, 85)
@@ -156,7 +156,7 @@ namespace imgLoader_WPF
                     ? temp.Replace(title, title.Substring(0, 80) + "...")
                     : temp;
 
-            return $@"{Core.Route}\{temp}\{Core.EHNumFromRaw(Number)}.{Core.InfoExt}";
+            return $@"{Core.Route}\{temp}\{Core.Dir.EHNumFromRaw(Number)}.{Core.InfoExt}";
         }       //returns info path
 
         private Error CreateInfo()
@@ -165,7 +165,7 @@ namespace imgLoader_WPF
             //{
                 if (!CheckDupl())
                 {
-                    Directory.CreateDirectory(Core.GetDirFromFile(Route));
+                    Directory.CreateDirectory(Core.Dir.GetDirFromFile(Route));
                 }
                 else
                 {
@@ -188,7 +188,7 @@ namespace imgLoader_WPF
 
         internal bool CheckDupl()
         {
-            if (!Directory.Exists(Core.GetDirFromFile(Route))) return false;
+            if (!Directory.Exists(Core.Dir.GetDirFromFile(Route))) return false;
             if (!File.Exists(Route)) return false;
 
             if (ImgUrl.Count.ToString() == File.ReadAllText(Route).Split('\n')[3])
@@ -233,7 +233,7 @@ namespace imgLoader_WPF
 
         private void AllocDown(string path, Dictionary<string, string> urlList)
         {
-            path = Core.GetDirFromFile(path);
+            path = Core.Dir.GetDirFromFile(path);
             _failed.Clear();
 
             var i = 0;
