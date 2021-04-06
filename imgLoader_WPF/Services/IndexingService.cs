@@ -74,13 +74,13 @@ namespace imgLoader_WPF.Services
                 sr.Close();
                 if (string.IsNullOrWhiteSpace(infos)) continue;
 
-                var info = Core.InitializeArray(Core.InfoCount, infos.Split('\n'));
+                var info = Core.InitArray(Core.InfoCount, infos.Split('\n'));
 
                 var item = new IndexItem();
                 try
                 {
                     item.Route = infoRoute;
-                    item.Number = Core.EHNumFromRoute(infoRoute.Split('\\')[^1].Split('.')[0]);
+                    item.Number = Core.EHNumFromPath(infoRoute.Split('\\')[^1].Split('.')[0]);
 
                     item.SiteName = info[0];
                     item.Title = info[1];

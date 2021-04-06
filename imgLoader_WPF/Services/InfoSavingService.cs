@@ -44,7 +44,7 @@ namespace imgLoader_WPF.Services
         private static void PerformSave(IndexItem item, StringBuilder sb)
         {
             if (string.IsNullOrWhiteSpace(item.Route)) return;
-            if (!Directory.Exists(Core.GetDirectoryFromFile(item.Route))) return;
+            if (!Directory.Exists(Core.GetDirFromFile(item.Route))) return;
 
             if (item.IsError) return;
 

@@ -79,7 +79,7 @@ namespace imgLoader_WPF
 
         internal static void CreateInfo(string infoFileName, ISite site)
         {
-            if (!Directory.Exists(GetDirectoryFromFile(infoFileName)))
+            if (!Directory.Exists(GetDirFromFile(infoFileName)))
                 throw new DirectoryNotFoundException();
             if (site == null)
                 throw new NullReferenceException("\"site\" is null.");
@@ -164,7 +164,7 @@ namespace imgLoader_WPF
             return dirName;
         }
 
-        internal static string GetNumber(string url)
+        internal static string GetNum(string url)
         {
             var val = url.Contains("//") ? url.Split("//")[1] : url;
 
@@ -187,7 +187,7 @@ namespace imgLoader_WPF
         /// </summary>
         internal static ISite LoadSite(string url)
         {
-            var mNumber = GetNumber(url);
+            var mNumber = GetNum(url);
             if (mNumber.Length == 0) return null;
 
             if (url.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase)) return new NHentai(mNumber);
@@ -284,10 +284,6 @@ namespace imgLoader_WPF
             return -1;
         }
 
-        internal static void SearchFromSpecif(ObservableCollection<IndexItem> index, SearchOption option)
-        {
-
-        }
         internal static void SearchFromAll(List<IndexItem> searchIndex, string search, List<IndexItem> destIndex)
         {
             var sb = new StringBuilder();
@@ -341,7 +337,7 @@ namespace imgLoader_WPF
             return temp;
         }
 
-        internal static T[] InitializeArray<T>(int count)
+        internal static T[] InitArray<T>(int count)
         {
             var temp = new T[count];
 
@@ -349,7 +345,7 @@ namespace imgLoader_WPF
 
             return temp;
         }
-        internal static T[] InitializeArray<T>(int count, T value)
+        internal static T[] InitArray<T>(int count, T value)
         {
             var temp = new T[count];
 
@@ -358,7 +354,7 @@ namespace imgLoader_WPF
             return temp;
         }
 
-        internal static T[] InitializeArray<T>(int count, T[] array)
+        internal static T[] InitArray<T>(int count, T[] array)
         {
             var temp = new T[count];
 
@@ -370,7 +366,7 @@ namespace imgLoader_WPF
             return temp;
         }
 
-        internal static string GetDirectoryFromFile(string path)
+        internal static string GetDirFromFile(string path)
         {
             return path.Substring(0, path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1);
         }
@@ -386,7 +382,7 @@ namespace imgLoader_WPF
             return number.Contains('/') ? number.Replace('/', '!') : number;
         }
 
-        internal static string EHNumFromRoute(string number)
+        internal static string EHNumFromPath(string number)
         {
             return number.Contains('!') ? number.Replace('!', '/') : number;
         }

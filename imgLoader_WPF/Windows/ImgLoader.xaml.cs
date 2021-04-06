@@ -182,7 +182,7 @@ namespace imgLoader_WPF.Windows
                     }
                 } while (wait);
 
-                Directory.Delete(Core.GetDirectoryFromFile(item.Route), true);
+                Directory.Delete(Core.GetDirFromFile(item.Route), true);
 
                 //var result = IdxSvc.DoIndex();
                 //IdxSvc.Refresh(result.infoFiles, result.newFiles);
@@ -208,7 +208,7 @@ namespace imgLoader_WPF.Windows
             TxtUrl.Text = "";
             LabelBlock_Add.Visibility = Visibility.Visible;
 
-            var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNumber(url) };
+            var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
 
             //var sw = new Stopwatch();
             //sw.Start();
@@ -446,7 +446,6 @@ namespace imgLoader_WPF.Windows
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
             if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
 
-            Debug.WriteLine("ScrollChanged: Paginate");
             var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.ScrollHeight = Scroll.ActualHeight;
             PgSvc.Paginate(disableProcessing);
@@ -563,11 +562,11 @@ namespace imgLoader_WPF.Windows
         //}
         private void OpenExplorer_Click(object sender, RoutedEventArgs e)
         {
-            Core.OpenDir(Core.GetDirectoryFromFile(_clickedItem.Route));
+            Core.OpenDir(Core.GetDirFromFile(_clickedItem.Route));
         }
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            Core.OpenOnCanvas(Core.GetDirectoryFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
+            Core.OpenOnCanvas(Core.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
 
             _clickedItem.View++;
             _clickedItem.IsRead = true;
@@ -675,7 +674,7 @@ namespace imgLoader_WPF.Windows
                 ShowItems[rand].ShownChang();
             }
 
-            Core.OpenOnCanvas(Core.GetDirectoryFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
+            Core.OpenOnCanvas(Core.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
         }
         private void VoteSort_Click(object sender, RoutedEventArgs e)
         {

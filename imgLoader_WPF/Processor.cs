@@ -67,7 +67,7 @@ namespace imgLoader_WPF
 
             IsImgLoading = new bool[ImgUrl.Count];
 
-            Number = Core.GetNumber(_url);
+            Number = Core.GetNum(_url);
             Artist = Core.GetArtistFromRaw(Site.GetArtist());
             Title = GetTitle(Site.GetTitle());
             Route = Getpath(Artist, Title);
@@ -165,7 +165,7 @@ namespace imgLoader_WPF
             //{
                 if (!CheckDupl())
                 {
-                    Directory.CreateDirectory(Core.GetDirectoryFromFile(Route));
+                    Directory.CreateDirectory(Core.GetDirFromFile(Route));
                 }
                 else
                 {
@@ -188,7 +188,7 @@ namespace imgLoader_WPF
 
         internal bool CheckDupl()
         {
-            if (!Directory.Exists(Core.GetDirectoryFromFile(Route))) return false;
+            if (!Directory.Exists(Core.GetDirFromFile(Route))) return false;
             if (!File.Exists(Route)) return false;
 
             if (ImgUrl.Count.ToString() == File.ReadAllText(Route).Split('\n')[3])
@@ -233,7 +233,7 @@ namespace imgLoader_WPF
 
         private void AllocDown(string path, Dictionary<string, string> urlList)
         {
-            path = Core.GetDirectoryFromFile(path);
+            path = Core.GetDirFromFile(path);
             _failed.Clear();
 
             var i = 0;
