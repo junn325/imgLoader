@@ -7,8 +7,8 @@
     <AssemblyName>imgLoader</AssemblyName>
     <Version>0</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <FileVersion>0.3.0.2273</FileVersion>
-    <AssemblyVersion>0.3.0.2273</AssemblyVersion>
+    <FileVersion>0.3.0.2285</FileVersion>
+    <AssemblyVersion>0.3.0.2285</AssemblyVersion>
     <StartupObject>imgLoader_WPF.App</StartupObject>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
@@ -30,10 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.1.2" />
-    <PackageReference Include="Ookii.Dialogs.Wpf" Version="3.1.0" />
     <PackageReference Include="System.Management" Version="5.0.0" />
-    <PackageReference Include="System.Management.Automation" Version="7.1.2" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
   </ItemGroup>
 
   <ItemGroup>

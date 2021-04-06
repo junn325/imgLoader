@@ -1,15 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using imgLoader_WPF.Services;
-using Ookii.Dialogs.Wpf;
+using MouseEventArgs = System.Windows.Input.MouseEventArgs;
 
 namespace imgLoader_WPF.Windows
 {
@@ -22,7 +18,7 @@ namespace imgLoader_WPF.Windows
         private readonly ImgLoader _sender;
         private readonly ScrollViewer _scroll;
 
-        internal Settings(Windows.ImgLoader sender, ScrollViewer scroll, List<IndexItem> index)
+        internal Settings(ImgLoader sender, ScrollViewer scroll, List<IndexItem> index)
         {
             InitializeComponent();
             _sender = sender;
@@ -44,9 +40,9 @@ namespace imgLoader_WPF.Windows
 
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var a = new VistaFolderBrowserDialog();
-            if (a.ShowDialog() == true)
-                TxtPath.Text = a.SelectedPath;
+            var b = new System.Windows.Forms.FolderBrowserDialog();
+            if (b.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                TxtPath.Text = b.SelectedPath;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
