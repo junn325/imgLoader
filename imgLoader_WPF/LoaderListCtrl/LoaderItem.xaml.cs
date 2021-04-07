@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using imgLoader_WPF.Services;
 
@@ -31,7 +32,7 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             data.ShownChang = () =>
             {
-                Background = data.IsRead ? Brushes.LightGray : Brushes.White; 
+                Background = data.IsRead ? Brushes.LightGray : Brushes.White;
                 ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";    //'열기' 시 조회수 새로고침
             };
 
@@ -86,7 +87,17 @@ namespace imgLoader_WPF.LoaderListCtrl
                 TitleBlock.Text = data.Title;
                 LblVote.Text = data.Vote.ToString();
                 ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
-                DateBlock.Text = Core.ShowDate ? data.Date.ToString(CultureInfo.CurrentCulture) : "";
+
+                if (Core.ShowDate)
+                {
+                    DateBlock.Text = data.Date.ToString(CultureInfo.CurrentCulture);
+                    Grid.SetColumnSpan(ProgPanel, 1);
+                }
+                else
+                {
+                    DateBlock.Text = "";
+                    Grid.SetColumnSpan(ProgPanel, 2);
+                }
 
                 ImgCntBlock.Visibility = data.ImgCount == -1 ? Visibility.Hidden : Visibility.Visible;
                 VoteGrid.Visibility = data.Vote == -1 ? Visibility.Hidden : Visibility.Visible;

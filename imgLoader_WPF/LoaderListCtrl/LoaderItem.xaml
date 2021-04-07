@@ -8,7 +8,7 @@
              Background="White" Height="{Binding ElementName=This, Path=MHeight}" MinWidth="515" Loaded="UserControl_Loaded">
 
     <Border BorderBrush="Black" BorderThickness="0.14">
-        <Grid x:Name="Grid" MaxWidth="{Binding ElementName=This, Path=ActualWidth}">
+        <Grid x:Name="MainGrid" MaxWidth="{Binding ElementName=This, Path=ActualWidth}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
