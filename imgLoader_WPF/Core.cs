@@ -437,20 +437,21 @@ namespace imgLoader_WPF
                 var first = Directory.GetFiles(firstPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
                 var second = Directory.GetFiles(secondPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
 
-                string[] longer, shorter;
-                if (first.Length > second.Length)
+                var result = new List<string>();
+
+                foreach (var s in first)
                 {
-                    longer = first;
-                    shorter = second;
-                }
-                else
-                {
-                    longer = second;
-                    shorter = first;
+                    if (second.Any(i => Path.GetFileNameWithoutExtension(i) == Path.GetFileNameWithoutExtension(s))) continue;
+
+                    result.Add(s);
                 }
 
-                var result = longer.Where(i => shorter.All(j => j == Path.GetFileNameWithoutExtension(i))).ToList();
-                result.AddRange(shorter.Where(i => longer.All(j => j == Path.GetFileNameWithoutExtension(i))));
+                foreach (var s in second)
+                {
+                    if (first.Any(i => Path.GetFileNameWithoutExtension(i) == Path.GetFileNameWithoutExtension(s))) continue;
+
+                    result.Add(s);
+                }
 
                 ;
             }
