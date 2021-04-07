@@ -23,7 +23,7 @@
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
                             <MenuItem x:Name="OpenMenu" Header="열기" IsEnabled="False" Click="Open_Click"/>
-                            <MenuItem x:Name="ManageMenu" Header="관리" IsEnabled="False" Click="Manage_Click"/>
+                            <MenuItem x:Name="ManageMenu" Header="항목 관리" IsEnabled="False" Click="Manage_Click"/>
                             <Separator/>
                             <MenuItem x:Name="AddMenu" Header="항목 추가" Click="AddItem_Click"/>
                             <Separator/>
@@ -72,12 +72,12 @@
             </ScrollViewer>
         </Border>
 
-        <TextBlock x:Name="IdxBlock" Text="인덱싱 중..." VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <TextBlock x:Name="IdxBlock" Text="Indexing..." VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
         <Border x:Name="AddBorder" Background="{StaticResource BBrush}" Visibility="Hidden" MouseDown="AddBorder_MouseDown">
             <Grid Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
                 <TextBox x:Name="TxtUrl" Height="21" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" TextChanged="TxtUrl_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
-                <TextBlock x:Name="LabelBlock_Add" Height="21" VerticalAlignment="Center" Text="주소 입력 후 Enter 키로 다운로드 시작" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>
+                <TextBlock x:Name="AddLblBlock" Height="21" VerticalAlignment="Center" Text="주소 입력 후 Enter 키로 다운로드 시작" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>
             </Grid>
         </Border>
 
@@ -99,7 +99,7 @@
 
             <!--<Grid Height="35" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">-->
                 <TextBox Grid.Row="1" x:Name="TxtSrchAll" Height="21" VerticalAlignment="Center" KeyUp="TxtSrchAll_KeyUp" TextChanged="TxtSrchAll_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
-                <TextBlock Grid.Row="1" x:Name="LabelBlock_Srch" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
+                <TextBlock Grid.Row="1" x:Name="SrchLblBlock" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
             <!--</Grid>-->
 
             <WrapPanel x:Name="RecentPanel" Grid.Row="2">

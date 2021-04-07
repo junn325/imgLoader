@@ -16,6 +16,8 @@ using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
 {
+    //작품 -> 항목으로 표시할 것
+
     //todo: 서로 다른 작품 자동 연결
     //todo: 완전히 같은 이미지 탐색
     //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
@@ -83,7 +85,7 @@ namespace imgLoader_WPF.Windows
         }
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            Core.Dir.CompareWorkspace(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (5)", @"F:\문서\사진\Saved Pictures\고니\manga");
+            //Core.Dir.CompareWorkspace(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (5)", @"F:\문서\사진\Saved Pictures\고니\manga");
             Thread.CurrentThread.Name = "Main";
 
             new Thread(() =>
@@ -206,7 +208,7 @@ namespace imgLoader_WPF.Windows
 
             var url = TxtUrl.Text;
             TxtUrl.Text = "";
-            LabelBlock_Add.Visibility = Visibility.Visible;
+            AddLblBlock.Visibility = Visibility.Visible;
 
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
 
@@ -277,11 +279,11 @@ namespace imgLoader_WPF.Windows
         {
             if (TxtUrl.Text.Length == 0)
             {
-                LabelBlock_Add.Visibility = Visibility.Visible;
+                AddLblBlock.Visibility = Visibility.Visible;
                 return;
             }
 
-            LabelBlock_Add.Visibility = Visibility.Collapsed;
+            AddLblBlock.Visibility = Visibility.Collapsed;
         }
         private void TxtUrl_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -291,11 +293,11 @@ namespace imgLoader_WPF.Windows
         {
             if (TxtSrchAll.Text.Length == 0)
             {
-                LabelBlock_Srch.Visibility = Visibility.Visible;
+                SrchLblBlock.Visibility = Visibility.Visible;
                 return;
             }
 
-            LabelBlock_Srch.Visibility = Visibility.Collapsed;
+            SrchLblBlock.Visibility = Visibility.Collapsed;
         }
         private void TxtSrchAll_KeyUp(object sender, KeyEventArgs e)
         {
@@ -693,7 +695,7 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
+                HideBorder(AddBorder, TxtUrl, AddLblBlock);
             }
         }
 
@@ -720,7 +722,7 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                HideBorder(SrchBorder, TxtSrchAll, LabelBlock_Srch);
+                HideBorder(SrchBorder, TxtSrchAll, SrchLblBlock);
             }
         }
 

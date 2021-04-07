@@ -156,5 +156,9 @@ namespace imgLoader_WPF.Windows
             if (e.LeftButton == MouseButtonState.Pressed)
                 DragMove();
         }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+        }
     }
 }

@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:imgLoader_WPF.Windows"
         mc:Ignorable="d"
         Title="Settings" Width="724" Height="175" MinWidth="724" MinHeight="160" Loaded="Window_Loaded" Closing="Window_Closing" WindowStyle="None" WindowStartupLocation="CenterScreen">
 
@@ -58,17 +57,16 @@
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Column="0" Margin="5">
                 <CheckBox x:Name="CheckAuthorName" Content="폴더명에 작가 이름을 표시하지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckAuthorName_Click"/>
-                <CheckBox x:Name="CheckDupl" Content="중복 작품 다운로드 시 물어보지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckDupl_Click"/>
-                <!--<CheckBox x:Name="CheckTagSex" Content="태그의 성별을 항상 텍스트로 표시함" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>
-                <CheckBox x:Name="CheckTagAlways" Content="태그를 항상 표시 (성능 저하)" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>-->
+                <CheckBox x:Name="CheckDupl" Content="중복 항목 다운로드 시 물어보지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckDupl_Click"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="5">
                 <CheckBox x:Name="CheckImmid" Content="항목 모두 즉시 다운로드 시작" IsChecked="True" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckImmid_Click"/>
                 <!--<CheckBox x:Name="CheckFolder" Content="북마크에서 로드한 항목은 북마크 제목으로 폴더명을 정함" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>-->
-                <!--<CheckBox x:Name="CheckScroll" Content="항목의 태그를 마우스로 스크롤하지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckScroll_Click"/>-->
                 <CheckBox x:Name="CheckSearch" Content="검색: 검색 창을 종료하는 한 번만 검색을 수행" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckSearch_Click"/>
             </StackPanel>
+
+            <Button Grid.Column="1" Width="150" Content="디렉토리 간 항목 비교" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="Button_Click_2"/>
         </Grid>
     </Grid>
 </Window>
