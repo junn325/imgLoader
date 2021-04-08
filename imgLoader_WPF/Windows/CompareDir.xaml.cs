@@ -14,7 +14,7 @@ namespace imgLoader_WPF.Windows
     /// </summary>
     public partial class CompareDir : Window
     {
-        private readonly ObservableCollection<CompareData> ItemsData = new();
+        private readonly ObservableCollection<CompareData> _itemsData = new();
         public CompareDir()
         {
             InitializeComponent();
@@ -41,7 +41,7 @@ namespace imgLoader_WPF.Windows
         {
             var result = Core.Dir.CompareWorkspace(TxtPath1.Text, TxtPath2.Text);
 
-            ItemsData.Clear();
+            _itemsData.Clear();
 
             List<string> longer;
             List<string> shorter;
@@ -72,7 +72,7 @@ namespace imgLoader_WPF.Windows
                 data.First = !ChkNumOnly.IsChecked.Value ? longer[i].Replace(lPath, "") : Path.GetFileNameWithoutExtension(longer[i]);
                 if (count > i) data.Second = !ChkNumOnly.IsChecked.Value ? shorter[i].Replace(sPath, "") : Path.GetFileNameWithoutExtension(shorter[i]);
 
-                ItemsData.Add(data);
+                _itemsData.Add(data);
             }
         }
 
@@ -82,24 +82,20 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            ItemsData.Clear();
+            _itemsData.Clear();
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            LView.ItemsSource = ItemsData;
+            LView.ItemsSource = _itemsData;
 
-            var listView = sender as ListView;
-            if (listView == null) return;
-
-            var gView = listView.View as GridView;
+            var gView = LView.View as GridView;
             if (gView == null) return;
 
-            var workingWidth = listView.ActualWidth - SystemParameters.VerticalScrollBarWidth; // take into account vertical scrollbar
+            var workingWidth = LView.ActualWidth - SystemParameters.VerticalScrollBarWidth; // take into account vertical scrollbar
 
             gView.Columns[0].Width = workingWidth * 0.5;
             gView.Columns[1].Width = workingWidth * 0.5;
-
         }
     }
 }
