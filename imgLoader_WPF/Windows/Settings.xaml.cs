@@ -159,6 +159,9 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            var a = new CompareDir();
+            a.TxtPath1.Text = TxtPath.Text;
+            a.Show();
         }
     }
 }

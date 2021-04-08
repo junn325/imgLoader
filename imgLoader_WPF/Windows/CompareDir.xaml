@@ -5,13 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:imgLoader_WPF.Windows"
         mc:Ignorable="d"
-        Title="Window1" Height="300" Width="500" WindowStyle="None" ResizeMode="CanResizeWithGrip">
+        Title="Window1" MinWidth="500" MinHeight="300" Width="900" Height="500" WindowStyle="None" ResizeMode="CanResizeWithGrip" Loaded="Window_Loaded">
 
     <WindowChrome.WindowChrome>
         <WindowChrome NonClientFrameEdges="None" CaptionHeight="25" GlassFrameThickness="5" />
     </WindowChrome.WindowChrome>
 
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid x:Name="TitleGrid" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="TitleGrid_MouseMove" Background="Transparent">
             <Grid.Resources>
                 <Style TargetType="{x:Type Button}">
@@ -30,5 +35,42 @@
             <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
             <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Margin="0,4,10,0" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_1"/>
         </Grid>
+
+        <StackPanel Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Path 1: " HorizontalAlignment="Left"/>
+                <TextBox x:Name="TxtPath1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Path 2: " HorizontalAlignment="Left"/>
+                <TextBox x:Name="TxtPath2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <CheckBox x:Name="ChkNumOnly" Grid.Column="0" Content="번호만 표시" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <Button Grid.Column="1" Content="Compare" HorizontalAlignment="Right" VerticalAlignment="Center" Width="75" Margin="0,1,5,0" Click="Button_Click"/>
+            </Grid>
+        </StackPanel>
+
+        <ListView x:Name="LView" Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                  HorizontalAlignment="Stretch" Margin="5">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Path 1" Width="50" DisplayMemberBinding="{Binding First}"/>
+                    <GridViewColumn Header="Path 2" Width="100" DisplayMemberBinding="{Binding Second}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

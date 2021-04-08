@@ -432,28 +432,29 @@ namespace imgLoader_WPF
                 canvas.Show();
             }
 
-            internal static void CompareWorkspace(string firstPath, string secondPath)
+            internal static List<string>[] CompareWorkspace(string firstPath, string secondPath)
             {
                 var first = Directory.GetFiles(firstPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
                 var second = Directory.GetFiles(secondPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
 
-                var result = new List<string>();
+                var result1 = new List<string>();
+                var result2 = new List<string>();
 
                 foreach (var s in first)
                 {
                     if (second.Any(i => Path.GetFileNameWithoutExtension(i) == Path.GetFileNameWithoutExtension(s))) continue;
 
-                    result.Add(s);
+                    result1.Add(s);
                 }
 
                 foreach (var s in second)
                 {
                     if (first.Any(i => Path.GetFileNameWithoutExtension(i) == Path.GetFileNameWithoutExtension(s))) continue;
 
-                    result.Add(s);
+                    result2.Add(s);
                 }
 
-                ;
+                return new[]{result1, result2};
             }
 
             internal static int[] TestRead(string route)
