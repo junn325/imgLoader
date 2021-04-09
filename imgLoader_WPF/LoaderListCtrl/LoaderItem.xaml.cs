@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,8 +9,6 @@ namespace imgLoader_WPF.LoaderListCtrl
 {
     public partial class LoaderItem
     {
-        private int _progMax;
-        private int _progVal;
         private Windows.ImgLoader _sender;
 
         public static int MHeight { get; } = 53;
@@ -52,9 +51,8 @@ namespace imgLoader_WPF.LoaderListCtrl
                 {
                     if (data.Author.Contains('|'))
                     {
-                        foreach (var s in data.Author.Split('|')[0].Split(';'))
+                        foreach (var s in data.Author.Split('|')[0].Split(';').Where(i => !string.IsNullOrWhiteSpace(i)))
                         {
-                            if (string.IsNullOrWhiteSpace(s)) continue;
                             sb.Append(s).Append(", ");
                         }
 
@@ -63,13 +61,15 @@ namespace imgLoader_WPF.LoaderListCtrl
                         if (data.Author.Split('|')[1].Contains(';'))
                         {
                             if (sb.Length != 0) sb.Append(' ');
+
                             sb.Append('(');
-                            foreach (var s in data.Author.Split('|')[1].Split(';'))
+
+                            foreach (var s in data.Author.Split('|')[1].Split(';').Where(i => !string.IsNullOrWhiteSpace(i)))
                             {
-                                if (string.IsNullOrWhiteSpace(s)) continue;
                                 sb.Append(s).Append(", ");
                             }
                             sb.Remove(sb.Length - 2, 2);
+
                             sb.Append(')');
                         }
                     }
@@ -98,23 +98,44 @@ namespace imgLoader_WPF.LoaderListCtrl
                     Grid.SetColumnSpan(ProgPanel, 2);
                 }
 
-                ImgCntBlock.Visibility = data.ImgCount == -1 ? Visibility.Hidden : Visibility.Visible;
-                VoteGrid.Visibility = data.Vote == -1 ? Visibility.Hidden : Visibility.Visible;
-                ViewCntBlock.Visibility = data.View == -1 ? Visibility.Hidden : Visibility.Visible;
+                ImgCntBlock.Visibility =
+                    data.ImgCount == -1
+                        ? Visibility.Hidden
+                        : Visibility.Visible;
+
+                VoteGrid.Visibility =
+                    data.View == -1 || data.IsDownloading
+                        ? Visibility.Hidden
+                        : Visibility.Visible;
+
+                ViewCntBlock.Visibility =
+                    data.View == -1 || data.IsDownloading
+                        ? Visibility.Hidden
+                        : Visibility.Visible;
+
+                if (data.IsDownloading)
+                {
+                    ProgBlock.Text = $"{data.Proc.ProgVal}/{data.Proc.ProgMax}";
+                    ProgPanel.Visibility =
+                        data.View == -1
+                            ? Visibility.Hidden
+                            : Visibility.Visible;
+
+                    ProgBar.Maximum = data.Proc.ProgMax;
+                    ProgBar.Value = data.Proc.ProgVal;
+                }
             });
 
             data.ProgBarMax = value => Dispatcher.Invoke(() =>
             {
-                _progMax = value;
-                ProgBlock.Text = $"0/{value}";
+                ProgBlock.Text = $"{data.Proc.ProgVal}/{value}";
                 ProgBar.Maximum = value;
             });
 
-            data.ProgBarVal = () => Dispatcher.Invoke(() =>
+            data.ProgBarVal = (value) => Dispatcher.Invoke(() =>
             {
-                _progVal++;
-                ProgBar.Value++;
-                ProgBlock.Text = $"{_progVal}/{_progMax}";
+                ProgBar.Value = value;
+                ProgBlock.Text = $"{value}/{data.Proc.ProgMax}";
             });
 
             Background = data.IsRead ? Brushes.LightGray : Brushes.White;

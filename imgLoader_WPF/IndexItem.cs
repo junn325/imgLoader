@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 
 namespace imgLoader_WPF
 {
@@ -39,7 +38,7 @@ namespace imgLoader_WPF
         //internal VisOne TagPanelVis;
 
         internal IntOne ProgBarMax;
-        internal NoParam ProgBarVal;
+        internal IntOne ProgBarVal;
 
         //todo: 델리게이트들을 Core로 옮길 수 있는가?
         //internal DblOne SizeChange;

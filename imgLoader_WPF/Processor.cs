@@ -14,6 +14,10 @@ namespace imgLoader_WPF
     {
         public bool[] IsImgLoading;
         public bool Pause;
+        public bool IsStop;
+
+        internal int ProgVal;
+        internal int ProgMax;
 
         private readonly Dictionary<string, string> _failed = new();
         private readonly IndexItem _item;
@@ -21,8 +25,6 @@ namespace imgLoader_WPF
 
         private readonly string _url;
         private int _thres = 10;
-
-        public bool IsStop;
 
         internal string Route { get; private set; }
         internal string Artist { get; private set; }
@@ -110,6 +112,7 @@ namespace imgLoader_WPF
             AllocTask(Route, ImgUrl);
             _item.IsDownloading = false;
 
+            Task.WaitAll(_tasks);
             DoStop();
         }
 
@@ -209,6 +212,7 @@ namespace imgLoader_WPF
 
             _item.ProgPanelVis.Invoke(Visibility.Visible);
             //_item.TagPanelVis.Invoke(Visibility.Hidden);
+            ProgMax = imgList.Count;
             _item.ProgBarMax.Invoke(imgList.Count);
 
             _tasks = new Task[imgList.Count];
@@ -326,7 +330,8 @@ namespace imgLoader_WPF
 
             if (fileSize == resp.ContentLength)
             {
-                _item.ProgBarVal.Invoke();
+                ProgVal++;
+                _item.ProgBarVal.Invoke(ProgVal);
                 //_item.Dispatcher.Invoke(() => _item.CurrentCount++);
             }
             else
@@ -366,7 +371,10 @@ namespace imgLoader_WPF
 
                 if (_tasks == null) return;
 
-                Task.WaitAll(_tasks);
+                foreach (var task in _tasks)
+                {
+                    task.Dispose();
+                }
                 //_stop = false;
 
                 _tasks = null;
