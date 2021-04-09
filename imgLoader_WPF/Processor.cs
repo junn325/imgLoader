@@ -24,7 +24,6 @@ namespace imgLoader_WPF
         private Task[] _tasks;
 
         private readonly string _url;
-        private int _thres = 10;
 
         internal string Route { get; private set; }
         internal string Artist { get; private set; }
@@ -155,7 +154,7 @@ namespace imgLoader_WPF
 
             temp =
                 Encoding.Unicode.GetByteCount(artist + title + Core.Route) + 4 > 4096 || Encoding.Unicode.GetByteCount(artist + title) + 3 > 255
-                    ? temp.Replace(title, title.Substring(0, 80) + "...")
+                    ? temp.Replace(title, title[..80] + "...")
                     : temp;
 
             return $@"{Core.Route}\{temp}\{Core.Dir.EHNumFromRaw(Number)}.{Core.InfoExt}";
@@ -193,12 +192,7 @@ namespace imgLoader_WPF
             if (!Directory.Exists(Core.Dir.GetDirFromFile(Route))) return false;
             if (!File.Exists(Route)) return false;
 
-            if (ImgUrl.Count.ToString() == File.ReadAllText(Route).Split('\n')[3])
-            {
-                return true;
-            }
-
-            return false;
+            return ImgUrl.Count.ToString() == File.ReadAllText(Route).Split('\n')[3];
         }
 
         private void AllocTask(string path, Dictionary<string, string> imgList)
@@ -220,7 +214,7 @@ namespace imgLoader_WPF
 
             Task.WaitAll(_tasks);
 
-            var success = HandleFail(path);
+            var success = HandleFail(path, 5);
 
             Core.Log($"Item:Complete: {path}");
             if (success)
@@ -339,7 +333,7 @@ namespace imgLoader_WPF
             resp.Close();
         }
 
-        private bool HandleFail(string path)
+        private bool HandleFail(string path, int thres)
         {
             if (_failed.Count == 0) return true;
 
@@ -348,9 +342,7 @@ namespace imgLoader_WPF
 
             Task.WaitAll(_tasks);
 
-            _thres--;
-
-            if (_thres > 0 && _failed.Count != 0) HandleFail(path);
+            if (thres > 0 && _failed.Count != 0) HandleFail(path, --thres);
 
             _failed.Clear();
 

@@ -53,15 +53,11 @@ namespace imgLoader_WPF.Windows
             FileList = FileList.OrderBy(i => int.TryParse(i.Split('\\')[^1].Split('.')[0], out var result) ? result : int.MaxValue).ToArray();
             _imgList = new BitmapImage[FileList.Length];
 
-            _imgList[0] = ImageLoad(FileList[0]);
-
             var len = new FileInfo(FileList[0]).Length;
             _size += len;
             Debug.WriteLine($"+{len}");
 
             _img = new Image();
-            _img.Source = _imgList[0];
-            _img.UpdateLayout();
             //_img.VerticalAlignment = VerticalAlignment.Center;
             //_img.HorizontalAlignment = HorizontalAlignment.Center;        //활성화시 확대 안됨 넣지말것
 
@@ -69,13 +65,17 @@ namespace imgLoader_WPF.Windows
 
             RenderOptions.SetBitmapScalingMode(_img, BitmapScalingMode.Fant);
             MPanel.Children.Add(_img);
-            //MPanel.dock
+
+            _imgList[0] = ImageLoad(FileList[0]);
+            _img.Source = _imgList[0];
+            _img.UpdateLayout();
 
             PBar.Maximum = FileList.Length;
             PBar.Value = 1;
 
             var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
+            _relRect = new Rect(_oriPosition.X, _oriPosition.Y, _oriPosition.Width, _oriPosition.Height);
         }
 
         private void SizeChange(bool enlarge)
@@ -232,13 +232,20 @@ namespace imgLoader_WPF.Windows
 
             return FileList[_index];
         }
-        private static BitmapImage ImageLoad(string path)
+        private BitmapImage ImageLoad(string path)
         {
             var bitmapImage = new BitmapImage();
 
             try
             {
                 bitmapImage.BeginInit();
+                if (_oriPosition.Width != 0)
+                {
+                    bitmapImage.CreateOptions = BitmapCreateOptions.DelayCreation;
+                    bitmapImage.DecodePixelWidth = (int)_oriPosition.Width;
+                    bitmapImage.DecodePixelHeight = (int)_oriPosition.Height;
+                }
+
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.UriSource = new Uri(path);
                 bitmapImage.EndInit();
