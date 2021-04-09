@@ -212,22 +212,16 @@ namespace imgLoader_WPF.Windows
 
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
 
-            //var sw = new Stopwatch();
-            //sw.Start();
-
-            //HideBorder(AddBorder, TxtUrl, LabelBlock_Add);
-
             var service = new Thread(() =>
             {
                 ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
                 Index.Insert(0, lItem);
                 List.Insert(0, lItem);
 
-                //InfSvc.Stop();
-
                 lItem.Proc = new Processor(url, lItem);
                 lItem.Proc.LoadInfo();
-                lItem.Proc.Pause = !Properties.Settings.Default.Down_Immid;
+
+                lItem.Proc.Pause = lItem.Proc.Pause || !Properties.Settings.Default.Down_Immid;
 
                 if (!lItem.Proc.IsValidated)
                 {
@@ -245,8 +239,6 @@ namespace imgLoader_WPF.Windows
                     List.Remove(lItem);
                     return;
                 }
-
-                //PgSvc.Paginate();
 
                 while (lItem.RefreshInfo == null)
                 {
@@ -268,7 +260,6 @@ namespace imgLoader_WPF.Windows
                 Sorter.SortRefresh((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
 
                 Dispatcher.Invoke(ShowItemCount);
-                //sw.Reset();
             });
 
             service.Name = "AddItem";

@@ -112,7 +112,6 @@ namespace imgLoader_WPF
             AllocTask(Route, ImgUrl);
             _item.IsDownloading = false;
 
-            Task.WaitAll(_tasks);
             DoStop();
         }
 
@@ -266,10 +265,9 @@ namespace imgLoader_WPF
 
             while (Pause)
             {
+                if (IsStop) return;
                 Task.Delay(500).Wait();
             }
-
-            if (IsStop) return;
 
             var req = WebRequest.Create(uri) as HttpWebRequest;
             HttpWebResponse resp;
@@ -280,8 +278,6 @@ namespace imgLoader_WPF
 
             try
             {
-                if (IsStop) return;
-
                 resp = req.GetResponse() as HttpWebResponse;
             }
             catch (WebException we)
@@ -371,10 +367,7 @@ namespace imgLoader_WPF
 
                 if (_tasks == null) return;
 
-                foreach (var task in _tasks)
-                {
-                    task.Dispose();
-                }
+                Task.WaitAll(_tasks);
                 //_stop = false;
 
                 _tasks = null;
