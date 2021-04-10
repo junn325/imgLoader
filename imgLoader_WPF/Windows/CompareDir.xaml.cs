@@ -9,15 +9,14 @@ using System.Windows.Input;
 
 namespace imgLoader_WPF.Windows
 {
-    /// <summary>
-    /// Interaction logic for Window1.xaml
-    /// </summary>
     public partial class CompareDir : Window
     {
+        private ImgLoader _sender;
         private readonly ObservableCollection<CompareData> _itemsData = new();
-        public CompareDir()
+        public CompareDir(ImgLoader sender)
         {
             InitializeComponent();
+            _sender = sender;
         }
 
         private void TitleGrid_MouseMove(object sender, MouseEventArgs e)
@@ -37,7 +36,7 @@ namespace imgLoader_WPF.Windows
             public string Second { get; set; }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Compare_Click(object sender, RoutedEventArgs e)
         {
             var (first, second) = Core.Dir.CompareWorkspace(TxtPath1.Text, TxtPath2.Text);
 
@@ -97,6 +96,23 @@ namespace imgLoader_WPF.Windows
 
             gView.Columns[0].Width = workingWidth * 0.5;
             gView.Columns[1].Width = workingWidth * 0.5;
+        }
+
+        private void Add_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (CompareData item in LView.Items)
+            {
+                if (item.Second == null) break;
+
+                _sender.AddItem((TxtPath1.Text + item.First).Split('\\')[^1].Split('.')[0]);
+            }
+        }
+
+        private void Swap_Click(object sender, RoutedEventArgs e)
+        {
+            var temp = TxtPath1.Text;
+            TxtPath1.Text = TxtPath2.Text;
+            TxtPath2.Text = temp;
         }
     }
 }

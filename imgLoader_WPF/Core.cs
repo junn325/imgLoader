@@ -317,7 +317,7 @@ namespace imgLoader_WPF
         {
             internal static string GetDirFromFile(string path)
             {
-                return path.Substring(0, path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1);
+                return path[..(path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1)];
             }
 
             private static void InfoEncrypt(string path, string[] info)

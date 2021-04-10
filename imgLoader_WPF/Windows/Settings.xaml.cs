@@ -159,9 +159,15 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            var a = new CompareDir();
-            a.TxtPath1.Text = TxtPath.Text;
-            a.Show();
+            var compareWindow = new CompareDir(_sender);
+            compareWindow.TxtPath1.Text = TxtPath.Text;
+            compareWindow.Show();
+        }
+
+        private void ChkPauseCompareAdd_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.PauseCmpAdd = ChkPauseCmpAdd.IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.Save();
         }
     }
 }

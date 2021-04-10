@@ -25,8 +25,7 @@
             <Grid.Resources>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="Width" Value="20"/>
-                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
-                    <!--Windowchrome위에서 클릭 허용-->
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>     <!--Windowchrome위에서 클릭 허용-->
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="Black"/>
                     <Setter Property="BorderThickness" Value="0"/>
@@ -58,6 +57,7 @@
             <StackPanel Grid.Column="0" Margin="5">
                 <CheckBox x:Name="CheckAuthorName" Content="폴더명에 작가 이름을 표시하지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckAuthorName_Click"/>
                 <CheckBox x:Name="CheckDupl" Content="중복 항목 다운로드 시 물어보지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckDupl_Click"/>
+                <CheckBox x:Name="ChkPauseCmpAdd" Content="항목 비교에서 다운로드 대기열 추가 시 자동으로 일시정지" VerticalAlignment="Top" HorizontalAlignment="Left" Click="ChkPauseCompareAdd_Click"/>
             </StackPanel>
 
             <StackPanel Grid.Column="1" Margin="5">

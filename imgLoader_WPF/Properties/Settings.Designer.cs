@@ -106,5 +106,17 @@ namespace imgLoader_WPF.Properties {
                 this["CacheSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PauseCmpAdd {
+            get {
+                return ((bool)(this["PauseCmpAdd"]));
+            }
+            set {
+                this["PauseCmpAdd"] = value;
+            }
+        }
     }
 }

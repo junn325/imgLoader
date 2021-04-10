@@ -209,6 +209,11 @@ namespace imgLoader_WPF.Windows
             TxtUrl.Text = "";
             AddLblBlock.Visibility = Visibility.Visible;
 
+            AddItem(url);
+        }
+
+        internal void AddItem(string url)
+        {
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
 
             var service = new Thread(() =>
@@ -266,6 +271,7 @@ namespace imgLoader_WPF.Windows
             service.SetApartmentState(ApartmentState.STA);
             service.Start();
         }
+
         private void TxtUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (TxtUrl.Text.Length == 0)

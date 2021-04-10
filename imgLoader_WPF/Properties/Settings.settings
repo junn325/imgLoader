@@ -23,5 +23,8 @@
     <Setting Name="CacheSize" Type="System.Int64" Scope="User">
       <Value Profile="(Default)">500000000</Value>
     </Setting>
+    <Setting Name="PauseCmpAdd" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -21,8 +21,7 @@
             <Grid.Resources>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="Width" Value="20"/>
-                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
-                    <!--Windowchrome위에서 클릭 허용-->
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/> <!--Windowchrome위에서 클릭 허용-->
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="Black"/>
                     <Setter Property="BorderThickness" Value="0"/>
@@ -36,32 +35,42 @@
             <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Margin="0,4,10,0" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_1"/>
         </Grid>
 
-        <StackPanel Grid.Row="1">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Path 1: " HorizontalAlignment="Left"/>
-                <TextBox x:Name="TxtPath1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            </Grid>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Label Content="Path 2: " HorizontalAlignment="Left"/>
-                <TextBox x:Name="TxtPath2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
-            </Grid>
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                </Grid.ColumnDefinitions>
-                <CheckBox x:Name="ChkNumOnly" Grid.Column="0" Content="번호만 표시" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                <Button Grid.Column="1" Content="Compare" HorizontalAlignment="Right" VerticalAlignment="Center" Width="75" Margin="0,1,5,0" Click="Button_Click"/>
-            </Grid>
-        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" VerticalAlignment="Top" Height="50" Content="↕" Margin="5,0,5,0" Click="Swap_Click"/>
+            <StackPanel Grid.Column="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Path 1: " HorizontalAlignment="Left"/>
+                    <TextBox x:Name="TxtPath1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Path 2: " HorizontalAlignment="Left"/>
+                    <TextBox x:Name="TxtPath2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                </Grid>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="2" Content="Add Path2 items to Path1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="5,0,5,0" Margin="0,1,5,0" Click="Add_Click"/>
+                    <CheckBox x:Name="ChkNumOnly" Grid.Column="0" Content="Show number only" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                    <Button Grid.Column="1" Content="Compare" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="5,0,5,0" Margin="0,1,5,0" Click="Compare_Click"/>
+                </Grid>
+            </StackPanel>
+        </Grid>
 
         <ListView x:Name="LView" Grid.Row="2" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" 
                   HorizontalAlignment="Stretch" Margin="5">
