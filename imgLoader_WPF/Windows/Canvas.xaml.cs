@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
 namespace imgLoader_WPF.Windows
 {
@@ -90,8 +92,8 @@ namespace imgLoader_WPF.Windows
 
             if (enlarge)
             {
-                _relRect.Width *= (Scale + 100) / 100d;
-                _relRect.Height *= (Scale + 100) / 100d;
+                _relRect.Width *= (Scale + 100) / 100.0;
+                _relRect.Height *= (Scale + 100) / 100.0;
                 _relRect.X = (ActualWidth - _relRect.Width) / 2;
                 _relRect.Y = (ActualHeight - _relRect.Height) / 2;
 
@@ -103,8 +105,8 @@ namespace imgLoader_WPF.Windows
             else
             {
                 if (_min <= 0) return;
-                _relRect.Width /= (Scale + 100) / 100d;
-                _relRect.Height /= (Scale + 100) / 100d;
+                _relRect.Width /= (Scale + 100) / 100.0;
+                _relRect.Height /= (Scale + 100) / 100.0;
                 _relRect.X = (ActualWidth - _relRect.Width) / 2;
                 _relRect.Y = (ActualHeight - _relRect.Height) / 2;
 
@@ -239,13 +241,12 @@ namespace imgLoader_WPF.Windows
             try
             {
                 bitmapImage.BeginInit();
-                if (_oriPosition.Width != 0)
-                {
-                    bitmapImage.CreateOptions = BitmapCreateOptions.DelayCreation;
-                    bitmapImage.DecodePixelWidth = (int)_oriPosition.Width;
-                    bitmapImage.DecodePixelHeight = (int)_oriPosition.Height;
-                }
 
+                var (newWidth, newHeight) = GetFutureSize(path);
+                bitmapImage.DecodePixelWidth = newWidth;
+                bitmapImage.DecodePixelHeight = newHeight;
+
+                bitmapImage.CreateOptions = BitmapCreateOptions.DelayCreation;
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.UriSource = new Uri(path);
                 bitmapImage.EndInit();
@@ -292,6 +293,38 @@ namespace imgLoader_WPF.Windows
 
             //_size -= new FileInfo(FileList[index]).Length;
         }
+        private static (double, double) GetImgSize(string path)
+        {
+            var decoder = BitmapDecoder.Create(new Uri(path), BitmapCreateOptions.IgnoreColorProfile, BitmapCacheOption.Default);
+
+            return (decoder.Frames[0].PixelWidth, decoder.Frames[0].PixelHeight);
+        }
+        private (int, int) GetFutureSize(string imgPath)
+        {
+            var (width, height) = GetImgSize(imgPath);
+
+            var panelLonger = MPanel.ActualWidth > MPanel.ActualHeight ? MPanel.ActualWidth : MPanel.ActualHeight;
+
+            if (width >= height)
+            {
+                if (width > panelLonger)
+                {
+                    height *= panelLonger / width;
+                    width = panelLonger;
+                }
+            }
+            else
+            {
+                if (height > panelLonger)
+                {
+                    width *= panelLonger / height;
+                    height = panelLonger;
+                }
+            }
+
+            return ((int)width, (int)height);
+        }
+
         //
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
@@ -389,6 +422,8 @@ namespace imgLoader_WPF.Windows
             _relRect = new Rect(0, 0, 0, 0);
             var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
+
+            
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {

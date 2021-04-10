@@ -39,7 +39,7 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var result = Core.Dir.CompareWorkspace(TxtPath1.Text, TxtPath2.Text);
+            var (first, second) = Core.Dir.CompareWorkspace(TxtPath1.Text, TxtPath2.Text);
 
             _itemsData.Clear();
 
@@ -48,18 +48,19 @@ namespace imgLoader_WPF.Windows
             string lPath;
             string sPath;
 
-            if (result[0].Count > result[1].Count)
+            if (first.Count > second.Count)
             {
-                longer = result[0];
-                shorter = result[1];
+                longer = first;
+                shorter = second;
 
                 lPath = TxtPath1.Text;
                 sPath = TxtPath2.Text;
             }
             else
             {
-                longer = result[1];
-                shorter = result[0];
+                longer = second;
+                shorter = first;
+
                 lPath = TxtPath2.Text;
                 sPath = TxtPath1.Text;
             }

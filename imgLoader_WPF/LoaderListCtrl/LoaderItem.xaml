@@ -71,7 +71,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <ProgressBar x:Name="ProgBar" Height="5" Margin="5,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Panel.ZIndex="100" Orientation="Horizontal"/>
+                <ProgressBar x:Name="ProgBar" Value="0" Maximum="1" Height="5" Margin="5,0,0,0" HorizontalAlignment="Stretch" HorizontalContentAlignment="Stretch" Panel.ZIndex="100" Orientation="Horizontal"/>
                 <TextBlock x:Name="ProgBlock" Grid.Column="1" Text="0/0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,0,0" Margin="5,1,5,1"/>
             </Grid>
 

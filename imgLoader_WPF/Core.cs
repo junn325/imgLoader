@@ -308,6 +308,10 @@ namespace imgLoader_WPF
             }
         }
 
+        internal static (int, int) GetBigSmall(int num1, int num2)
+        {
+            return num1 >= num2 ? (num1, num2) : (num2, num1);
+        }
         internal static class Dir
         {
             internal static string GetDirFromFile(string path)
@@ -432,7 +436,7 @@ namespace imgLoader_WPF
                 canvas.Show();
             }
 
-            internal static List<string>[] CompareWorkspace(string firstPath, string secondPath)
+            internal static (List<string>, List<string>) CompareWorkspace(string firstPath, string secondPath)
             {
                 var first = Directory.GetFiles(firstPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
                 var second = Directory.GetFiles(secondPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
@@ -454,7 +458,7 @@ namespace imgLoader_WPF
                     result2.Add(s);
                 }
 
-                return new[]{result1, result2};
+                return (result1, result2);
             }
 
             internal static int[] TestRead(string route)
