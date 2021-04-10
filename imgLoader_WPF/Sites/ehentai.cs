@@ -21,45 +21,52 @@ namespace imgLoader_WPF.Sites
 
         public EHentai(string mNumber)
         {
-            sw.Start();
-            _src_gall = StrLoad.Load($"{BaseUrl}g/{mNumber}/");
-            Debug.WriteLine(sw.ElapsedMilliseconds);
-            sw.Restart();
-
-            var sb = new StringBuilder();
-            var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
-            Debug.WriteLine(sw.ElapsedMilliseconds);
-            sw.Restart();
-
-            _gall_id = mNumber.Split('/')[0];
-            _src_data = XmlHttpRequest_Data(ApiUrl, _gall_id, mNumber.Split('/')[1]);
-            _title = StrTools.GetStringValue(_src_data, "title");
-            Debug.WriteLine(sw.ElapsedMilliseconds);
-            sw.Restart();
-
-            for (var i = 1; i < _src_data.StrLen("group") + 1; i++)
+            try
             {
-                sb.Append(_src_data.Split("group:")[i].Split('"')[0]).Append(';');
+                sw.Start();
+                _src_gall = StrLoad.Load($"{BaseUrl}g/{mNumber}/");
+                Debug.WriteLine(sw.ElapsedMilliseconds);
+                sw.Restart();
+
+                var sb = new StringBuilder();
+                var temp = StrLoad.LoadAsync(_src_gall.Split("\"><img alt")[0].Split('\"').Last());        //1번째 항목 불러옴
+                Debug.WriteLine(sw.ElapsedMilliseconds);
+                sw.Restart();
+
+                _gall_id = mNumber.Split('/')[0];
+                _src_data = XmlHttpRequest_Data(ApiUrl, _gall_id, mNumber.Split('/')[1]);
+                _title = StrTools.GetStringValue(_src_data, "title");
+                Debug.WriteLine(sw.ElapsedMilliseconds);
+                sw.Restart();
+
+                for (var i = 1; i < _src_data.StrLen("group") + 1; i++)
+                {
+                    sb.Append(_src_data.Split("group:")[i].Split('"')[0]).Append(';');
+                }
+                _group = sb.ToString();
+
+                sb.Clear();
+
+                for (var i = 1; i < _src_data.StrLen("artist") + 1; i++)
+                {
+                    sb.Append(_src_data.Split("artist:")[i].Split('"')[0]).Append(';');
+                }
+                _artist = sb.ToString();
+
+                temp.Wait();
+                Debug.WriteLine(sw.ElapsedMilliseconds);
+                sw.Restart();
+
+                var srcItem = temp.Result;
+                _showKey = srcItem.Split("var showkey=\"")[1].Split("\";")[0];
+
+                Number = mNumber;
+                sw.Restart();
             }
-            _group = sb.ToString();
-
-            sb.Clear();
-
-            for (var i = 1; i < _src_data.StrLen("artist") + 1; i++)
+            catch (Exception ex)
             {
-                sb.Append(_src_data.Split("artist:")[i].Split('"')[0]).Append(';');
+                Core.Log("ehentai: " + ex.Message);
             }
-            _artist = sb.ToString();
-
-            temp.Wait();
-            Debug.WriteLine(sw.ElapsedMilliseconds);
-            sw.Restart();
-
-            var srcItem = temp.Result;
-            _showKey = srcItem.Split("var showkey=\"")[1].Split("\";")[0];
-
-            Number = mNumber;
-            sw.Restart();
         }
 
         public string GetArtist()

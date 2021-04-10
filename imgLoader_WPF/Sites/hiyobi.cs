@@ -17,8 +17,8 @@ namespace imgLoader_WPF.Sites
             try
             {
                 // 썸네일 https://cdn.hiyobi.me/tn/(갤러리id).(확장자)
-                _src_api = StrLoad.Load($"https://api.hiyobi.me/gallery/{mNumber}");
                 _src_cdn = StrLoad.Load($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
+                _src_api = StrLoad.Load($"https://api.hiyobi.me/gallery/{mNumber}");
 
                 if (_src_api.Contains("\\")) _src_api = _src_api.Replace("\\", "");
                 _title = _src_api.Split("title\":\"")[1].Split("\",")[0];
@@ -43,9 +43,9 @@ namespace imgLoader_WPF.Sites
 
                 Number = mNumber;
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception("failed to initiate");
+                Core.Log("hiyobi: " + ex.Message);
             }
         }
 

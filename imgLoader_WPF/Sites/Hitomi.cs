@@ -20,7 +20,8 @@ namespace imgLoader_WPF.Sites
             try
             {
                 var temp = StrLoad.LoadAsync($"https://ltn.hitomi.la/galleries/{mNumber}.js");
-                _src_gall = StrLoad.Load(StrLoad.Load($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0]);
+                var gallAddress = StrLoad.Load($"https://hitomi.la/galleries/{mNumber}.html").Split("window.location.href = \"")[1].Split('\"')[0];
+                _src_gall = StrLoad.Load(gallAddress);
 
                 _src_info = temp.Result;
 
@@ -40,7 +41,7 @@ namespace imgLoader_WPF.Sites
             }
             catch (Exception ex)
             {
-                Core.Log(ex.Message);
+                Core.Log("hitomi: " + ex.Message);
             }
         }
 

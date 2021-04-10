@@ -32,9 +32,9 @@ namespace imgLoader_WPF.Sites
                 HitomiNumber = StrTools.GetStringValue(_source, "media_id");
                 Number = mNumber;
             }
-            catch
+            catch (Exception ex)
             {
-                throw new Exception("failed to initiate");
+                Core.Log("nhentai: " + ex.Message);
             }
         }
 
