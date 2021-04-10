@@ -119,22 +119,12 @@ namespace imgLoader_WPF
         /// </summary>
         private static ISite Load(string url)
         {
-            try
-            {
-                var site = Core.LoadSite(url);
+            var site = Core.LoadSite(url);
 
-                if (site == null) throw new Exception("Failed to Initialize: Processor: private Load: site is null");
-
-                return !site.IsValidated()
-                            ? null
-                            : site;
-            }
-            catch
-            {
-                return null;
-            }
+            return site == null || !site.IsValidated()
+                        ? null
+                        : site;
         }
-
 
         private static string GetTitle(string title)
         {

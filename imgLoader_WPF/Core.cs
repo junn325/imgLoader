@@ -15,6 +15,7 @@ using System.Windows;
 using System.Windows.Media.Imaging;
 using imgLoader_WPF.Services;
 using imgLoader_WPF.Windows;
+using System.Security.Policy;
 
 namespace imgLoader_WPF
 {
@@ -122,7 +123,7 @@ namespace imgLoader_WPF
 
             if (val.Contains("e-hentai") || val.Contains("exhentai")) return val.Split("/g/")[1].Remove(val.Split("/g/")[1].Length - 1);
 
-            return "";
+            return url;
         }
 
         /// <summary>
@@ -133,6 +134,23 @@ namespace imgLoader_WPF
             var mNumber = GetNum(url);
             if (mNumber.Length == 0) return null;
 
+            if (url == mNumber)     //입력값이 번호
+            {
+                ISite temp = new Hitomi(mNumber);
+                if (temp.IsValidated()) return temp;
+
+                temp = new Hiyobi(mNumber);
+                if (temp.IsValidated()) return temp;
+
+                temp = new NHentai(mNumber);
+                if (temp.IsValidated()) return temp;
+
+                temp = new EHentai(mNumber);
+                if (temp.IsValidated()) return temp;
+
+                return null;
+            }
+
             if (url.Contains("nhentai.net", StringComparison.OrdinalIgnoreCase)) return new NHentai(mNumber);
             if (url.Contains("pixiv", StringComparison.OrdinalIgnoreCase)) return new Pixiv(mNumber);
             if (url.Contains("hiyobi.me", StringComparison.OrdinalIgnoreCase)) return new Hiyobi(mNumber);
@@ -142,7 +160,7 @@ namespace imgLoader_WPF
 
             return null;
         }
-
+        
         internal static string GetArtistFromRaw(string rawArtist)
         {
             var sb = new StringBuilder();
@@ -285,19 +303,6 @@ namespace imgLoader_WPF
             return collect1.Where(item => collect2.All(i => i.Title != item.Title));
         }
 
-        internal static List<IndexItem> Find(IEnumerable<IndexItem> where, string find)
-        {
-            var result = new List<IndexItem>();
-
-            foreach (IndexItem item in where)
-            {
-                if (item.Author.Contains("|")) continue;
-                result.Add(item);
-            }
-
-            return result;
-        }
-
         internal static void RefreshList(List<IndexItem> list, IEnumerable<IndexItem> newContent)
         {
             list.Clear();
@@ -308,10 +313,6 @@ namespace imgLoader_WPF
             }
         }
 
-        internal static (int, int) GetBigSmall(int num1, int num2)
-        {
-            return num1 >= num2 ? (num1, num2) : (num2, num1);
-        }
         internal static class Dir
         {
             internal static string GetDirFromFile(string path)
