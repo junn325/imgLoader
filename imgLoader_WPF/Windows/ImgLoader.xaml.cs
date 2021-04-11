@@ -405,6 +405,41 @@ namespace imgLoader_WPF.Windows
 
             PnlRecent.Children.Insert(0, block);
         }
+        private void Search(string[] searchTags, int option)
+        {
+            foreach (var itemTag in searchTags)
+            {
+                CondInd.Add(itemTag, ConditionIndicator.Condition.Search, option);
+
+                var tag = option switch
+                {
+                    -1 => "All:",
+                    0 => "Author:",
+                    1 => "Number:",
+                    2 => "Tag:",
+                    3 => "SiteName:",
+                    4 => "Title:",
+                    5 => "ImgCount:",
+                    6 => "Vote:",
+                    _ => ""
+                };
+
+                var block = new TextBlock
+                {
+                    Text = tag + itemTag,
+                    Background = Brushes.White,
+
+                    Margin = new Thickness(2),
+                    Padding = new Thickness(4, 2, 4, 2),
+
+                    VerticalAlignment = VerticalAlignment.Top,
+                    HorizontalAlignment = HorizontalAlignment.Left
+                };
+                block.MouseDown += Block_ClickHandler;
+
+                PnlRecent.Children.Insert(0, block);
+            }
+        }
         private void Search(string searchTxt, int option, string label)
         {
             CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
@@ -573,6 +608,7 @@ namespace imgLoader_WPF.Windows
         {
             Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
 
+            _clickedItem.LastViewDate = DateTime.Now;
             _clickedItem.View++;
             _clickedItem.IsRead = true;
             _clickedItem.ShownChang.Invoke();
@@ -588,7 +624,7 @@ namespace imgLoader_WPF.Windows
         }
         private void TagSrch_Click(object sender, RoutedEventArgs e)
         {
-            //CondInd.Add(_clickedItem.Tags, ConditionIndicator.Condition.Search, (int)Searcher.SearchOption.Tag);
+            Search(_clickedItem.Tags, (int) Searcher.SearchOption.Tag);
         }
         private void SearchSMenu_Click(object sender, RoutedEventArgs e)
         {
@@ -693,6 +729,11 @@ namespace imgLoader_WPF.Windows
         {
             _winSetting.ShowDialog();
         }
+        private void MenuSortLastDate_Click(object sender, RoutedEventArgs e)
+        {
+            CondInd.Add("LastAccess", ConditionIndicator.Condition.Sort, (int)SortOption.LastAccess);
+        }
+
         #endregion
         private void AddBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -754,5 +795,6 @@ namespace imgLoader_WPF.Windows
         {
             TxtSrchAll.Focus();
         }
+
     }
 }

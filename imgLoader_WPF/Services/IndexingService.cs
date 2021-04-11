@@ -103,6 +103,18 @@ namespace imgLoader_WPF.Services
                     item.Vote = info[6] != null ? int.Parse(info[6]) : 0;
                     item.Show = info[7] == null || info[7] == "1";
                     item.View = info[8] != null ? int.Parse(info[8]) : 0;
+
+                    if (info.Length > 9 && info[9].Contains(' ') && info[9].Contains('/'))
+                    {
+                        var lastDate = info[9].Split(' ');
+                        int.TryParse(lastDate[0].Split('/')[0], out var month);
+                        int.TryParse(lastDate[0].Split('/')[1], out var day);
+                        int.TryParse(lastDate[0].Split('/')[2], out var year);
+                        int.TryParse(lastDate[1].Split(':')[0], out var hour);
+                        int.TryParse(lastDate[1].Split(':')[1], out var minute);
+                        int.TryParse(lastDate[1].Split(':')[2], out var second);
+                        item.LastViewDate = new DateTime(year, month, day, hour, minute, second);
+                    }
                 }
                 catch
                 {

@@ -62,14 +62,15 @@ namespace imgLoader_WPF.Services
             sb.Clear();
 
             sb.Append(item.SiteName).Append('\n')
-                    .Append(item.Title).Append('\n')
-                    .Append(item.Author).Append('\n')
-                    .Append(item.ImgCount).Append('\n')
-                    .Append(tags).Append('\n')
-                    .Append(item.Date.ToString(CultureInfo.InvariantCulture)).Append('\n')
-                    .Append(item.Vote).Append('\n')
-                    .Append(item.Show ? "1" : "0").Append('\n')
-                    .Append(item.View);
+                .Append(item.Title).Append('\n')
+                .Append(item.Author).Append('\n')
+                .Append(item.ImgCount).Append('\n')
+                .Append(tags).Append('\n')
+                .Append(item.Date.ToString(CultureInfo.InvariantCulture)).Append('\n')
+                .Append(item.Vote).Append('\n')
+                .Append(item.Show ? "1" : "0").Append('\n')
+                .Append(item.View).Append('\n')
+                .Append(item.LastViewDate.ToString(CultureInfo.InvariantCulture));
 
             using var fs = Core.Dir.DelayStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             using var sw = new StreamWriter(fs, Encoding.UTF8);

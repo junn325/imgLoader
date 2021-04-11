@@ -23,9 +23,9 @@
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
                             <MenuItem x:Name="MenuOpen" Header="열기" IsEnabled="False" Click="Open_Click"/>
-                            <MenuItem x:Name="MenuManage" Header="항목 관리" IsEnabled="False" Click="Manage_Click"/>
+                            <MenuItem x:Name="MenuManage" Header="관리" IsEnabled="False" Click="Manage_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="MenuAdd" Header="항목 추가" Click="AddItem_Click"/>
+                            <MenuItem x:Name="MenuAdd" Header="주소로부터 추가" Click="AddItem_Click"/>
                             <Separator/>
                             <MenuItem x:Name="MenuCancel" Header="취소" IsEnabled="False" Click="Cancel_Click"/>
                             <MenuItem x:Name="MenuPause" Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
@@ -37,21 +37,25 @@
                             <Separator/>
                             <MenuItem x:Name="MenuSrch" Header="검색" >
                                 <MenuItem x:Name="MenuSrchManual" Header="직접 검색" Click="SearchSMenu_Click"/>
-                                <MenuItem x:Name="MenuSrchAuthor" Header="작가로 검색" Click="AuthorSrch_Click"/>
-                                <MenuItem x:Name="MenuSrchTitle" Header="사이트로 검색" Click="SiteSrch_Click"/>
-                                <MenuItem x:Name="MenuSrchTag" Header="태그로 검색" Click="TagSrch_Click"/>
+                                <Separator/>
+                                <MenuItem x:Name="MenuSrchAuthor" Header="작가" Click="AuthorSrch_Click"/>
+                                <MenuItem x:Name="MenuSrchTitle" Header="사이트" Click="SiteSrch_Click"/>
+                                <MenuItem x:Name="MenuSrchTag" Header="태그" Click="TagSrch_Click"/>
                             </MenuItem>
                             <MenuItem x:Name="MenuSort" Header="정렬">
-                                <MenuItem x:Name="MenuSortTitle" Header="제목으로 정렬" Click="TitleSort_Click"/>
-                                <MenuItem x:Name="MenuSortAuthor" Header="작가로 정렬" Click="AuthorSort_Click"/>
-                                <MenuItem x:Name="MenuSortDate" Header="날짜로 정렬" Click="DateSort_Click"/>
-                                <MenuItem x:Name="MenuSortVote" Header="점수로 정렬" Click="VoteSort_Click"/>
-                                <MenuItem x:Name="MenuSortView" Header="조회수로 정렬" Click="ViewSort_Click"/>
-                                <MenuItem x:Name="MenuSortPage" Header="페이지수로 정렬" Click="PageSort_Click"/>
-                                <MenuItem x:Name="MenuSortNum" Header="번호로 정렬" Click="NumberSort_Click"/>
+                                <MenuItem x:Name="MenuSortTitle" Header="제목" Click="TitleSort_Click"/>
+                                <MenuItem x:Name="MenuSortAuthor" Header="작가" Click="AuthorSort_Click"/>
+                                <Separator/>
+                                <MenuItem x:Name="MenuSortVote" Header="점수" Click="VoteSort_Click"/>
+                                <MenuItem x:Name="MenuSortDate" Header="날짜" Click="DateSort_Click"/>
+                                <MenuItem x:Name="MenuSortView" Header="조회수" Click="ViewSort_Click"/>
+                                <MenuItem x:Name="MenuSortLastDate" Header="조회 날짜" Click="MenuSortLastDate_Click"/>
+                                <Separator/>
+                                <MenuItem x:Name="MenuSortPage" Header="페이지수" Click="PageSort_Click"/>
+                                <MenuItem x:Name="MenuSortNum" Header="번호" Click="NumberSort_Click"/>
                             </MenuItem>
                             <Separator/>
-                            <MenuItem x:Name="MenuRand" Header="랜덤 선택" IsEnabled="False" Click="Random_Click"/>
+                            <MenuItem x:Name="MenuRand" Header="무작위 선택" IsEnabled="False" Click="Random_Click"/>
                             <MenuItem x:Name="MenuOpenExpl" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
                             <MenuItem x:Name="MenuCpyAddr" Header="링크 복사" Click="CopyAddress_Click"/>
                             <Separator/>

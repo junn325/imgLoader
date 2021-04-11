@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Threading;
 using imgLoader_WPF.Windows;
 using Dispatcher = System.Windows.Threading.Dispatcher;
@@ -51,6 +52,9 @@ namespace imgLoader_WPF.Services
                 case SortOption.View:
                     temp = new List<IndexItem>(_list.OrderByDescending(i => i.View));
                     break;
+                case SortOption.LastAccess:
+                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.LastViewDate));
+                    break;
 
                 default:
                     return;
@@ -92,7 +96,8 @@ namespace imgLoader_WPF.Services
             Vote,
             Page,
             Date,
-            View
+            View,
+            LastAccess
         }
     }
 }
