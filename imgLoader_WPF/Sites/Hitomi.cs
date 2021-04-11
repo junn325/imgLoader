@@ -14,7 +14,6 @@ namespace imgLoader_WPF.Sites
         private readonly string _src_info, _src_gall, _artist, _group, _title;
         public Hitomi(string mNumber)
         {
-            var wc = new WebClient { Encoding = Encoding.UTF8 };
             var sb = new StringBuilder();
 
             try

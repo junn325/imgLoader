@@ -22,7 +22,7 @@ namespace imgLoader_WPF
             var sb = new StringBuilder();
 
             var req = WebRequest.Create(url);
-            req.Timeout = 3000;
+            req.Timeout = 5000;
 
             var resp = req.GetResponse();
             //if (resp == null) return null;
