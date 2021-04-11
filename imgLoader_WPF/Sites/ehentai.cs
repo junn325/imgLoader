@@ -39,7 +39,7 @@ namespace imgLoader_WPF.Sites
                 Debug.WriteLine(sw.ElapsedMilliseconds);
                 sw.Restart();
 
-                for (var i = 1; i < _src_data.StrLen("group") + 1; i++)
+                for (var i = 1; i < _src_data.StrLen("group:") + 1; i++)
                 {
                     sb.Append(_src_data.Split("group:")[i].Split('"')[0]).Append(';');
                 }
@@ -47,7 +47,7 @@ namespace imgLoader_WPF.Sites
 
                 sb.Clear();
 
-                for (var i = 1; i < _src_data.StrLen("artist") + 1; i++)
+                for (var i = 1; i < _src_data.StrLen("artist:") + 1; i++)
                 {
                     sb.Append(_src_data.Split("artist:")[i].Split('"')[0]).Append(';');
                 }
