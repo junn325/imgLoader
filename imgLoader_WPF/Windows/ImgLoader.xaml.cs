@@ -109,7 +109,7 @@ namespace imgLoader_WPF.Windows
             }
             else
             {
-                IdxBlock.Visibility = Visibility.Hidden;
+                BlockIdx.Visibility = Visibility.Hidden;
                 _winSetting.Show();
             }
 
@@ -122,7 +122,7 @@ namespace imgLoader_WPF.Windows
             D_Stop.Visibility = Visibility.Collapsed;
             D_Else1.Visibility = Visibility.Collapsed;
 #endif
-            foreach (RadioButton radio in RadioPanel.Children)
+            foreach (RadioButton radio in PnlRadio.Children)
             {
                 radio.PreviewKeyUp += TxtSrchAll_KeyUp;
             }
@@ -197,7 +197,7 @@ namespace imgLoader_WPF.Windows
         {
             Debug.WriteLine("ShowItemCount: Call");
 
-            CountBlock.Text = $"{List.Count} items | {Core.Route}";
+            BlockCnt.Text = $"{List.Count} items | {Core.Route}";
         }
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
@@ -207,7 +207,7 @@ namespace imgLoader_WPF.Windows
 
             var url = TxtUrl.Text;
             TxtUrl.Text = "";
-            AddLblBlock.Visibility = Visibility.Visible;
+            BlockAdd.Visibility = Visibility.Visible;
 
             AddItem(url);
         }
@@ -276,11 +276,11 @@ namespace imgLoader_WPF.Windows
         {
             if (TxtUrl.Text.Length == 0)
             {
-                AddLblBlock.Visibility = Visibility.Visible;
+                BlockAdd.Visibility = Visibility.Visible;
                 return;
             }
 
-            AddLblBlock.Visibility = Visibility.Collapsed;
+            BlockAdd.Visibility = Visibility.Collapsed;
         }
         private void TxtUrl_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -290,11 +290,11 @@ namespace imgLoader_WPF.Windows
         {
             if (TxtSrchAll.Text.Length == 0)
             {
-                SrchLblBlock.Visibility = Visibility.Visible;
+                BlockSrchLbl.Visibility = Visibility.Visible;
                 return;
             }
 
-            SrchLblBlock.Visibility = Visibility.Collapsed;
+            BlockSrchLbl.Visibility = Visibility.Collapsed;
         }
         private void TxtSrchAll_KeyUp(object sender, KeyEventArgs e)
         {
@@ -303,13 +303,13 @@ namespace imgLoader_WPF.Windows
 
             Search(TxtSrchAll.Text,
                 (int)(
-                    AllRadio.IsChecked.Value
+                    RadioAll.IsChecked.Value
                         ? Searcher.SearchOption.All
-                        : AuthorRadio.IsChecked.Value
+                        : RadioAuthor.IsChecked.Value
                             ? Searcher.SearchOption.Author
-                            : TagRadio.IsChecked.Value
+                            : RadioTag.IsChecked.Value
                                 ? Searcher.SearchOption.Tag
-                                : NumRadio.IsChecked.Value
+                                : RadioNum.IsChecked.Value
                                     ? Searcher.SearchOption.Number
                                     : Searcher.SearchOption.Title
                 ));
@@ -323,7 +323,7 @@ namespace imgLoader_WPF.Windows
 
             if (e.RightButton == MouseButtonState.Pressed)
             {
-                RecentPanel.Children.Remove((TextBlock)sender);
+                PnlRecent.Children.Remove((TextBlock)sender);
                 return;
             }
 
@@ -333,26 +333,26 @@ namespace imgLoader_WPF.Windows
                 switch (finalText.Split(':')[0])
                 {
                     case "All":
-                        AllRadio.IsChecked = true;
+                        RadioAll.IsChecked = true;
                         break;
 
                     case "Author":
-                        AuthorRadio.IsChecked = true;
+                        RadioAuthor.IsChecked = true;
                         break;
 
                     case "Number":
-                        NumRadio.IsChecked = true;
+                        RadioNum.IsChecked = true;
                         break;
 
                     case "Tag":
-                        TagRadio.IsChecked = true;
+                        RadioTag.IsChecked = true;
                         break;
 
                     case "SiteName":
                         break;
 
                     case "Title":
-                        TitleRadio.IsChecked = true;
+                        RadioTitle.IsChecked = true;
                         break;
 
                     case "ImgCount":
@@ -401,7 +401,7 @@ namespace imgLoader_WPF.Windows
             };
             block.MouseDown += Block_ClickHandler;
 
-            RecentPanel.Children.Insert(0, block);
+            PnlRecent.Children.Insert(0, block);
         }
         private void Search(string searchTxt, int option, string label)
         {
@@ -437,7 +437,7 @@ namespace imgLoader_WPF.Windows
             };
             block.MouseDown += Block_ClickHandler;
 
-            RecentPanel.Children.Insert(0, block);
+            PnlRecent.Children.Insert(0, block);
         }
 
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
@@ -475,13 +475,15 @@ namespace imgLoader_WPF.Windows
 
                 switch (item.Name)
                 {
-                    case "OpenMenu":
+                    case "MenuOpen":
                         item.IsEnabled = !_clickedItem.IsDownloading;
                         break;
-                    case "CancelMenu":
+
+                    case "MenuCancel":
                         item.IsEnabled = _clickedItem.IsDownloading;
                         break;
-                    case "ResumeMenu":
+
+                    case "MenuResume":
                         if (!_clickedItem.IsDownloading)
                         {
                             item.IsEnabled = false;
@@ -493,9 +495,9 @@ namespace imgLoader_WPF.Windows
                         {
                             item.IsEnabled = true;
                         }
-
                         break;
-                    case "PauseMenu":
+
+                    case "MenuPause":
                         if (!_clickedItem.IsDownloading)
                         {
                             item.IsEnabled = false;
@@ -511,9 +513,11 @@ namespace imgLoader_WPF.Windows
 
                         item.IsEnabled = true;
                         break;
-                    case "ManageMenu":
+
+                    case "MenuManage":
                         item.IsEnabled = false;
                         break;
+
                     default:
                         item.IsEnabled = true;
                         break;
@@ -530,10 +534,10 @@ namespace imgLoader_WPF.Windows
 
                 switch (((MenuItem)item).Name)
                 {
-                    case "SettingMenu":
-                    case "RandomMenu":
-                    case "AddMenu":
-                    case "SearchMenu":
+                    case "MenuSetting":
+                    case "MenuRand":
+                    case "MenuAdd":
+                    case "MenuSrch":
                         ((MenuItem)item).IsEnabled = true;
                         break;
                     default:
@@ -586,7 +590,7 @@ namespace imgLoader_WPF.Windows
         }
         private void SearchSMenu_Click(object sender, RoutedEventArgs e)
         {
-            SrchBorder.Visibility = Visibility.Visible;
+            BdrSrch.Visibility = Visibility.Visible;
             TxtSrchAll.Focus();
         }
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -609,7 +613,7 @@ namespace imgLoader_WPF.Windows
         }
         private void AddItem_Click(object sender, RoutedEventArgs e)
         {
-            AddBorder.Visibility = Visibility.Visible;
+            BdrAdd.Visibility = Visibility.Visible;
             TxtUrl.Focus();
         }
         private void CopyAddress_Click(object sender, RoutedEventArgs e)
@@ -692,7 +696,7 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                HideBorder(AddBorder, TxtUrl, AddLblBlock);
+                HideBorder(BdrAdd, TxtUrl, BlockAdd);
             }
         }
 
@@ -719,7 +723,7 @@ namespace imgLoader_WPF.Windows
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                HideBorder(SrchBorder, TxtSrchAll, SrchLblBlock);
+                HideBorder(BdrSrch, TxtSrchAll, BlockSrchLbl);
             }
         }
 

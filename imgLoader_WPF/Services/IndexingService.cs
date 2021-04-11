@@ -144,7 +144,7 @@ namespace imgLoader_WPF.Services
             {
                 _sender.Dispatcher.Invoke(() =>
                 {
-                    _sender.IdxBlock.Visibility = System.Windows.Visibility.Hidden;
+                    _sender.BlockIdx.Visibility = System.Windows.Visibility.Hidden;
                     var disableProcessing = _sender.Dispatcher.DisableProcessing();
                     var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
                     _sender.Sorter.SortRefresh(temp, disableProcessing);

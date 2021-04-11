@@ -41,7 +41,7 @@ namespace imgLoader_WPF.Services
                     var temp = IndicatorList.Where(i => i.Condition == Condition.Sort).ToArray();
                     if (temp.Length > 0)
                     {
-                        _sender.CondPanel.Children.Remove(temp[0].Panel);
+                        _sender.PnlCond.Children.Remove(temp[0].Panel);
                         IndicatorList.Remove(temp[0]);
                     }
 
@@ -68,7 +68,7 @@ namespace imgLoader_WPF.Services
             };
             tb.MouseUp += RemoveHandler;
 
-            tb.Measure(_sender.CondPanel.DesiredSize);
+            tb.Measure(_sender.PnlCond.DesiredSize);
 
             item.Panel = new DockPanel
             {
@@ -87,7 +87,7 @@ namespace imgLoader_WPF.Services
             item.Option = option;
 
             item.Panel.Children.Add(tb);
-            _sender.CondPanel.Children.Add(item.Panel);
+            _sender.PnlCond.Children.Add(item.Panel);
 
             IndicatorList.Add(item);
         }
@@ -122,7 +122,7 @@ namespace imgLoader_WPF.Services
             };
             tb.MouseUp += RemoveHandler;
 
-            tb.Measure(_sender.CondPanel.DesiredSize);
+            tb.Measure(_sender.PnlCond.DesiredSize);
 
             item.Panel = new DockPanel
             {
@@ -141,7 +141,7 @@ namespace imgLoader_WPF.Services
             item.Option = option;
 
             item.Panel.Children.Add(tb);
-            _sender.CondPanel.Children.Add(item.Panel);
+            _sender.PnlCond.Children.Add(item.Panel);
 
             IndicatorList.Add(item);
 
@@ -163,7 +163,7 @@ namespace imgLoader_WPF.Services
 
         internal void Remove(IndItem item)
         {
-            _sender.CondPanel.Children.Remove(item.Panel);
+            _sender.PnlCond.Children.Remove(item.Panel);
             IndicatorList.Remove(item);
 
             var disableProcessing = _sender.Dispatcher.DisableProcessing();

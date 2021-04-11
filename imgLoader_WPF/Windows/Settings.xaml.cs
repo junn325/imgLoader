@@ -52,7 +52,7 @@ namespace imgLoader_WPF.Windows
 
             Core.Route = TxtPath.Text;
 
-            _sender.IdxBlock.Dispatcher.Invoke(() => _sender.IdxBlock.Visibility = Visibility.Visible);
+            _sender.BlockIdx.Dispatcher.Invoke(() => _sender.BlockIdx.Visibility = Visibility.Visible);
 
             _sender.CondInd.Clear();
 
@@ -71,7 +71,7 @@ namespace imgLoader_WPF.Windows
                     _sender.Dispatcher.Invoke(() =>
                     {
                         _sender.ShowItems.Clear();
-                        _sender.IdxBlock.Visibility = Visibility.Hidden;
+                        _sender.BlockIdx.Visibility = Visibility.Hidden;
                         _sender.ShowItemCount();
                     });
 
@@ -160,7 +160,7 @@ namespace imgLoader_WPF.Windows
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             var compareWindow = new CompareDir(_sender);
-            compareWindow.TxtPath1.Text = TxtPath.Text;
+            compareWindow.BlockPath1.Text = TxtPath.Text;
             compareWindow.Show();
         }
 

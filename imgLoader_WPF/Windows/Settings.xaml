@@ -66,7 +66,7 @@
                 <CheckBox x:Name="CheckSearch" Content="검색: 검색 창을 종료하는 한 번만 검색을 수행" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckSearch_Click"/>
             </StackPanel>
 
-            <Button Grid.Column="1" Width="150" Content="디렉토리 간 항목 비교" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="Button_Click_2"/>
+            <Button Grid.Column="1" Width="150" Content="Show missing items from" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="5" Click="Button_Click_2"/>
         </Grid>
     </Grid>
 </Window>
