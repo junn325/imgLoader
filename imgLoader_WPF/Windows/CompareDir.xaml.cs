@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace imgLoader_WPF.Windows
@@ -30,50 +28,54 @@ namespace imgLoader_WPF.Windows
             Close();
         }
 
-        class CompareData
+        private class CompareData
         {
-            public string First { get; set; }
-            public string Second { get; set; }
+            public string Item { get; set; }
+            //public string Second { get; set; }
         }
 
         private void Compare_Click(object sender, RoutedEventArgs e)
         {
-            var (first, second) = Core.Dir.CompareWorkspace(BlockPath1.Text, TxtPath2.Text);
+            var (_, second) = Core.Dir.CompareWorkspace(BlockPath1.Text, TxtPath2.Text);
 
             _itemsData.Clear();
 
-            List<string> longer;
-            List<string> shorter;
-            string lPath;
-            string sPath;
-
-            if (first.Count > second.Count)
+            foreach (var item in second)
             {
-                longer = first;
-                shorter = second;
-
-                lPath = BlockPath1.Text;
-                sPath = TxtPath2.Text;
+                _itemsData.Add(new CompareData { Item = !ChkNumOnly.IsChecked.Value ? item.Replace(TxtPath2.Text + "\\", "").Split('\\')[0] : Path.GetFileNameWithoutExtension(item) });
             }
-            else
-            {
-                longer = second;
-                shorter = first;
+            //List<string> longer;
+            //List<string> shorter;
+            //string lPath;
+            //string sPath;
 
-                lPath = TxtPath2.Text;
-                sPath = BlockPath1.Text;
-            }
+            //if (first.Count > second.Count)
+            //{
+            //    longer = first;
+            //    shorter = second;
 
-            var count = shorter.Count;
-            for (var i = 0; i < longer.Count; i++)
-            {
-                var data = new CompareData();
+            //    lPath = BlockPath1.Text;
+            //    sPath = TxtPath2.Text;
+            //}
+            //else
+            //{
+            //    longer = second;
+            //    shorter = first;
 
-                data.First = !ChkNumOnly.IsChecked.Value ? longer[i].Replace(lPath + "\\", "").Split('\\')[0] : Path.GetFileNameWithoutExtension(longer[i]);
-                if (count > i) data.Second = !ChkNumOnly.IsChecked.Value ? shorter[i].Replace(sPath + "\\", "").Split('\\')[0] : Path.GetFileNameWithoutExtension(shorter[i]);
+            //    lPath = TxtPath2.Text;
+            //    sPath = BlockPath1.Text;
+            //}
 
-                _itemsData.Add(data);
-            }
+            //var count = shorter.Count;
+            //for (var i = 0; i < longer.Count; i++)
+            //{
+            //    var data = new CompareData();
+
+            //    data.First = !ChkNumOnly.IsChecked.Value ? longer[i].Replace(lPath + "\\", "").Split('\\')[0] : Path.GetFileNameWithoutExtension(longer[i]);
+            //    if (count > i) data.Second = !ChkNumOnly.IsChecked.Value ? shorter[i].Replace(sPath + "\\", "").Split('\\')[0] : Path.GetFileNameWithoutExtension(shorter[i]);
+
+            //    _itemsData.Add(data);
+            //}
         }
 
         private void LView_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -89,22 +91,22 @@ namespace imgLoader_WPF.Windows
         {
             ListV.ItemsSource = _itemsData;
 
-            var gView = ListV.View as GridView;
-            if (gView == null) return;
+            //var gView = ListV.View as GridView;
+            //if (gView == null) return;
 
-            var workingWidth = ListV.ActualWidth - SystemParameters.VerticalScrollBarWidth; // take into account vertical scrollbar
+            //var workingWidth = ListV.ActualWidth - SystemParameters.VerticalScrollBarWidth; // take into account vertical scrollbar
 
-            gView.Columns[0].Width = workingWidth * 0.5;
-            gView.Columns[1].Width = workingWidth * 0.5;
+            //gView.Columns[0].Width = workingWidth * 0.5;
+            //gView.Columns[1].Width = workingWidth * 0.5;
         }
 
         private void Add_Click(object sender, RoutedEventArgs e)
         {
-            foreach (CompareData item in ListV.Items)
+            foreach (string item in ListV.Items)
             {
-                if (item.Second == null) break;
+                if (item == null) break;
 
-                _sender.AddItem((BlockPath1.Text + item.First).Split('\\')[^1].Split('.')[0]);
+                _sender.AddItem((BlockPath1.Text + item).Split('\\')[^1].Split('.')[0]);
             }
         }
 

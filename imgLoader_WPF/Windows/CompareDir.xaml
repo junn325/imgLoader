@@ -21,7 +21,8 @@
             <Grid.Resources>
                 <Style TargetType="{x:Type Button}">
                     <Setter Property="Width" Value="20"/>
-                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/> <!--Windowchrome위에서 클릭 허용-->
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+                    <!--Windowchrome위에서 클릭 허용-->
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="Black"/>
                     <Setter Property="BorderThickness" Value="0"/>
@@ -31,8 +32,12 @@
                     <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
                 </Style>
             </Grid.Resources>
-            <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Margin="0,4,10,0" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_1"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="13*"/>
+                <ColumnDefinition Width="437*"/>
+            </Grid.ColumnDefinitions>
+            <DockPanel x:Name="CondPanel" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,0,0"/>
+            <Button VerticalAlignment="Center" HorizontalAlignment="Left" Height="20" Margin="844,0,0,0" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_1" Grid.Column="1"/>
         </Grid>
 
         <Grid Grid.Row="1">
@@ -40,23 +45,23 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" VerticalAlignment="Top" Height="50" Content="↕" Margin="5,0,5,0" Click="Swap_Click"/>
+            <Button Grid.Column="0" VerticalAlignment="Top" Height="50" Content="↕" Margin="5,0,5,0" Visibility="Collapsed" Click="Swap_Click"/>
             <StackPanel Grid.Column="1">
                 <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="auto"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="Path 1: " HorizontalAlignment="Left"/>
-                    <TextBlock x:Name="BlockPath1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
-                </Grid>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="Path 2: " HorizontalAlignment="Left"/>
-                    <TextBox x:Name="TxtPath2" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
+
+                    <Label Content="Target: " Grid.Row="0" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="BlockPath1" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2.5,0,5,0"/>
+
+                    <Label Content="Compare: " Grid.Row="1" Grid.Column="0" HorizontalAlignment="Left"/>
+                    <TextBox x:Name="TxtPath2" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0"/>
                 </Grid>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -65,7 +70,7 @@
                         <ColumnDefinition Width="auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="2" Content="Path1: Add missing items" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="7,0,7,0" Margin="0,1,5,0" Click="Add_Click"/>
+                    <Button Grid.Column="2" Content="Add missing items" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="7,0,7,0" Margin="0,1,5,0" Click="Add_Click"/>
                     <CheckBox x:Name="ChkNumOnly" Grid.Column="0" Content="Show number only" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0"/>
                     <Button Grid.Column="1" Content="Compare" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="7,0,7,0" Margin="0,1,5,0" Click="Compare_Click"/>
                 </Grid>
@@ -76,8 +81,8 @@
                   HorizontalAlignment="Stretch" Margin="5">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Path 1" Width="50" DisplayMemberBinding="{Binding First}"/>
-                    <GridViewColumn Header="Path 2" Width="100" DisplayMemberBinding="{Binding Second}"/>
+                    <GridViewColumn Header="Missing" Width="{Binding ElementName=ListV, Path=ActualWidth}" DisplayMemberBinding="{Binding Item}"/>
+                    <!--<GridViewColumn Header="Path 2" Width="100" DisplayMemberBinding="{Binding Second}"/>-->
                 </GridView>
             </ListView.View>
         </ListView>
