@@ -18,7 +18,7 @@ namespace imgLoader_WPF
 
         //internal bool Selected = false;
         internal bool Show = true;
-        internal bool IsRead, IsDownloading, IsError;
+        internal bool IsRead, IsDownloading, IsError, IsSeparator;
 
         internal NoParam RefreshInfo, ShownChang;
 

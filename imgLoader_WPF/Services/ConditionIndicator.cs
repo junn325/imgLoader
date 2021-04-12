@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -66,7 +67,7 @@ namespace imgLoader_WPF.Services
                 Margin = new Thickness(2, 1, 2, 1),
                 Padding = new Thickness(2, 1, 2, 1),
             };
-            tb.MouseUp += RemoveHandler;
+            tb.MouseUp += ClickHandler;
 
             tb.Measure(_sender.PnlCond.DesiredSize);
 
@@ -120,7 +121,7 @@ namespace imgLoader_WPF.Services
                 Margin = new Thickness(2, 1, 2, 1),
                 Padding = new Thickness(2, 1, 2, 1),
             };
-            tb.MouseUp += RemoveHandler;
+            tb.MouseUp += ClickHandler;
 
             tb.Measure(_sender.PnlCond.DesiredSize);
 
@@ -144,21 +145,47 @@ namespace imgLoader_WPF.Services
             _sender.PnlCond.Children.Add(item.Panel);
 
             IndicatorList.Add(item);
-
         }
-        private void RemoveHandler(object sender, MouseEventArgs e)
-        {
-            var item = new IndItem();
-            foreach (var indItem in IndicatorList)
-            {
-                if ((TextBlock)indItem.Panel.Children[0] == (TextBlock)sender)
-                {
-                    item = indItem;
-                    break;
-                }
-            }
 
-            Remove(item);
+        private int _click;
+        private void ClickHandler(object sender, MouseEventArgs e)
+        {
+            new Thread(() =>
+            {
+                _click++;
+
+                var item = new IndItem();
+                foreach (var indItem in IndicatorList)
+                {
+                    if ((TextBlock)indItem.Panel.Children[0] == (TextBlock)sender)
+                    {
+                        item = indItem;
+                        break;
+                    }
+                }
+
+                //for (int i = 0; i < 30; i++)
+                //{
+                //    if (_click >= 2)
+                //    {
+                //        var block = (TextBlock)sender;
+                //        var txtEdit = new TextBox { Width = block.Width, Height = block.Height, Text = block.Text };
+                //        txtEdit.PreviewKeyUp += EnterHandler;
+
+                //        block.Visibility = Visibility.Collapsed;
+                //        item.Panel.Children.Add(txtEdit);
+                //        txtEdit.SelectAll();
+
+                //        _click = 0;
+                //        return;
+                //    }
+
+                //    Thread.Sleep(10);
+                //}
+
+                Remove(item);
+
+            }).Start();
         }
 
         internal void Remove(IndItem item)
@@ -232,5 +259,35 @@ namespace imgLoader_WPF.Services
             Sort,
             Search,
         }
+
+        //private class DoubleClick : ICommand
+        //{
+        //    public event EventHandler CanExecuteChanged;
+
+        //    public bool CanExecute(object parameter)
+        //    {
+        //        return true;
+        //    }
+
+        //    public void Execute(object parameter)
+        //    {
+        //        Debug.WriteLine("dbl");
+
+        //    }
+        //}
+        //private class Click : ICommand
+        //{
+        //    public event EventHandler CanExecuteChanged;
+
+        //    public bool CanExecute(object parameter)
+        //    {
+        //        return true;
+        //    }
+
+        //    public void Execute(object parameter)
+        //    {
+        //        Debug.WriteLine("one");
+        //    }
+        //}
     }
 }

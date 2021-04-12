@@ -22,9 +22,17 @@ namespace imgLoader_WPF.LoaderListCtrl
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            _sender = (Windows.ImgLoader)Window.GetWindow(this);
+            var data = (IndexItem)DataContext;
 
-            var data = ((IndexItem)DataContext);
+            if (data.IsSeparator)
+            {
+                this.Height = 2;
+                MainGrid.Visibility = Visibility.Collapsed;
+                return;
+                //this.Background = Brushes.LightGray;
+            }
+
+            _sender = (Windows.ImgLoader)Window.GetWindow(this);
 
             if (data.IsDownloading) VoteGrid.Visibility = Visibility.Hidden;
 
@@ -139,6 +147,7 @@ namespace imgLoader_WPF.LoaderListCtrl
             });
 
             Background = data.IsRead ? Brushes.LightGray : Brushes.White;
+
             data.RefreshInfo();
         }
 
