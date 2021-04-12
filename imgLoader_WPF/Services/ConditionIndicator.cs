@@ -251,6 +251,7 @@ namespace imgLoader_WPF.Services
             _sender.PnlCond.Children.Clear();
 
             _sender.List.Clear();
+            _sender.ShowItems.Clear();
 
             foreach (var indexItem in _sender.Index)
             {

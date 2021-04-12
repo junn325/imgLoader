@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -95,12 +96,12 @@ namespace imgLoader_WPF.LoaderListCtrl
                 LblVote.Text = data.Vote.ToString();
                 ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
 
-                if (Core.ShowDate)
+                if (Core.ShowDate && data.Date.Year != 1)
                 {
                     DateBlock.Text = data.Date.ToString(CultureInfo.CurrentCulture);
                     Grid.SetColumnSpan(ProgPanel, 1);
                 }
-                else if (Core.ShowLastDate)
+                else if (Core.ShowLastDate && data.LastViewDate.Year != 1)
                 {
                     DateBlock.Text = data.LastViewDate.ToString(CultureInfo.CurrentCulture);
                     Grid.SetColumnSpan(ProgPanel, 1);
