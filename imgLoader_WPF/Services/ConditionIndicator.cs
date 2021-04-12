@@ -147,45 +147,45 @@ namespace imgLoader_WPF.Services
             IndicatorList.Add(item);
         }
 
-        private int _click;
+        //private int _click;
         private void ClickHandler(object sender, MouseEventArgs e)
         {
-            new Thread(() =>
+            //new Thread(() =>
+            //{
+            //_click++;
+
+            var item = new IndItem();
+            foreach (var indItem in IndicatorList)
             {
-                _click++;
-
-                var item = new IndItem();
-                foreach (var indItem in IndicatorList)
+                if ((TextBlock)indItem.Panel.Children[0] == (TextBlock)sender)
                 {
-                    if ((TextBlock)indItem.Panel.Children[0] == (TextBlock)sender)
-                    {
-                        item = indItem;
-                        break;
-                    }
+                    item = indItem;
+                    break;
                 }
+            }
 
-                //for (int i = 0; i < 30; i++)
-                //{
-                //    if (_click >= 2)
-                //    {
-                //        var block = (TextBlock)sender;
-                //        var txtEdit = new TextBox { Width = block.Width, Height = block.Height, Text = block.Text };
-                //        txtEdit.PreviewKeyUp += EnterHandler;
+            //for (int i = 0; i < 30; i++)
+            //{
+            //    if (_click >= 2)
+            //    {
+            //        var block = (TextBlock)sender;
+            //        var txtEdit = new TextBox { Width = block.Width, Height = block.Height, Text = block.Text };
+            //        txtEdit.PreviewKeyUp += EnterHandler;
 
-                //        block.Visibility = Visibility.Collapsed;
-                //        item.Panel.Children.Add(txtEdit);
-                //        txtEdit.SelectAll();
+            //        block.Visibility = Visibility.Collapsed;
+            //        item.Panel.Children.Add(txtEdit);
+            //        txtEdit.SelectAll();
 
-                //        _click = 0;
-                //        return;
-                //    }
+            //        _click = 0;
+            //        return;
+            //    }
 
-                //    Thread.Sleep(10);
-                //}
+            //    Thread.Sleep(10);
+            //}
 
-                Remove(item);
+            Remove(item);
 
-            }).Start();
+            //}).Start();
         }
 
         internal void Remove(IndItem item)
@@ -240,10 +240,27 @@ namespace imgLoader_WPF.Services
 
         internal void Clear()
         {
-            foreach (var indItem in new List<IndItem>(IndicatorList))
+            //foreach (var indItem in new List<IndItem>(IndicatorList))
+            //{
+            //    Remove(indItem);
+            //}
+
+            var disableProcessing = _sender.Dispatcher.DisableProcessing();
+
+            IndicatorList.Clear();
+            _sender.PnlCond.Children.Clear();
+
+            _sender.List.Clear();
+
+            foreach (var indexItem in _sender.Index)
             {
-                Remove(indItem);
+                _sender.List.Add(indexItem);
             }
+
+            _sender.Sorter.DoSortList((Sorter.SortOption)IndicatorList.Find(i => i.Condition == Condition.Sort).Option);
+            _sender.PgSvc.Paginate(disableProcessing);
+            _sender.ShowItemCount();
+
         }
 
         internal struct IndItem

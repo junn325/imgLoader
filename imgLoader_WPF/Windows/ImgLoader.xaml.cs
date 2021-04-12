@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -194,26 +195,12 @@ namespace imgLoader_WPF.Windows
                 Dispatcher.Invoke(() => ShowItems.Remove(_clickedItem));
             }).Start();
         }
-
         internal void ShowItemCount()
         {
             Debug.WriteLine("ShowItemCount: Call");
 
             BlockCnt.Text = $"{List.Count} items | {Core.Route}";
         }
-
-        private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key != Key.Enter) return;
-            if (TxtUrl.Text.Length == 0) return;
-
-            var url = TxtUrl.Text;
-            TxtUrl.Text = "";
-            BlockAdd.Visibility = Visibility.Visible;
-
-            AddItem(url);
-        }
-
         internal void AddItem(string url)
         {
             var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
@@ -273,7 +260,68 @@ namespace imgLoader_WPF.Windows
             service.SetApartmentState(ApartmentState.STA);
             service.Start();
         }
+        private void Search(string searchTxt, int option)
+        {
+            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
 
+            AddRecent(searchTxt, option);
+        }
+        private void Search(string[] searchTags, int option)
+        {
+            foreach (var itemTag in searchTags)
+            {
+                CondInd.Add(itemTag, ConditionIndicator.Condition.Search, option);
+
+                AddRecent(itemTag, option);
+            }
+        }
+        private void Search(string searchTxt, int option, string label)
+        {
+            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
+            AddRecent(searchTxt, option);
+        }
+        private void AddRecent(string searchTxt, int option)
+        {
+            var tag = option switch
+            {
+                -1 => "All:",
+                0 => "Author:",
+                1 => "Number:",
+                2 => "Tag:",
+                3 => "SiteName:",
+                4 => "Title:",
+                5 => "ImgCount:",
+                6 => "Vote:",
+                _ => ""
+            };
+
+            var block = new TextBlock
+            {
+                Text = tag + searchTxt,
+                Background = Brushes.White,
+
+                Margin = new Thickness(2),
+                Padding = new Thickness(4, 2, 4, 2),
+
+                VerticalAlignment = VerticalAlignment.Top,
+                HorizontalAlignment = HorizontalAlignment.Left
+            };
+            block.MouseDown += Block_ClickHandler;
+
+            PnlRecent.Children.Insert(1, block);
+        }
+
+        private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+            if (TxtUrl.Text.Length == 0) return;
+
+            var url = TxtUrl.Text;
+            TxtUrl.Text = "";
+            BlockAdd.Visibility = Visibility.Visible;
+
+            AddItem(url);
+        }
         private void TxtUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (TxtUrl.Text.Length == 0)
@@ -373,110 +421,6 @@ namespace imgLoader_WPF.Windows
 
             e.Handled = true;
         }
-        private void Search(string searchTxt, int option)
-        {
-            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
-            
-            var tag = option switch
-            {
-                -1 => "All:",
-                0 => "Author:",
-                1 => "Number:",
-                2 => "Tag:",
-                3 => "SiteName:",
-                4 => "Title:",
-                5 => "ImgCount:",
-                6 => "Vote:",
-                _ => ""
-            };
-
-            var block = new TextBlock
-            {
-                Text = tag + searchTxt,
-                Background = Brushes.White,
-
-                Margin = new Thickness(2),
-                Padding = new Thickness(4, 2, 4, 2),
-
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
-            block.MouseDown += Block_ClickHandler;
-
-            PnlRecent.Children.Insert(0, block);
-        }
-        private void Search(string[] searchTags, int option)
-        {
-            foreach (var itemTag in searchTags)
-            {
-                CondInd.Add(itemTag, ConditionIndicator.Condition.Search, option);
-
-                var tag = option switch
-                {
-                    -1 => "All:",
-                    0 => "Author:",
-                    1 => "Number:",
-                    2 => "Tag:",
-                    3 => "SiteName:",
-                    4 => "Title:",
-                    5 => "ImgCount:",
-                    6 => "Vote:",
-                    _ => ""
-                };
-
-                var block = new TextBlock
-                {
-                    Text = tag + itemTag,
-                    Background = Brushes.White,
-
-                    Margin = new Thickness(2),
-                    Padding = new Thickness(4, 2, 4, 2),
-
-                    VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Left
-                };
-                block.MouseDown += Block_ClickHandler;
-
-                PnlRecent.Children.Insert(0, block);
-            }
-        }
-        private void Search(string searchTxt, int option, string label)
-        {
-            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
-            AddRecent(searchTxt, option);
-        }
-
-        private void AddRecent(string searchTxt, int option)
-        {
-            var tag = option switch
-            {
-                -1 => "All:",
-                0 => "Author:",
-                1 => "Number:",
-                2 => "Tag:",
-                3 => "SiteName:",
-                4 => "Title:",
-                5 => "ImgCount:",
-                6 => "Vote:",
-                _ => ""
-            };
-
-            var block = new TextBlock
-            {
-                Text = tag + searchTxt,
-                Background = Brushes.White,
-
-                Margin = new Thickness(2),
-                Padding = new Thickness(4, 2, 4, 2),
-
-                VerticalAlignment = VerticalAlignment.Top,
-                HorizontalAlignment = HorizontalAlignment.Left
-            };
-            block.MouseDown += Block_ClickHandler;
-
-            PnlRecent.Children.Insert(0, block);
-        }
-
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
@@ -705,15 +649,19 @@ namespace imgLoader_WPF.Windows
 
             Debug.WriteLine("Main: Random_Click: " + List[rand].Title);
 
-            if (ShowItems.Count < rand + 1)
-            {
+            //if (ShowItems.Count < rand + 1)
+            //{
                 List[rand].IsRead = true;
-            }
-            else
-            {
-                ShowItems[rand].IsRead = true;
-                ShowItems[rand].ShownChang();
-            }
+            //}
+            //else
+            //{
+            //    ShowItems[rand].IsRead = true;
+            //    ShowItems[rand].ShownChang?.Invoke();
+            //}
+
+            List[rand].LastViewDate = DateTime.Now;
+            List[rand].View++;
+            List[rand].ShownChang.Invoke();
 
             Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
         }
@@ -796,5 +744,19 @@ namespace imgLoader_WPF.Windows
             TxtSrchAll.Focus();
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            CondInd.Clear();
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            var temp = PnlRecent.Children.Cast<UIElement>().ToList();
+            foreach (UIElement child in temp)
+            {
+                if (child.GetType() == typeof(Button)) continue;
+                PnlRecent.Children.Remove(child);
+            }
+        }
     }
 }

@@ -20,10 +20,10 @@ namespace imgLoader_WPF.Services
         private readonly ObservableCollection<IndexItem> _showItems;
         private readonly List<IndexItem> _list;
 
-        private readonly IndexItem _separator;
+        //private readonly IndexItem _separator;
 
         public double ScrollHeight;
-        private int _counter;
+        //private int _counter;
 
         public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, List<IndexItem> list)
         {
@@ -32,7 +32,7 @@ namespace imgLoader_WPF.Services
             _list = list;
             ScrollHeight = scrollHeight;
 
-            _separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
+            //_separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
         }
 
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
@@ -56,14 +56,14 @@ namespace imgLoader_WPF.Services
                 foreach (var item in itemToAdd)
                 {
                     if (item == null) continue;
-                    _counter++;
+                    //_counter++;
                     _showItems.Add(item);
 
-                    if (_counter == 5)
-                    {
-                        _counter = 0;
-                        _showItems.Add(_separator);
-                    }
+                    //if (_counter == 5)
+                    //{
+                    //    _counter = 0;
+                    //    _showItems.Add(_separator);
+                    //}
                 }
 
                 _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;

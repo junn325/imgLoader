@@ -85,14 +85,23 @@
             </Grid>
         </Border>
 
-        <Grid x:Name="BdrSrch" Background="{StaticResource BrushB}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Hidden" MouseDown="SrchBorder_MouseDown">
+        <Grid x:Name="BdrSrch" Background="{StaticResource BrushB}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Visibility="Visible" MouseDown="SrchBorder_MouseDown">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="25"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
+                    <!--Windowchrome위에서 클릭 허용-->
+                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Style>
+            </Grid.Resources>
 
-            <StackPanel x:Name="PnlRadio" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="20" Background="{StaticResource BrushP}" Orientation="Horizontal" MouseDown="StackPanel_MouseDown" PreviewKeyUp="TxtSrchAll_KeyUp">
+            <StackPanel x:Name="PnlRadio" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="20" Margin="5,0,5,0" Background="{StaticResource BrushP}" Orientation="Horizontal" MouseDown="StackPanel_MouseDown" PreviewKeyUp="TxtSrchAll_KeyUp">
                 <RadioButton x:Name="RadioAll" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" IsChecked="True" Content="전체" Click="AllRadio_Click"/>
                 <RadioButton x:Name="RadioTitle" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="제목" Click="AllRadio_Click"/>
                 <RadioButton x:Name="RadioAuthor" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="작가" Click="AllRadio_Click"/>
@@ -101,19 +110,19 @@
                 <!--<RadioButton x:Name="ImgCntRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="페이지"/>-->
             </StackPanel>
 
-            <!--<Grid Height="35" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">-->
-                <TextBox Grid.Row="1" x:Name="TxtSrchAll" Height="21" VerticalAlignment="Center" KeyUp="TxtSrchAll_KeyUp" TextChanged="TxtSrchAll_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
-                <TextBlock Grid.Row="1" x:Name="BlockSrchLbl" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
-            <!--</Grid>-->
+            <Grid Margin="4,0,4,0" Grid.Row="1" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
+                <TextBox x:Name="TxtSrchAll" Height="21" VerticalAlignment="Center" KeyUp="TxtSrchAll_KeyUp" TextChanged="TxtSrchAll_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
+                <TextBlock x:Name="BlockSrchLbl" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
+            </Grid>
 
             <WrapPanel x:Name="PnlRecent" Grid.Row="2">
+                <Button x:Name="BtnClear" VerticalAlignment="Top" HorizontalAlignment="Left" Content="↑" Padding="7,2,7,4" Margin="5,1.0,2,2" Click="Button_Click_1"/>
             </WrapPanel>
         </Grid>
 
         <Grid x:Name="GridTitle" VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" MouseMove="DockPanel_MouseMove" Background="Transparent">
             <Grid.Resources>
                 <Style TargetType="{x:Type Button}">
-                    <Setter Property="Width" Value="20"/>
                     <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>     <!--Windowchrome위에서 클릭 허용-->
                     <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Foreground" Value="Black"/>
@@ -125,7 +134,11 @@
                 </Style>
             </Grid.Resources>
             <DockPanel x:Name="PnlCond" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Margin="0,4,10,0" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_3"/>
+
+            <DockPanel VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,4,10,0" >
+                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Content="↑" Padding="5,0,5,5" Margin="0,0,10,0" Click="Button_Click"/>
+                <Button VerticalAlignment="Top" HorizontalAlignment="Right" Width="20" Height="20" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_3"/>
+            </DockPanel>
         </Grid>
 
         <Grid x:Name="GridMsg" Visibility="Hidden" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Background="{StaticResource BrushB}">
