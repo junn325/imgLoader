@@ -53,6 +53,7 @@ namespace imgLoader_WPF.Services
                     temp = new List<IndexItem>(_list.OrderByDescending(i => i.View));
                     break;
                 case SortOption.LastAccess:
+                    Core.ShowLastDate = true;
                     temp = new List<IndexItem>(_list.OrderByDescending(i => i.LastViewDate));
                     break;
 

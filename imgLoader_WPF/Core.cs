@@ -1,21 +1,15 @@
-﻿using imgLoader_WPF.Sites;
-
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Media.Imaging;
-using imgLoader_WPF.Services;
+
+using imgLoader_WPF.Sites;
 using imgLoader_WPF.Windows;
-using System.Security.Policy;
 
 namespace imgLoader_WPF
 {
@@ -30,9 +24,10 @@ namespace imgLoader_WPF
 
         internal const string InfoExt = "ilif";
 
-        internal const int InfoCount = 9;
+        internal const int InfoCount = 10;
 
-        internal static bool ShowDate = false;
+        internal static bool ShowDate;
+        internal static bool ShowLastDate;
 
         private static readonly string[] DFilter = { "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };

@@ -104,7 +104,7 @@ namespace imgLoader_WPF.Services
                     item.Show = info[7] == null || info[7] == "1";
                     item.View = info[8] != null ? int.Parse(info[8]) : 0;
 
-                    if (info.Length > 9 && info[9].Contains(' ') && info[9].Contains('/'))
+                    if (info.Length > 9 && info[9] != null && info[9].Contains(' ') && info[9].Contains('/'))
                     {
                         var lastDate = info[9].Split(' ');
                         int.TryParse(lastDate[0].Split('/')[0], out var month);

@@ -100,6 +100,11 @@ namespace imgLoader_WPF.LoaderListCtrl
                     DateBlock.Text = data.Date.ToString(CultureInfo.CurrentCulture);
                     Grid.SetColumnSpan(ProgPanel, 1);
                 }
+                else if (Core.ShowLastDate)
+                {
+                    DateBlock.Text = data.LastViewDate.ToString(CultureInfo.CurrentCulture);
+                    Grid.SetColumnSpan(ProgPanel, 1);
+                }
                 else
                 {
                     DateBlock.Text = "";
