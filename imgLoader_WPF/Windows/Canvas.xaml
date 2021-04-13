@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Canvas" Height="1000" Width="1280" PreviewKeyDown="Window_PreviewKeyDown" PreviewMouseWheel="Window_PreviewMouseWheel" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" MouseUp="Window_MouseUp" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick" Closed="Window_Closed">
+        Title="Canvas" Height="1000" Width="1280" PreviewKeyUp="Window_PreviewKeyUp" PreviewKeyDown="Window_PreviewKeyDown" PreviewMouseWheel="Window_PreviewMouseWheel" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" MouseUp="Window_MouseUp" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick" Closed="Window_Closed">
     <Grid>
         <DockPanel x:Name="MPanel" LastChildFill="False" Background="Green">
             <ProgressBar x:Name="PBar" Height="7" VerticalAlignment="Bottom" DockPanel.Dock="Top"/>

@@ -42,6 +42,7 @@ namespace imgLoader_WPF.Windows
         internal string Author = "";
 
         private bool _isMouseDown = false;
+        private bool _isCtrlDown = false;
 
         public Canvas()
         {
@@ -330,10 +331,20 @@ namespace imgLoader_WPF.Windows
         {
             switch (e.Key)
             {
+                case Key.LeftCtrl:
+                    if (_isCtrlDown) return;
+                    _isCtrlDown = true;
+                    break;
+
                 case Key.G:
                     break;
 
                 case Key.W:
+                    if (_isCtrlDown)
+                    {
+                        this.Close();
+                    }
+
                     if (_min != 0)
                     {
                         _relRect.Y += _movePix;
@@ -463,6 +474,14 @@ namespace imgLoader_WPF.Windows
                 _imgList[i] = null;
             }
             GC.Collect();
+        }
+
+        private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl)
+            {
+                _isCtrlDown = false;
+            }
         }
     }
 }
