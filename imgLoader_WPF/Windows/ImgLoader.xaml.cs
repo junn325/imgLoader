@@ -310,6 +310,15 @@ namespace imgLoader_WPF.Windows
 
             PnlRecent.Children.Insert(1, block);
         }
+        private void ShowInfo(string content)
+        {
+            //프로그램 오른쪽 아래에 작게 표시
+        }
+        private void ShowError(string content)
+        {
+            //메시지 전용 패널에 표시
+        }
+        //
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
         {
@@ -645,23 +654,35 @@ namespace imgLoader_WPF.Windows
         }
         private void Random_Click(object sender, RoutedEventArgs e)
         {
-            var rand = new Random().Next(0, List.Count);
+            var rng = new Random();
+
+            int rand;
+            do
+            {
+                rand = rng.Next(0, List.Count);
+
+                if (!List[rand].IsRead) continue;
+                rand++;
+
+                if (rand >= List.Count)
+                {
+                    return;
+                }
+            }
+            while (List[rand].IsRead);
 
             Debug.WriteLine("Main: Random_Click: " + List[rand].Title);
 
-            //if (ShowItems.Count < rand + 1)
-            //{
-                List[rand].IsRead = true;
-            //}
-            //else
-            //{
-            //    ShowItems[rand].IsRead = true;
-            //    ShowItems[rand].ShownChang?.Invoke();
-            //}
-
-            List[rand].LastViewDate = DateTime.Now;
+            List[rand].IsRead = true;
             List[rand].View++;
-            List[rand].ShownChang.Invoke();
+            List[rand].LastViewDate = DateTime.Now;
+
+            InfSvc.Save(List[rand]);
+
+            if (ShowItems.Count >= rand + 1)
+            {
+                List[rand].ShownChang?.Invoke();
+            }
 
             Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
         }

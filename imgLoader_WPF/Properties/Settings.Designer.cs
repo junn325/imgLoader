@@ -118,5 +118,17 @@ namespace imgLoader_WPF.Properties {
                 this["PauseCmpAdd"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PathCondFlush {
+            get {
+                return ((bool)(this["PathCondFlush"]));
+            }
+            set {
+                this["PathCondFlush"] = value;
+            }
+        }
     }
 }
