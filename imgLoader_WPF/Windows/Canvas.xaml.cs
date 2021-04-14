@@ -83,11 +83,6 @@ namespace imgLoader_WPF.Windows
 
         private void SizeChange(bool enlarge)
         {
-            if (_min == 0)
-            {
-                _oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
-            }
-
             var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             if (_relRect.Width == 0 || _relRect.Height == 0) _relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
 
