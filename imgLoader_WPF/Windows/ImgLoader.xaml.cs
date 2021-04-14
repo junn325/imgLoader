@@ -146,7 +146,7 @@ namespace imgLoader_WPF.Windows
 
             //var disableProcessing = Dispatcher.DisableProcessing();
             InfSvc.Start();
-            IdxSvc.Start();
+            //IdxSvc.Start();
             //PgSvc.Paginate(disableProcessing);
         }
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)

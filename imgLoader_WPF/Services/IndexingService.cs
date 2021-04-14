@@ -16,7 +16,7 @@ namespace imgLoader_WPF.Services
     {
         private const int Interval = 3000;
 
-        private readonly Thread _service;
+        //private readonly Thread _service;
         private bool _stop;
         private bool _pause;
 
@@ -33,7 +33,7 @@ namespace imgLoader_WPF.Services
         {
             _sender = sender;
 
-            _service = new Thread(() =>
+            var service = new Thread(() =>
             {
                 while (!_stop)
                 {
@@ -47,8 +47,8 @@ namespace imgLoader_WPF.Services
                     Indexing();
                 }
             });
-            _service.Name = "IdxSvc";
-            _service.IsBackground = true;
+            service.Name = "IdxSvc";
+            service.IsBackground = true;
 
             Indexing();
         }
@@ -172,11 +172,11 @@ namespace imgLoader_WPF.Services
                 item.RefreshInfo?.Invoke();
             }
         }
-        internal void Start()
-        {
-            _stop = false;
-            _service.Start();
-        }
+        //internal void Start()
+        //{
+        //    _stop = false;
+        //    _service.Start();
+        //}
 
         internal void Pause()
         {
@@ -188,10 +188,10 @@ namespace imgLoader_WPF.Services
             _pause = false;
         }
 
-        internal void Stop()
-        {
-            _stop = true;
-            while (_service.IsAlive) Thread.Sleep(100);
-        }
+        //internal void Stop()
+        //{
+        //    _stop = true;
+        //    while (_service.IsAlive) Thread.Sleep(100);
+        //}
     }
 }

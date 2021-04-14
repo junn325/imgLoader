@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using imgLoader_WPF.Services;
+
 namespace imgLoader_WPF.Windows
 {
     /// <summary>
@@ -22,21 +24,21 @@ namespace imgLoader_WPF.Windows
         private const byte Scale = 15; //percent
         private int _movePix = 50;
 
+        private ImgCacheService _imgSvc;
+        private Image _img;
+
         private Rect _oriPosition;
         private Rect _relRect;
         private Point _oriPoint;
 
-        private Image _img;
-        private long _size;
-        //public BitmapImage Image;
-
         internal string[] FileList;
         private BitmapImage[] _imgList;
-        //private long[] _imgSizeList;
 
         private int _index;
         private int _min;
         private int _thres = 0;
+
+        private long _size;
 
         internal string TTitle = "";
         internal string Author = "";
@@ -50,6 +52,8 @@ namespace imgLoader_WPF.Windows
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            _imgSvc = new ImgCacheService(this);
+
             Title = GetTitle(FileList[0]);
 
             //FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
@@ -114,6 +118,9 @@ namespace imgLoader_WPF.Windows
         }
         private void ChangeImage(string nextPath, bool next)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
             int prevIndex;
             int nextIndex;
 
@@ -149,40 +156,60 @@ namespace imgLoader_WPF.Windows
                     if (_size < Properties.Settings.Default.CacheSize) break;
                 }
             }
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
             if (_imgList[_index] == null)
             {
                 LoadImage(_index);
+                Debug.WriteLine("LoadImage_now");
             }
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
             if (_imgList[nextIndex] == null)
             {
                 CacheImage(nextIndex);
+                Debug.WriteLine("cacheimage_next");
             }
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
-            if (_imgList[prevIndex] == null)
-            {
-                CacheImage(prevIndex);
-            }
+            //if (_imgList[prevIndex] == null)
+            //{
+            //    CacheImage(prevIndex);
+            //    Debug.WriteLine("cacheimage_prev");
+            //}
 
             //todo:메모리가 지정된 양을 벗어났을 때만 리스트에서 지울 것
 
             _img.Source = _imgList[_index];
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
             Title = GetTitle(nextPath);
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
             var imgOffset = _img.TransformToAncestor(this).Transform(new Point(0, 0));
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
             _img.Measure(new Size(MPanel.ActualWidth, MPanel.ActualHeight));
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
             _relRect.Width = _img.DesiredSize.Width;
             _relRect.Height = _img.DesiredSize.Height;
             _relRect.X = imgOffset.X;
             _relRect.Y = imgOffset.Y;
+            Debug.WriteLine(sw.Elapsed.Ticks);
+            sw.Restart();
 
             //_img.Arrange(_relRect);
 
             _oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
+            Debug.WriteLine(sw.Elapsed.Ticks + "\n====================");
 
             _min = 0;
         }
@@ -256,25 +283,13 @@ namespace imgLoader_WPF.Windows
         }
         private void CacheImage(int index)
         {
-            var service = new Thread(() =>
-            {
-                if (_imgList[index] != null) return;
-
-                while (_size >= Properties.Settings.Default.CacheSize)
-                {
-                    Task.Delay(200).Wait();
-                }
-
-                LoadImage(index);
-            });
-
-            service.Start();
+            _imgSvc.Add(index);
         }
-        private void LoadImage(int index)
+        internal void LoadImage(int index)
         {
             var length = new FileInfo(FileList[index]).Length;
             _size += length;
-            Debug.WriteLine($"+{length}");
+            //Debug.WriteLine($"+{length}");
 
             //_imgList[index] = ImageLoad(FileList[index]);
             Dispatcher.Invoke(() => _imgList[index] = ImageLoad(FileList[index]));
@@ -325,8 +340,8 @@ namespace imgLoader_WPF.Windows
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
-            {
-                case Key.LeftCtrl:
+            { 
+                case Key.LeftCtrl: 
                     if (_isCtrlDown) return;
                     _isCtrlDown = true;
                     break;
@@ -346,6 +361,7 @@ namespace imgLoader_WPF.Windows
                         _img.Arrange(_relRect);
                     }
                     break;
+
                 case Key.A:
                     if (_min != 0)
                     {
@@ -357,6 +373,7 @@ namespace imgLoader_WPF.Windows
                         ChangeImagePrev();
                     }
                     break;
+
                 case Key.S:
                     if (_min != 0)
                     {
@@ -364,6 +381,7 @@ namespace imgLoader_WPF.Windows
                         _img.Arrange(_relRect);
                     }
                     break;
+
                 case Key.D:
                     if (_min != 0)
                     {
@@ -379,6 +397,7 @@ namespace imgLoader_WPF.Windows
                 case Key.Left:
                     ChangeImagePrev();
                     break;
+
                 case Key.Right:
                     ChangeImageNext();
                     break;
@@ -386,9 +405,11 @@ namespace imgLoader_WPF.Windows
                 case Key.Q:
                     SizeChange(false);
                     break;
+
                 case Key.E:
                     SizeChange(true);
                     break;
+
                 case Key.R:
                     _img.Arrange(_oriPosition);
                     _relRect = new Rect(_oriPosition.Size);
@@ -468,7 +489,7 @@ namespace imgLoader_WPF.Windows
             {
                 _imgList[i] = null;
             }
-            GC.Collect();
+            //GC.Collect();
         }
 
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
