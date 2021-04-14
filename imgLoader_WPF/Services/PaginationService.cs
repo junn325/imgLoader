@@ -39,20 +39,20 @@ namespace imgLoader_WPF.Services
         {
             var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
 
-            var oriCnt = _showItems.Count;
-            var listCount = _list.Count;
-
-            var itemToAdd = new IndexItem[num];
-            for (var i = 0; i < num; i++)
-            {
-                var i1 = i;
-                if (oriCnt + i1 + 1 > listCount) break;
-
-                itemToAdd[i] = _list[oriCnt + i1];
-            }
-
             _sender.Dispatcher.BeginInvoke(() =>
             {
+                var oriCnt = _showItems.Count;
+
+                var itemToAdd = new IndexItem[num];
+                for (var i = 0; i < num; i++)
+                {
+                    if (oriCnt + i + 1 > _list.Count) break;
+
+                    itemToAdd[i] = _list[oriCnt + i];
+                }
+
+                //Debug.WriteLine($"oriCnt: {oriCnt}, _showItems:{_showItems.Count}");
+
                 foreach (var item in itemToAdd)
                 {
                     if (item == null) continue;
@@ -64,6 +64,7 @@ namespace imgLoader_WPF.Services
                     //    _counter = 0;
                     //    _showItems.Add(_separator);
                     //}
+                    //Debug.Assert(_showItems.Count <= _sender.List.Count);
                 }
 
                 _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;
@@ -84,11 +85,11 @@ namespace imgLoader_WPF.Services
                 {
                     for (var i = 0; i < Math.Ceiling(ScrollHeight / LoaderItem.MHeight); i++)
                     {
-                        var i1 = i;
-                        if (oriCnt + i1 + 1 > _list.Count) return;
+                        if (oriCnt + i + 1 > _list.Count) return;
 
-                        var temp = _list[oriCnt + i1];
+                        var temp = _list[oriCnt + i];
                         _showItems.Add(temp);
+                        //Debug.Assert(_showItems.Count <= _sender.List.Count);
                     }
                 });
             });
