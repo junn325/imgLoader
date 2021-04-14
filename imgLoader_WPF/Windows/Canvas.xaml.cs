@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 using imgLoader_WPF.Services;
 
@@ -28,7 +24,7 @@ namespace imgLoader_WPF.Windows
         private Image _img;
 
         private Rect _oriPosition;
-        private Rect _relRect;
+        private Rect _relRect;          //얘네들 존나겹치는거같음 _relRect는 계산이 너무 무거워서 제거 필요
         private Point _oriPoint;
 
         internal string[] FileList;
