@@ -8,7 +8,7 @@
     <Grid x:Name="Grd">
         <DockPanel x:Name="MPanel" LastChildFill="False" Background="Green">
             <ProgressBar x:Name="PBar" Height="7" VerticalAlignment="Bottom" DockPanel.Dock="Top"/>
-            <!--<Canvas x:Name="Canvas1"/>-->
+            <Canvas x:Name="Cnvs"/>
         </DockPanel>
     </Grid>
 </Window>
