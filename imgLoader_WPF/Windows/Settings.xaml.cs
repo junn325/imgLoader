@@ -35,7 +35,7 @@ namespace imgLoader_WPF.Windows
             CheckDupl.IsChecked = Properties.Settings.Default.NoAsk_Dupl;
             CheckImmid.IsChecked = Properties.Settings.Default.Down_Immid;
             //CheckScroll.IsChecked = Properties.Settings.Default.NoScrollTag;
-            CheckNoIndex.IsChecked = Properties.Settings.Default.NoIndex;
+            //CheckNoIndex.IsChecked = Properties.Settings.Default.NoIndex;
         }
 
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -131,8 +131,8 @@ namespace imgLoader_WPF.Windows
 
         private void CheckNoIndex_Click(object sender, RoutedEventArgs e)
         {
-            Properties.Settings.Default.NoIndex = CheckNoIndex.IsChecked.GetValueOrDefault();
-            Properties.Settings.Default.Save();
+            //Properties.Settings.Default.NoIndex = CheckNoIndex.IsChecked.GetValueOrDefault();
+            //Properties.Settings.Default.Save();
         }
 
         private void CheckSearch_Click(object sender, RoutedEventArgs e)

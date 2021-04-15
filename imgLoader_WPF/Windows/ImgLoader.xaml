@@ -69,7 +69,7 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <loaderListCtrl:LoaderItem MouseRightButtonDown="LItem_MouseRightButtonDown" IsTabStop="False"/>
+                            <loaderListCtrl:LoaderItem PreviewMouseRightButtonUp="LItem_MouseRightButtonUp" IsTabStop="False"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

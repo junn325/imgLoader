@@ -39,15 +39,36 @@
             <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Margin="0,4,10,0" Content="Ñ" FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_1"/>
         </Grid>
 
-        <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
-            <DockPanel>
-                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Stretch">
-                    <Label Content="처리 경로" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0" Padding="0,0,0,0"/>
-                    <TextBox x:Name="TxtPath" Text="더블클릭하여 다운로드 경로를 선택하거나 직접 입력" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,5,5,5" MouseDoubleClick="TextBox_MouseDoubleClick" TextChanged="TextBox_TextChanged"/>
-                </DockPanel>
-            </DockPanel>
-            <CheckBox  x:Name="CheckNoIndex" Content="경로 인덱싱을 사용하지 않고 직접 새로고침만 사용" VerticalAlignment="Bottom" Click="CheckNoIndex_Click" Margin="5,0,0,0"/>
-        </StackPanel>
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Content="처리 경로" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0" Padding="0,0,0,0"/>
+                <TextBox Grid.Column="1" x:Name="TxtPath" Text="더블클릭하여 다운로드 경로를 선택하거나 직접 입력" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0" MouseDoubleClick="TextBox_MouseDoubleClick" TextChanged="TextBox_TextChanged"/>
+            </Grid>
+
+            <Grid Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" Content="Open on" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0" Padding="0,0,0,0"/>
+                <TextBox Grid.Column="1" x:Name="TxtOpen" Text="더블클릭하여 다운로드 경로를 선택하거나 직접 입력" HorizontalAlignment="Stretch" VerticalAlignment="Center" MouseDoubleClick="TextBox_MouseDoubleClick" TextChanged="TextBox_TextChanged"/>
+                <CheckBox Grid.Column="2" Content="Open on basic viewer" IsChecked="True" Margin="5,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+            </Grid>
+
+            <!--<CheckBox  x:Name="CheckNoIndex" Content="경로 인덱싱을 사용하지 않고 직접 새로고침만 사용" VerticalAlignment="Bottom" Click="CheckNoIndex_Click" Margin="5,0,0,0"/>-->
+        </Grid>
 
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>

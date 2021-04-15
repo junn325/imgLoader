@@ -447,7 +447,7 @@ namespace imgLoader_WPF.Windows
             //InfSvc.Stop();
             //IdxSvc.Stop();
         }
-        private void LItem_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        private void LItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (sender == null || ItemCtrl.ContextMenu == null) return;
 
@@ -514,7 +514,7 @@ namespace imgLoader_WPF.Windows
                 }
             }
 
-            e.Handled = true;
+            //e.Handled = true;
         }
         private void LList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -560,6 +560,8 @@ namespace imgLoader_WPF.Windows
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
+            //Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
+            //Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Core.Dir.GetDirFromFile(_clickedItem.Route));
 
             _clickedItem.LastViewDate = DateTime.Now;
             _clickedItem.View++;
