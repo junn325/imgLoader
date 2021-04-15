@@ -428,7 +428,7 @@ namespace imgLoader_WPF
                 //img.UriSource = new Uri(temp[0]);
                 //img.EndInit();
 
-                var canvas = new Canvas { TTitle = title, Author = author, FileList = temp};
+                var canvas = new Viewer { TTitle = title, Author = author, FileList = temp};
                 canvas.Show();
             }
 

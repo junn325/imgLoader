@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -9,23 +12,24 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using imgLoader_WPF.Services;
+using Point = System.Windows.Point;
 
 namespace imgLoader_WPF.Windows
 {
     /// <summary>
-    /// Interaction logic for Canvas.xaml
+    /// Interaction logic for Viewer.xaml
     /// </summary>
-    public partial class Canvas
+    public partial class Viewer
     {
         private const byte Scale = 15; //percent
         private int _movePix = 50;
 
         private ImgCacheService _imgSvc;
-        private Image _img;
+        private System.Windows.Controls.Image _img;
 
-        private Rect _oriPosition;
+        //private Rect _oriPosition;
         //private Rect _relRect;          //얘네들 존나겹치는거같음 _relRect는 계산이 너무 무거워서 제거 필요
-        private Point _oriPoint;
+        //private Point _oriPoint;
 
         internal string[] FileList;
         private BitmapImage[] _imgList;
@@ -42,7 +46,7 @@ namespace imgLoader_WPF.Windows
         private bool _isMouseDown = false;
         private bool _isCtrlDown = false;
 
-        public Canvas()
+        public Viewer()
         {
             InitializeComponent();
         }
@@ -60,25 +64,31 @@ namespace imgLoader_WPF.Windows
             _size += len;
             Debug.WriteLine($"+{len}");
 
-            _img = new Image();
+            _img = new System.Windows.Controls.Image();
             //_img.VerticalAlignment = VerticalAlignment.Center;
             //_img.HorizontalAlignment = HorizontalAlignment.Center;        //활성화시 확대 안됨
 
             DockPanel.SetDock(_img, Dock.Top);
 
             RenderOptions.SetBitmapScalingMode(_img, BitmapScalingMode.Fant);
-            //MPanel.Children.Add(_img);
+            //GridCanvas.Children.Add(_img);
             Cnvs.Children.Add(_img);
 
             _imgList[0] = ImageLoad(FileList[0]);
+
+            var (width, height) = GetFutureSize(FileList[0]);
+            _img.Width = width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width;
+            _img.Height = height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height;
+
             _img.Source = _imgList[0];
             _img.UpdateLayout();
 
             PBar.Maximum = FileList.Length;
             PBar.Value = 1;
 
-            var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
-            _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
+            //_oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
+            Canvas.SetLeft(_img, 0);
+            Canvas.SetTop(_img, _imgList[0].Height >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _imgList[0].DecodePixelHeight) / 2);
             //_relRect = new Rect(_oriPosition.X, _oriPosition.Y, _oriPosition.Width, _oriPosition.Height);
         }
 
@@ -204,7 +214,7 @@ namespace imgLoader_WPF.Windows
             Debug.WriteLine(sw.Elapsed.Ticks);
             sw.Restart();
 
-            //_img.Measure(new Size(MPanel.ActualWidth, MPanel.ActualHeight));
+            //_img.Measure(new Size(GridCanvas.ActualWidth, GridCanvas.ActualHeight));
             //Debug.WriteLine(sw.Elapsed.Ticks);
             //sw.Restart();
 
@@ -217,7 +227,7 @@ namespace imgLoader_WPF.Windows
 
             //_img.Arrange(_relRect);
 
-            _oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
+            //_oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
             Debug.WriteLine(sw.Elapsed.Ticks + "\n====================");
 
             _min = 0;
@@ -323,7 +333,7 @@ namespace imgLoader_WPF.Windows
         {
             var (width, height) = GetImgSize(imgPath);
 
-            var panelLonger = MPanel.ActualWidth > MPanel.ActualHeight ? MPanel.ActualWidth : MPanel.ActualHeight;
+            var panelLonger = GridCanvas.ActualWidth > GridCanvas.ActualHeight ? GridCanvas.ActualWidth : GridCanvas.ActualHeight;
 
             if (width >= height)
             {
@@ -344,13 +354,36 @@ namespace imgLoader_WPF.Windows
 
             return ((int)width, (int)height);
         }
+        public static Bitmap ResizeImageWithOptions(System.Drawing.Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
 
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
         //
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
-            { 
-                case Key.LeftCtrl: 
+            {
+                case Key.LeftCtrl:
                     if (_isCtrlDown) return;
                     _isCtrlDown = true;
                     break;
@@ -396,7 +429,7 @@ namespace imgLoader_WPF.Windows
 
                 case Key.D:
                     _min = 1;
-                    System.Windows.Controls.Canvas.SetRight(_img, System.Windows.Controls.Canvas.GetRight(_img) + 20);
+                    Canvas.SetLeft(_img, Canvas.GetLeft(_img) + 20);
 
                     if (_min != 0)
                     {
@@ -426,7 +459,7 @@ namespace imgLoader_WPF.Windows
                     break;
 
                 case Key.R:
-                    _img.Arrange(_oriPosition);
+                    //_img.Arrange(_oriPosition);
                     //_relRect = new Rect(_oriPosition.Size);
                     _min = 0;
                     _thres = 0;
@@ -463,13 +496,13 @@ namespace imgLoader_WPF.Windows
 
             //_relRect = new Rect(0, 0, 0, 0);
             var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
-            _oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
+            //_oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
 
             
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            _oriPoint = Mouse.GetPosition(this);
+            //_oriPoint = Mouse.GetPosition(this);
 
             var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             //_relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
@@ -489,12 +522,12 @@ namespace imgLoader_WPF.Windows
             //_relRect.X += mPos.X - _oriPoint.X;
             //_relRect.Y += mPos.Y - _oriPoint.Y;
 
-            _oriPoint = Mouse.GetPosition(this);
+            //_oriPoint = Mouse.GetPosition(this);
             //_img.Arrange(_relRect);
         }
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            _img.Arrange(_oriPosition);
+            //_img.Arrange(_oriPosition);
             //_relRect = new Rect(_oriPosition.Size);
             _min = 0;
         }

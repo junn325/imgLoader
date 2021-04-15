@@ -13,14 +13,14 @@ namespace imgLoader_WPF.Services
     {
         internal const int Interval = 1000;
 
-        private Canvas _sender;
+        private Viewer _sender;
 
         private bool _stop;
         private bool _pause;
 
         private readonly Queue<int> _cacheQueue = new();
 
-        public ImgCacheService(Canvas sender)
+        public ImgCacheService(Viewer sender)
         {
             _sender = sender;
 
