@@ -1,5 +1,0 @@
-{"id":1104849,"uid":0,"title":"A I Ro |아이로","uploader":0,"uploadername":"",
-
-"artists":[],"groups":[{"value":"futotta obasan","display":"futotta obasan"}],
-
-"parodys":[{"value":"original","display":"original"}],"characters":[],"tags":[{"value":"female:defloration","display":"여:처녀상실"},{"value":"female:gokkun","display":"여:정액먹기"},{"value":"female:sole female","display":"여:단독 여성"},{"value":"female:tomboy","display":"여:남자같은 여자"},{"value":"male:sole male","display":"남:단독 남성"}],"language":"korean","type":1,"category":0,"comments":1}
