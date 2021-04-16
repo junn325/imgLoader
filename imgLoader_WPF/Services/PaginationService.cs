@@ -20,11 +20,12 @@ namespace imgLoader_WPF.Services
         private readonly ObservableCollection<IndexItem> _showItems;
         private readonly List<IndexItem> _list;
 
-        private readonly IndexItem _separator;
+        //private readonly IndexItem _separator;
+
+        //private int _counter;
+        //private int _separatorCount;
 
         public double ScrollHeight;
-        private int _counter;
-        private int _separatorCount;
 
         public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, List<IndexItem> list)
         {
@@ -33,7 +34,7 @@ namespace imgLoader_WPF.Services
             _list = list;
             ScrollHeight = scrollHeight;
 
-            _separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
+            //_separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
         }
 
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
@@ -42,25 +43,31 @@ namespace imgLoader_WPF.Services
 
             _sender.Dispatcher.BeginInvoke(() =>
             {
-                var oriCnt = _showItems.Count;
+                var oriCnt = GetCntItemOnly();
 
                 var listCpy = new List<IndexItem>(_list);
                 for (var i = 0; i < num; i++)
                 {
-                    if (oriCnt + i - _separatorCount >= listCpy.Count) break;
-                    if (listCpy[oriCnt + i - _separatorCount] == null) continue;
+                    if (oriCnt + i >= listCpy.Count)
+                        break;
 
-                    _counter++;
-                    _showItems.Add(listCpy[oriCnt + i - _separatorCount]);
+                    if (listCpy[oriCnt + i] == null)
+                        continue;
+                    
+                    _showItems.Add(listCpy[oriCnt + i]);
 
-                    if (_counter == 5)
-                    {
-                        _counter = 0;
-                        _showItems.Add(_separator);
-                        _separatorCount++;
-                        //Debug.WriteLine($"sCnt: {_separatorCount}");
-                    }
+                    //_counter++;
+
+                    //if (_counter == 5)
+                    //{
+                    //    _counter = 0;
+                    //    _showItems.Add(_separator);
+                    //    _separatorCount++;
+                    //    //Debug.WriteLine($"sCnt: {_separatorCount}");
+                    //}
                 }
+
+                _sender.ShowItemCount();
                 _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;
             });
 
@@ -73,27 +80,29 @@ namespace imgLoader_WPF.Services
 
             _service = new Thread(() =>
             {
-                var oriCnt = _showItems.Count;
+                var oriCnt = GetCntItemOnly();
 
                 _sender.Dispatcher.Invoke(() =>
                 {
                     for (var i = 0; i < Math.Ceiling(ScrollHeight / LoaderItem.MHeight); i++)
                     {
-                        if (oriCnt + i - _separatorCount >= _list.Count)
+                        if (oriCnt + i >= _list.Count)
                             return;
 
-                        _counter++;
-                        _showItems.Add(_list[oriCnt + i - _separatorCount]);
+                        _showItems.Add(_list[oriCnt + i]);
+                        //_counter++;
 
-                        if (_counter == 5)
-                        {
-                            _counter = 0;
-                            _showItems.Add(_separator);
-                            _separatorCount++;
-                            //Debug.WriteLine($"sCnt: {_separatorCount}");
-                        }
+                        //if (_counter == 5)
+                        //{
+                        //    _counter = 0;
+                        //    _showItems.Add(_separator);
+                        //    _separatorCount++;
+                        //    //Debug.WriteLine($"sCnt: {_separatorCount}");
+                        //}
                         //Debug.Assert(_showItems.Count <= _sender.List.Count);
                     }
+
+                    _sender.ShowItemCount();
                 });
             });
             _service.Name = "PgSvc_NoDisableDispatcher";
@@ -103,44 +112,75 @@ namespace imgLoader_WPF.Services
 
         internal void RefreshCounter()
         {
-            _counter = 0;
-            _separatorCount = 0;
+            //_counter = 0;
+            //_separatorCount = 0;
             //Debug.WriteLine($"sCnt: {_separatorCount}");
         }
 
-        internal int GetCntWoSep()
+        internal int GetCntItemOnly()
         {
-            return _showItems.Count - _separatorCount;
+            return _showItems.Count /*- _separatorCount*/;
         }
 
         internal void Clear()
         {
-            _sender.Scroll.ScrollToTop();
-            _showItems.Clear();
+            //var disableProcessing = _sender.Dispatcher.DisableProcessing();
+
+            RefreshCounter();
+            if (_sender.Scroll.Dispatcher.CheckAccess())
+            {
+                _sender.Scroll.ScrollToTop();
+                _showItems.Clear();
+            }
+            else
+            {
+                _sender.Scroll.Dispatcher.Invoke(() =>
+                {
+                    _sender.Scroll.ScrollToTop();
+                    _showItems.Clear();
+                });
+            }
+
+            _sender.ShowItemCount();
+            //return disableProcessing;
         }
 
         internal void Remove(IndexItem item)
         {
             if (_sender.ItemCtrl.Dispatcher.CheckAccess())
             {
-                _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Remove(item));
+                _showItems.Remove(item);
             }
             else
             {
-                _showItems.Remove(item);
+                _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Remove(item));
             }
+
+            _sender.ShowItemCount();
         }
 
         internal void Insert(int index, IndexItem item)
         {
             if (_sender.ItemCtrl.Dispatcher.CheckAccess())
             {
-                _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Insert(index, item));
+                _showItems.Insert(index, item);
             }
             else
             {
-                _showItems.Insert(index, item);
+                _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Insert(index, item));
             }
+        }
+
+        internal void Modify(int index)
+        {
+            //if (_sender.ItemCtrl.Dispatcher.CheckAccess())
+            //{
+            //    _showItems[index].Author
+            //}
+            //else
+            //{
+            //    _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Insert(index, item));
+            //}
         }
 
         internal void PaginateToEnd()

@@ -94,7 +94,7 @@ namespace imgLoader_WPF.Windows
                 {
                     while (true)
                     {
-                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}/PgSvc.GetCntWoSep():{PgSvc?.GetCntWoSep()}");
+                        Debug.WriteLine($"\t_index:{Index.Count}/_list:{List.Count}\n\t\t\t\t_showitems:\t{ShowItems.Count}\n\t/PgSvc.GetCntItemOnly():{PgSvc?.GetCntItemOnly()}");
                         Thread.Sleep(1000);
                     }
                 })
@@ -117,7 +117,7 @@ namespace imgLoader_WPF.Windows
             }
 
 #if DEBUG
-            Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (5)";
+            Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (4)";
 #endif
 #if !DEBUG
             D_Stop.IsEnabled = false;
@@ -168,6 +168,8 @@ namespace imgLoader_WPF.Windows
             {
                 item.Proc?.DoStop();
 
+                Core.Log($"Delete: try delete {_clickedItem.Route}");
+
                 var wait = true;
                 do
                 {
@@ -199,7 +201,14 @@ namespace imgLoader_WPF.Windows
         {
             Debug.WriteLine("ShowItemCount: Call");
 
-            BlockCnt.Text = $"{List.Count} items | {Core.Route}";
+            if (Dispatcher.CheckAccess())
+            {
+                BlockCnt.Text = $"{List.Count} items | {Core.Route}";
+            }
+            else
+            {
+                Dispatcher.Invoke(() => BlockCnt.Text = $"{List.Count} items | {Core.Route}");
+            }
         }
         internal void AddItem(string url)
         {
@@ -208,8 +217,8 @@ namespace imgLoader_WPF.Windows
             var service = new Thread(() =>
             {
                 PgSvc.Insert(0, lItem);
-                Index.Insert(0, lItem);
-                List.Insert(0, lItem);
+                //Index.Insert(0, lItem);
+                //List.Insert(0, lItem);
 
                 lItem.Proc = new Processor(url, lItem);
                 lItem.Proc.LoadInfo();
@@ -219,8 +228,8 @@ namespace imgLoader_WPF.Windows
                 if (!lItem.Proc.IsValidated)
                 {
                     PgSvc.Remove(lItem);
-                    Index.Remove(lItem);
-                    List.Remove(lItem);
+                    //Index.Remove(lItem);
+                    //List.Remove(lItem);
                     return;
                 }
 
@@ -228,8 +237,8 @@ namespace imgLoader_WPF.Windows
                 {
                     MessageBox.Show("Already Exists.");
                     PgSvc.Remove(lItem);
-                    Index.Remove(lItem);
-                    List.Remove(lItem);
+                    //Index.Remove(lItem);
+                    //List.Remove(lItem);
                     return;
                 }
 
@@ -242,8 +251,8 @@ namespace imgLoader_WPF.Windows
                 if (lItem.Proc.IsStop)
                 {
                     PgSvc.Remove(lItem);
-                    Index.Remove(lItem);
-                    List.Remove(lItem);
+                    //Index.Remove(lItem);
+                    //List.Remove(lItem);
                     return;
                 }
 
@@ -433,7 +442,7 @@ namespace imgLoader_WPF.Windows
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= PgSvc?.GetCntWoSep() || List.Count == 0) return;
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= PgSvc?.GetCntItemOnly() || List.Count == 0) return;
 
             var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.ScrollHeight = Scroll.ActualHeight;
@@ -680,7 +689,7 @@ namespace imgLoader_WPF.Windows
 
             InfSvc.Save(List[rand]);
 
-            if (PgSvc.GetCntWoSep() >= rand + 1)
+            if (PgSvc.GetCntItemOnly() >= rand + 1)
             {
                 List[rand].ShownChang?.Invoke();
             }
@@ -779,6 +788,11 @@ namespace imgLoader_WPF.Windows
                 if (child.GetType() == typeof(Button)) continue;
                 PnlRecent.Children.Remove(child);
             }
+        }
+
+        private void D_Else2_Click(object sender, RoutedEventArgs e)
+        {
+            IdxSvc.Indexing();
         }
     }
 }
