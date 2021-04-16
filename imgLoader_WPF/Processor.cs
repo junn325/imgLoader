@@ -330,6 +330,8 @@ namespace imgLoader_WPF
             var failCopy = new Dictionary<string, string>(_failed);
             AllocDown(path, failCopy);
 
+            if (_tasks == null) return true;
+
             Task.WaitAll(_tasks);
 
             if (thres > 0 && _failed.Count != 0) HandleFail(path, --thres);

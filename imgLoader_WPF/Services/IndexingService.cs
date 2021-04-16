@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -102,7 +103,7 @@ namespace imgLoader_WPF.Services
             if (!item.Show) return;
 
             _sender.Index.Add(item);
-            _sender.List.Add(item);
+            _sender.List.Insert(0, item);
             Debug.WriteLine("idxsvc: list add");
 
             //_sender.Dispatcher.Invoke(() =>
@@ -143,11 +144,10 @@ namespace imgLoader_WPF.Services
             //_sender.Index.Remove(item);
             //_sender.List.Remove(item);
 
-            
             _sender.Index[indexIdx].Author = item.Author;
             _sender.Index[indexIdx].Date = item.Date;
             _sender.Index[indexIdx].ImgCount = item.ImgCount;
-            _sender.Index[indexIdx].IsDownloading = item.IsDownloading;
+            //_sender.Index[indexIdx].IsDownloading = item.IsDownloading;
             _sender.Index[indexIdx].LastViewDate = item.LastViewDate;
             _sender.Index[indexIdx].SiteName = item.SiteName;
             _sender.Index[indexIdx].Tags = item.Tags;
@@ -168,7 +168,7 @@ namespace imgLoader_WPF.Services
                     _sender.List[listIdx].Author = item.Author;
                     _sender.List[listIdx].Date = item.Date;
                     _sender.List[listIdx].ImgCount = item.ImgCount;
-                    _sender.List[listIdx].IsDownloading = item.IsDownloading;
+                    //_sender.List[listIdx].IsDownloading = item.IsDownloading;
                     _sender.List[listIdx].LastViewDate = item.LastViewDate;
                     _sender.List[listIdx].SiteName = item.SiteName;
                     _sender.List[listIdx].Tags = item.Tags;
@@ -181,6 +181,8 @@ namespace imgLoader_WPF.Services
                     _sender.List.RemoveAt(listIdx);
                 }
             }
+
+            if (FindItemIndex(_sender.ShowItems, e.FullPath) != -1) return;
 
             _sender.Dispatcher.Invoke(() =>
             {
@@ -370,9 +372,16 @@ namespace imgLoader_WPF.Services
             return temp.Length != 0 ? temp[0] : null;
         }
 
-        internal int FindItemIndex(List<IndexItem> collection, string infoPath)
+        internal int FindItemIndex(IEnumerable<IndexItem> collection, string infoPath)
         {
-            return collection.FindIndex(i => i.Route == infoPath);
+            int i = 0;
+            foreach (var item in collection)
+            {
+                if (item.Route == infoPath) return i;
+                i++;
+            }
+
+            return -1;
         }
 
         internal void RefreshAll()
