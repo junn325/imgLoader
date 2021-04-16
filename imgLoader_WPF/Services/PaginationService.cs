@@ -44,22 +44,14 @@ namespace imgLoader_WPF.Services
             {
                 var oriCnt = _showItems.Count;
 
-                var itemToAdd = new IndexItem[num];
+                var listCpy = new List<IndexItem>(_list);
                 for (var i = 0; i < num; i++)
                 {
-                    if (oriCnt + i - _separatorCount >= _list.Count)
-                        break;
+                    if (oriCnt + i - _separatorCount >= listCpy.Count) break;
+                    if (listCpy[oriCnt + i - _separatorCount] == null) continue;
 
-                    itemToAdd[i] = _list[oriCnt + i - _separatorCount];
-                }
-
-                //Debug.WriteLine($"oriCnt: {oriCnt}, _showItems:{_showItems.Count}");
-
-                foreach (var item in itemToAdd)
-                {
-                    if (item == null) continue;
                     _counter++;
-                    _showItems.Add(item);
+                    _showItems.Add(listCpy[oriCnt + i - _separatorCount]);
 
                     if (_counter == 5)
                     {
@@ -67,12 +59,8 @@ namespace imgLoader_WPF.Services
                         _showItems.Add(_separator);
                         _separatorCount++;
                         //Debug.WriteLine($"sCnt: {_separatorCount}");
-
                     }
-                    //Debug.Assert(_showItems.Count <= _sender.List.Count);
                 }
-
-                //_counter = 0;
                 _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;
             });
 
