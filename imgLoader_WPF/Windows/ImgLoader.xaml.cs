@@ -207,7 +207,7 @@ namespace imgLoader_WPF.Windows
 
             var service = new Thread(() =>
             {
-                ItemCtrl.Dispatcher.Invoke(() => ShowItems.Insert(0, lItem));
+                PgSvc.Insert(0, lItem);
                 Index.Insert(0, lItem);
                 List.Insert(0, lItem);
 
