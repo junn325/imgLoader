@@ -10,15 +10,14 @@ namespace imgLoader_WPF.Services
     {
         private const int Interval = 1000;
 
-        private bool _stop;
-        private readonly Thread _service;
+        private bool _stop = false;
         private readonly StringBuilder _sb = new();
 
         private readonly Queue<IndexItem> _saveQueue = new();
 
         public InfoSavingService()
         {
-            _service = new Thread(() =>
+            var service = new Thread(() =>
             {
                 while (!_stop)
                 {
@@ -32,8 +31,10 @@ namespace imgLoader_WPF.Services
                     _saveQueue.Dequeue();
                 }
             });
-            _service.Name = "vtSvc";
-            _service.IsBackground = true;
+            service.Name = "vtSvc";
+            service.IsBackground = true;
+
+            service.Start();
         }
 
         internal void Save(IndexItem item)
@@ -82,32 +83,6 @@ namespace imgLoader_WPF.Services
             sw.Close();
 
             sb.Clear();
-        }
-
-        internal void Start()
-        {
-            _stop = false;
-            _service.Start();
-        }
-
-        internal void Stop()
-        {
-            _stop = true;
-            while (_service.IsAlive) Thread.Sleep(100);
-        }
-
-        internal enum Info
-        {
-            SiteName,
-            Title,
-            Author,
-            ImgCount,
-            Tags,
-            Date,
-            Vote,
-            Show,
-            View,
-            All = int.MaxValue
         }
     }
 }

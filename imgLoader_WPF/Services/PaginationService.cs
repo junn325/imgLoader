@@ -66,7 +66,7 @@ namespace imgLoader_WPF.Services
                         _counter = 0;
                         _showItems.Add(_separator);
                         _separatorCount++;
-                        Debug.WriteLine($"sCnt: {_separatorCount}");
+                        //Debug.WriteLine($"sCnt: {_separatorCount}");
 
                     }
                     //Debug.Assert(_showItems.Count <= _sender.List.Count);
@@ -102,7 +102,7 @@ namespace imgLoader_WPF.Services
                             _counter = 0;
                             _showItems.Add(_separator);
                             _separatorCount++;
-                            Debug.WriteLine($"sCnt: {_separatorCount}");
+                            //Debug.WriteLine($"sCnt: {_separatorCount}");
                         }
                         //Debug.Assert(_showItems.Count <= _sender.List.Count);
                     }
@@ -117,11 +117,11 @@ namespace imgLoader_WPF.Services
         {
             _counter = 0;
             _separatorCount = 0;
-            Debug.WriteLine($"sCnt: {_separatorCount}");
+            //Debug.WriteLine($"sCnt: {_separatorCount}");
 
         }
 
-        internal int GetShowItemsCount()
+        internal int GetShowItemsCnt()
         {
             return _showItems.Count - _separatorCount;
         }

@@ -94,7 +94,7 @@ namespace imgLoader_WPF.Windows
                 {
                     while (true)
                     {
-                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}/PgSvc.GetShowItemsCount():{PgSvc?.GetShowItemsCount()}");
+                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}/PgSvc.GetShowItemsCnt():{PgSvc?.GetShowItemsCnt()}");
                         Thread.Sleep(1000);
                     }
                 })
@@ -145,7 +145,7 @@ namespace imgLoader_WPF.Windows
             IdxSvc = new IndexingService(this);
 
             //var disableProcessing = Dispatcher.DisableProcessing();
-            InfSvc.Start();
+            //InfSvc.Start();
             //IdxSvc.Start();
             //PgSvc.Paginate(disableProcessing);
         }
@@ -433,7 +433,7 @@ namespace imgLoader_WPF.Windows
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= PgSvc?.GetShowItemsCount() || List.Count == 0) return;
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= PgSvc?.GetShowItemsCnt() || List.Count == 0) return;
 
             var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.ScrollHeight = Scroll.ActualHeight;
@@ -680,7 +680,7 @@ namespace imgLoader_WPF.Windows
 
             InfSvc.Save(List[rand]);
 
-            if (PgSvc.GetShowItemsCount() >= rand + 1)
+            if (PgSvc.GetShowItemsCnt() >= rand + 1)
             {
                 List[rand].ShownChang?.Invoke();
             }
