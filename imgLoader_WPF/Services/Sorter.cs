@@ -67,6 +67,8 @@ namespace imgLoader_WPF.Services
             {
                 _list.Add(item);
             }
+
+            _sender.PgSvc.RefreshCounter();
         }
 
         internal void SortRefresh(SortOption sortOption, DispatcherProcessingDisabled disableProcessing)

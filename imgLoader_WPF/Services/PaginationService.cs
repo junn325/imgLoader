@@ -20,10 +20,11 @@ namespace imgLoader_WPF.Services
         private readonly ObservableCollection<IndexItem> _showItems;
         private readonly List<IndexItem> _list;
 
-        //private readonly IndexItem _separator;
+        private readonly IndexItem _separator;
 
         public double ScrollHeight;
-        //private int _counter;
+        private int _counter;
+        private int _separatorCount;
 
         public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, List<IndexItem> list)
         {
@@ -32,7 +33,7 @@ namespace imgLoader_WPF.Services
             _list = list;
             ScrollHeight = scrollHeight;
 
-            //_separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
+            _separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
         }
 
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
@@ -46,9 +47,10 @@ namespace imgLoader_WPF.Services
                 var itemToAdd = new IndexItem[num];
                 for (var i = 0; i < num; i++)
                 {
-                    if (oriCnt + i + 1 > _list.Count) break;
+                    if (oriCnt + i - _separatorCount >= _list.Count)
+                        break;
 
-                    itemToAdd[i] = _list[oriCnt + i];
+                    itemToAdd[i] = _list[oriCnt + i - _separatorCount];
                 }
 
                 //Debug.WriteLine($"oriCnt: {oriCnt}, _showItems:{_showItems.Count}");
@@ -56,17 +58,21 @@ namespace imgLoader_WPF.Services
                 foreach (var item in itemToAdd)
                 {
                     if (item == null) continue;
-                    //_counter++;
+                    _counter++;
                     _showItems.Add(item);
 
-                    //if (_counter == 5)
-                    //{
-                    //    _counter = 0;
-                    //    _showItems.Add(_separator);
-                    //}
+                    if (_counter == 5)
+                    {
+                        _counter = 0;
+                        _showItems.Add(_separator);
+                        _separatorCount++;
+                        Debug.WriteLine($"sCnt: {_separatorCount}");
+
+                    }
                     //Debug.Assert(_showItems.Count <= _sender.List.Count);
                 }
 
+                //_counter = 0;
                 _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;
             });
 
@@ -85,10 +91,19 @@ namespace imgLoader_WPF.Services
                 {
                     for (var i = 0; i < Math.Ceiling(ScrollHeight / LoaderItem.MHeight); i++)
                     {
-                        if (oriCnt + i + 1 > _list.Count) return;
+                        if (oriCnt + i - _separatorCount >= _list.Count)
+                            return;
 
-                        var temp = _list[oriCnt + i];
-                        _showItems.Add(temp);
+                        _counter++;
+                        _showItems.Add(_list[oriCnt + i - _separatorCount]);
+
+                        if (_counter == 5)
+                        {
+                            _counter = 0;
+                            _showItems.Add(_separator);
+                            _separatorCount++;
+                            Debug.WriteLine($"sCnt: {_separatorCount}");
+                        }
                         //Debug.Assert(_showItems.Count <= _sender.List.Count);
                     }
                 });
@@ -98,6 +113,18 @@ namespace imgLoader_WPF.Services
             _service.Start();
         }
 
+        internal void RefreshCounter()
+        {
+            _counter = 0;
+            _separatorCount = 0;
+            Debug.WriteLine($"sCnt: {_separatorCount}");
+
+        }
+
+        internal int GetShowItemsCount()
+        {
+            return _showItems.Count - _separatorCount;
+        }
         internal void PaginateToEnd()
         {
             if (_service == null) goto page;

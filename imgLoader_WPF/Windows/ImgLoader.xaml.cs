@@ -94,7 +94,7 @@ namespace imgLoader_WPF.Windows
                 {
                     while (true)
                     {
-                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}");
+                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}/PgSvc.GetShowItemsCount():{PgSvc?.GetShowItemsCount()}");
                         Thread.Sleep(1000);
                     }
                 })
@@ -433,7 +433,7 @@ namespace imgLoader_WPF.Windows
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= ShowItems.Count || List.Count == 0) return;
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= PgSvc?.GetShowItemsCount() || List.Count == 0) return;
 
             var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.ScrollHeight = Scroll.ActualHeight;
@@ -559,9 +559,8 @@ namespace imgLoader_WPF.Windows
         }
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
-            //Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
-            //Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Core.Dir.GetDirFromFile(_clickedItem.Route));
+            //Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
+            Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
 
             _clickedItem.LastViewDate = DateTime.Now;
             _clickedItem.View++;
@@ -681,7 +680,7 @@ namespace imgLoader_WPF.Windows
 
             InfSvc.Save(List[rand]);
 
-            if (ShowItems.Count >= rand + 1)
+            if (PgSvc.GetShowItemsCount() >= rand + 1)
             {
                 List[rand].ShownChang?.Invoke();
             }

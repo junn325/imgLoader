@@ -35,6 +35,7 @@ namespace imgLoader_WPF.Services
                 _list.Add(item);
             }
 
+            _sender.PgSvc.RefreshCounter();
             _sender.PgSvc.Paginate();
             _sender.ShowItemCount();
         }

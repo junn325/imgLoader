@@ -24,11 +24,6 @@ namespace imgLoader_WPF.Services
 
         private readonly ImgLoader _sender;
 
-        internal struct IndexReturn
-        {
-            internal string[] InfoFiles;
-            internal string[] NewFiles;
-        }
         public IndexingService(ImgLoader sender)
         {
             _sender = sender;
@@ -55,13 +50,13 @@ namespace imgLoader_WPF.Services
 
         private void Indexing()
         {
-            var result = DoIndex();
-            Refresh(result.InfoFiles, result.NewFiles);
+            var (infoFiles, newFiles) = DoIndex();
+            Refresh(infoFiles, newFiles);
         }
 
-        internal IndexReturn DoIndex()
+        internal (string[], string[]) DoIndex()
         {
-            if (!Directory.Exists(Core.Route)) return new IndexReturn { InfoFiles = null };
+            if (!Directory.Exists(Core.Route)) return (null, null);
 
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
             var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
@@ -130,7 +125,7 @@ namespace imgLoader_WPF.Services
                 _sender.List.Add(item);
             }
 
-            return new IndexReturn { InfoFiles = infoFiles, NewFiles = newFiles };
+            return (infoFiles, newFiles);
         }
         internal void Refresh(string[] infoFiles, string[] newFiles)
         {
