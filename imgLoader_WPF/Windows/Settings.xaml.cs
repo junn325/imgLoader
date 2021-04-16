@@ -70,7 +70,7 @@ namespace imgLoader_WPF.Windows
                 {
                     _sender.Dispatcher.Invoke(() =>
                     {
-                        _sender.ShowItems.Clear();
+                        _sender.PgSvc.Clear();
                         _sender.BlockIdx.Visibility = Visibility.Hidden;
                         _sender.ShowItemCount();
                     });

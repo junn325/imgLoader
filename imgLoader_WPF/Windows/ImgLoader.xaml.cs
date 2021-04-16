@@ -94,7 +94,7 @@ namespace imgLoader_WPF.Windows
                 {
                     while (true)
                     {
-                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}/PgSvc.GetShowItemsCnt():{PgSvc?.GetShowItemsCnt()}");
+                        Debug.WriteLine($"_index:{Index.Count}/_list:{List.Count}/_showitems:{ShowItems.Count}/PgSvc.GetCntWoSep():{PgSvc?.GetCntWoSep()}");
                         Thread.Sleep(1000);
                     }
                 })
@@ -192,7 +192,7 @@ namespace imgLoader_WPF.Windows
                 //IdxSvc.Refresh(result.infoFiles, result.newFiles);
 
                 List.Remove(_clickedItem);
-                Dispatcher.Invoke(() => ShowItems.Remove(_clickedItem));
+                PgSvc.Remove(_clickedItem);
             }).Start();
         }
         internal void ShowItemCount()
@@ -218,7 +218,7 @@ namespace imgLoader_WPF.Windows
 
                 if (!lItem.Proc.IsValidated)
                 {
-                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                    PgSvc.Remove(lItem);
                     Index.Remove(lItem);
                     List.Remove(lItem);
                     return;
@@ -227,7 +227,7 @@ namespace imgLoader_WPF.Windows
                 if (lItem.Proc.CheckDupl())
                 {
                     MessageBox.Show("Already Exists.");
-                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                    PgSvc.Remove(lItem);
                     Index.Remove(lItem);
                     List.Remove(lItem);
                     return;
@@ -241,7 +241,7 @@ namespace imgLoader_WPF.Windows
 
                 if (lItem.Proc.IsStop)
                 {
-                    ItemCtrl.Dispatcher.Invoke(() => ShowItems.Remove(lItem));
+                    PgSvc.Remove(lItem);
                     Index.Remove(lItem);
                     List.Remove(lItem);
                     return;
@@ -433,7 +433,7 @@ namespace imgLoader_WPF.Windows
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= PgSvc?.GetShowItemsCnt() || List.Count == 0) return;
+            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= PgSvc?.GetCntWoSep() || List.Count == 0) return;
 
             var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.ScrollHeight = Scroll.ActualHeight;
@@ -591,7 +591,7 @@ namespace imgLoader_WPF.Windows
 
             DeleteItemDir(_clickedItem);
 
-            ShowItems.Remove(_clickedItem);
+            PgSvc.Remove(_clickedItem);
             List.Remove(_clickedItem);
             Index.Remove(_clickedItem);
         }
@@ -680,7 +680,7 @@ namespace imgLoader_WPF.Windows
 
             InfSvc.Save(List[rand]);
 
-            if (PgSvc.GetShowItemsCnt() >= rand + 1)
+            if (PgSvc.GetCntWoSep() >= rand + 1)
             {
                 List[rand].ShownChang?.Invoke();
             }
@@ -723,7 +723,7 @@ namespace imgLoader_WPF.Windows
             //MessageBox.Show($"{this.Left}, {this.Top}");
             var disableProcessing = ItemCtrl.Dispatcher.DisableProcessing();
 
-            ShowItems.Clear();
+            PgSvc.Clear();
             List.Clear();
             foreach (var item in Index)
             {

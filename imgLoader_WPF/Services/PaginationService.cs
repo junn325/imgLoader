@@ -118,13 +118,43 @@ namespace imgLoader_WPF.Services
             _counter = 0;
             _separatorCount = 0;
             //Debug.WriteLine($"sCnt: {_separatorCount}");
-
         }
 
-        internal int GetShowItemsCnt()
+        internal int GetCntWoSep()
         {
             return _showItems.Count - _separatorCount;
         }
+
+        internal void Clear()
+        {
+            _sender.Scroll.ScrollToTop();
+            _showItems.Clear();
+        }
+
+        internal void Remove(IndexItem item)
+        {
+            if (_sender.ItemCtrl.Dispatcher.CheckAccess())
+            {
+                _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Remove(item));
+            }
+            else
+            {
+                _showItems.Remove(item);
+            }
+        }
+
+        internal void Insert(int index, IndexItem item)
+        {
+            if (_sender.ItemCtrl.Dispatcher.CheckAccess())
+            {
+                _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Insert(index, item));
+            }
+            else
+            {
+                _showItems.Insert(index, item);
+            }
+        }
+
         internal void PaginateToEnd()
         {
             if (_service == null) goto page;

@@ -74,7 +74,7 @@ namespace imgLoader_WPF.Services
         internal void SortRefresh(SortOption sortOption, DispatcherProcessingDisabled disableProcessing)
         {
             DoSortList(sortOption);
-            _sender.Dispatcher.Invoke(() => _sender.ShowItems.Clear());
+            _sender.PgSvc.Clear();
             _sender.PgSvc.Paginate(disableProcessing);
             _sender.ShowItemCount();
         }
@@ -85,7 +85,7 @@ namespace imgLoader_WPF.Services
             _sender.Dispatcher.Invoke(() =>
             {
                 var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
-                _sender.ShowItems.Clear();
+                _sender.PgSvc.Clear();
                 _sender.PgSvc.Paginate(disableProcessing);
                 _sender.ShowItemCount();
             });

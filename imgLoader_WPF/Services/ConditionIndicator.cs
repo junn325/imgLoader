@@ -202,7 +202,7 @@ namespace imgLoader_WPF.Services
             }
 
             var searchItem = IndicatorList.Where(indItem => indItem.Condition == Condition.Search).ToArray();
-            _sender.ShowItems.Clear();
+            _sender.PgSvc.Clear();
 
             if (searchItem.Length == 0)
             {
@@ -251,7 +251,7 @@ namespace imgLoader_WPF.Services
             _sender.PnlCond.Children.Clear();
 
             _sender.List.Clear();
-            _sender.ShowItems.Clear();
+            _sender.PgSvc.Clear();
 
             foreach (var indexItem in _sender.Index)
             {

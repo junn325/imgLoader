@@ -20,8 +20,8 @@ namespace imgLoader_WPF.Services
 
         internal void SearchRefresh(string search, SearchOption option)
         {
-            _sender.Scroll.ScrollToTop();
-            _sender.ShowItems.Clear();
+            //_sender.Scroll.ScrollToTop();
+            _sender.PgSvc.Clear();
 
             var index = SearchIndex(_list);
             var result = SearchFrom(_list, index, search, option);

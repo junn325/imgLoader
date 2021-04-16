@@ -142,7 +142,7 @@ namespace imgLoader_WPF.Services
                 _sender.Dispatcher.Invoke(() =>
                 {
                     _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Visible;
-                    _sender.ShowItems.Remove(item);
+                    _sender.PgSvc.Remove(item);
                     _sender.ShowItemCount();
                 });
             }
