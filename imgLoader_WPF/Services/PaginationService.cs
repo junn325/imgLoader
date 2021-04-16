@@ -53,7 +53,7 @@ namespace imgLoader_WPF.Services
 
                     if (listCpy[oriCnt + i] == null)
                         continue;
-                    
+
                     _showItems.Add(listCpy[oriCnt + i]);
 
                     //_counter++;
@@ -67,7 +67,7 @@ namespace imgLoader_WPF.Services
                     //}
                 }
 
-                _sender.ShowItemCount();
+                //_sender.ShowItemCount();
                 _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;
             });
 
@@ -102,7 +102,7 @@ namespace imgLoader_WPF.Services
                         //Debug.Assert(_showItems.Count <= _sender.List.Count);
                     }
 
-                    _sender.ShowItemCount();
+                    //_sender.ShowItemCount();
                 });
             });
             _service.Name = "PgSvc_NoDisableDispatcher";

@@ -103,12 +103,14 @@ namespace imgLoader_WPF.Services
 
             _sender.Index.Add(item);
             _sender.List.Add(item);
+            Debug.WriteLine("idxsvc: list add");
 
-            _sender.Dispatcher.Invoke(() =>
-            {
-                using var disableprocessing = _sender.Dispatcher.DisableProcessing();
-                _sender.PgSvc.Remove(item);
-            });
+            //_sender.Dispatcher.Invoke(() =>
+            //{
+            //    using var disableprocessing = _sender.Dispatcher.DisableProcessing();
+            //    _sender.PgSvc.Clear();
+            //    _sender.PgSvc.Paginate(disableprocessing);
+            //});
         }
 
         internal void RemoveIndex(object sender, FileSystemEventArgs e)

@@ -1,0 +1,12 @@
+p : page
+s : site url
+n : button - goto first image, prev image, next image, last image
+i : info(image name :: size x size :: file size)
+k : key
+i3: (image click) goto next page
+i5: goto gallery page
+i6: button - goto "galleries with this file, generate static image link, image fails loading"
+i7: goto download original source
+si: image size
+x : image width
+y : image height

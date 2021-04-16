@@ -261,7 +261,6 @@ namespace imgLoader_WPF.Services
             _sender.Sorter.DoSortList((Sorter.SortOption)IndicatorList.Find(i => i.Condition == Condition.Sort).Option);
             _sender.PgSvc.Paginate(disableProcessing);
             _sender.ShowItemCount();
-
         }
 
         internal struct IndItem
