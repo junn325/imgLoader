@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
+using imgL_Sites;
+
 namespace imgLoader_WPF
 {
     internal class Processor

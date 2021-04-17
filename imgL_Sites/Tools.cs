@@ -1,6 +1,6 @@
-﻿namespace imgLoader_WPF
+﻿namespace imgL_Sites
 {
-    internal static class StrTools
+    public static class StrTools
     {
         /// <summary>
         ///  StringSplitOptions.None

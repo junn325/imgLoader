@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Windows;
 
-using imgLoader_WPF.Sites;
+using imgL_Sites;
 using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
@@ -73,7 +73,7 @@ namespace imgLoader_WPF
             }).Start();
         }
 
-        internal static void CreateInfo(string infoPath, ISite site)
+        internal static void CreateInfo(string infoPath,  imgL_Sites.ISite site)
         {
             if (!Directory.Exists(Dir.GetDirFromFile(infoPath)))
                 throw new DirectoryNotFoundException();

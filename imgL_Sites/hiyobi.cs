@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using imgL_Sites;
 
-namespace imgLoader_WPF.Sites
+namespace imgL_Sites
 {
     public class Hiyobi : ISite
     {

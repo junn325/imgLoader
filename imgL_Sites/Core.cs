@@ -6,12 +6,12 @@ using System.Threading;
 
 namespace imgL_Sites
 {
-    internal class Core
+    public static class Core
     {
-        internal const string LogDir = "ILLOG"; 
-        internal const string LogFile = "ILLG";
+        public const string LogDir = "ILLOG"; 
+        public const string LogFile = "ILLG";
 
-        internal static void Log(string content)
+        public static void Log(string content)
         {
             new Thread(() =>
             {

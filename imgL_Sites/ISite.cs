@@ -1,19 +1,19 @@
 ﻿using System.Collections.Generic;
 
-namespace imgLoader_WPF
+namespace imgL_Sites
 {
-    interface ISite
+    public interface ISite
     {
         public string Number { get; }
 
-        string GetArtist();
+        public string GetArtist();
 
-        Dictionary<string, string> GetImgUrls();
+        public Dictionary<string, string> GetImgUrls();
 
-        string GetTitle();
+        public string GetTitle();
 
-        string[] ReturnInfo();        //제목, 태그, 날짜,  파일이름: (품번).ini
+        public string[] ReturnInfo();        //제목, 태그, 날짜,  파일이름: (품번).ini
 
-        bool IsValidated();
+        public bool IsValidated();
     }
 }

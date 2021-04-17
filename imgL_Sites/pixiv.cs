@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace imgLoader_WPF.Sites
+namespace imgL_Sites
 {
     public class Pixiv : ISite
     {
