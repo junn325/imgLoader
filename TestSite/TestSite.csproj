@@ -3,13 +3,19 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net5.0</TargetFramework>
-		<FileVersion>1.0.6.50</FileVersion>
-		<AssemblyVersion>1.0.4.50</AssemblyVersion>
+		<FileVersion>1.0.6.51</FileVersion>
+		<AssemblyVersion>1.0.4.51</AssemblyVersion>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="BenchmarkDotNet" Version="0.12.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="imgL_Sites">
+	    <HintPath>C:\Users\junn6\Desktop\imgL_Sites.dll</HintPath>
+	  </Reference>
 	</ItemGroup>
 
 </Project>
