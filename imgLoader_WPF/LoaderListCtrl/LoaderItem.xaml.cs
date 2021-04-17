@@ -24,13 +24,13 @@ namespace imgLoader_WPF.LoaderListCtrl
         {
             var data = (IndexItem)DataContext;
 
-            if (data.IsSeparator)
-            {
-                this.Height = 2;
-                MainGrid.Visibility = Visibility.Collapsed;
-                return;
-                //this.Background = Brushes.LightGray;
-            }
+            //if (data.IsSeparator)
+            //{
+            //    this.Height = 2;
+            //    MainGrid.Visibility = Visibility.Collapsed;
+            //    return;
+            //    //this.Background = Brushes.LightGray;
+            //}
 
             _sender = (Windows.ImgLoader)Window.GetWindow(this);
 
