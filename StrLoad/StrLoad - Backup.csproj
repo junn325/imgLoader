@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<AssemblyVersion>1.0.0.6</AssemblyVersion>
+		<FileVersion>1.0.0.6</FileVersion>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
+		<DocumentationFile></DocumentationFile>
+		<Optimize>true</Optimize>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<WarningsAsErrors>;NU1605</WarningsAsErrors>
+		<OutputPath>bin\Release\</OutputPath>
+	</PropertyGroup>
+
+</Project>

@@ -6,7 +6,7 @@ namespace imgLoader_WPF.Sites
 {
     public class Hiyobi : ISite
     {
-        public string Number { get; set; }
+        public string Number { get; }
 
         private readonly string _src_cdn, _src_api, _title, _artist = "", _group = "";
 
