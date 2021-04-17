@@ -1,12 +1,9 @@
-﻿using imgLoader_WPF.LoaderListCtrl;
-using imgLoader_WPF.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +11,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+
+using imgLoader_WPF.LoaderListCtrl;
+using imgLoader_WPF.Services;
+
 using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
@@ -792,7 +793,13 @@ namespace imgLoader_WPF.Windows
 
         private void D_Else2_Click(object sender, RoutedEventArgs e)
         {
-            IdxSvc.Indexing();
+            //Core.CreateInfo(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", new Sites.Hiyobi("1890156"));
+            var file = new FileInfo(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif");
+            if (file.Exists)
+            {
+                if ((file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
+                else System.IO.File.SetAttributes(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", FileAttributes.Hidden);
+            }
         }
     }
 }

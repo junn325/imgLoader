@@ -20,6 +20,8 @@ namespace imgLoader_WPF.Sites
                 _src_cdn = StrLoad.Load($"https://cdn.hiyobi.me/json/{mNumber}_list.json");
                 _src_api = StrLoad.Load($"https://api.hiyobi.me/gallery/{mNumber}");
 
+                if (_src_cdn == null || _src_api == null) return;
+
                 if (_src_api.Contains("\\")) _src_api = _src_api.Replace("\\", "");
                 _title = _src_api.Split("title\":\"")[1].Split("\",")[0];
 

@@ -14,6 +14,8 @@ namespace imgLoader_WPF.Services
     internal class ConditionIndicator
     {
         internal readonly List<IndItem> IndicatorList = new();
+        //todo: searchList와 sortOption(배열이나 리스트 아님)으로 나눌것
+
         private readonly ImgLoader _sender;
 
         public ConditionIndicator(ImgLoader sender)

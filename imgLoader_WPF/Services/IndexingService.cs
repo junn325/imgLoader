@@ -1,4 +1,7 @@
 ﻿using imgLoader_WPF.Windows;
+
+using Microsoft.VisualBasic;
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -38,7 +41,7 @@ namespace imgLoader_WPF.Services
                                         | NotifyFilters.Size
                                         | NotifyFilters.DirectoryName
                                         | NotifyFilters.FileName
-                                        | NotifyFilters.Attributes
+                                        //| NotifyFilters.Attributes
                                         | NotifyFilters.LastWrite;
 
                 //_watcher.Filter = $"*";
@@ -94,7 +97,7 @@ namespace imgLoader_WPF.Services
             Refresh(infoFiles, newFiles);
         }
 
-        internal void AddIndex(object sender, FileSystemEventArgs e)
+        private void AddIndex(object sender, FileSystemEventArgs e)
         {
             Debug.WriteLine("IdxSvc: AddIndex");
 
@@ -104,7 +107,7 @@ namespace imgLoader_WPF.Services
 
             _sender.Index.Add(item);
             _sender.List.Insert(0, item);
-            Debug.WriteLine("idxsvc: list add");
+            Debug.WriteLine("Idxsvc: list add");
 
             //_sender.Dispatcher.Invoke(() =>
             //{
@@ -114,7 +117,7 @@ namespace imgLoader_WPF.Services
             //});
         }
 
-        internal void RemoveIndex(object sender, FileSystemEventArgs e)
+        private void RemoveIndex(object sender, FileSystemEventArgs e)
         {
             Debug.WriteLine("IdxSvc: RemoveIndex");
 
@@ -129,25 +132,22 @@ namespace imgLoader_WPF.Services
             });
         }
 
-        internal void RefreshIndex(object sender, FileSystemEventArgs e)
+        private void RefreshIndex(object sender, FileSystemEventArgs e)
         {
             Debug.WriteLine("IdxSvc: RefreshIndex");
 
             var indexIdx = FindItemIndex(_sender.Index, e.FullPath);
             if (indexIdx == -1)
             {
-                Debug.WriteLine("search failed");
+                Debug.WriteLine("IdxSvc: RefreshIndex: indexIdx: search failed");
                 return;
             }
 
             var item = GetItemFromInfo(e.FullPath);
-            //_sender.Index.Remove(item);
-            //_sender.List.Remove(item);
 
             _sender.Index[indexIdx].Author = item.Author;
             _sender.Index[indexIdx].Date = item.Date;
             _sender.Index[indexIdx].ImgCount = item.ImgCount;
-            //_sender.Index[indexIdx].IsDownloading = item.IsDownloading;
             _sender.Index[indexIdx].LastViewDate = item.LastViewDate;
             _sender.Index[indexIdx].SiteName = item.SiteName;
             _sender.Index[indexIdx].Tags = item.Tags;
@@ -159,40 +159,43 @@ namespace imgLoader_WPF.Services
             var listIdx = FindItemIndex(_sender.List, e.FullPath);
             if (listIdx == -1)
             {
-                _sender.List.Add(item);
+                Debug.WriteLine("IdxSvc: RefreshIndex: listIdx: search failed");
+                return;
+            }
+
+            if (item.Show)
+            {
+                _sender.List[listIdx].Author = item.Author;
+                _sender.List[listIdx].Date = item.Date;
+                _sender.List[listIdx].ImgCount = item.ImgCount;
+                _sender.List[listIdx].LastViewDate = item.LastViewDate;
+                _sender.List[listIdx].SiteName = item.SiteName;
+                _sender.List[listIdx].Tags = item.Tags;
+                _sender.List[listIdx].Title = item.Title;
+                _sender.List[listIdx].View = item.View;
+                _sender.List[listIdx].Vote = item.Vote;
             }
             else
             {
-                if (item.Show)
-                {
-                    _sender.List[listIdx].Author = item.Author;
-                    _sender.List[listIdx].Date = item.Date;
-                    _sender.List[listIdx].ImgCount = item.ImgCount;
-                    //_sender.List[listIdx].IsDownloading = item.IsDownloading;
-                    _sender.List[listIdx].LastViewDate = item.LastViewDate;
-                    _sender.List[listIdx].SiteName = item.SiteName;
-                    _sender.List[listIdx].Tags = item.Tags;
-                    _sender.List[listIdx].Title = item.Title;
-                    _sender.List[listIdx].View = item.View;
-                    _sender.List[listIdx].Vote = item.Vote;
-                }
-                else
-                {
-                    _sender.List.RemoveAt(listIdx);
-                }
+                _sender.List.RemoveAt(listIdx);
             }
 
-            if (FindItemIndex(_sender.ShowItems, e.FullPath) != -1) return;
-
-            _sender.Dispatcher.Invoke(() =>
+            var itemIdx = FindItemIndex(_sender.ShowItems, e.FullPath);
+            if (itemIdx != -1)
             {
-                using var disableprocessing = _sender.Dispatcher.DisableProcessing();
-                _sender.PgSvc.Clear();
-                _sender.PgSvc.Paginate(disableprocessing);
-            });
+                _sender.ShowItems[itemIdx].RefreshInfo();
+                return;
+            }
+
+            //_sender.Dispatcher.Invoke(() =>
+            //{
+            //    using var disableprocessing = _sender.Dispatcher.DisableProcessing();
+            //    _sender.PgSvc.Clear();
+            //    _sender.PgSvc.Paginate(disableprocessing);
+            //});
         }
 
-        internal IndexItem GetItemFromInfo(string fileName)
+        private static IndexItem GetItemFromInfo(string fileName)
         {
             using var sr = new StreamReader(Core.Dir.DelayStream(fileName, FileMode.Open, FileAccess.Read), Encoding.UTF8);
             var infos = sr.ReadToEnd().Replace("\r\n", "\n");
@@ -366,13 +369,13 @@ namespace imgLoader_WPF.Services
             }
         }
 
-        private IndexItem FindItem(List<IndexItem> collection, string infoPath)
+        private static IndexItem FindItem(List<IndexItem> collection, string infoPath)
         {
             var temp = collection.Where(i => i.Route == infoPath).ToArray();
             return temp.Length != 0 ? temp[0] : null;
         }
 
-        internal int FindItemIndex(IEnumerable<IndexItem> collection, string infoPath)
+        private static int FindItemIndex(IEnumerable<IndexItem> collection, string infoPath)
         {
             int i = 0;
             foreach (var item in collection)

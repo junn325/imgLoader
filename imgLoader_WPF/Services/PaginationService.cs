@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Threading;
+
 using imgLoader_WPF.LoaderListCtrl;
+
 using ThreadState = System.Threading.ThreadState;
 
 namespace imgLoader_WPF.Services

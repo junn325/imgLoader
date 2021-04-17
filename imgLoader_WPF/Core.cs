@@ -73,17 +73,16 @@ namespace imgLoader_WPF
             }).Start();
         }
 
-        internal static void CreateInfo(string infoFileName, ISite site)
+        internal static void CreateInfo(string infoPath, ISite site)
         {
-            if (!Directory.Exists(Dir.GetDirFromFile(infoFileName)))
+            if (!Directory.Exists(Dir.GetDirFromFile(infoPath)))
                 throw new DirectoryNotFoundException();
             if (site == null)
                 throw new NullReferenceException("\"site\" is null.");
 
-            var file = new FileInfo(infoFileName);
-            if (file.Exists && (file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
+            using var fs = Dir.DelayStream(infoPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            using var sw = new StreamWriter(fs, Encoding.UTF8);
 
-            using var sw = new StreamWriter(new FileStream(infoFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
             var info = site.ReturnInfo();
 
             Debug.Assert(info[2].Contains('|'));
@@ -98,9 +97,12 @@ namespace imgLoader_WPF
             }
             sw.Write($"\n{DateTime.Now.ToString(CultureInfo.InvariantCulture)}\n0\n1\n0"); //0=Vote, 1=Show, 0=View
 
+            sw.Flush();                 //┐
+            fs.SetLength(fs.Position);  //오류 등으로 원래 담겨야할 줄 수 이상의 줄이 있을 때 지움
+
             sw.Close();
 
-            File.SetAttributes(infoFileName, FileAttributes.Hidden);
+            File.SetAttributes(infoPath, FileAttributes.Hidden);
         }
 
         internal static string GetNum(string url)
