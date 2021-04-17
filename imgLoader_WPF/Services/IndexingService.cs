@@ -1,16 +1,12 @@
-﻿using imgLoader_WPF.Windows;
-
-using Microsoft.VisualBasic;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.DirectoryServices.ActiveDirectory;
 using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
+
+using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF.Services
 {

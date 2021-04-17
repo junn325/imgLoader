@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Windows;
 using System.Windows.Threading;
+
 using imgLoader_WPF.Windows;
+
 using Dispatcher = System.Windows.Threading.Dispatcher;
 
 namespace imgLoader_WPF.Services

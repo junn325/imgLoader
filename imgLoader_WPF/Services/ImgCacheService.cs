@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
 using imgLoader_WPF.Windows;
 

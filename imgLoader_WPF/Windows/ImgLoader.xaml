@@ -148,8 +148,8 @@
 
         <TextBlock x:Name="BlockCnt" Text="(항목 개수) items" VerticalAlignment="Bottom" Margin="10,0,0,3"/>
 
-        <Button x:Name="D_Stop" Content="정지" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,376,0,0" Height="27" Width="76" Click="Button_Click_5"/>
-        <Button x:Name="D_Else1" Content="Button" HorizontalAlignment="Left" Height="27" Margin="230,376,0,0" VerticalAlignment="Top" Width="80" Click="Button_Click_2"/>
-        <Button x:Name="D_Else2" Content="Button" HorizontalAlignment="Left" Height="27" Margin="489,376,0,0" VerticalAlignment="Top" Width="80" Click="D_Else2_Click"/>
+        <Button x:Name="D_Stop" Content="정지" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,7" Height="27" Width="76" Click="Button_Click_5"/>
+        <Button x:Name="D_Else1" Content="Button" VerticalAlignment="Bottom" HorizontalAlignment="Center" Height="27" Margin="0,0,200,7" Width="80" Click="Button_Click_2"/>
+        <Button x:Name="D_Else2" Content="Button" VerticalAlignment="Bottom" HorizontalAlignment="Center" Height="27" Margin="200,0,0,7" Width="80" Click="D_Else2_Click"/>
     </Grid>
 </Window>
