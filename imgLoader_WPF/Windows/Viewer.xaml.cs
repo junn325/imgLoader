@@ -10,10 +10,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Media.Media3D;
 
 using imgLoader_WPF.Services;
-
+using Brushes = System.Windows.Media.Brushes;
 using Point = System.Windows.Point;
 
 namespace imgLoader_WPF.Windows
@@ -30,8 +29,8 @@ namespace imgLoader_WPF.Windows
         private System.Windows.Controls.Image _img;
 
         //private Rect _oriPosition;
-        //private Rect _relRect;          //얘네들 존나겹치는거같음 _relRect는 계산이 너무 무거워서 제거 필요
-        //private Point _oriPoint;
+        private Rect _imgRect;
+        private Point _mouseOriPoint;
 
         internal string[] FileList;
         private BitmapImage[] _imgList;
@@ -124,18 +123,28 @@ namespace imgLoader_WPF.Windows
                 );
             }
         }
+        private void MoveImage(/*System.Windows.Controls.Image img, */double x, double y)
+        {
+            _imgRect.X = x;
+            _imgRect.Y = y;
+            _imgRect.Width = _img.ActualWidth;
+            _imgRect.Height = _img.ActualHeight;
 
-        //private static void MoveImage(Image img, double x, double y)
-        //{
-        //    img.Arrange(new Rect(x, y, img.Width, img.Height));
-        //}
+            //Debug.WriteLine(_imgRect);
 
+            _img.Arrange(_imgRect);
+        }
         private void MoveImage(double x, double y, double width, double height)
         {
-            _img.Arrange(new Rect(x, y, width, height));
+            _imgRect.X = x;
+            _imgRect.Y = y;
+            _imgRect.Width = width;
+            _imgRect.Height = height;
 
+            //Debug.WriteLine(_imgRect);
+
+            _img.Arrange(_imgRect);
         }
-
         private void ChangeImage(string nextPath, bool next)
         {
             var sw = new Stopwatch();
@@ -235,7 +244,6 @@ namespace imgLoader_WPF.Windows
 
             _min = 0;
         }
-
         private string GetTitle(string nextPath)
         {
             return $"{TTitle}{(Author != "|" ? " :by " + Core.GetArtistFromRaw(Author) : "")} || {nextPath.Split('\\')[^1]}";
@@ -335,21 +343,29 @@ namespace imgLoader_WPF.Windows
 
             return (decoder.Frames[0].PixelWidth, decoder.Frames[0].PixelHeight);
         }
-
         private void ResetImg()
         {
             //Canvas.SetLeft(_img, 0);
             //Canvas.SetTop(_img, 0);
 
-            var (width, height) = GetFutureSize(FileList[0]);
-            _img.Arrange(
-                new Rect(
-                    width >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - width) / 2,
-                    height >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - height) / 2,
-                    width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width,
-                    height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height
-                    )
-                );
+            var (newWidth, newHeight) = GetFutureSize(FileList[0]);
+
+            //_imgRect = new Rect(
+            //    newWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - newWidth) / 2,
+            //    newHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - newHeight) / 2,
+            //    newWidth > Cnvs.ActualWidth ? Cnvs.ActualWidth : newWidth,
+            //    newHeight > Cnvs.ActualHeight ? Cnvs.ActualHeight : newHeight);
+
+            _imgRect.X = newWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - newWidth) / 2;
+            _imgRect.Y = newHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - newHeight) / 2;
+            _imgRect.Width = newWidth > Cnvs.ActualWidth ? Cnvs.ActualWidth : newWidth;
+            _imgRect.Height = newHeight > Cnvs.ActualHeight ? Cnvs.ActualHeight : newHeight;
+
+            _img.Arrange(_imgRect);
+
+            _imgRect.Width = _img.ActualWidth;
+            _imgRect.Height = _img.ActualHeight;
+
 
             //_img.Width = width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width;
             //_img.Height = height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height;
@@ -413,6 +429,7 @@ namespace imgLoader_WPF.Windows
             return destImage;
         }
         //
+
         private void Window_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.Key)
@@ -426,7 +443,6 @@ namespace imgLoader_WPF.Windows
                     break;
 
                 case Key.Y:
-                    Canvas.SetLeft(_img, 0);
                     break;
 
                 case Key.W:
@@ -441,7 +457,6 @@ namespace imgLoader_WPF.Windows
                         //_relRect.Y += _movePix;
                         //_img.Arrange(_relRect);
                         //MoveImage(_img.);
-                        ;
                     }
                     break;
 
@@ -466,9 +481,6 @@ namespace imgLoader_WPF.Windows
                     break;
 
                 case Key.D:
-                    _min = 1;
-                    Canvas.SetLeft(_img, Canvas.GetLeft(_img) + 20);
-
                     if (_min != 0)
                     {
                         //_relRect.X -= _movePix;
@@ -497,8 +509,7 @@ namespace imgLoader_WPF.Windows
                     break;
 
                 case Key.R:
-                    //_img.Arrange(_oriPosition);
-                    //_relRect = new Rect(_oriPosition.Size);
+                    ResetImg();
                     _min = 0;
                     _thres = 0;
                     break;
@@ -536,14 +547,19 @@ namespace imgLoader_WPF.Windows
             //_oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
 
             ResetImg();
-
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //_oriPoint = Mouse.GetPosition(this);
+            _mouseOriPoint = e.GetPosition(this);
 
             var conPos = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             //_relRect = new Rect(conPos.X, conPos.Y, _img.ActualWidth, _img.ActualHeight);
+
+            _imgRect.X = conPos.X;
+            _imgRect.Y = conPos.Y;
+
+            _imgRect.Width = _img.ActualWidth;
+            _imgRect.Height = _img.ActualHeight;
 
             _isMouseDown = true;
         }
@@ -551,18 +567,17 @@ namespace imgLoader_WPF.Windows
         {
             _isMouseDown = false;
         }
+
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             if (!_isMouseDown) return;
             if (e.LeftButton != MouseButtonState.Pressed && e.MiddleButton != MouseButtonState.Pressed) _isMouseDown = false;
 
-            var mPos = Mouse.GetPosition(this);
-            //_relRect.X += mPos.X - _oriPoint.X;
-            //_relRect.Y += mPos.Y - _oriPoint.Y;
-
-            //_oriPoint = Mouse.GetPosition(this);
-            //_img.Arrange(_relRect);
+            var mPos = e.GetPosition(this);
+            MoveImage(_imgRect.X + (mPos.X - _mouseOriPoint.X), _imgRect.Y + (mPos.Y - _mouseOriPoint.Y));
+            _mouseOriPoint = e.GetPosition(this);
         }
+
         private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
             //_img.Arrange(_oriPosition);
