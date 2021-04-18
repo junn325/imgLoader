@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Media.Media3D;
 
 using imgLoader_WPF.Services;
 
@@ -73,13 +74,13 @@ namespace imgLoader_WPF.Windows
 
             RenderOptions.SetBitmapScalingMode(_img, BitmapScalingMode.Fant);
             //GridCanvas.Children.Add(_img);
-            Cnvs.Children.Add(_img);
+            Cnvs.Children.Insert(0, _img);
 
             _imgList[0] = ImageLoad(FileList[0]);
 
-            var (width, height) = GetFutureSize(FileList[0]);
-            _img.Width = width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width;
-            _img.Height = height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height;
+            //var (width, height) = GetFutureSize(FileList[0]);
+            //_img.Width = width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width;
+            //_img.Height = height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height;
 
             _img.Source = _imgList[0];
             _img.UpdateLayout();
@@ -88,7 +89,7 @@ namespace imgLoader_WPF.Windows
             PBar.Value = 1;
 
             //_oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
-            ResetImgLocation();
+            ResetImg();
             //_relRect = new Rect(_oriPosition.X, _oriPosition.Y, _oriPosition.Width, _oriPosition.Height);
         }
 
@@ -229,7 +230,7 @@ namespace imgLoader_WPF.Windows
 
             //_oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
 
-            ResetImgLocation();
+            ResetImg();
             Debug.WriteLine(sw.Elapsed.Ticks + "\n====================");
 
             _min = 0;
@@ -290,6 +291,9 @@ namespace imgLoader_WPF.Windows
                 bitmapImage.DecodePixelWidth = newWidth;
                 bitmapImage.DecodePixelHeight = newHeight;
 
+                //TxtTest.Width = newWidth;
+                //TxtTest.Height = newHeight;
+
                 bitmapImage.CreateOptions = BitmapCreateOptions.DelayCreation;
                 bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
                 bitmapImage.UriSource = new Uri(path);
@@ -332,10 +336,32 @@ namespace imgLoader_WPF.Windows
             return (decoder.Frames[0].PixelWidth, decoder.Frames[0].PixelHeight);
         }
 
-        private void ResetImgLocation()
+        private void ResetImg()
         {
-            Canvas.SetLeft(_img, _imgList[0].DecodePixelWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - _imgList[0].DecodePixelWidth) / 2);
-            Canvas.SetTop(_img, _imgList[0].DecodePixelHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _imgList[0].DecodePixelHeight) / 2);
+            //Canvas.SetLeft(_img, 0);
+            //Canvas.SetTop(_img, 0);
+
+            var (width, height) = GetFutureSize(FileList[0]);
+            _img.Arrange(
+                new Rect(
+                    width >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - width) / 2,
+                    height >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - height) / 2,
+                    width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width,
+                    height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height
+                    )
+                );
+
+            //_img.Width = width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width;
+            //_img.Height = height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height;
+
+            //_img.UpdateLayout();
+
+            //_img.Width = _img.ActualWidth;
+            //_img.Height = _img.ActualHeight;
+
+            //Canvas.SetLeft(_img, _img.ActualWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - _img.ActualWidth) / 2);
+            //Canvas.SetTop(_img, _img.ActualHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _img.ActualHeight) / 2);
+
         }
         private (int, int) GetFutureSize(string imgPath)
         {
@@ -397,6 +423,10 @@ namespace imgLoader_WPF.Windows
                     break;
 
                 case Key.G:
+                    break;
+
+                case Key.Y:
+                    Canvas.SetLeft(_img, 0);
                     break;
 
                 case Key.W:
@@ -505,7 +535,7 @@ namespace imgLoader_WPF.Windows
             //var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             //_oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
 
-            ResetImgLocation();
+            ResetImg();
 
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
