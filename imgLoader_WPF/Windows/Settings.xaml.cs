@@ -73,7 +73,7 @@ namespace imgLoader_WPF.Windows
                     {
                         _sender.PgSvc.Clear();
                         _sender.BlockIdx.Visibility = Visibility.Hidden;
-                        _sender.ShowItemCount();
+                        _sender.ShowItemsCnt();
                     });
 
                     _sender.PgSvc.Paginate();

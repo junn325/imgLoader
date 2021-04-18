@@ -235,7 +235,7 @@ namespace imgLoader_WPF.Services
 
             _sender.Sorter.DoSortList((Sorter.SortOption)IndicatorList.Find(i => i.Condition == Condition.Sort).Option);
             _sender.PgSvc.Paginate(disableProcessing);
-            _sender.ShowItemCount();
+            _sender.ShowItemsCnt();
         }
 
         internal void Clear()
@@ -260,7 +260,7 @@ namespace imgLoader_WPF.Services
 
             _sender.Sorter.DoSortList((Sorter.SortOption)IndicatorList.Find(i => i.Condition == Condition.Sort).Option);
             _sender.PgSvc.Paginate(disableProcessing);
-            _sender.ShowItemCount();
+            _sender.ShowItemsCnt();
         }
 
         internal struct IndItem

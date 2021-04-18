@@ -38,7 +38,7 @@ namespace imgLoader_WPF.Services
 
             _sender.PgSvc.RefreshCounter();
             _sender.PgSvc.Paginate();
-            _sender.ShowItemCount();
+            _sender.ShowItemsCnt();
         }
 
         //internal void SearchRefresh(string search, SearchOption option, DispatcherProcessingDisabled disableProcessing)

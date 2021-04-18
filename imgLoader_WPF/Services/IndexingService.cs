@@ -17,11 +17,8 @@ namespace imgLoader_WPF.Services
     {
         private const int Interval = 3000;
 
-        //private readonly Thread _service;
         private bool _stop;
         private bool _pause;
-
-        //public readonly List<IndexItem> Index;
 
         private readonly ImgLoader _sender;
         private readonly FileSystemWatcher _watcher = new();
@@ -29,7 +26,11 @@ namespace imgLoader_WPF.Services
         public IndexingService(ImgLoader sender)
         {
             _sender = sender;
-            Indexing();
+
+            DoIndex();
+            if (_sender.Index.Count != 0) _sender.BlockIdx.Visibility = System.Windows.Visibility.Hidden;
+            _sender.PgSvc.Paginate();
+            _sender.ShowItemsCnt();
 
             {
                 _watcher.Path = Core.Route;
@@ -37,10 +38,8 @@ namespace imgLoader_WPF.Services
                                         | NotifyFilters.Size
                                         | NotifyFilters.DirectoryName
                                         | NotifyFilters.FileName
-                                        //| NotifyFilters.Attributes
                                         | NotifyFilters.LastWrite;
 
-                //_watcher.Filter = $"*";
                 _watcher.Filter = $"*.{Core.InfoExt}";
 
                 //_watcher.Created += (sender, e) => Debug.WriteLine("created");
@@ -52,7 +51,6 @@ namespace imgLoader_WPF.Services
                 _watcher.Deleted += RemoveIndex;
                 _watcher.Changed += RefreshIndex;
 
-                //_watcher.EnableRaisingEvents = true;
                 _watcher.IncludeSubdirectories = true;
             }
 
@@ -83,14 +81,6 @@ namespace imgLoader_WPF.Services
             service.IsBackground = true;
 
             service.Start();
-        }
-
-        internal void Indexing()
-        {
-            _watcher.Path = Core.Route;
-
-            var (infoFiles, newFiles) = DoIndex();
-            Refresh(infoFiles, newFiles);
         }
 
         private void AddIndex(object sender, FileSystemEventArgs e)
@@ -252,9 +242,9 @@ namespace imgLoader_WPF.Services
 
             return item;
         }
-        internal (string[], string[]) DoIndex()
+        internal void DoIndex()
         {
-            if (!Directory.Exists(Core.Route)) return (null, null);
+            if (!Directory.Exists(Core.Route)) return;
 
             var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
             var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
@@ -326,8 +316,6 @@ namespace imgLoader_WPF.Services
 
                 _sender.List.Add(item);
             }
-
-            return (infoFiles, newFiles);
         }
 
         internal void Refresh(string[] infoFiles, string[] newFiles)
@@ -348,7 +336,7 @@ namespace imgLoader_WPF.Services
                 {
                     _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Visible;
                     _sender.PgSvc.Remove(item);
-                    _sender.ShowItemCount();
+                    _sender.ShowItemsCnt();
                 });
             }
 
@@ -390,11 +378,6 @@ namespace imgLoader_WPF.Services
                 item.RefreshInfo?.Invoke();
             }
         }
-        //internal void Start()
-        //{
-        //    _stop = false;
-        //    _service.Start();
-        //}
 
         internal void Pause()
         {
@@ -405,11 +388,5 @@ namespace imgLoader_WPF.Services
         {
             _pause = false;
         }
-
-        //internal void Stop()
-        //{
-        //    _stop = true;
-        //    while (_service.IsAlive) Thread.Sleep(100);
-        //}
     }
 }

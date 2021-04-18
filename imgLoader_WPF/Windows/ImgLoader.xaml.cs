@@ -198,9 +198,9 @@ namespace imgLoader_WPF.Windows
                 PgSvc.Remove(_clickedItem);
             }).Start();
         }
-        internal void ShowItemCount()
+        internal void ShowItemsCnt()
         {
-            Debug.WriteLine("ShowItemCount: Call");
+            Debug.WriteLine("ShowItemsCnt: Call");
 
             if (Dispatcher.CheckAccess())
             {
@@ -262,7 +262,7 @@ namespace imgLoader_WPF.Windows
 
                 Sorter.SortRefresh((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
 
-                //Dispatcher.Invoke(ShowItemCount);
+                //Dispatcher.Invoke(ShowItemsCnt);
                 lItem.Proc = null;
             });
 

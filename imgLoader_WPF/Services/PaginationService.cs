@@ -67,7 +67,7 @@ namespace imgLoader_WPF.Services
                     //}
                 }
 
-                //_sender.ShowItemCount();
+                //_sender.ShowItemsCnt();
                 _sender.Scroll.VerticalScrollBarVisibility = System.Windows.Controls.ScrollBarVisibility.Auto;
             });
 
@@ -102,7 +102,7 @@ namespace imgLoader_WPF.Services
                         //Debug.Assert(_showItems.Count <= _sender.List.Count);
                     }
 
-                    //_sender.ShowItemCount();
+                    //_sender.ShowItemsCnt();
                 });
             });
             _service.Name = "PgSvc_NoDisableDispatcher";
@@ -141,7 +141,7 @@ namespace imgLoader_WPF.Services
                 });
             }
 
-            _sender.ShowItemCount();
+            _sender.ShowItemsCnt();
             //return disableProcessing;
         }
 
@@ -156,7 +156,7 @@ namespace imgLoader_WPF.Services
                 _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Remove(item));
             }
 
-            _sender.ShowItemCount();
+            _sender.ShowItemsCnt();
         }
 
         internal void Insert(int index, IndexItem item)
