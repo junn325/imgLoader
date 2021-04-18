@@ -88,8 +88,7 @@ namespace imgLoader_WPF.Windows
             PBar.Value = 1;
 
             //_oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
-            Canvas.SetLeft(_img, 0);
-            Canvas.SetTop(_img, _imgList[0].Height >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _imgList[0].DecodePixelHeight) / 2);
+            ResetImgLocation();
             //_relRect = new Rect(_oriPosition.X, _oriPosition.Y, _oriPosition.Width, _oriPosition.Height);
         }
 
@@ -229,6 +228,8 @@ namespace imgLoader_WPF.Windows
             //_img.Arrange(_relRect);
 
             //_oriPosition = new Rect(_img.TransformToAncestor(this).Transform(new Point(0, 0)), new Size(_img.ActualWidth, _img.ActualHeight));
+
+            ResetImgLocation();
             Debug.WriteLine(sw.Elapsed.Ticks + "\n====================");
 
             _min = 0;
@@ -329,6 +330,12 @@ namespace imgLoader_WPF.Windows
             var decoder = BitmapDecoder.Create(new Uri(path), BitmapCreateOptions.IgnoreColorProfile, BitmapCacheOption.Default);
 
             return (decoder.Frames[0].PixelWidth, decoder.Frames[0].PixelHeight);
+        }
+
+        private void ResetImgLocation()
+        {
+            Canvas.SetLeft(_img, _imgList[0].DecodePixelWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - _imgList[0].DecodePixelWidth) / 2);
+            Canvas.SetTop(_img, _imgList[0].DecodePixelHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _imgList[0].DecodePixelHeight) / 2);
         }
         private (int, int) GetFutureSize(string imgPath)
         {
@@ -490,16 +497,16 @@ namespace imgLoader_WPF.Windows
         }
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            //return;
             if (_img == null) return;
 
-            _movePix = (int)(_img.ActualHeight / 10);
+            //_movePix = (int)(_img.ActualHeight / 10);
 
             //_relRect = new Rect(0, 0, 0, 0);
-            var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
+            //var temp = _img.TransformToAncestor(this).Transform(new Point(0, 0));
             //_oriPosition = new Rect(temp.X, temp.Y, _img.ActualWidth, _img.ActualHeight);
 
-            
+            ResetImgLocation();
+
         }
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {

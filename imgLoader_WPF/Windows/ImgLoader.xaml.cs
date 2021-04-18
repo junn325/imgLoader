@@ -116,6 +116,15 @@ namespace imgLoader_WPF.Windows
                 _winSetting.Show();
             }
 
+            if (Core.OpenWith.Length == 0 && File.Exists(Path.GetTempPath() + Core.OpenFile) && File.Exists(File.ReadAllText(Path.GetTempPath() + Core.OpenFile)))
+            {
+                Core.OpenWith = File.ReadAllText(Path.GetTempPath() + Core.OpenFile);
+            }
+            else
+            {
+                Core.OpenWith = "";
+            }
+
 #if DEBUG
             Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (4)";
 #endif

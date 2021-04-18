@@ -6,13 +6,13 @@
         mc:Ignorable="d"
         Title="Viewer" Height="1000" Width="1280" PreviewKeyUp="Window_PreviewKeyUp" PreviewKeyDown="Window_PreviewKeyDown" PreviewMouseWheel="Window_PreviewMouseWheel" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged" MouseDown="Window_MouseDown" MouseUp="Window_MouseUp" MouseMove="Window_MouseMove" MouseDoubleClick="Window_MouseDoubleClick" Closed="Window_Closed">
     <Grid x:Name="Grd">
-        <Grid x:Name="GridCanvas" Background="Green">
+        <Grid x:Name="GridCanvas">
             <Grid.RowDefinitions>
                 <RowDefinition Height="7"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <ProgressBar x:Name="PBar" Grid.Row="0" Height="7" VerticalAlignment="Bottom" DockPanel.Dock="Top"/>
-            <Canvas Grid.Row="1" x:Name="Cnvs"/>
+            <Canvas Grid.Row="1" x:Name="Cnvs" Background="Green"/>
         </Grid>
     </Grid>
 </Window>
