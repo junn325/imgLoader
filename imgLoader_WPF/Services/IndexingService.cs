@@ -62,12 +62,7 @@ namespace imgLoader_WPF.Services
 
                     Thread.Sleep(Interval);
 
-                    if (Properties.Settings.Default.NoIndex)
-                    {
-                        _watcher.EnableRaisingEvents = false;
-                        continue;
-                    }
-                    if (_pause)
+                    if (!Directory.Exists(Core.FilesRoute + Core.RouteFile) || _pause || Properties.Settings.Default.NoIndex)
                     {
                         _watcher.EnableRaisingEvents = false;
                         continue;

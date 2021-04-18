@@ -102,13 +102,20 @@ namespace imgLoader_WPF.Windows
                 })
             { IsBackground = true }.Start();
 
+            _winSetting = new Settings(this);
+
+            if (!Directory.Exists(Core.FilesRoute))
+            {
+                Directory.CreateDirectory(Core.FilesRoute);
+            }
+
             Properties.Settings.Default.Upgrade();
 
             Menu.Focus(); //메뉴 미리 로드
 
-            if (Core.Route.Length == 0 && File.Exists(Path.GetTempPath() + Core.RouteFile) && Directory.Exists(File.ReadAllText(Path.GetTempPath() + Core.RouteFile)))
+            if (Core.Route.Length == 0 && File.Exists(Core.FilesRoute + Core.RouteFile) && Directory.Exists(File.ReadAllText(Core.FilesRoute + Core.RouteFile)))
             {
-                Core.Route = File.ReadAllText(Path.GetTempPath() + Core.RouteFile);
+                Core.Route = File.ReadAllText(Core.FilesRoute + Core.RouteFile);
             }
             else
             {
@@ -116,9 +123,9 @@ namespace imgLoader_WPF.Windows
                 _winSetting.Show();
             }
 
-            if (Core.OpenWith.Length == 0 && File.Exists(Path.GetTempPath() + Core.OpenFile) && File.Exists(File.ReadAllText(Path.GetTempPath() + Core.OpenFile)))
+            if (Core.OpenWith.Length == 0 && File.Exists(Core.FilesRoute + Core.OpenFile) && File.Exists(File.ReadAllText(Core.FilesRoute + Core.OpenFile)))
             {
-                Core.OpenWith = File.ReadAllText(Path.GetTempPath() + Core.OpenFile);
+                Core.OpenWith = File.ReadAllText(Core.FilesRoute + Core.OpenFile);
             }
             else
             {
@@ -126,7 +133,7 @@ namespace imgLoader_WPF.Windows
             }
 
 #if DEBUG
-            Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (4)";
+            //Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (4)";
 #endif
 #if !DEBUG
             D_Stop.IsEnabled = false;
@@ -140,8 +147,6 @@ namespace imgLoader_WPF.Windows
             }
 
             Title = Core.Route;
-
-            _winSetting = new Settings(this);
 
             ItemCtrl.ItemsSource = ShowItems;
 

@@ -87,16 +87,16 @@ namespace imgLoader_WPF.Windows
                 }).Start();
             }).Start();
 
-            if (File.Exists(Path.GetTempPath() + Core.RouteFile))
+            if (File.Exists(Core.FilesRoute + Core.RouteFile))
             {
-                if (File.ReadAllText(Path.GetTempPath() + Core.RouteFile) != Core.Route)
+                if (File.ReadAllText(Core.FilesRoute + Core.RouteFile) != Core.Route)
                 {
-                    File.WriteAllText(Path.GetTempPath() + Core.RouteFile, Core.Route);
+                    File.WriteAllText(Core.FilesRoute + Core.RouteFile, Core.Route);
                 }
             }
             else
             {
-                File.WriteAllText(Path.GetTempPath() + Core.RouteFile, Core.Route);
+                File.WriteAllText(Core.FilesRoute + Core.RouteFile, Core.Route);
             }
         }
 
@@ -202,16 +202,16 @@ namespace imgLoader_WPF.Windows
 
             Core.OpenWith = TxtOpen.Text;
 
-            if (File.Exists(Path.GetTempPath() + Core.OpenFile))
+            if (File.Exists(Core.FilesRoute + Core.OpenFile))
             {
-                if (File.ReadAllText(Path.GetTempPath() + Core.OpenFile) != Core.OpenWith)
+                if (File.ReadAllText(Core.FilesRoute + Core.OpenFile) != Core.OpenWith)
                 {
-                    File.WriteAllText(Path.GetTempPath() + Core.OpenFile, Core.OpenWith);
+                    File.WriteAllText(Core.FilesRoute + Core.OpenFile, Core.OpenWith);
                 }
             }
             else
             {
-                File.WriteAllText(Path.GetTempPath() + Core.OpenFile, Core.OpenWith);
+                File.WriteAllText(Core.FilesRoute + Core.OpenFile, Core.OpenWith);
             }
 
         }

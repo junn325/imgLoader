@@ -16,8 +16,10 @@ namespace imgLoader_WPF
     internal static class Core
     {
         internal const string ProjectName = "imgLoader";
-        internal const string RouteFile = "ILTempRout";
-        internal const string OpenFile = "ILTempOpen";
+        internal static readonly string FilesRoute = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.imgL\\";
+
+        internal const string RouteFile = "ILRout";
+        internal const string OpenFile = "ILOpen";
         internal const string IndexFile = "ILIdx";
 
         internal const string LogDir = "ILLOG";
@@ -45,7 +47,7 @@ namespace imgLoader_WPF
         {
             new Thread(() =>
             {
-                var sb = new StringBuilder(Path.GetTempPath());
+                var sb = new StringBuilder(FilesRoute);
                 sb.Append('\\').Append(LogDir);
 
                 if (!Directory.Exists(sb.ToString())) Directory.CreateDirectory(sb.ToString());
