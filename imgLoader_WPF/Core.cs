@@ -17,6 +17,7 @@ namespace imgLoader_WPF
     {
         internal const string ProjectName = "imgLoader";
         internal const string RouteFile = "ILTempRout";
+        internal const string OpenFile = "ILTempOpen";
         internal const string IndexFile = "ILIdx";
 
         internal const string LogDir = "ILLOG";
@@ -38,6 +39,7 @@ namespace imgLoader_WPF
         //private static readonly List<ListViewItem> LvItem = new List<ListViewItem>();
 
         internal static string Route = "";
+        internal static string OpenWith = "";
 
         internal static void Log(string content)
         {
@@ -172,7 +174,7 @@ namespace imgLoader_WPF
                     if (s.Length == 0) continue;
                     sb.Append(s).Append(", ");
                 }
-                temp = sb.ToString().Substring(0, sb.Length - 2);
+                temp = sb.ToString()[..(sb.Length - 2)];
 
                 sb.Clear();
 
@@ -184,7 +186,7 @@ namespace imgLoader_WPF
 
                 temp =
                     sb.Length != 0
-                        ? $"{temp} ({sb.ToString().Substring(0, sb.Length - 2)})"
+                        ? $"{temp} ({sb.ToString()[..(sb.Length - 2)]})"
                         : temp;
             }
             else
@@ -195,7 +197,7 @@ namespace imgLoader_WPF
                     sb.Append(s).Append(", ");
                 }
 
-                temp = sb.ToString().Substring(0, sb.Length - 2);
+                temp = sb.ToString()[..(sb.Length - 2)];
             }
 
             return temp;
@@ -417,6 +419,14 @@ namespace imgLoader_WPF
             internal static string EHNumFromInternal(string number)
             {
                 return number.Contains('!') ? number.Replace('!', '/') : number;
+            }
+
+            internal static void OpenOn(string path)
+            {
+                if (!File.Exists(Core.OpenWith)) return;
+                if (!File.Exists(path)) return;
+
+                Process.Start(Core.OpenWith, path);
             }
 
             internal static void OpenOnCanvas(string imgSetPath, string title, string author)

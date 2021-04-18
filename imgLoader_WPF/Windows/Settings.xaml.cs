@@ -15,21 +15,25 @@ namespace imgLoader_WPF.Windows
     /// </summary>
     public partial class Settings : Window
     {
-        private readonly List<IndexItem> _index;
+        //private readonly List<IndexItem> _index;
         private readonly ImgLoader _sender;
-        private readonly ScrollViewer _scroll;
+        //private readonly ScrollViewer _scroll;
 
-        internal Settings(ImgLoader sender, ScrollViewer scroll, List<IndexItem> index)
+        private const string TextPath = "Double click to select a path or enter directly";
+        private const string TextOpen = "Double click to select a program or enter directly";
+
+        internal Settings(ImgLoader sender)
         {
             InitializeComponent();
             _sender = sender;
-            _index = index;
-            _scroll = scroll;
+            //_index = index;
+            //_scroll = scroll;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            TxtPath.Text = Core.Route.Length == 0 ? TxtPath.Text : Core.Route;
+            TxtPath.Text = Core.Route.Length == 0 ? TextPath : Core.Route;
+            TxtOpen.Text = Core.OpenWith.Length == 0 ? TextOpen : Core.OpenWith;
 
             CheckAuthorName.IsChecked = Properties.Settings.Default.ShowAuthor_Folder;
             //CheckFolder.IsChecked = Properties.Settings.Default.BookMark_Name;
@@ -37,6 +41,8 @@ namespace imgLoader_WPF.Windows
             CheckImmid.IsChecked = Properties.Settings.Default.Down_Immid;
             //CheckScroll.IsChecked = Properties.Settings.Default.NoScrollTag;
             //CheckNoIndex.IsChecked = Properties.Settings.Default.NoIndex;
+
+            ChkOpenBasic_Change();
         }
 
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -48,7 +54,7 @@ namespace imgLoader_WPF.Windows
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (TxtPath.Text == "더블클릭하여 다운로드 경로를 선택하거나 직접 입력" || Core.Route == TxtPath.Text) return;
+            if (TxtPath.Text == TextPath || Core.Route == TxtPath.Text) return;
             if (!Directory.Exists(TxtPath.Text)) return;
 
             Core.Route = TxtPath.Text;
@@ -60,7 +66,7 @@ namespace imgLoader_WPF.Windows
             _sender.Index.Clear();
             _sender.List.Clear();
 
-            _scroll.ScrollToTop();
+            _sender.Scroll.ScrollToTop();
             _sender.IdxSvc.Pause();
 
             new Thread(() =>
@@ -81,16 +87,16 @@ namespace imgLoader_WPF.Windows
                 }).Start();
             }).Start();
 
-            if (File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt"))
+            if (File.Exists(Path.GetTempPath() + Core.RouteFile))
             {
-                if (File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt") != Core.Route)
+                if (File.ReadAllText(Path.GetTempPath() + Core.RouteFile) != Core.Route)
                 {
-                    File.WriteAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt", Core.Route);
+                    File.WriteAllText(Path.GetTempPath() + Core.RouteFile, Core.Route);
                 }
             }
             else
             {
-                File.WriteAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt", Core.Route);
+                File.WriteAllText(Path.GetTempPath() + Core.RouteFile, Core.Route);
             }
         }
 
@@ -169,6 +175,53 @@ namespace imgLoader_WPF.Windows
         {
             Properties.Settings.Default.PauseCmpAdd = ChkPauseCmpAdd.IsChecked.GetValueOrDefault();
             Properties.Settings.Default.Save();
+        }
+
+        private void ChkOpenBasic_Checked(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ChkOpenBasic_Click(object sender, RoutedEventArgs e)
+        {
+            ChkOpenBasic_Change();
+            Properties.Settings.Default.UseBasicViewer = ChkOpenBasic.IsChecked.GetValueOrDefault();
+            Properties.Settings.Default.Save();
+        }
+
+        private void ChkOpenBasic_Change()
+        {
+            TxtOpen.Visibility = ChkOpenBasic.IsChecked == true ? Visibility.Collapsed : Visibility.Visible;
+            Grid.SetColumn(ChkOpenBasic, ChkOpenBasic.IsChecked == true ? 0 : 1);
+        }
+
+        private void TxtOpen_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (TxtOpen.Text == TextOpen || Core.OpenWith == TxtOpen.Text) return;
+            if (!File.Exists(TxtOpen.Text)) return;
+
+            Core.OpenWith = TxtOpen.Text;
+
+            if (File.Exists(Path.GetTempPath() + Core.OpenFile))
+            {
+                if (File.ReadAllText(Path.GetTempPath() + Core.OpenFile) != Core.OpenWith)
+                {
+                    File.WriteAllText(Path.GetTempPath() + Core.OpenFile, Core.OpenWith);
+                }
+            }
+            else
+            {
+                File.WriteAllText(Path.GetTempPath() + Core.OpenFile, Core.OpenWith);
+            }
+
+        }
+
+        private void TxtOpen_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var b = new System.Windows.Forms.OpenFileDialog();
+            b.Filter = "Executable files (*.exe)|*.exe";
+            if (b.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                TxtPath.Text = b.FileName;
         }
     }
 }

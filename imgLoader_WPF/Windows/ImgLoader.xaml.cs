@@ -15,6 +15,7 @@ using System.Windows.Threading;
 using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Services;
 
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
@@ -105,11 +106,9 @@ namespace imgLoader_WPF.Windows
 
             Menu.Focus(); //메뉴 미리 로드
 
-            _winSetting = new Settings(this, Scroll, Index);
-
-            if (Core.Route.Length == 0 && File.Exists($"{Path.GetTempPath()}{Core.RouteFile}.txt") && Directory.Exists(File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt")))
+            if (Core.Route.Length == 0 && File.Exists(Path.GetTempPath() + Core.RouteFile) && Directory.Exists(File.ReadAllText(Path.GetTempPath() + Core.RouteFile)))
             {
-                Core.Route = File.ReadAllText($"{Path.GetTempPath()}{Core.RouteFile}.txt");
+                Core.Route = File.ReadAllText(Path.GetTempPath() + Core.RouteFile);
             }
             else
             {
@@ -133,7 +132,7 @@ namespace imgLoader_WPF.Windows
 
             Title = Core.Route;
 
-            _winSetting = new Settings(this, Scroll, Index);
+            _winSetting = new Settings(this);
 
             ItemCtrl.ItemsSource = ShowItems;
 
@@ -569,8 +568,17 @@ namespace imgLoader_WPF.Windows
         }
         private void Open_Click(object sender, RoutedEventArgs e)
         {
+            if (Properties.Settings.Default.UseBasicViewer)
+            {
+                Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
+            }
+            else
+            {
+                Core.Dir.OpenOn(Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
+            }
+
             //Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
-            Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
+            //Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
 
             _clickedItem.LastViewDate = DateTime.Now;
             _clickedItem.View++;
@@ -695,7 +703,14 @@ namespace imgLoader_WPF.Windows
                 List[rand].ShownChang?.Invoke();
             }
 
-            Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
+            if (Properties.Settings.Default.UseBasicViewer)
+            {
+                Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
+            }
+            else
+            {
+                Core.Dir.OpenOn(List[rand].Route);
+            }
         }
         private void VoteSort_Click(object sender, RoutedEventArgs e)
         {

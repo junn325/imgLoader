@@ -130,5 +130,17 @@ namespace imgLoader_WPF.Properties {
                 this["PathCondFlush"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UseBasicViewer {
+            get {
+                return ((bool)(this["UseBasicViewer"]));
+            }
+            set {
+                this["UseBasicViewer"] = value;
+            }
+        }
     }
 }
