@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Threading;
 
@@ -49,15 +48,7 @@ namespace imgLoader_WPF.Services
 
                     _sender.ShowItems.Add(listCpy[oriCnt + i]);
 
-                    //_counter++;
-
-                    //if (_counter == 5)
-                    //{
-                    //    _counter = 0;
-                    //    _showItems.Add(_separator);
-                    //    _separatorCount++;
-                    //    //Debug.WriteLine($"sCnt: {_separatorCount}");
-                    //}
+                    InsertCounter();
                 }
 
                 //_sender.ShowItemsCnt();
@@ -82,16 +73,8 @@ namespace imgLoader_WPF.Services
                         if (oriCnt + i >= _sender.List.Count)
                             return;
 
+                        InsertCounter();
                         _sender.ShowItems.Add(_sender.List[oriCnt + i]);
-                        //_counter++;
-
-                        //if (_counter == 5)
-                        //{
-                        //    _counter = 0;
-                        //    _showItems.Add(_separator);
-                        //    _separatorCount++;
-                        //    //Debug.WriteLine($"sCnt: {_separatorCount}");
-                        //}
                         //Debug.Assert(_showItems.Count <= _sender.List.Count);
                     }
 
@@ -101,6 +84,19 @@ namespace imgLoader_WPF.Services
             _service.Name = "PgSvc_NoDisableDispatcher";
             _service.IsBackground = true;
             _service.Start();
+        }
+
+        private void InsertCounter()
+        {
+            //_counter++;
+
+            //if (_counter == 5)
+            //{
+            //    _counter = 0;
+            //    _showItems.Add(_separator);
+            //    _separatorCount++;
+            //    //Debug.WriteLine($"sCnt: {_separatorCount}");
+            //}
         }
 
         internal void RefreshCounter()

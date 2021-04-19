@@ -15,7 +15,6 @@ using System.Windows.Threading;
 using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Services;
 
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
@@ -133,7 +132,7 @@ namespace imgLoader_WPF.Windows
             }
 
 #if DEBUG
-            //Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (4)";
+            Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (4)";
 #endif
 #if !DEBUG
             D_Stop.IsEnabled = false;
@@ -273,10 +272,13 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
+                Index.Add(lItem);
+                List.Add(lItem);
                 Sorter.SortRefresh((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
 
                 //Dispatcher.Invoke(ShowItemsCnt);
                 lItem.Proc = null;
+                Debug.WriteLine($"Complete: {lItem.Number}");
             });
 
             service.Name = "AddItem";
@@ -528,6 +530,10 @@ namespace imgLoader_WPF.Windows
 
                     case "MenuManage":
                         item.IsEnabled = false;
+                        break;
+
+                    case "MenuDelete":
+                        if (_clickedItem.IsDownloading) item.IsEnabled = false;
                         break;
 
                     default:

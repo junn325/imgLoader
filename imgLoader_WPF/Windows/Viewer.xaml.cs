@@ -98,13 +98,19 @@ namespace imgLoader_WPF.Windows
             {
                 _min++;
 
-                _img.Stretch = Stretch.Uniform;
-                //MoveImage(_img, (ActualWidth - _img.Width) / 2, (ActualHeight - _img.Height) / 2);
+                //_img.Stretch = Stretch.Uniform;
+                //MoveImage(
+                //    _imgRect.X - ((_imgRect.Width * (Scale / 100.0)) / 2),
+                //    _imgRect.Y - ((_imgRect.Height * (Scale / 100.0)) / 2),     
+                //    _imgRect.Width * ((Scale + 100) / 100.0),                   
+                //    _imgRect.Height * ((Scale + 100) / 100.0)
+                //    );
+
                 MoveImage(
-                    (ActualWidth - _img.ActualWidth) / 2,
-                    (ActualHeight - _img.ActualHeight) / 2,
-                    _img.ActualWidth * (Scale + 100) / 100.0,
-                    _img.ActualHeight * (Scale + 100) / 100.0
+                    _imgRect.X - (_imgRect.Width * (Scale / 100.0) / 2),
+                    _imgRect.Y - (_imgRect.Height * (Scale / 100.0) / 2),
+                    _imgRect.Width * ((Scale + 100) / 100.0),
+                    _imgRect.Height * ((Scale + 100) / 100.0)
                     );
             }
             else
@@ -113,14 +119,35 @@ namespace imgLoader_WPF.Windows
 
                 _min--;
 
-                _img.Stretch = Stretch.Uniform;
-                //MoveImage(_img, (ActualWidth - _img.Width) / 2, (ActualHeight - _img.Height) / 2);
+                //_img.Stretch = Stretch.Uniform;
+
                 MoveImage(
-                    (ActualWidth - _img.ActualWidth) / 2,
-                    (ActualHeight - _img.ActualHeight) / 2,
-                    _img.ActualWidth / (Scale + 100) / 100.0,
-                    _img.ActualHeight / (Scale + 100) / 100.0
+                    _imgRect.X + (_imgRect.Width * (Scale / (100.0 + Scale)) / 2),
+                    _imgRect.Y + (_imgRect.Height * (Scale / (100.0 + Scale)) / 2),
+                    _imgRect.Width / 1.15,
+                    _imgRect.Height / 1.15
                 );
+
+                //MoveImage(
+                //    _imgRect.X + ((_imgRect.Width - (_imgRect.Width / 1.15)) / 2),
+                //    _imgRect.Y + ((_imgRect.Height - (_imgRect.Height / 1.15))/2),
+                //    _imgRect.Width / 1.15,
+                //    _imgRect.Height / 1.15
+                //);
+
+                //MoveImage(
+                //    _imgRect.X + ((_imgRect.Width * (Scale / 100.0)) / 2),
+                //    _imgRect.Y + ((_imgRect.Height * (Scale / 100.0)) / 2),
+                //    _imgRect.Width / 1.15,
+                //    _imgRect.Height / 1.15
+                //);
+
+                //MoveImage(
+                //    (Cnvs.ActualWidth - _imgRect.Width) / 2,
+                //    (Cnvs.ActualHeight - _imgRect.Height) / 2,
+                //    _imgRect.Width / ((Scale + 100) / 100.0),         //1) MoveImage로 width/height부터 조절 > 두 번째 MoveImage로 종래의 방식으로 위치 조절 (ex: (Cnvs.ActualWidth - _imgRect.Width) / 2)
+                //    _imgRect.Height / ((Scale + 100) / 100.0)         //2) 지금 적용된 방식
+                //);
             }
         }
         private void MoveImage(/*System.Windows.Controls.Image img, */double x, double y)
@@ -365,7 +392,8 @@ namespace imgLoader_WPF.Windows
 
             _imgRect.Width = _img.ActualWidth;
             _imgRect.Height = _img.ActualHeight;
-
+            _imgRect.X = newWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - _imgRect.Width) / 2;
+            _imgRect.Y = newHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _imgRect.Height) / 2;
 
             //_img.Width = width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width;
             //_img.Height = height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height;
@@ -451,7 +479,6 @@ namespace imgLoader_WPF.Windows
                         this.Close();
                     }
 
-                    _min = 1;
                     if (_min != 0)
                     {
                         //_relRect.Y += _movePix;
