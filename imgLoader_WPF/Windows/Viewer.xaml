@@ -13,7 +13,7 @@
             </Grid.RowDefinitions>
             <ProgressBar x:Name="PBar" Grid.Row="0" Height="7" VerticalAlignment="Top"/>
             <Canvas Grid.Row="1" x:Name="Cnvs" Background="Black">
-                <TextBlock x:Name="TxtTest" Background="Gray" Canvas.Left="100" Canvas.Top="0" Width="50" Height="50"/>
+                <!--<TextBlock x:Name="TxtTest" Background="Gray" Canvas.Left="100" Canvas.Top="0" Width="50" Height="50"/>-->
             </Canvas>
         </Grid>
     </Grid>
