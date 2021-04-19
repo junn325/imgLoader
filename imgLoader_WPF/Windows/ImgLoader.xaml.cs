@@ -151,10 +151,10 @@ namespace imgLoader_WPF.Windows
             ItemCtrl.ItemsSource = ShowItems;
 
             CondInd = new ConditionIndicator(this);
-            Sorter = new Sorter(this, List);
-            Searcher = new Searcher(this, List);
+            Sorter = new Sorter(this);
+            Searcher = new Searcher(this);
 
-            PgSvc = new PaginationService(this, Scroll.ActualHeight, ShowItems, List);
+            PgSvc = new PaginationService(this);
             InfSvc = new InfoSavingService();
             IdxSvc = new IndexingService(this);
 
@@ -456,10 +456,9 @@ namespace imgLoader_WPF.Windows
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
-            if (!(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1) || Index.Count <= PgSvc?.GetCntItemOnly() || List.Count == 0) return;
+            if (PgSvc == null || Index.Count <= PgSvc?.GetCntItemOnly() || List.Count == 0 || !(Math.Abs(e.VerticalOffset - Scroll.ScrollableHeight) < 1)) return;
 
             var disableProcessing = Dispatcher.DisableProcessing();
-            PgSvc.ScrollHeight = Scroll.ActualHeight;
             PgSvc.Paginate(disableProcessing);
         }
         private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)

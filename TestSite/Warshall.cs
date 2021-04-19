@@ -17,7 +17,6 @@ namespace TestSite
                     for (int k = 0; k < n; k++)
                     {
                         w[i, j] = w[i, j] || (w[i, k] && w[k, j]);
-
                     }
                 }
             }

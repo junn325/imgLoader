@@ -17,35 +17,28 @@ namespace imgLoader_WPF.Services
         private Thread _service;
 
         private readonly Windows.ImgLoader _sender;
-        private readonly ObservableCollection<IndexItem> _showItems;
-        private readonly List<IndexItem> _list;
 
         //private readonly IndexItem _separator;
 
         //private int _counter;
         //private int _separatorCount;
 
-        public double ScrollHeight;
-
-        public PaginationService(Windows.ImgLoader sender, double scrollHeight, ObservableCollection<IndexItem> showItems, List<IndexItem> list)
+        public PaginationService(Windows.ImgLoader sender)
         {
             _sender = sender;
-            _showItems = showItems;
-            _list = list;
-            ScrollHeight = scrollHeight;
 
             //_separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
         }
 
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
         {
-            var num = (int)Math.Ceiling(ScrollHeight / LoaderItem.MHeight);
+            var num = (int)Math.Ceiling(_sender.Scroll.ActualHeight / LoaderItem.MHeight);
 
             _sender.Dispatcher.BeginInvoke(() =>
             {
                 var oriCnt = GetCntItemOnly();
 
-                var listCpy = new List<IndexItem>(_list);
+                var listCpy = new List<IndexItem>(_sender.List);
                 for (var i = 0; i < num; i++)
                 {
                     if (oriCnt + i >= listCpy.Count)
@@ -54,7 +47,7 @@ namespace imgLoader_WPF.Services
                     if (listCpy[oriCnt + i] == null)
                         continue;
 
-                    _showItems.Add(listCpy[oriCnt + i]);
+                    _sender.ShowItems.Add(listCpy[oriCnt + i]);
 
                     //_counter++;
 
@@ -84,12 +77,12 @@ namespace imgLoader_WPF.Services
 
                 _sender.Dispatcher.Invoke(() =>
                 {
-                    for (var i = 0; i < Math.Ceiling(ScrollHeight / LoaderItem.MHeight); i++)
+                    for (var i = 0; i < Math.Ceiling(_sender.Scroll.ActualHeight / LoaderItem.MHeight); i++)
                     {
-                        if (oriCnt + i >= _list.Count)
+                        if (oriCnt + i >= _sender.List.Count)
                             return;
 
-                        _showItems.Add(_list[oriCnt + i]);
+                        _sender.ShowItems.Add(_sender.List[oriCnt + i]);
                         //_counter++;
 
                         //if (_counter == 5)
@@ -119,7 +112,7 @@ namespace imgLoader_WPF.Services
 
         internal int GetCntItemOnly()
         {
-            return _showItems.Count /*- _separatorCount*/;
+            return _sender.ShowItems.Count /*- _separatorCount*/;
         }
 
         internal void Clear()
@@ -130,14 +123,14 @@ namespace imgLoader_WPF.Services
             if (_sender.Scroll.Dispatcher.CheckAccess())
             {
                 _sender.Scroll.ScrollToTop();
-                _showItems.Clear();
+                _sender.ShowItems.Clear();
             }
             else
             {
                 _sender.Scroll.Dispatcher.Invoke(() =>
                 {
                     _sender.Scroll.ScrollToTop();
-                    _showItems.Clear();
+                    _sender.ShowItems.Clear();
                 });
             }
 
@@ -149,11 +142,11 @@ namespace imgLoader_WPF.Services
         {
             if (_sender.ItemCtrl.Dispatcher.CheckAccess())
             {
-                _showItems.Remove(item);
+                _sender.ShowItems.Remove(item);
             }
             else
             {
-                _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Remove(item));
+                _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ShowItems.Remove(item));
             }
 
             _sender.ShowItemsCnt();
@@ -163,11 +156,11 @@ namespace imgLoader_WPF.Services
         {
             if (_sender.ItemCtrl.Dispatcher.CheckAccess())
             {
-                _showItems.Insert(index, item);
+                _sender.ShowItems.Insert(index, item);
             }
             else
             {
-                _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Insert(index, item));
+                _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ShowItems.Insert(index, item));
             }
         }
 
@@ -192,10 +185,10 @@ namespace imgLoader_WPF.Services
             {
                 _sender.Dispatcher.Invoke(() =>
                 {
-                    _showItems.Clear();
-                    foreach (var item in _list)
+                    _sender.ShowItems.Clear();
+                    foreach (var item in _sender.List)
                     {
-                        _showItems.Add(item);
+                        _sender.ShowItems.Add(item);
                     }
                 });
 

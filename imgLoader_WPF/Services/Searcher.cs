@@ -11,12 +11,10 @@ namespace imgLoader_WPF.Services
     {
         private const int IndexCount = 5;
         private readonly ImgLoader _sender;
-        private readonly List<IndexItem> _list;
 
-        public Searcher(ImgLoader sender, List<IndexItem> list)
+        public Searcher(ImgLoader sender)
         {
             _sender = sender;
-            _list = list;
         }
 
         internal void SearchRefresh(string search, SearchOption option)
@@ -24,16 +22,16 @@ namespace imgLoader_WPF.Services
             //_sender.Scroll.ScrollToTop();
             _sender.PgSvc.Clear();
 
-            var index = SearchIndex(_list);
-            var result = SearchFrom(_list, index, search, option);
+            var index = SearchIndex(_sender.List);
+            var result = SearchFrom(_sender.List, index, search, option);
 
-            _list.Clear();
+            _sender.List.Clear();
 
             foreach (var item in result)
             {
                 if (item == null) continue;
 
-                _list.Add(item);
+                _sender.List.Add(item);
             }
 
             _sender.PgSvc.RefreshCounter();
@@ -46,16 +44,16 @@ namespace imgLoader_WPF.Services
         //    _sender.Scroll.ScrollToTop();
         //    _sender.ShowItems.Clear();
 
-        //    var index = SearchIndex(_list);
-        //    var result = SearchFrom(_list, index, search, option);
+        //    var index = SearchIndex(_sender.List);
+        //    var result = SearchFrom(_sender.List, index, search, option);
 
-        //    _list.Clear();
+        //    _sender.List.Clear();
 
         //    foreach (var item in result)
         //    {
         //        if (item == null) continue;
 
-        //        _list.Add(item);
+        //        _sender.List.Add(item);
         //    }
 
         //    _sender.PgSvc.Paginate(disableProcessing);

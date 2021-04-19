@@ -12,11 +12,9 @@ namespace imgLoader_WPF.Services
     internal class Sorter
     {
         private readonly ImgLoader _sender;
-        private readonly List<IndexItem> _list;
 
-        public Sorter(ImgLoader sender, List<IndexItem> list)
+        public Sorter(ImgLoader sender)
         {
-            _list = list;
             _sender = sender;
         }
 
@@ -31,41 +29,41 @@ namespace imgLoader_WPF.Services
                 //todo: OrderBy로 새 리스트를 만들지 말고 insert로 구현하는 정렬 알고리즘 제작할 것
 
                 case SortOption.Number:
-                    temp = new List<IndexItem>(_list.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+                    temp = new List<IndexItem>(_sender.List.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
                     break;
                 case SortOption.Title:
-                    temp = new List<IndexItem>(_list.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
+                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
                     break;
                 case SortOption.Page:
-                    temp = new List<IndexItem>(_list.OrderBy(i => i.ImgCount));
+                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.ImgCount));
                     break;
                 case SortOption.Author:
-                    temp = new List<IndexItem>(_list.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
+                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
                     break;
                 case SortOption.Date:
                     Core.ShowDate = true;
-                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.Date));
+                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.Date));
                     break;
                 case SortOption.Vote:
-                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.Vote));
+                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.Vote));
                     break;
                 case SortOption.View:
-                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.View));
+                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.View));
                     break;
                 case SortOption.LastAccess:
                     Core.ShowLastDate = true;
-                    temp = new List<IndexItem>(_list.OrderByDescending(i => i.LastViewDate));
+                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.LastViewDate));
                     break;
 
                 default:
                     return;
             }
 
-            _list.Clear();
+            _sender.List.Clear();
 
             foreach (var item in temp)
             {
-                _list.Add(item);
+                _sender.List.Add(item);
             }
 
             _sender.PgSvc.RefreshCounter();
