@@ -85,6 +85,7 @@ namespace imgLoader_WPF.Services
             var item = GetItemFromInfo(e.FullPath);
 
             if (!item.Show) return;
+            if (item.ImgCount != Directory.GetFiles(Core.Dir.GetDirFromFile(e.FullPath), "*").Count(i => !i.Contains($".{Core.InfoExt}"))) return;
 
             _sender.Index.Add(item);
             _sender.List.Add(item);

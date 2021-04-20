@@ -230,8 +230,8 @@ namespace imgLoader_WPF.Windows
             var service = new Thread(() =>
             {
                 PgSvc.Insert(0, lItem);
-                //Index.Insert(0, lItem);
-                //List.Insert(0, lItem);
+                Index.Insert(0, lItem);
+                List.Insert(0, lItem);
 
                 lItem.Proc = new Processor(url, lItem);
                 lItem.Proc.LoadInfo();
@@ -241,8 +241,8 @@ namespace imgLoader_WPF.Windows
                 if (!lItem.Proc.IsValidated)
                 {
                     PgSvc.Remove(lItem);
-                    //Index.Remove(lItem);
-                    //List.Remove(lItem);
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
                     return;
                 }
 
@@ -250,8 +250,8 @@ namespace imgLoader_WPF.Windows
                 {
                     MessageBox.Show("Already Exists.");
                     PgSvc.Remove(lItem);
-                    //Index.Remove(lItem);
-                    //List.Remove(lItem);
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
                     return;
                 }
 
@@ -264,16 +264,14 @@ namespace imgLoader_WPF.Windows
                 if (lItem.Proc.IsStop)
                 {
                     PgSvc.Remove(lItem);
-                    //Index.Remove(lItem);
-                    //List.Remove(lItem);
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
                     return;
                 }
 
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
-                //Index.Add(lItem);
-                //List.Add(lItem);
                 Sorter.SortRefresh((SortOption)CondInd.SortItem.Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
 
                 //Dispatcher.Invoke(ShowItemsCnt);

@@ -6,7 +6,7 @@ using imgL_Fixer.imgLoader;
 
 namespace imgL_Fixer
 {
-    class Program
+    static class Program
     {
         //todo: 작가명 제대로 안써진것들 수정
         private static void Main(string[] args)
