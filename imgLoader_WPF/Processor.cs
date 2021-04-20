@@ -352,7 +352,6 @@ namespace imgLoader_WPF
                 _failed.Clear();
 
                 if (_tasks == null) return;
-
                 Task.WaitAll(_tasks);
                 //_stop = false;
 

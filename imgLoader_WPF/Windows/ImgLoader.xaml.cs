@@ -272,9 +272,9 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
-                Index.Add(lItem);
-                List.Add(lItem);
-                Sorter.SortRefresh((SortOption)CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
+                //Index.Add(lItem);
+                //List.Add(lItem);
+                Sorter.SortRefresh((SortOption)CondInd.SortItem.Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
 
                 //Dispatcher.Invoke(ShowItemsCnt);
                 lItem.Proc = null;

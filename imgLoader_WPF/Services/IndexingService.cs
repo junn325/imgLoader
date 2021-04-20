@@ -62,7 +62,7 @@ namespace imgLoader_WPF.Services
 
                     Thread.Sleep(Interval);
 
-                    if (!Directory.Exists(Core.FilesRoute + Core.RouteFile) || _pause || Properties.Settings.Default.NoIndex)
+                    if (!File.Exists(Core.FilesRoute + Core.RouteFile) || _pause || Properties.Settings.Default.NoIndex)
                     {
                         _watcher.EnableRaisingEvents = false;
                         continue;
@@ -87,7 +87,17 @@ namespace imgLoader_WPF.Services
             if (!item.Show) return;
 
             _sender.Index.Add(item);
-            _sender.List.Insert(0, item);
+            _sender.List.Add(item);
+            //_sender.List.Insert(0, item);
+            _sender.Dispatcher.Invoke(() =>
+            {
+                using var disableprocessing = _sender.Dispatcher.DisableProcessing();
+
+                _sender.Sorter.SortRefresh((Sorter.SortOption)_sender.CondInd.SortItem.Option);
+                _sender.PgSvc.Clear();
+                _sender.PgSvc.Paginate(disableprocessing);
+            });
+
             Debug.WriteLine("Idxsvc: list add");
 
             //_sender.Dispatcher.Invoke(() =>
@@ -341,7 +351,7 @@ namespace imgLoader_WPF.Services
                 {
                     _sender.BlockIdx.Visibility = System.Windows.Visibility.Hidden;
                     var disableProcessing = _sender.Dispatcher.DisableProcessing();
-                    var temp = (Sorter.SortOption)_sender.CondInd.IndicatorList.Find(i => i.Condition == ConditionIndicator.Condition.Sort).Option;
+                    var temp = (Sorter.SortOption)_sender.CondInd.SortItem.Option;
                     _sender.Sorter.SortRefresh(temp, disableProcessing);
                 });
 

@@ -22,6 +22,7 @@ namespace imgLoader_WPF.Services
         {
             //_sender.Scroll.ScrollToTop();
             Core.ShowDate = false;
+            Core.ShowLastDate = false;
 
             List<IndexItem> temp;
             switch (sortOption)
