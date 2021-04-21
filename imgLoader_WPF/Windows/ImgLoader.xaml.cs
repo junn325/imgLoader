@@ -101,6 +101,32 @@ namespace imgLoader_WPF.Windows
                 })
             { IsBackground = true }.Start();
 
+            var gbd = Array.Find(Directory.GetFiles(Directory.GetCurrentDirectory(), "*", SearchOption.AllDirectories), i => i.Contains("goodbyedpi"));
+
+            if (gbd != null
+                && File.Exists(gbd)
+                && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert.dll")
+                && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert32.sys")
+                && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert64.sys"))
+            {
+                var startInfo = new ProcessStartInfo
+                {
+                    FileName               = gbd,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError  = true,
+                    UseShellExecute        = false,
+                    CreateNoWindow         = true
+                };
+
+                var process = new Process
+                {
+                    StartInfo = startInfo,
+                    EnableRaisingEvents = true
+                };
+
+                process.Start();
+            }
+
             _winSetting = new Settings(this);
 
             if (!Directory.Exists(Core.FilesRoute))

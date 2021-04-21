@@ -7,8 +7,8 @@
     <AssemblyName>imgLoader</AssemblyName>
     <Version>0</Version>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <FileVersion>0.3.0.2840</FileVersion>
-    <AssemblyVersion>0.3.0.2840</AssemblyVersion>
+    <FileVersion>0.3.0.2856</FileVersion>
+    <AssemblyVersion>0.3.0.2856</AssemblyVersion>
     <StartupObject>imgLoader_WPF.App</StartupObject>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
@@ -23,10 +23,33 @@
     <None Remove="Font\NanumGothic.ttf" />
     <None Remove="Font\NanumGothicBold.ttf" />
     <None Remove="Font\Wingdings2.ttf" />
+    <None Remove="GoodbyeDPI\goodbyedpi.exe" />
+    <None Remove="GoodbyeDPI\LICENSE_ValdikSS_GoodbyeDPI" />
+    <None Remove="GoodbyeDPI\WinDivert.dll" />
+    <None Remove="GoodbyeDPI\WinDivert32.sys" />
+    <None Remove="GoodbyeDPI\WinDivert64.sys" />
     <None Remove="LoaderListCtrl\Icon\DownOver.png" />
     <None Remove="LoaderListCtrl\Icon\Dwn.png" />
     <None Remove="LoaderListCtrl\Icon\Up.png" />
     <None Remove="LoaderListCtrl\Icon\UpOver.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="GoodbyeDPI\goodbyedpi.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoodbyeDPI\LICENSE_ValdikSS_GoodbyeDPI">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoodbyeDPI\WinDivert.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoodbyeDPI\WinDivert32.sys">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoodbyeDPI\WinDivert64.sys">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

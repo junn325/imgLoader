@@ -316,6 +316,10 @@ namespace imgLoader_WPF
 
         internal static class Dir
         {
+            /// <summary>
+            /// No last backslash
+            /// </summary>
+
             internal static string GetDirFromFile(string path)
             {
                 return path[..(path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1)];
