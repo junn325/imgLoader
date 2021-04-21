@@ -66,3 +66,4 @@
 ./Etcs linguist-vendored
 /Etcs/*.* linguist-vendored
 ./Etcs/* linguist-vendored
+*.html linguist-vendored
