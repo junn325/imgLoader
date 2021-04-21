@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 using imgLoader_WPF.Services;
-using Brushes = System.Windows.Media.Brushes;
+
 using Point = System.Windows.Point;
 
 namespace imgLoader_WPF.Windows
@@ -195,7 +195,8 @@ namespace imgLoader_WPF.Windows
             _imgRect.Width = width;
             _imgRect.Height = height;
 
-            //Debug.WriteLine(_imgRect);
+            _img.Width = width;
+            _img.Height = height;
 
             _img.Arrange(_imgRect);
         }
@@ -397,39 +398,81 @@ namespace imgLoader_WPF.Windows
         }
         private void ResetImg()
         {
-            //Canvas.SetLeft(_img, 0);
-            //Canvas.SetTop(_img, 0);
-
             var (newWidth, newHeight) = GetFutureSize(FileList[0]);
 
-            //_imgRect = new Rect(
-            //    newWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - newWidth) / 2,
-            //    newHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - newHeight) / 2,
-            //    newWidth > Cnvs.ActualWidth ? Cnvs.ActualWidth : newWidth,
-            //    newHeight > Cnvs.ActualHeight ? Cnvs.ActualHeight : newHeight);
+            if (newHeight >= newWidth)
+            {
+                if (newHeight >= Cnvs.ActualHeight)
+                {
+                    _imgRect.Height = Cnvs.ActualHeight;
+                    _imgRect.Width = (Cnvs.ActualHeight / newHeight) * newWidth;
+                }
+                else
+                {
+                    _imgRect.Height = newHeight;
+                    _imgRect.Width = newWidth;
+                }
 
-            _imgRect.X = newWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - newWidth) / 2;
-            _imgRect.Y = newHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - newHeight) / 2;
-            _imgRect.Width = newWidth > Cnvs.ActualWidth ? Cnvs.ActualWidth : newWidth;
-            _imgRect.Height = newHeight > Cnvs.ActualHeight ? Cnvs.ActualHeight : newHeight;
+                _imgRect.X =
+                    _imgRect.Width >= Cnvs.ActualWidth
+                        ? 0
+                        : (Cnvs.ActualWidth - _imgRect.Width) / 2;
+                _imgRect.Y =
+                    _imgRect.Height >= Cnvs.ActualHeight
+                        ? 0
+                        : (Cnvs.ActualHeight - _imgRect.Height) / 2;
+            }
+            else
+            {
+                if (newWidth >= Cnvs.ActualWidth)
+                {
+                    _imgRect.Width = Cnvs.ActualWidth;
+                    _imgRect.Height = (Cnvs.ActualWidth / newWidth) * newHeight;
+                }
+                else
+                {
+                    _imgRect.Width = newWidth;
+                    _imgRect.Height = newHeight;
+                }
 
+                _imgRect.X =
+                    _imgRect.Width >= Cnvs.ActualWidth
+                        ? 0
+                        : (Cnvs.ActualWidth - _imgRect.Width) / 2;
+                _imgRect.Y =
+                    _imgRect.Height >= Cnvs.ActualHeight
+                        ? 0
+                        : (Cnvs.ActualHeight - _imgRect.Height) / 2;
+
+                //_imgRect.X =
+                //    newWidth >= Cnvs.ActualWidth
+                //        ? 0
+                //        : (Cnvs.ActualWidth - newWidth) / 2;
+                //_imgRect.Y =
+                //    newHeight >= Cnvs.ActualHeight
+                //        ? 0
+                //        : (Cnvs.ActualHeight - newHeight) / 2;
+
+                //_imgRect.Width =
+                //    newWidth > Cnvs.ActualWidth
+                //        ? Cnvs.ActualWidth
+                //        : newWidth;
+                //_imgRect.Height =
+                //    newHeight > Cnvs.ActualHeight
+                //        ? Cnvs.ActualHeight
+                //        : newHeight;
+            }
+
+            _img.Width = _imgRect.Width;
+            _img.Height = _imgRect.Height;
             _img.Arrange(_imgRect);
+
+            _img.UpdateLayout();
 
             _imgRect.Width = _img.ActualWidth;
             _imgRect.Height = _img.ActualHeight;
             _imgRect.X = newWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - _imgRect.Width) / 2;
             _imgRect.Y = newHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _imgRect.Height) / 2;
-
-            //_img.Width = width > Cnvs.ActualWidth ? Cnvs.ActualWidth : width;
-            //_img.Height = height > Cnvs.ActualHeight ? Cnvs.ActualHeight : height;
-
-            //_img.UpdateLayout();
-
-            //_img.Width = _img.ActualWidth;
-            //_img.Height = _img.ActualHeight;
-
-            //Canvas.SetLeft(_img, _img.ActualWidth >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth - _img.ActualWidth) / 2);
-            //Canvas.SetTop(_img, _img.ActualHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _img.ActualHeight) / 2);
 
             _min = 0;
             _thres = 0;
@@ -564,7 +607,7 @@ namespace imgLoader_WPF.Windows
         }
         private void Window_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (e.MiddleButton == MouseButtonState.Pressed)
+            if (_isCtrlDown || e.MiddleButton == MouseButtonState.Pressed)
             {
                 var mPos = e.GetPosition(Cnvs);
 
