@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-
 using imgL_Sites;
 
 namespace imgLoader_WPF
@@ -42,7 +41,7 @@ namespace imgLoader_WPF
             //{
             if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
             _item = item;
-            _url = url;
+            _url  = url;
 
             item.IsDownloading = true;
             //}
@@ -60,7 +59,7 @@ namespace imgLoader_WPF
             Site = Load(_url);
             if (Site == null)
             {
-                if(!IsStop) MessageBox.Show("주소에 연결할 수 없음.");
+                if (!IsStop) MessageBox.Show("주소에 연결할 수 없음.");
                 return;
             }
 
@@ -72,20 +71,20 @@ namespace imgLoader_WPF
 
             Number = Core.GetNum(_url);
             Artist = Core.GetArtistFromRaw(Site.GetArtist());
-            Title = GetTitle(Site.GetTitle());
-            Route = Getpath(Artist, Title);
-            Info = Site.ReturnInfo();
+            Title  = GetTitle(Site.GetTitle());
+            Route  = Getpath(Artist, Title);
+            Info   = Site.ReturnInfo();
 
             _item.ImgCount = ImgUrl.Count;
-            _item.Author = Site.GetArtist();
-            _item.Title = Title;
-            _item.Route = Route;
+            _item.Author   = Site.GetArtist();
+            _item.Title    = Title;
+            _item.Route    = Route;
             _item.SiteName = Site.GetType().Name;
-            _item.Number = Number;
-            _item.Date = DateTime.Now;
-            _item.Tags = Info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
-            _item.Vote = 0;
-            _item.View = 0;
+            _item.Number   = Number;
+            _item.Date     = DateTime.Now;
+            _item.Tags     = Info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
+            _item.Vote     = 0;
+            _item.View     = 0;
 
             //}
             //catch (Exception ex)
@@ -117,15 +116,15 @@ namespace imgLoader_WPF
         }
 
         /// <summary>
-        ///  Can be null
+        ///     Can be null
         /// </summary>
         private static ISite Load(string url)
         {
             var site = Core.LoadSite(url);
 
             return site == null || !site.IsValidated()
-                        ? null
-                        : site;
+                       ? null
+                       : site;
         }
 
         private static string GetTitle(string title)
@@ -133,8 +132,8 @@ namespace imgLoader_WPF
             var temp = Core.Dir.DirFilter(title);
 
             return Encoding.Unicode.GetByteCount(temp) > 255
-                        ? temp.Substring(0, 85)
-                        : temp;
+                       ? temp.Substring(0, 85)
+                       : temp;
         }
 
         private string Getpath(string artist, string title)
@@ -150,24 +149,24 @@ namespace imgLoader_WPF
                     : temp;
 
             return $@"{Core.Route}\{temp}\{Core.Dir.EHNumFromRaw(Number)}.{Core.InfoExt}";
-        }       //returns info path
+        } //returns info path
 
         private Error CreateInfo()
         {
             //try
             //{
-                if (!CheckDupl())
-                {
-                    Directory.CreateDirectory(Core.Dir.GetDirFromFile(Route));
-                }
-                else
-                {
-                    MessageBox.Show("Test");
-                }
+            if (!CheckDupl())
+            {
+                Directory.CreateDirectory(Core.Dir.GetDirFromFile(Route));
+            }
+            else
+            {
+                MessageBox.Show("Test");
+            }
 
-                Core.CreateInfo(Route, Site);
+            Core.CreateInfo(Route, Site);
 
-                return Error.End;
+            return Error.End;
             //}
             //catch (DirectoryNotFoundException)
             //{
@@ -259,7 +258,7 @@ namespace imgLoader_WPF
             HttpWebResponse resp;
 
             if (req == null) return;
-            req.Referer = $"https://{new Uri(uri).Host}";
+            req.Referer   = $"https://{new Uri(uri).Host}";
             req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36";
 
             try

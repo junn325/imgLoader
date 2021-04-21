@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
-
 using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF.Services
@@ -17,11 +16,11 @@ namespace imgLoader_WPF.Services
     {
         private const int Interval = 3000;
 
-        private bool _stop;
-        private bool _pause;
-
         private readonly ImgLoader _sender;
         private readonly FileSystemWatcher _watcher = new();
+
+        private bool _stop;
+        private bool _pause;
 
         public IndexingService(ImgLoader sender)
         {
@@ -68,11 +67,11 @@ namespace imgLoader_WPF.Services
                         continue;
                     }
 
-                    _watcher.Path = Core.Route;
+                    _watcher.Path                = Core.Route;
                     _watcher.EnableRaisingEvents = true;
                 }
             });
-            service.Name = "IdxSvc";
+            service.Name         = "IdxSvc";
             service.IsBackground = true;
 
             service.Start();
@@ -137,16 +136,16 @@ namespace imgLoader_WPF.Services
 
             var item = GetItemFromInfo(e.FullPath);
 
-            _sender.Index[indexIdx].Author = item.Author;
-            _sender.Index[indexIdx].Date = item.Date;
-            _sender.Index[indexIdx].ImgCount = item.ImgCount;
+            _sender.Index[indexIdx].Author       = item.Author;
+            _sender.Index[indexIdx].Date         = item.Date;
+            _sender.Index[indexIdx].ImgCount     = item.ImgCount;
             _sender.Index[indexIdx].LastViewDate = item.LastViewDate;
-            _sender.Index[indexIdx].SiteName = item.SiteName;
-            _sender.Index[indexIdx].Tags = item.Tags;
-            _sender.Index[indexIdx].Title = item.Title;
-            _sender.Index[indexIdx].View = item.View;
-            _sender.Index[indexIdx].Vote = item.Vote;
-            _sender.Index[indexIdx].Show = item.Show;
+            _sender.Index[indexIdx].SiteName     = item.SiteName;
+            _sender.Index[indexIdx].Tags         = item.Tags;
+            _sender.Index[indexIdx].Title        = item.Title;
+            _sender.Index[indexIdx].View         = item.View;
+            _sender.Index[indexIdx].Vote         = item.Vote;
+            _sender.Index[indexIdx].Show         = item.Show;
 
             var listIdx = FindItemIndex(_sender.List, e.FullPath);
             if (listIdx == -1)
@@ -157,15 +156,15 @@ namespace imgLoader_WPF.Services
 
             if (item.Show)
             {
-                _sender.List[listIdx].Author = item.Author;
-                _sender.List[listIdx].Date = item.Date;
-                _sender.List[listIdx].ImgCount = item.ImgCount;
+                _sender.List[listIdx].Author       = item.Author;
+                _sender.List[listIdx].Date         = item.Date;
+                _sender.List[listIdx].ImgCount     = item.ImgCount;
                 _sender.List[listIdx].LastViewDate = item.LastViewDate;
-                _sender.List[listIdx].SiteName = item.SiteName;
-                _sender.List[listIdx].Tags = item.Tags;
-                _sender.List[listIdx].Title = item.Title;
-                _sender.List[listIdx].View = item.View;
-                _sender.List[listIdx].Vote = item.Vote;
+                _sender.List[listIdx].SiteName     = item.SiteName;
+                _sender.List[listIdx].Tags         = item.Tags;
+                _sender.List[listIdx].Title        = item.Title;
+                _sender.List[listIdx].View         = item.View;
+                _sender.List[listIdx].Vote         = item.Vote;
             }
             else
             {
@@ -199,14 +198,14 @@ namespace imgLoader_WPF.Services
             var item = new IndexItem();
             try
             {
-                item.Route = fileName;
+                item.Route  = fileName;
                 item.Number = Core.Dir.EHNumFromInternal(fileName.Split('\\')[^1].Split('.')[0]);
 
                 item.SiteName = info[0];
-                item.Title = info[1];
-                item.Author = info[2];
+                item.Title    = info[1];
+                item.Author   = info[2];
                 item.ImgCount = int.TryParse(info[3], out var parse) ? parse : -1;
-                item.Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                item.Tags     = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
                 if (info[5].Contains(' ') && info[5].Contains('/'))
                 {
@@ -238,16 +237,17 @@ namespace imgLoader_WPF.Services
             }
             catch
             {
-                item.IsError = true;
-                item.Title = "";
-                item.Author = "Info read error. Recovery is required.";
-                item.Vote = -1;
-                item.View = -1;
+                item.IsError  = true;
+                item.Title    = "";
+                item.Author   = "Info read error. Recovery is required.";
+                item.Vote     = -1;
+                item.View     = -1;
                 item.ImgCount = -1;
             }
 
             return item;
         }
+
         internal void DoIndex()
         {
             if (!Directory.Exists(Core.Route)) return;
@@ -268,14 +268,14 @@ namespace imgLoader_WPF.Services
                 var item = new IndexItem();
                 try
                 {
-                    item.Route = infoRoute;
+                    item.Route  = infoRoute;
                     item.Number = Core.Dir.EHNumFromInternal(infoRoute.Split('\\')[^1].Split('.')[0]);
 
                     item.SiteName = info[0];
-                    item.Title = info[1];
-                    item.Author = info[2];
+                    item.Title    = info[1];
+                    item.Author   = info[2];
                     item.ImgCount = int.TryParse(info[3], out var parse) ? parse : -1;
-                    item.Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                    item.Tags     = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
                     if (info[5].Contains(' ') && info[5].Contains('/'))
                     {
@@ -307,11 +307,11 @@ namespace imgLoader_WPF.Services
                 }
                 catch
                 {
-                    item.IsError = true;
-                    item.Title = "";
-                    item.Author = "Info read error. Recovery is required.";
-                    item.Vote = -1;
-                    item.View = -1;
+                    item.IsError  = true;
+                    item.Title    = "";
+                    item.Author   = "Info read error. Recovery is required.";
+                    item.Vote     = -1;
+                    item.View     = -1;
                     item.ImgCount = -1;
                 }
 
@@ -332,7 +332,7 @@ namespace imgLoader_WPF.Services
             {
                 if (item.IsDownloading) continue;
                 if (infoFiles.Contains(item.Route)) continue;
-                if (item.ImgCount == -1) continue;                //새로 다운로드 중인 항목 무시
+                if (item.ImgCount == -1) continue; //새로 다운로드 중인 항목 무시
 
                 Debug.WriteLine($"IdxSvc: remove {item.Number}");
 
@@ -355,7 +355,6 @@ namespace imgLoader_WPF.Services
                     var temp = (Sorter.SortOption)_sender.CondInd.SortItem.Option;
                     _sender.Sorter.SortRefresh(temp, disableProcessing);
                 });
-
             }
         }
 

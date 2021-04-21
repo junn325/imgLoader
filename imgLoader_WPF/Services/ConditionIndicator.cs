@@ -4,7 +4,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-
 using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF.Services
@@ -12,7 +11,7 @@ namespace imgLoader_WPF.Services
     internal class ConditionIndicator
     {
         //internal readonly List<IndItem> IndicatorList = new();
-        internal IndItem SortItem = new(){Condition = Condition.Sort, Content = "", Option = -1, Panel = null};
+        internal IndItem SortItem = new() { Condition = Condition.Sort, Content = "", Option = -1, Panel = null };
         internal readonly List<IndItem> SearchList = new();
 
         //todo: searchList와 sortOption(배열이나 리스트 아님)으로 나눌것
@@ -29,11 +28,13 @@ namespace imgLoader_WPF.Services
             if (!DoRequest(srchText, cond, option)) return;
             AddIndicator(srchText, cond, option);
         }
+
         internal void Add(string srchText, Condition cond, int option, string label)
         {
-            if(!DoRequest(srchText, cond, option)) return;
+            if (!DoRequest(srchText, cond, option)) return;
             AddIndicator(srchText, cond, option, label);
         }
+
         private bool DoRequest(string srchText, Condition cond, int option)
         {
             if (cond == Condition.Sort && option == SortItem.Option) return false;
@@ -53,18 +54,19 @@ namespace imgLoader_WPF.Services
 
             return true;
         }
+
         private void AddIndicator(string srchText, Condition cond, int option, string label)
         {
             var item = new IndItem();
 
             var tb = new TextBlock
             {
-                Text = label,
-                Height = 20,
+                Text                = label,
+                Height              = 20,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(2, 1, 2, 1),
-                Padding = new Thickness(2, 1, 2, 1),
+                VerticalAlignment   = VerticalAlignment.Center,
+                Margin              = new Thickness(2, 1, 2, 1),
+                Padding             = new Thickness(2, 1, 2, 1),
             };
 
             if (cond == Condition.Search)
@@ -85,15 +87,15 @@ namespace imgLoader_WPF.Services
 
                 Background = cond switch
                 {
-                    Condition.Sort => Brushes.Turquoise,
+                    Condition.Sort   => Brushes.Turquoise,
                     Condition.Search => Brushes.CornflowerBlue,
-                    _ => Brushes.Gray
+                    _                => Brushes.Gray
                 },
             };
 
-            item.Content = srchText;
+            item.Content   = srchText;
             item.Condition = cond;
-            item.Option = option;
+            item.Option    = option;
 
             item.Panel.Children.Add(tb);
             _sender.PnlCond.Children.Add(item.Panel);
@@ -108,6 +110,7 @@ namespace imgLoader_WPF.Services
                 SortItem = item;
             }
         }
+
         private void AddIndicator(string srchText, Condition cond, int option)
         {
             var item = new IndItem();
@@ -116,26 +119,26 @@ namespace imgLoader_WPF.Services
                 Condition.Search => option switch
                 {
                     -1 => "All:",
-                    0 => "Author:",
-                    1 => "Number:",
-                    2 => "Tag:",
-                    3 => "SiteName:",
-                    4 => "Title:",
-                    5 => "ImgCount:",
-                    6 => "Vote:",
-                    _ => ""
+                    0  => "Author:",
+                    1  => "Number:",
+                    2  => "Tag:",
+                    3  => "SiteName:",
+                    4  => "Title:",
+                    5  => "ImgCount:",
+                    6  => "Vote:",
+                    _  => ""
                 },
                 Condition.Sort => "Sort:",
-                _ => ""
+                _              => ""
             };
             var tb = new TextBlock
             {
-                Text = tag + srchText,
-                Height = 20,
+                Text                = tag + srchText,
+                Height              = 20,
                 HorizontalAlignment = HorizontalAlignment.Left,
-                VerticalAlignment = VerticalAlignment.Center,
-                Margin = new Thickness(2, 1, 2, 1),
-                Padding = new Thickness(2, 1, 2, 1),
+                VerticalAlignment   = VerticalAlignment.Center,
+                Margin              = new Thickness(2, 1, 2, 1),
+                Padding             = new Thickness(2, 1, 2, 1),
             };
 
             if (cond == Condition.Search)
@@ -155,15 +158,15 @@ namespace imgLoader_WPF.Services
 
                 Background = cond switch
                 {
-                    Condition.Sort => Brushes.Turquoise,
+                    Condition.Sort   => Brushes.Turquoise,
                     Condition.Search => Brushes.CornflowerBlue,
-                    _ => Brushes.Gray
+                    _                => Brushes.Gray
                 },
             };
 
-            item.Content = srchText;
+            item.Content   = srchText;
             item.Condition = cond;
-            item.Option = option;
+            item.Option    = option;
 
             item.Panel.Children.Add(tb);
             _sender.PnlCond.Children.Add(item.Panel);
@@ -190,6 +193,7 @@ namespace imgLoader_WPF.Services
 
             //}).Start();
         }
+
         private void SrchClickHandler(object sender, MouseEventArgs e)
         {
             //new Thread(() =>
@@ -224,8 +228,8 @@ namespace imgLoader_WPF.Services
         internal void RemoveSort(IndItem item)
         {
             _sender.PnlCond.Children.Remove(item.Panel);
-            SortItem.Option = -1;
-            SortItem.Panel = null;
+            SortItem.Option  = -1;
+            SortItem.Panel   = null;
             SortItem.Content = "";
 
             var disableProcessing = _sender.Dispatcher.DisableProcessing();
@@ -297,8 +301,8 @@ namespace imgLoader_WPF.Services
 
             SearchList.Clear();
 
-            SortItem.Option = -1;
-            SortItem.Panel = null;
+            SortItem.Option  = -1;
+            SortItem.Panel   = null;
             SortItem.Content = "";
 
             _sender.PnlCond.Children.Clear();

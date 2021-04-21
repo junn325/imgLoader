@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -11,10 +12,8 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-
 using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Services;
-
 using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
@@ -71,9 +70,9 @@ namespace imgLoader_WPF.Windows
 
         private Settings _winSetting;
 
-        internal readonly List<IndexItem> Index = new();                             //인덱싱 결과
-        internal readonly List<IndexItem> List = new();                              //표시되어야 할 총 항목
-        internal readonly ObservableCollection<IndexItem> ShowItems = new();         //실제 표시되는 항목
+        internal readonly List<IndexItem> Index = new(); //인덱싱 결과
+        internal readonly List<IndexItem> List = new(); //표시되어야 할 총 항목
+        internal readonly ObservableCollection<IndexItem> ShowItems = new(); //실제 표시되는 항목
 
         private IndexItem _clickedItem;
 
@@ -87,6 +86,7 @@ namespace imgLoader_WPF.Windows
         {
             ;
         }
+
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
             Thread.CurrentThread.Name = "Main";
@@ -99,7 +99,7 @@ namespace imgLoader_WPF.Windows
                         Thread.Sleep(1000);
                     }
                 })
-            { IsBackground = true }.Start();
+                { IsBackground = true }.Start();
 
             var gbd = Array.Find(Directory.GetFiles(Directory.GetCurrentDirectory(), "*", SearchOption.AllDirectories), i => i.Contains("goodbyedpi"));
 
@@ -120,7 +120,7 @@ namespace imgLoader_WPF.Windows
 
                 var process = new Process
                 {
-                    StartInfo = startInfo,
+                    StartInfo           = startInfo,
                     EnableRaisingEvents = true
                 };
 
@@ -129,10 +129,7 @@ namespace imgLoader_WPF.Windows
 
             _winSetting = new Settings(this);
 
-            if (!Directory.Exists(Core.FilesRoute))
-            {
-                Directory.CreateDirectory(Core.FilesRoute);
-            }
+            if (!Directory.Exists(Core.FilesRoute)) Directory.CreateDirectory(Core.FilesRoute);
 
             Properties.Settings.Default.Upgrade();
 
@@ -166,20 +163,17 @@ namespace imgLoader_WPF.Windows
             D_Stop.Visibility = Visibility.Collapsed;
             D_Else1.Visibility = Visibility.Collapsed;
 #endif
-            foreach (RadioButton radio in PnlRadio.Children)
-            {
-                radio.PreviewKeyUp += TxtSrchAll_KeyUp;
-            }
+            foreach (RadioButton radio in PnlRadio.Children) radio.PreviewKeyUp += TxtSrchAll_KeyUp;
 
             Title = Core.Route;
 
             ItemCtrl.ItemsSource = ShowItems;
 
-            CondInd = new ConditionIndicator(this);
-            Sorter = new Sorter(this);
+            CondInd  = new ConditionIndicator(this);
+            Sorter   = new Sorter(this);
             Searcher = new Searcher(this);
 
-            PgSvc = new PaginationService(this);
+            PgSvc  = new PaginationService(this);
             InfSvc = new InfoSavingService();
             IdxSvc = new IndexingService(this);
 
@@ -188,6 +182,7 @@ namespace imgLoader_WPF.Windows
             //IdxSvc.Start();
             //PgSvc.Paginate(disableProcessing);
         }
+
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
         {
             border.Visibility = Visibility.Hidden;
@@ -196,6 +191,7 @@ namespace imgLoader_WPF.Windows
             txtB.Text = "";
             label.Visibility = Visibility.Visible;
         }
+
         private void DeleteItemDir(IndexItem item)
         {
             if (!File.Exists(item.Route)) return;
@@ -236,6 +232,7 @@ namespace imgLoader_WPF.Windows
                 PgSvc.Remove(_clickedItem);
             }).Start();
         }
+
         internal void ShowItemsCnt()
         {
             Debug.WriteLine("ShowItemsCnt: Call");
@@ -249,9 +246,10 @@ namespace imgLoader_WPF.Windows
                 Dispatcher.Invoke(() => BlockCnt.Text = $"{List.Count} items | {Core.Route}");
             }
         }
+
         internal void AddItem(string url)
         {
-            var lItem = new IndexItem() { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
+            var lItem = new IndexItem { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
 
             var service = new Thread(() =>
             {
@@ -298,7 +296,7 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
-                Sorter.SortRefresh((SortOption)CondInd.SortItem.Option);  //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
+                Sorter.SortRefresh((SortOption)CondInd.SortItem.Option); //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
 
                 //Dispatcher.Invoke(ShowItemsCnt);
                 lItem.Proc = null;
@@ -309,12 +307,14 @@ namespace imgLoader_WPF.Windows
             service.SetApartmentState(ApartmentState.STA);
             service.Start();
         }
+
         private void Search(string searchTxt, int option)
         {
             CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
 
             AddRecent(searchTxt, option);
         }
+
         private void Search(string[] searchTags, int option)
         {
             foreach (var itemTag in searchTags)
@@ -324,45 +324,49 @@ namespace imgLoader_WPF.Windows
                 AddRecent(itemTag, option);
             }
         }
+
         private void Search(string searchTxt, int option, string label)
         {
             CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
             AddRecent(searchTxt, option);
         }
+
         private void AddRecent(string searchTxt, int option)
         {
             var tag = option switch
             {
                 -1 => "All:",
-                0 => "Author:",
-                1 => "Number:",
-                2 => "Tag:",
-                3 => "SiteName:",
-                4 => "Title:",
-                5 => "ImgCount:",
-                6 => "Vote:",
-                _ => ""
+                0  => "Author:",
+                1  => "Number:",
+                2  => "Tag:",
+                3  => "SiteName:",
+                4  => "Title:",
+                5  => "ImgCount:",
+                6  => "Vote:",
+                _  => ""
             };
 
             var block = new TextBlock
             {
-                Text = tag + searchTxt,
+                Text       = tag + searchTxt,
                 Background = Brushes.White,
 
-                Margin = new Thickness(2),
+                Margin  = new Thickness(2),
                 Padding = new Thickness(4, 2, 4, 2),
 
-                VerticalAlignment = VerticalAlignment.Top,
+                VerticalAlignment   = VerticalAlignment.Top,
                 HorizontalAlignment = HorizontalAlignment.Left
             };
             block.MouseDown += Block_ClickHandler;
 
             PnlRecent.Children.Insert(1, block);
         }
+
         private void ShowInfo(string content)
         {
             //프로그램 오른쪽 아래에 작게 표시
         }
+
         private void ShowError(string content)
         {
             //메시지 전용 패널에 표시
@@ -371,7 +375,7 @@ namespace imgLoader_WPF.Windows
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key != Key.Enter) return;
+            if (e.Key              != Key.Enter) return;
             if (TxtUrl.Text.Length == 0) return;
 
             var url = TxtUrl.Text;
@@ -380,6 +384,7 @@ namespace imgLoader_WPF.Windows
 
             AddItem(url);
         }
+
         private void TxtUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (TxtUrl.Text.Length == 0)
@@ -390,10 +395,12 @@ namespace imgLoader_WPF.Windows
 
             BlockAdd.Visibility = Visibility.Collapsed;
         }
+
         private void TxtUrl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
         }
+
         private void TxtSrchAll_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (TxtSrchAll.Text.Length == 0)
@@ -404,6 +411,7 @@ namespace imgLoader_WPF.Windows
 
             BlockSrchLbl.Visibility = Visibility.Collapsed;
         }
+
         private void TxtSrchAll_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
@@ -425,6 +433,7 @@ namespace imgLoader_WPF.Windows
             TxtSrchAll.Text = "";
             TxtSrchAll.Focus();
         }
+
         private void Block_ClickHandler(object sender, MouseButtonEventArgs e)
         {
             if (sender == null) return;
@@ -479,6 +488,7 @@ namespace imgLoader_WPF.Windows
 
             e.Handled = true;
         }
+
         private void Scroll_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             //if (e.VerticalChange == 0 && e.ExtentHeightChange == 0) return;
@@ -487,7 +497,8 @@ namespace imgLoader_WPF.Windows
             var disableProcessing = Dispatcher.DisableProcessing();
             PgSvc.Paginate(disableProcessing);
         }
-        private void ImgLoader_WPF_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+
+        private void ImgLoader_WPF_Closing(object sender, CancelEventArgs e)
         {
             _winSetting.Close();
             _winSetting.Dispatcher.BeginInvokeShutdown(DispatcherPriority.Normal);
@@ -495,6 +506,7 @@ namespace imgLoader_WPF.Windows
             //InfSvc.Stop();
             //IdxSvc.Stop();
         }
+
         private void LItem_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
         {
             if (sender == null || ItemCtrl.ContextMenu == null) return;
@@ -529,10 +541,7 @@ namespace imgLoader_WPF.Windows
                         }
 
                         if (_clickedItem.Proc == null) continue;
-                        if (_clickedItem.Proc.Pause)
-                        {
-                            item.IsEnabled = true;
-                        }
+                        if (_clickedItem.Proc.Pause) item.IsEnabled = true;
                         break;
 
                     case "MenuPause":
@@ -568,6 +577,7 @@ namespace imgLoader_WPF.Windows
 
             //e.Handled = true;
         }
+
         private void LList_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             foreach (var item in ItemCtrl.ContextMenu?.Items)
@@ -590,6 +600,7 @@ namespace imgLoader_WPF.Windows
         }
 
         #region MenuItem
+
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show($"Are you sure want to delete {_clickedItem.Number}?", "Confirm", MessageBoxButton.YesNo) != MessageBoxResult.Yes) return;
@@ -609,6 +620,7 @@ namespace imgLoader_WPF.Windows
         {
             Core.Dir.OpenDir(Core.Dir.GetDirFromFile(_clickedItem.Route));
         }
+
         private void Open_Click(object sender, RoutedEventArgs e)
         {
             if (Properties.Settings.Default.UseBasicViewer)
@@ -629,23 +641,28 @@ namespace imgLoader_WPF.Windows
             _clickedItem.ShownChang.Invoke();
             InfSvc.Save(_clickedItem);
         }
+
         private void AuthorSrch_Click(object sender, RoutedEventArgs e)
         {
             Search(_clickedItem.Author, (int)Searcher.SearchOption.Author, "Author:" + Core.GetArtistFromRaw(_clickedItem.Author));
         }
+
         private void SiteSrch_Click(object sender, RoutedEventArgs e)
         {
             Search(_clickedItem.SiteName, (int)Searcher.SearchOption.SiteName);
         }
+
         private void TagSrch_Click(object sender, RoutedEventArgs e)
         {
-            Search(_clickedItem.Tags, (int) Searcher.SearchOption.Tag);
+            Search(_clickedItem.Tags, (int)Searcher.SearchOption.Tag);
         }
+
         private void SearchSMenu_Click(object sender, RoutedEventArgs e)
         {
             BdrSrch.Visibility = Visibility.Visible;
             TxtSrchAll.Focus();
         }
+
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Proc?.DoStop();
@@ -656,19 +673,23 @@ namespace imgLoader_WPF.Windows
             List.Remove(_clickedItem);
             Index.Remove(_clickedItem);
         }
+
         private void Resume_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Proc.Pause = false;
         }
+
         private void Pause_Click(object sender, RoutedEventArgs e)
         {
             _clickedItem.Proc.Pause = true;
         }
+
         private void AddItem_Click(object sender, RoutedEventArgs e)
         {
             BdrAdd.Visibility = Visibility.Visible;
             TxtUrl.Focus();
         }
+
         private void CopyAddress_Click(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(_clickedItem.Route)) return;
@@ -688,32 +709,38 @@ namespace imgLoader_WPF.Windows
                     Clipboard.SetText($"https://nhentai.net/g/{_clickedItem.Number}");
                     break;
             }
-        } 
+        }
+
         private void TitleSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Title", ConditionIndicator.Condition.Sort, (int)SortOption.Title);
         }
+
         private void AuthorSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Author", ConditionIndicator.Condition.Sort, (int)SortOption.Author);
         }
+
         private void PageSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Page", ConditionIndicator.Condition.Sort, (int)SortOption.Page);
         }
+
         private void NumberSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Number", ConditionIndicator.Condition.Sort, (int)SortOption.Number);
         }
+
         private void Manage_Click(object sender, RoutedEventArgs e)
         {
             if (!File.Exists(_clickedItem.Route)) return;
-
         }
+
         private void DateSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Date", ConditionIndicator.Condition.Sort, (int)SortOption.Date);
         }
+
         private void Random_Click(object sender, RoutedEventArgs e)
         {
             var rng = new Random();
@@ -726,12 +753,9 @@ namespace imgLoader_WPF.Windows
                 if (!List[rand].IsRead) continue;
                 rand++;
 
-                if (rand >= List.Count)
-                {
-                    return;
-                }
-            }
-            while (List[rand].IsRead);
+                if (rand >= List.Count) return;
+
+            } while (List[rand].IsRead);
 
             Debug.WriteLine("Main: Random_Click: " + List[rand].Title);
 
@@ -741,10 +765,7 @@ namespace imgLoader_WPF.Windows
 
             InfSvc.Save(List[rand]);
 
-            if (PgSvc.GetCntItemOnly() >= rand + 1)
-            {
-                List[rand].ShownChang?.Invoke();
-            }
+            if (PgSvc.GetCntItemOnly() >= rand + 1) List[rand].ShownChang?.Invoke();
 
             if (Properties.Settings.Default.UseBasicViewer)
             {
@@ -755,30 +776,32 @@ namespace imgLoader_WPF.Windows
                 Core.Dir.OpenOn(List[rand].Route);
             }
         }
+
         private void VoteSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("Vote", ConditionIndicator.Condition.Sort, (int)SortOption.Vote);
         }
+
         private void ViewSort_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("View", ConditionIndicator.Condition.Sort, (int)SortOption.View);
         }
+
         private void Setting_Click(object sender, RoutedEventArgs e)
         {
             _winSetting.ShowDialog();
         }
+
         private void MenuSortLastDate_Click(object sender, RoutedEventArgs e)
         {
             CondInd.Add("LastAccess", ConditionIndicator.Condition.Sort, (int)SortOption.LastAccess);
         }
 
         #endregion
+
         private void AddBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                HideBorder(BdrAdd, TxtUrl, BlockAdd);
-            }
+            if (e.LeftButton == MouseButtonState.Pressed) HideBorder(BdrAdd, TxtUrl, BlockAdd);
         }
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
@@ -793,19 +816,13 @@ namespace imgLoader_WPF.Windows
 
             PgSvc.Clear();
             List.Clear();
-            foreach (var item in Index)
-            {
-                List.Add(item);
-            }
+            foreach (var item in Index) List.Add(item);
             PgSvc.Paginate(disableProcessing);
         }
 
         private void SrchBorder_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                HideBorder(BdrSrch, TxtSrchAll, BlockSrchLbl);
-            }
+            if (e.LeftButton == MouseButtonState.Pressed) HideBorder(BdrSrch, TxtSrchAll, BlockSrchLbl);
         }
 
         private void DockPanel_MouseMove(object sender, MouseEventArgs e)
@@ -856,7 +873,7 @@ namespace imgLoader_WPF.Windows
             if (file.Exists)
             {
                 if ((file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
-                else System.IO.File.SetAttributes(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", FileAttributes.Hidden);
+                else File.SetAttributes(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", FileAttributes.Hidden);
             }
         }
     }
