@@ -62,8 +62,5 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-# ./Etcs/* linguist-vendored
-# ./Etcs linguist-vendored
-# /Etcs/*.* linguist-vendored
-# ./Etcs/* linguist-vendored
 Etcs/* linguist-vendored
+*.js linguist-vendored
