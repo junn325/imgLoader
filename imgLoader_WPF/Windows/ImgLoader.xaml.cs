@@ -25,7 +25,7 @@ namespace imgLoader_WPF.Windows
     //조회수
     //todo: 여러 폴더를 탭으로 동시에 관리
     //폴더 두 개를 열고 없는 항목 체크
-    //todo: 조건이 있는 랜덤 -> List에서만 고름으로 달성?
+    //조건이 있는 랜덤 -> List에서만 고름으로 달성?
     //뷰어: 계속 다시 로드하지 말고 배열에 이미지를 담아놓을것
     //최근 본 날짜 + 검색
 
@@ -371,6 +371,27 @@ namespace imgLoader_WPF.Windows
         {
             //메시지 전용 패널에 표시
         }
+
+        private void OpenItem()
+        {
+            if (Properties.Settings.Default.UseBasicViewer)
+            {
+                Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
+            }
+            else
+            {
+                Core.Dir.OpenOn(Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains($".{Core.InfoExt}")));
+            }
+
+            //Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
+            //Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
+
+            _clickedItem.LastViewDate = DateTime.Now;
+            _clickedItem.View++;
+            _clickedItem.IsRead = true;
+            _clickedItem.ShownChang.Invoke();
+            InfSvc.Save(_clickedItem);
+        }
         //
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
@@ -623,23 +644,7 @@ namespace imgLoader_WPF.Windows
 
         private void Open_Click(object sender, RoutedEventArgs e)
         {
-            if (Properties.Settings.Default.UseBasicViewer)
-            {
-                Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
-            }
-            else
-            {
-                Core.Dir.OpenOn(Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
-            }
-
-            //Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
-            //Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
-
-            _clickedItem.LastViewDate = DateTime.Now;
-            _clickedItem.View++;
-            _clickedItem.IsRead = true;
-            _clickedItem.ShownChang.Invoke();
-            InfSvc.Save(_clickedItem);
+            OpenItem();
         }
 
         private void AuthorSrch_Click(object sender, RoutedEventArgs e)
@@ -875,6 +880,20 @@ namespace imgLoader_WPF.Windows
                 if ((file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
                 else File.SetAttributes(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", FileAttributes.Hidden);
             }
+        }
+
+        private void LoaderItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            
+        }
+
+        private void LoaderItem_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            var temp = ((LoaderItem)sender).DataContext;
+
+            if (temp == null) return;
+
+            _clickedItem = (IndexItem)temp;
         }
     }
 }
