@@ -204,10 +204,10 @@ namespace imgLoader_WPF.Windows
 
             if (File.Exists(Core.FilesRoute + Core.OpenFile))
             {
-                if (File.ReadAllText(Core.FilesRoute + Core.OpenFile) != Core.OpenWith)
-                {
-                    File.WriteAllText(Core.FilesRoute + Core.OpenFile, Core.OpenWith);
-                }
+                //if (File.ReadAllText(Core.FilesRoute + Core.OpenFile) != Core.OpenWith)
+                //{
+                File.WriteAllText(Core.FilesRoute + Core.OpenFile, Core.OpenWith);
+                //}
             }
             else
             {

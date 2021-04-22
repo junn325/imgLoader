@@ -165,9 +165,6 @@ namespace imgLoader_WPF.Windows
 
         private void ChangeImage(string nextPath, bool next)
         {
-            var sw = new Stopwatch();
-            sw.Start();
-
             int prevIndex;
             int nextIndex;
 
@@ -204,17 +201,11 @@ namespace imgLoader_WPF.Windows
                 }
             }
 
-            Debug.WriteLine(sw.Elapsed.Ticks);
-            sw.Restart();
-
             if (_imgList[_index] == null)
             {
                 LoadImage(_index);
                 Debug.WriteLine("LoadImage_now");
             }
-
-            Debug.WriteLine(sw.Elapsed.Ticks);
-            sw.Restart();
 
             if (_imgList[nextIndex] == null)
             {
@@ -222,27 +213,13 @@ namespace imgLoader_WPF.Windows
                 Debug.WriteLine("cacheimage_next");
             }
 
-            Debug.WriteLine(sw.Elapsed.Ticks);
-            sw.Restart();
-
-            //if (_imgList[prevIndex] == null)
-            //{
-            //    CacheImage(prevIndex);
-            //    Debug.WriteLine("cacheimage_prev");
-            //}
-
             //todo:메모리가 지정된 양을 벗어났을 때만 리스트에서 지울 것
 
             _img.Source = _imgList[_index];
-            Debug.WriteLine(sw.Elapsed.Ticks);
-            sw.Restart();
 
             Title = GetTitle(nextPath);
-            Debug.WriteLine(sw.Elapsed.Ticks);
-            sw.Restart();
 
             ResetImg();
-            Debug.WriteLine(sw.Elapsed.Ticks + "\n====================");
         }
 
         private string GetTitle(string nextPath)
@@ -352,6 +329,8 @@ namespace imgLoader_WPF.Windows
 
         private void ResetImg()
         {
+            var sw = new Stopwatch();
+
             var (newWidth, newHeight) = GetFutureSize(FileList[0]);
 
             if (newHeight >= newWidth)
@@ -403,14 +382,14 @@ namespace imgLoader_WPF.Windows
             _img.Height = _imgRect.Height;
             _img.Arrange(_imgRect);
 
-            _img.UpdateLayout();
+            //_img.UpdateLayout();
 
             _imgRect.Width  = _img.ActualWidth;
             _imgRect.Height = _img.ActualHeight;
             _imgRect.X      = newWidth  >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth   - _imgRect.Width)  / 2;
             _imgRect.Y      = newHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _imgRect.Height) / 2;
 
-            _min   = 0;
+            _min = 0;
             _thres = 0;
         }
 
@@ -624,7 +603,7 @@ namespace imgLoader_WPF.Windows
             {
                 _imgList[i] = null;
             }
-            //GC.Collect();
+            GC.Collect();
         }
 
         private void Window_PreviewKeyUp(object sender, KeyEventArgs e)
