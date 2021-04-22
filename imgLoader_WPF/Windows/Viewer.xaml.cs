@@ -31,7 +31,7 @@ namespace imgLoader_WPF.Windows
         private Point _mouseOriPoint;
 
         internal string[] FileList;
-        private BitmapImage[] _imgList;
+        //private BitmapImage[] _imgList;
 
         private int _index;
         private int _min;
@@ -58,7 +58,7 @@ namespace imgLoader_WPF.Windows
 
             //FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
             FileList = FileList.OrderBy(i => int.TryParse(i.Split('\\')[^1].Split('.')[0], out var result) ? result : int.MaxValue).ToArray();
-            _imgList = new BitmapImage[FileList.Length];
+            //_imgList = new BitmapImage[FileList.Length];
 
             var len = new FileInfo(FileList[0]).Length;
             _size += len;
@@ -73,8 +73,9 @@ namespace imgLoader_WPF.Windows
 
             Cnvs.Children.Insert(0, _img);
 
-            _imgList[0] = ImageLoad(FileList[0]);
-            _img.Source = _imgList[0];
+            //_imgList[0] = ImageLoad(FileList[0]);
+            _img.Source = ImageLoad(FileList[0]);
+            //_img.Source = _imgList[0];
             _img.UpdateLayout();
 
             PBar.Maximum = FileList.Length;
@@ -191,31 +192,31 @@ namespace imgLoader_WPF.Windows
                         : _index          - 1;
             }
 
-            if (_size >= Properties.Settings.Default.CacheSize)
-            {
-                for (int i = 0; i < _imgList.Length; i++)
-                {
-                    if (i == _index) continue;
-                    ReleaseImage(i);
-                    if (_size < Properties.Settings.Default.CacheSize) break;
-                }
-            }
+            //if (_size >= Properties.Settings.Default.CacheSize)
+            //{
+            //    for (int i = 0; i < _imgList.Length; i++)
+            //    {
+            //        if (i == _index) continue;
+            //        ReleaseImage(i);
+            //        if (_size < Properties.Settings.Default.CacheSize) break;
+            //    }
+            //}
 
-            if (_imgList[_index] == null)
-            {
-                LoadImage(_index);
-                Debug.WriteLine("LoadImage_now");
-            }
+            //if (_imgList[_index] == null)
+            //{
+            //    LoadImage(_index);
+            //    Debug.WriteLine("LoadImage_now");
+            //}
 
-            if (_imgList[nextIndex] == null)
-            {
-                CacheImage(nextIndex);
-                Debug.WriteLine("cacheimage_next");
-            }
+            //if (_imgList[nextIndex] == null)
+            //{
+            //    CacheImage(nextIndex);
+            //    Debug.WriteLine("cacheimage_next");
+            //}
 
             //todo:메모리가 지정된 양을 벗어났을 때만 리스트에서 지울 것
 
-            _img.Source = _imgList[_index];
+            _img.Source = ImageLoad(FileList[_index]);
 
             Title = GetTitle(nextPath);
 
@@ -306,12 +307,12 @@ namespace imgLoader_WPF.Windows
             //Debug.WriteLine($"+{length}");
 
             //_imgList[index] = ImageLoad(FileList[index]);
-            Dispatcher.Invoke(() => _imgList[index] = ImageLoad(FileList[index]));
+            //Dispatcher.Invoke(() => _imgList[index] = ImageLoad(FileList[index]));
         }
 
         private void ReleaseImage(int index)
         {
-            _imgList[index] = null;
+            //_imgList[index] = null;
 
             var temp = new FileInfo(FileList[index]).Length;
             _size -= temp;
@@ -599,10 +600,10 @@ namespace imgLoader_WPF.Windows
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            for (var i = 0; i < _imgList.Length; i++)
-            {
-                _imgList[i] = null;
-            }
+            //for (var i = 0; i < _imgList.Length; i++)
+            //{
+            //    _imgList[i] = null;
+            //}
             GC.Collect();
         }
 
