@@ -891,9 +891,9 @@ namespace imgLoader_WPF.Windows
         {
             var temp = ((LoaderItem)sender).DataContext;
 
-            if (temp == null) return;
+            if (temp is not IndexItem item) return;
 
-            _clickedItem = (IndexItem)temp;
+            _clickedItem = item;
         }
     }
 }
