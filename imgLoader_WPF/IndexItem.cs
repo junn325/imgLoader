@@ -1,5 +1,7 @@
 ﻿using System;
 
+using imgLoader_WPF.LoaderListCtrl;
+
 namespace imgLoader_WPF
 {
     internal class IndexItem
@@ -20,7 +22,7 @@ namespace imgLoader_WPF
 
         //internal bool Selected = false;
         internal bool Show = true;
-        internal bool IsRead, IsDownloading, IsError/*, IsSeparator*/;
+        internal bool IsRead, IsDownloading, IsError, IsSeparator;
 
         internal NoParam RefreshInfo, ShownChang;
         internal VisOne ProgPanelVis;

@@ -252,9 +252,10 @@ namespace imgLoader_WPF.Services
         {
             if (!Directory.Exists(Core.Route)) return;
 
-            var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-            var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
-            foreach (var infoRoute in newFiles)
+            var infoFiles = Core.Dir.GetFiles(Core.Route, Core.InfoExt).ToArray();
+            //infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+
+            foreach (var infoRoute in infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray())
             {
                 if (!File.Exists(infoRoute)) continue;
 

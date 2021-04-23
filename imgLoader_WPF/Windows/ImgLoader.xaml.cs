@@ -543,7 +543,7 @@ namespace imgLoader_WPF.Windows
 
             foreach (var i in ItemCtrl.ContextMenu.Items)
             {
-                if (i.GetType() == typeof(Separator)) continue;
+                if (i.GetType() == typeof(System.Windows.Controls.Separator)) continue;
 
                 var item = (MenuItem)i;
 
@@ -606,7 +606,7 @@ namespace imgLoader_WPF.Windows
         {
             foreach (var item in ItemCtrl.ContextMenu?.Items)
             {
-                if (item.GetType() == typeof(Separator)) continue;
+                if (item.GetType() == typeof(System.Windows.Controls.Separator)) continue;
 
                 switch (((MenuItem)item).Name)
                 {
@@ -876,12 +876,9 @@ namespace imgLoader_WPF.Windows
 
         private void D_Else2_Click(object sender, RoutedEventArgs e)
         {
-            //Core.CreateInfo(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", new Sites.Hiyobi("1890156"));
-            var file = new FileInfo(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif");
-            if (file.Exists)
+            for (int i = 0; i < 999; i++)
             {
-                if ((file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
-                else File.SetAttributes(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", FileAttributes.Hidden);
+                PgSvc.Add(new IndexItem() {IsSeparator =true});
             }
         }
 

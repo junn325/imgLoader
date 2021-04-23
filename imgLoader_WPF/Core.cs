@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using System.Windows.Forms.VisualStyles;
+
 using imgL_Sites;
 
 using imgLoader_WPF.Windows;
@@ -489,6 +491,46 @@ namespace imgLoader_WPF
                 } while (count > 0);
 
                 return temp;
+            }
+
+            internal static List<string> GetFiles(string path, string contains)
+            {
+                var result = new List<string>();
+
+                var files = Directory.GetFiles(path);
+                for (var i = 0; i < files.Length; i++)
+                {
+                    var fileName = files[i];
+
+                    if (!fileName.Contains(contains) || fileName.Contains(".lnk"))
+                    {
+                        continue;
+                    }
+
+                    result.Add(fileName);
+                }
+
+                var dirs = Directory.GetDirectories(path);
+                for (var i = 0; i < dirs.Length; i++)
+                {
+                    var dir = dirs[i];
+
+                    if (dir.Contains("$RECYCLE.BIN") || dir.Contains(@":\Windows\") || dir.Contains(@":\Program Files"))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        result.AddRange(GetFiles(dirs[i], contains));
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+                }
+
+                return result;
             }
         }
     }
