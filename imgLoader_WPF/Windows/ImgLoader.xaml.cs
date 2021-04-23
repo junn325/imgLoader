@@ -884,7 +884,7 @@ namespace imgLoader_WPF.Windows
 
         private void LoaderItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            
+            OpenItem();
         }
 
         private void LoaderItem_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
