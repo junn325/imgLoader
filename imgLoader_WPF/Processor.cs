@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+//using imgL_Sites;
 using imgL_Sites;
 
 namespace imgLoader_WPF
@@ -144,8 +145,8 @@ namespace imgLoader_WPF
                     : $"{title} ({artist})";
 
             temp =
-                Encoding.Unicode.GetByteCount(artist + title + Core.Route) + 4 > 4096 || Encoding.Unicode.GetByteCount(artist + title) + 3 > 255
-                    ? temp.Replace(title, title[..80] + "...")
+                Encoding.Unicode.GetByteCount(temp + Core.Route) + 4 > 4096 || Encoding.Unicode.GetByteCount(temp) + 3 > 255
+                    ? temp[..79] + "...)"
                     : temp;
 
             return $@"{Core.Route}\{temp}\{Core.Dir.EHNumFromRaw(Number)}.{Core.InfoExt}";

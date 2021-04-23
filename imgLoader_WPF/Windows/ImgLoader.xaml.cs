@@ -884,16 +884,16 @@ namespace imgLoader_WPF.Windows
 
         private void LoaderItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            
+            OpenItem();
         }
 
         private void LoaderItem_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             var temp = ((LoaderItem)sender).DataContext;
 
-            if (temp == null) return;
+            if (temp is not IndexItem item) return;
 
-            _clickedItem = (IndexItem)temp;
+            _clickedItem = item;
         }
     }
 }

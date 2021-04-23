@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -8,14 +7,16 @@ namespace imgL_Sites
 {
     public static class Core
     {
-        public const string LogDir = "ILLOG"; 
-        public const string LogFile = "ILLG";
+        private static readonly string FilesRoute = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.imgL\\";
 
-        public static void Log(string content)
+        private const string LogDir = "ILLOG";
+        private const string LogFile = "ILLG";
+
+        internal static void Log(string content)
         {
             new Thread(() =>
             {
-                var sb = new StringBuilder(Path.GetTempPath());
+                var sb = new StringBuilder(FilesRoute);
                 sb.Append('\\').Append(LogDir);
 
                 if (!Directory.Exists(sb.ToString())) Directory.CreateDirectory(sb.ToString());

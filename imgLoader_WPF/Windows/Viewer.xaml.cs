@@ -586,7 +586,11 @@ namespace imgLoader_WPF.Windows
         private void Window_MouseMove(object sender, MouseEventArgs e)
         {
             if (!_isMouseDown) return;
-            if (e.LeftButton != MouseButtonState.Pressed && e.MiddleButton != MouseButtonState.Pressed) _isMouseDown = false;
+            if (e.LeftButton != MouseButtonState.Pressed && e.MiddleButton != MouseButtonState.Pressed)
+            {
+                _isMouseDown = false;
+                return;
+            }
 
             var mPos = e.GetPosition(Cnvs);
             MoveImage(_imgRect.X + (mPos.X - _mouseOriPoint.X), _imgRect.Y + (mPos.Y - _mouseOriPoint.Y));
