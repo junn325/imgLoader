@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Windows.Threading;
-
 using imgLoader_WPF.LoaderListCtrl;
-
 using ThreadState = System.Threading.ThreadState;
 
 namespace imgLoader_WPF.Services
@@ -81,7 +79,7 @@ namespace imgLoader_WPF.Services
                     //_sender.ShowItemsCnt();
                 });
             });
-            _service.Name = "PgSvc_NoDisableDispatcher";
+            _service.Name         = "PgSvc_NoDisableDispatcher";
             _service.IsBackground = true;
             _service.Start();
         }
@@ -170,27 +168,6 @@ namespace imgLoader_WPF.Services
             //{
             //    _sender.ItemCtrl.Dispatcher.Invoke(() => _showItems.Insert(index, item));
             //}
-        }
-
-        internal void PaginateToEnd()
-        {
-            if (_service == null) goto page;
-            if (_service.ThreadState != ThreadState.Stopped) return;
-
-            page: _service = new Thread(() =>
-            {
-                _sender.Dispatcher.Invoke(() =>
-                {
-                    _sender.ShowItems.Clear();
-                    foreach (var item in _sender.List)
-                    {
-                        _sender.ShowItems.Add(item);
-                    }
-                });
-
-            });
-            _service.Name = "PgSvc";
-            _service.Start();
         }
     }
 }

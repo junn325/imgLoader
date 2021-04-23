@@ -10,10 +10,7 @@ namespace imgLoader_WPF.LoaderListCtrl
     public partial class LoaderItem
     {
         private Windows.ImgLoader _sender;
-
         public static int MHeight { get; } = 53;
-
-        //private readonly Stopwatch sw = new Stopwatch();
 
         public LoaderItem()
         {
@@ -38,15 +35,15 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             data.ShownChang = () =>
             {
-                Background = data.IsRead ? Brushes.LightGray : Brushes.White;
-                ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";    //'열기' 시 조회수 새로고침
+                Background        = data.IsRead ? Brushes.LightGray : Brushes.White;
+                ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views"; //'열기' 시 조회수 새로고침
             };
 
             data.ProgPanelVis = (v) => Dispatcher.Invoke(() =>
             {
-                ProgPanel.Visibility = v;
+                ProgPanel.Visibility    = v;
                 ViewCntBlock.Visibility = v == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
-                VoteGrid.Visibility = v == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
+                VoteGrid.Visibility     = v == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
             });
 
             //data.SizeChange = (value) => this.MaxWidth = value;
@@ -76,6 +73,7 @@ namespace imgLoader_WPF.LoaderListCtrl
                             {
                                 sb.Append(s).Append(", ");
                             }
+
                             sb.Remove(sb.Length - 2, 2);
 
                             sb.Append(')');
@@ -87,12 +85,12 @@ namespace imgLoader_WPF.LoaderListCtrl
                     }
                 }
 
-                AuthorBlock.Text = sb.ToString();
-                ImgCntBlock.Text = data.ImgCount == -1 ? "" : $"{data.ImgCount} Imgs";
-                NumBlock.Text = data.Number;
-                SiteBlock.Text = data.SiteName;
-                TitleBlock.Text = data.Title;
-                LblVote.Text = data.Vote.ToString();
+                AuthorBlock.Text  = sb.ToString();
+                ImgCntBlock.Text  = data.ImgCount == -1 ? "" : $"{data.ImgCount} Imgs";
+                NumBlock.Text     = data.Number;
+                SiteBlock.Text    = data.SiteName;
+                TitleBlock.Text   = data.Title;
+                LblVote.Text      = data.Vote.ToString();
                 ViewCntBlock.Text = data.View == -1 ? "" : $"{data.View} Views";
 
                 if (Core.ShowDate && data.Date.Year != 1)
@@ -135,19 +133,19 @@ namespace imgLoader_WPF.LoaderListCtrl
                             : Visibility.Visible;
 
                     ProgBar.Maximum = data.Proc.ProgMax;
-                    ProgBar.Value = data.Proc.ProgVal;
+                    ProgBar.Value   = data.Proc.ProgVal;
                 }
             });
 
             data.ProgBarMax = value => Dispatcher.Invoke(() =>
             {
-                ProgBlock.Text = $"{data.Proc.ProgVal}/{value}";
+                ProgBlock.Text  = $"{data.Proc.ProgVal}/{value}";
                 ProgBar.Maximum = value;
             });
 
             data.ProgBarVal = (value) => Dispatcher.Invoke(() =>
             {
-                ProgBar.Value = value;
+                ProgBar.Value  = value;
                 ProgBlock.Text = $"{value}/{data.Proc.ProgMax}";
             });
 
@@ -165,6 +163,7 @@ namespace imgLoader_WPF.LoaderListCtrl
 
             LblVote.Text = data.Vote.ToString();
         }
+
         private void DownVote_Click(object sender, RoutedEventArgs e)
         {
             var data = ((IndexItem)DataContext);

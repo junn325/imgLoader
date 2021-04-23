@@ -316,6 +316,10 @@ namespace imgLoader_WPF
 
         internal static class Dir
         {
+            /// <summary>
+            /// No last backslash
+            /// </summary>
+
             internal static string GetDirFromFile(string path)
             {
                 return path[..(path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1)];
@@ -436,7 +440,7 @@ namespace imgLoader_WPF
                 if (!Directory.Exists(imgSetPath)) return;
 
                 //var img = new BitmapImage();
-                var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains(".ilif")).ToArray();
+                var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains($".{Core.InfoExt}")).ToArray();
 
                 //img.BeginInit();
                 //img.UriSource = new Uri(temp[0]);
