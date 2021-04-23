@@ -42,6 +42,8 @@ namespace imgLoader_WPF.Windows
     //todo: 드래그로 사용자 정의 순서
     //todo: CondInd 객체 새로고침, 수정 추가
     //todo: 5항목마다 한칸씩 공백 삽입(아무 컨트롤 없는 LoaderItem 삽입?)
+    //todo: 페이지네이션시 이미 넘어간 항목 삭제
+    //todo: 마우스 올리면 썸네일
 
     //  검색
     //todo: 검색 조건에 AND, OR 추가
@@ -55,8 +57,9 @@ namespace imgLoader_WPF.Windows
     //todo: 특정 정보 자동 치환 (ex: 작가명이 A에서 B로 바뀜 -> A = B로 자동 치환)
     //todo: 작가별 트리식 정렬
     //todo: 특정 이미지 숨기기(삭제x)
-    //todo: 단행본 나누기
+    //todo: 단행본 나누기, 뷰어 좌측이나 우측에 작은 네모로 표시, ctrl+화살표(wasd)로 단행본 간 이동
     //todo: 서로 다른 항목 자동 연결
+    //todo: 시작 페이지(썸네일)
 
     public partial class ImgLoader
     {
