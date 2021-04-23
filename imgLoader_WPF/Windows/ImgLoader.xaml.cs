@@ -501,7 +501,7 @@ namespace imgLoader_WPF.Windows
                 }
             }
 
-            finalText = finalText.Split(':')[1];
+            finalText = finalText[(finalText.Split(':')[0].Length + 1)..];
 
             TxtSrchAll.Text += (TxtSrchAll.Text.Length == 0 ? "" : ",") + finalText;
             TxtSrchAll.Select(TxtSrchAll.Text.Length, 0);

@@ -442,6 +442,7 @@ namespace imgLoader_WPF
                 //var img = new BitmapImage();
                 var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains($".{Core.InfoExt}")).ToArray();
 
+                if (temp.Length == 0) return;
                 //img.BeginInit();
                 //img.UriSource = new Uri(temp[0]);
                 //img.EndInit();
