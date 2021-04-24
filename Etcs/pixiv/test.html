@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script type="text/javascript" src="./index.js"></script>
+</head>
+
+<body>
+
+    <script>
+        pixivCookie({
+            username: 'your_pixiv_id',
+            password: 'your_pixiv_password'
+        }).then((cookie) => {
+            console.log(cookie);
+        }).catch((error) => {
+            console.log(error);
+        });
+    </script>
+
+</body>
+
+</html>

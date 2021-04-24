@@ -13,7 +13,7 @@ namespace imgL_Sites
 
         public string GetTitle();
 
-        public string[] ReturnInfo();        //제목, 태그, 날짜,  파일이름: (품번).ini
+        public string[] GetInfo();        //제목, 태그, 날짜,  파일이름: (품번).ini
 
         public bool IsValidated();
     }

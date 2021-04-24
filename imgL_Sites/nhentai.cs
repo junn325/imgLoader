@@ -48,7 +48,7 @@ namespace imgL_Sites
             return _title;
         }
 
-        public string[] ReturnInfo()
+        public string[] GetInfo()
         {
             var info = new string[5];
 

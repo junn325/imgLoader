@@ -72,7 +72,7 @@ namespace imgLoader_WPF
             _artist = Core.GetArtistFromRaw(_site.GetArtist());
             _title  = GetTitle(_site.GetTitle());
             _route  = Getpath(_artist, _title);
-            _info   = _site.ReturnInfo();
+            _info   = _site.GetInfo();
 
             _item.ImgCount = _imgUrl.Count;
             _item.Author   = _site.GetArtist();
@@ -257,8 +257,6 @@ namespace imgLoader_WPF
             if (WebRequest.Create(uri) is not HttpWebRequest req) return;
 
             req.Referer   = _referer ?? $"https://{new Uri(uri).Host}";
-            Debug.WriteLine("++" + req.Referer);
-
             req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36";
 
             try

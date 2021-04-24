@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
+
 using imgLoader_WPF.LoaderListCtrl;
+
 using ThreadState = System.Threading.ThreadState;
 
 namespace imgLoader_WPF.Services

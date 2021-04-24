@@ -1,7 +1,5 @@
 ﻿using System;
 
-using imgLoader_WPF.LoaderListCtrl;
-
 namespace imgLoader_WPF
 {
     internal class IndexItem

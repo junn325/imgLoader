@@ -5,12 +5,15 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+
 using imgLoader_WPF.Services;
+
 using Point = System.Windows.Point;
 
 namespace imgLoader_WPF.Windows
@@ -35,15 +38,15 @@ namespace imgLoader_WPF.Windows
 
         private int _index;
         private int _min;
-        private int _thres = 0;
+        private int _thres;
 
         private long _size;
 
         internal string TTitle = "";
         internal string Author = "";
 
-        private bool _isMouseDown = false;
-        private bool _isCtrlDown = false;
+        private bool _isMouseDown;
+        private bool _isCtrlDown;
 
         public Viewer()
         {
@@ -56,8 +59,7 @@ namespace imgLoader_WPF.Windows
 
             Title = GetTitle(FileList[0]);
 
-            //FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
-            FileList = FileList.OrderBy(i => int.TryParse(i.Split('\\')[^1].Split('.')[0], out var result) ? result : int.MaxValue).ToArray();
+            FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
             //_imgList = new BitmapImage[FileList.Length];
 
             var len = new FileInfo(FileList[0]).Length;

@@ -89,7 +89,7 @@ namespace imgLoader_WPF
             using var fs = Dir.DelayStream(infoPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             using var sw = new StreamWriter(fs, Encoding.UTF8);
 
-            var info = site.ReturnInfo();
+            var info = site.GetInfo();
 
             Debug.Assert(info[2].Contains('|'));
 
@@ -321,7 +321,6 @@ namespace imgLoader_WPF
             /// <summary>
             /// No last backslash
             /// </summary>
-
             internal static string GetDirFromFile(string path)
             {
                 return path[..(path.IndexOf(path.Split('\\')[^1], StringComparison.Ordinal) - 1)];

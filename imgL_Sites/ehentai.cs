@@ -119,7 +119,7 @@ namespace imgL_Sites
             return _title ?? throw new Exception("_title was Null");
         }
 
-        public string[] ReturnInfo()
+        public string[] GetInfo()
         {
             var info = new string[5];
             info[0] = "EHentai";

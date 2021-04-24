@@ -2,8 +2,8 @@
 
   <PropertyGroup>
 	<TargetFramework>net5.0</TargetFramework>
-	<AssemblyVersion>1.0.0.61</AssemblyVersion>
-	<FileVersion>1.0.0.61</FileVersion>
+	<AssemblyVersion>1.0.0.150</AssemblyVersion>
+	<FileVersion>1.0.0.150</FileVersion>
 	<Configurations>Debug;Release;Obfuscar</Configurations>
   </PropertyGroup>
 </Project>
