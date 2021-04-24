@@ -57,8 +57,8 @@ namespace imgL_Sites
                 var @base = "";
                 if (!js[i].Contains("hash")) continue;
 
-                var hash = StrTools.GetStringValue(js[i], "hash");
-                var name = StrTools.GetStringValue(js[i], "name");
+                var hash = js[i].GetStringValue("hash");
+                var name = js[i].GetStringValue("name");
 
                 string type;
                 if (js[i].Contains("haswebp\":1")) type = "webp";
@@ -111,20 +111,20 @@ namespace imgL_Sites
 
             var sb = new StringBuilder();
             sb.Append("tags:");
-            foreach (var item in StrTools.GetValue(_src_info, "tags", '[', ']').Split('{'))
+            foreach (var item in _src_info.GetValue("tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
                 var temp = item.Split('}')[0];
 
                 sb.Append(
                         temp.Contains("female")
-                            ? (StrTools.GetValue(temp, "female") == "\"1\"")
+                            ? (temp.GetValue("female") == "\"1\"")
                                 ? "female"
                                 : "male"
                             : "tag"
                         )
                     .Append(':')
-                    .Append(StrTools.GetStringValue(item.Split('}')[0], "tag")).Append(';');
+                    .Append(item.Split('}')[0].GetStringValue("tag")).Append(';');
             }
             foreach (var item in _src_gall.Split("Characters</td><td>")[1].Split("</ul>")[0].Split("<li>"))
             {

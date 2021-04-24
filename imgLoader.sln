@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "imgLoader_WPF", "imgLoader_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StrLoad", "StrLoad\StrLoad.csproj", "{642A8CDB-6689-4192-939F-41708FA28CA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imgL_Sites", "imgL_Sites\imgL_Sites.csproj", "{40ABDA08-31FB-4900-82FE-AF02A58B0823}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "imgL_Sites", "imgL_Sites\imgL_Sites.csproj", "{40ABDA08-31FB-4900-82FE-AF02A58B0823}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

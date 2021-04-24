@@ -34,7 +34,7 @@ namespace imgL_Sites
 
                 _gall_id = mNumber.Split('/')[0];
                 _src_data = XmlHttpRequest_Data(ApiUrl, _gall_id, mNumber.Split('/')[1]);
-                _title = StrTools.GetStringValue(_src_data, "title");
+                _title = _src_data.GetStringValue("title");
                 Debug.WriteLine(sw.ElapsedMilliseconds);
                 sw.Restart();
 
@@ -124,11 +124,11 @@ namespace imgL_Sites
             info[0] = "EHentai";
             info[1] = _title ?? throw new Exception("_title was Null");
             info[2] = $"{_artist}|{_group}";
-            info[3] = StrTools.GetStringValue(_src_data, "filecount");
+            info[3] = _src_data.GetStringValue("filecount");
 
             var sb = new StringBuilder();
             sb.Append("tags:");
-            foreach (var item in StrTools.GetValue(_src_data, "tags", '[', ']').Split("\","))
+            foreach (var item in _src_data.GetValue("tags", '[', ']').Split("\","))
             {
                 if (item.Length == 0) continue;
 

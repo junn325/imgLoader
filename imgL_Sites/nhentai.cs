@@ -26,10 +26,10 @@ namespace imgL_Sites
                 for (var i = 1; i < _source.Split("artist\",\"name\":\"").Length; i++) sb.Append(_source.Split("artist\",\"name\":\"")[i].Split('"')[0]).Append(';');
                 _artist = sb.ToString();
 
-                _title = StrTools.GetStringValue(_source, "pretty");
+                _title = _source.GetStringValue("pretty");
 
-                HitomiNumber = StrTools.GetStringValue(_source, "media_id");
-                Number = mNumber;
+                HitomiNumber = _source.GetStringValue("media_id");
+                Number       = mNumber;
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace imgL_Sites
 
             var temp = new StringBuilder();
             temp.Append("tags:");
-            foreach (var item in StrTools.GetValue(_source, "tags", '[', ']').Split("\"type\":\"tag\",\"name\":\""))
+            foreach (var item in _source.GetValue("tags", '[', ']').Split("\"type\":\"tag\",\"name\":\""))
             {
                 if (!item.Contains("tag")) continue;
                 temp.Append(item.Split('\"')[0]).Append(';');
@@ -72,11 +72,11 @@ namespace imgL_Sites
         {
             string ext;
             var temp = new Dictionary<string, string>();
-            _imgNum = int.Parse(StrTools.GetValue(_source, "num_pages"));
+            _imgNum = int.Parse(_source.GetValue("num_pages"));
 
             for (var i = 1; i <= _imgNum; i++)
             {
-                ext = StrTools.GetStringValue(_source.Split("\"pages\":[")[1].Split(']')[0].Split('{')[i], "t");
+                ext = _source.Split("\"pages\":[")[1].Split(']')[0].Split('{')[i].GetStringValue("t");
                 switch (ext)
                 {
                     case "j":

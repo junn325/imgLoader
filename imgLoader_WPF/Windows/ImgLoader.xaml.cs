@@ -12,6 +12,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+
+using imgL_Sites;
+
 using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Services;
 using static imgLoader_WPF.Services.Sorter;
@@ -92,6 +95,10 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
+            var test = new Pixiv("88966501");
+            var test1 = test.GetImgUrls();
+            ;
+
             Thread.CurrentThread.Name = "Main";
 
             new Thread(() =>
