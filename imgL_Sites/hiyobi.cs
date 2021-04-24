@@ -7,6 +7,7 @@ namespace imgL_Sites
     public class Hiyobi : ISite
     {
         public string Number { get; }
+        public string Referer { get; } = "https://cdn.hiyobi.me";
 
         private readonly string _src_cdn, _src_api, _title, _artist = "", _group = "";
 
@@ -24,7 +25,7 @@ namespace imgL_Sites
                 if (_src_api.Contains("\\")) _src_api = _src_api.Replace("\\", "");
                 _title = _src_api.Split("title\":\"")[1].Split("\",")[0];
 
-                if (_src_api.Contains("artists") && StrTools.GetValue(_src_api, "artists").Contains("value"))
+                if (_src_api.Contains("artists") && _src_api.GetValue("artists").Contains("value"))
                 {
                     var temp = _src_api.Split("artists\":[")[1].Split(']')[0].Split("\"value\":\"");
 
@@ -34,7 +35,7 @@ namespace imgL_Sites
 
                 sb.Clear();
 
-                if (_src_api.Contains("groups") && StrTools.GetValue(_src_api, "groups").Contains("value"))
+                if (_src_api.Contains("groups") && _src_api.GetValue("groups").Contains("value"))
                 {
                     var temp = _src_api.Split("groups\":[")[1].Split(']')[0].Split("\"value\":\"");
 
@@ -64,7 +65,7 @@ namespace imgL_Sites
             {
                 if (!js[i].Contains("name")) continue;
 
-                var name = StrTools.GetStringValue(js[i], "name");
+                var name = js[i].GetStringValue("name");
                 imgList.Add(name, $"http://cdn.hiyobi.me/data/{Number}/{name}");
             }
 
@@ -76,7 +77,7 @@ namespace imgL_Sites
             return _title;
         }
 
-        public string[] ReturnInfo()
+        public string[] GetInfo()
         {
             var info = new string[5];
 
@@ -87,18 +88,18 @@ namespace imgL_Sites
 
             var sb = new StringBuilder();
             sb.Append("tags:");
-            foreach (var item in StrTools.GetValue(_src_api, "tags", '[', ']').Split('{'))
+            foreach (var item in _src_api.GetValue("tags", '[', ']').Split('{'))
             {
                 if (item.Length == 0) continue;
-                sb.Append(StrTools.GetStringValue(item.Split('}')[0], "value")).Append(';');
+                sb.Append(item.Split('}')[0].GetStringValue("value")).Append(';');
             }
 
-            if (StrTools.GetValue(_src_api, "characters", '[', ']').Length != 0)
+            if (_src_api.GetValue("characters", '[', ']').Length != 0)
             {
-                foreach (var item in StrTools.GetValue(_src_api, "characters", '[', ']').Split('{'))
+                foreach (var item in _src_api.GetValue("characters", '[', ']').Split('{'))
                 {
                     if (item.Length == 0) continue;
-                    sb.Append("character:").Append(StrTools.GetStringValue(item.Split('}')[0], "value")).Append(';');
+                    sb.Append("character:").Append(item.Split('}')[0].GetStringValue("value")).Append(';');
                 }
             }
 

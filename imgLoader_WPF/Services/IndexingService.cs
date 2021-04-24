@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+
 using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF.Services
@@ -67,7 +68,7 @@ namespace imgLoader_WPF.Services
                         continue;
                     }
 
-                    _watcher.Path                = Core.Route;
+                    _watcher.Path                = Core.Route.Trim();
                     _watcher.EnableRaisingEvents = true;
                 }
             });
@@ -252,9 +253,10 @@ namespace imgLoader_WPF.Services
         {
             if (!Directory.Exists(Core.Route)) return;
 
-            var infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-            var newFiles = infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray();
-            foreach (var infoRoute in newFiles)
+            var infoFiles = Core.Dir.GetFiles(Core.Route, Core.InfoExt).ToArray();
+            //infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+
+            foreach (var infoRoute in infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray())
             {
                 if (!File.Exists(infoRoute)) continue;
 

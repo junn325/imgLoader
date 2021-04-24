@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Threading;
+
 using imgLoader_WPF.LoaderListCtrl;
+
 using ThreadState = System.Threading.ThreadState;
 
 namespace imgLoader_WPF.Services
@@ -15,16 +18,16 @@ namespace imgLoader_WPF.Services
 
         private readonly Windows.ImgLoader _sender;
 
-        //private readonly IndexItem _separator;
+        private readonly IndexItem _separator;
 
-        //private int _counter;
-        //private int _separatorCount;
+        private int _counter;
+        private int _separatorCount;
 
         public PaginationService(Windows.ImgLoader sender)
         {
             _sender = sender;
 
-            //_separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
+            _separator = new IndexItem { View = -1, ImgCount = -1, IsSeparator = true };
         }
 
         internal void Paginate(DispatcherProcessingDisabled disableProcessing)
@@ -86,27 +89,25 @@ namespace imgLoader_WPF.Services
 
         private void InsertCounter()
         {
-            //_counter++;
+            _counter++;
+            if (_counter != 5) return;
 
-            //if (_counter == 5)
-            //{
-            //    _counter = 0;
-            //    _showItems.Add(_separator);
-            //    _separatorCount++;
-            //    //Debug.WriteLine($"sCnt: {_separatorCount}");
-            //}
+            _counter = 0;
+            _sender.ShowItems.Add(_separator);
+            _separatorCount++;
+            //Debug.WriteLine($"sCnt: {_separatorCount}");
         }
 
         internal void RefreshCounter()
         {
-            //_counter = 0;
-            //_separatorCount = 0;
-            //Debug.WriteLine($"sCnt: {_separatorCount}");
+            _counter = 0;
+            _separatorCount = 0;
+            Debug.WriteLine($"sCnt: {_separatorCount}");
         }
 
         internal int GetCntItemOnly()
         {
-            return _sender.ShowItems.Count /*- _separatorCount*/;
+            return _sender.ShowItems.Count - _separatorCount;
         }
 
         internal void Clear()
@@ -156,6 +157,13 @@ namespace imgLoader_WPF.Services
             {
                 _sender.ItemCtrl.Dispatcher.Invoke(() => _sender.ShowItems.Insert(index, item));
             }
+        }
+
+        internal void Add(IndexItem item)
+        {
+            //if (item == null) return;
+
+            _sender.ShowItems.Add(item);
         }
 
         internal void Modify(int index)

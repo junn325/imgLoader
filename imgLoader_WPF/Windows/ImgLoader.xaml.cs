@@ -12,8 +12,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+
 using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Services;
+
 using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
@@ -42,6 +44,8 @@ namespace imgLoader_WPF.Windows
     //todo: 드래그로 사용자 정의 순서
     //todo: CondInd 객체 새로고침, 수정 추가
     //todo: 5항목마다 한칸씩 공백 삽입(아무 컨트롤 없는 LoaderItem 삽입?)
+    //todo: 페이지네이션시 이미 넘어간 항목 삭제
+    //todo: 마우스 올리면 썸네일
 
     //  검색
     //todo: 검색 조건에 AND, OR 추가
@@ -55,8 +59,9 @@ namespace imgLoader_WPF.Windows
     //todo: 특정 정보 자동 치환 (ex: 작가명이 A에서 B로 바뀜 -> A = B로 자동 치환)
     //todo: 작가별 트리식 정렬
     //todo: 특정 이미지 숨기기(삭제x)
-    //todo: 단행본 나누기
+    //todo: 단행본 나누기, 뷰어 좌측이나 우측에 작은 네모로 표시, ctrl+화살표(wasd)로 단행본 간 이동
     //todo: 서로 다른 항목 자동 연결
+    //todo: 시작 페이지(썸네일)
 
     public partial class ImgLoader
     {
@@ -501,7 +506,7 @@ namespace imgLoader_WPF.Windows
                 }
             }
 
-            finalText = finalText.Split(':')[1];
+            finalText = finalText[(finalText.Split(':')[0].Length + 1)..];
 
             TxtSrchAll.Text += (TxtSrchAll.Text.Length == 0 ? "" : ",") + finalText;
             TxtSrchAll.Select(TxtSrchAll.Text.Length, 0);
@@ -540,7 +545,7 @@ namespace imgLoader_WPF.Windows
 
             foreach (var i in ItemCtrl.ContextMenu.Items)
             {
-                if (i.GetType() == typeof(Separator)) continue;
+                if (i.GetType() == typeof(System.Windows.Controls.Separator)) continue;
 
                 var item = (MenuItem)i;
 
@@ -603,7 +608,7 @@ namespace imgLoader_WPF.Windows
         {
             foreach (var item in ItemCtrl.ContextMenu?.Items)
             {
-                if (item.GetType() == typeof(Separator)) continue;
+                if (item.GetType() == typeof(System.Windows.Controls.Separator)) continue;
 
                 switch (((MenuItem)item).Name)
                 {
@@ -873,12 +878,9 @@ namespace imgLoader_WPF.Windows
 
         private void D_Else2_Click(object sender, RoutedEventArgs e)
         {
-            //Core.CreateInfo(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", new Sites.Hiyobi("1890156"));
-            var file = new FileInfo(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif");
-            if (file.Exists)
+            for (int i = 0; i < 999; i++)
             {
-                if ((file.Attributes & FileAttributes.Hidden) != 0) file.Attributes &= ~FileAttributes.Hidden;
-                else File.SetAttributes(@"F:\문서\사진\Saved Pictures\고니\i\새 폴더 (4)\dafd\1890156.ilif", FileAttributes.Hidden);
+                PgSvc.Add(new IndexItem() {IsSeparator =true});
             }
         }
 
