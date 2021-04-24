@@ -7,6 +7,7 @@ namespace imgL_Sites
     public class Hiyobi : ISite
     {
         public string Number { get; }
+        public string Referer { get; } = "https://cdn.hiyobi.me";
 
         private readonly string _src_cdn, _src_api, _title, _artist = "", _group = "";
 

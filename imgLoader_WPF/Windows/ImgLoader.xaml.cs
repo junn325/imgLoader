@@ -95,10 +95,6 @@ namespace imgLoader_WPF.Windows
 
         private void ImgLoader_WPF_Loaded(object sender, RoutedEventArgs e)
         {
-            var test = new Pixiv("88966501");
-            var test1 = test.GetImgUrls();
-            ;
-
             Thread.CurrentThread.Name = "Main";
 
             new Thread(() =>

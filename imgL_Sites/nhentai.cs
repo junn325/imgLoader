@@ -8,9 +8,10 @@ namespace imgL_Sites
     {
         private readonly string _source, _artist, _group, _title;
         public string Number { get; }
-        public string HitomiNumber { get; }
+        public string Referer { get; }
 
         private int _imgNum;
+        private readonly string _hitomiNumber;
 
         public NHentai(string mNumber)
         {
@@ -28,7 +29,7 @@ namespace imgL_Sites
 
                 _title = _source.GetStringValue("pretty");
 
-                HitomiNumber = _source.GetStringValue("media_id");
+                _hitomiNumber = _source.GetStringValue("media_id");
                 Number       = mNumber;
             }
             catch (Exception ex)
@@ -89,7 +90,7 @@ namespace imgL_Sites
                         ext = "gif";
                         break;
                 }
-                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/{HitomiNumber}/{i}.{ext}");
+                temp.Add($"{i}.{ext}", $"https://i.nhentai.net/galleries/{_hitomiNumber}/{i}.{ext}");
             }
 
             return temp;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,8 +16,7 @@ namespace imgLoader_WPF
     internal class Processor
     {
         public bool[] IsImgLoading;
-        public bool Pause;
-        public bool IsStop;
+        public bool Pause, IsStop, IsValidated;
 
         internal int ProgVal;
         internal int ProgMax;
@@ -27,14 +27,11 @@ namespace imgLoader_WPF
 
         private readonly string _url;
 
-        internal string Route { get; private set; }
-        internal string Artist { get; private set; }
-        internal string Title { get; private set; }
-        internal string[] Info { get; private set; }
-        internal string Number { get; private set; }
-        internal Dictionary<string, string> ImgUrl { get; private set; }
-        internal ISite Site { get; private set; }
-        internal bool IsValidated { get; private set; }
+        private string _route, _artist, _title, _number, _referer;
+        private string[] _info;
+
+        private Dictionary<string, string> _imgUrl;
+        private ISite _site;
 
         public Processor(string url, IndexItem item)
         {
@@ -57,33 +54,34 @@ namespace imgLoader_WPF
             IsStop = false;
             _item.IsDownloading = true;
 
-            Site = Load(_url);
-            if (Site == null)
+            _site = Load(_url);
+            if (_site == null)
             {
                 if (!IsStop) MessageBox.Show("주소에 연결할 수 없음.");
                 return;
             }
 
-            if (!Site.IsValidated()) throw new Exception("Failed to Initialize: Processor: Invalidate");
+            if (!_site.IsValidated()) throw new Exception("Failed to Initialize: Processor: Invalidate");
 
-            ImgUrl = Site.GetImgUrls();
+            _imgUrl  = _site.GetImgUrls();
+            _referer = _site.Referer;
 
-            IsImgLoading = new bool[ImgUrl.Count];
+            IsImgLoading = new bool[_imgUrl.Count];
 
-            Number = Core.GetNum(_url);
-            Artist = Core.GetArtistFromRaw(Site.GetArtist());
-            Title  = GetTitle(Site.GetTitle());
-            Route  = Getpath(Artist, Title);
-            Info   = Site.ReturnInfo();
+            _number = Core.GetNum(_url);
+            _artist = Core.GetArtistFromRaw(_site.GetArtist());
+            _title  = GetTitle(_site.GetTitle());
+            _route  = Getpath(_artist, _title);
+            _info   = _site.ReturnInfo();
 
-            _item.ImgCount = ImgUrl.Count;
-            _item.Author   = Site.GetArtist();
-            _item.Title    = Title;
-            _item.Route    = Route;
-            _item.SiteName = Site.GetType().Name;
-            _item.Number   = Number;
+            _item.ImgCount = _imgUrl.Count;
+            _item.Author   = _site.GetArtist();
+            _item.Title    = _title;
+            _item.Route    = _route;
+            _item.SiteName = _site.GetType().Name;
+            _item.Number   = _number;
             _item.Date     = DateTime.Now;
-            _item.Tags     = Info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
+            _item.Tags     = _info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.RemoveEmptyEntries);
             _item.Vote     = 0;
             _item.View     = 0;
 
@@ -93,7 +91,7 @@ namespace imgLoader_WPF
             //    throw new Exception($"Failed to Initialize: Processor: {ex.StackTrace}");
             //}
 
-            IsValidated = Site.IsValidated();
+            IsValidated = _site.IsValidated();
         }
 
         internal void StartDownload()
@@ -110,7 +108,7 @@ namespace imgLoader_WPF
                 throw new Exception("Failed to Load: Processor.Load()");
             }
 
-            AllocTask(Route, ImgUrl);
+            AllocTask(_route, _imgUrl);
             _item.IsDownloading = false;
 
             DoStop();
@@ -133,7 +131,7 @@ namespace imgLoader_WPF
             var temp = Core.Dir.DirFilter(title);
 
             return Encoding.Unicode.GetByteCount(temp) > 255
-                       ? temp.Substring(0, 85)
+                       ? temp[..85]
                        : temp;
         }
 
@@ -149,7 +147,7 @@ namespace imgLoader_WPF
                     ? temp[..79] + "...)"
                     : temp;
 
-            return $@"{Core.Route}\{temp}\{Core.Dir.EHNumFromRaw(Number)}.{Core.InfoExt}";
+            return $@"{Core.Route}\{temp}\{Core.Dir.EHNumFromRaw(_number)}.{Core.InfoExt}";
         } //returns info path
 
         private Error CreateInfo()
@@ -158,14 +156,14 @@ namespace imgLoader_WPF
             //{
             if (!CheckDupl())
             {
-                Directory.CreateDirectory(Core.Dir.GetDirFromFile(Route));
+                Directory.CreateDirectory(Core.Dir.GetDirFromFile(_route));
             }
             else
             {
                 MessageBox.Show("Test");
             }
 
-            Core.CreateInfo(Route, Site);
+            Core.CreateInfo(_route, _site);
 
             return Error.End;
             //}
@@ -181,10 +179,10 @@ namespace imgLoader_WPF
 
         internal bool CheckDupl()
         {
-            if (!Directory.Exists(Core.Dir.GetDirFromFile(Route))) return false;
-            if (!File.Exists(Route)) return false;
+            if (!Directory.Exists(Core.Dir.GetDirFromFile(_route))) return false;
+            if (!File.Exists(_route)) return false;
 
-            return ImgUrl.Count.ToString() == File.ReadAllText(Route).Split('\n')[3];
+            return _imgUrl.Count.ToString() == File.ReadAllText(_route).Split('\n')[3];
         }
 
         private void AllocTask(string path, Dictionary<string, string> imgList)
@@ -206,7 +204,7 @@ namespace imgLoader_WPF
 
             Task.WaitAll(_tasks);
 
-            var success = HandleFail(path, 5);
+            var success = HandleFail(path, 5);  //thres = 5;
 
             Core.Log($"Item:Complete: {path}");
             if (success)
@@ -255,11 +253,12 @@ namespace imgLoader_WPF
                 Task.Delay(500).Wait();
             }
 
-            var req = WebRequest.Create(uri) as HttpWebRequest;
             HttpWebResponse resp;
+            if (WebRequest.Create(uri) is not HttpWebRequest req) return;
 
-            if (req == null) return;
-            req.Referer   = $"https://{new Uri(uri).Host}";
+            req.Referer   = _referer ?? $"https://{new Uri(uri).Host}";
+            Debug.WriteLine("++" + req.Referer);
+
             req.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.135 Safari/537.36";
 
             try

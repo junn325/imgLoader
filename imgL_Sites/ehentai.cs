@@ -11,6 +11,7 @@ namespace imgL_Sites
     public class EHentai : ISite
     {
         public string Number { get; }
+        public string Referer { get; }
 
         private const string ApiUrl = "https://api.e-hentai.org/api.php";
         private const string BaseUrl = "https://e-hentai.org/";

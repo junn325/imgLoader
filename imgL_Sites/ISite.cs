@@ -5,6 +5,7 @@ namespace imgL_Sites
     public interface ISite
     {
         public string Number { get; }
+        public string Referer { get; }
 
         public string GetArtist();
 

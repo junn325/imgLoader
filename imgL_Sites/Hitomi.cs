@@ -9,6 +9,7 @@ namespace imgL_Sites
     public class Hitomi : ISite
     {
         public string Number { get; }
+        public string Referer { get; }
 
         private readonly string _src_info, _src_gall, _artist, _group, _title;
         public Hitomi(string mNumber)

@@ -7,6 +7,7 @@ namespace imgL_Sites
     public class Pixiv : ISite
     {
         public string Number { get; }
+        public string Referer { get; } = "https://www.pixiv.net/";
 
         private readonly string _src_gall, _src_this, _title, _artist = "", _date, _imgCnt;
 
@@ -18,7 +19,7 @@ namespace imgL_Sites
                 if (_src_gall == null)
                     return;
 
-                _src_this = _src_gall.BraceParse("userIllusts").BraceParse("88966501");
+                _src_this = _src_gall.BraceParse("userIllusts").BraceParse(mNumber);
 
                 _title  = _src_gall.GetStringValue("illustTitle");
                 _artist = _src_gall.GetStringValue("userName");
