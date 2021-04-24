@@ -334,7 +334,7 @@ namespace imgLoader_WPF.Windows
         {
             var sw = new Stopwatch();
 
-            var (newWidth, newHeight) = GetFutureSize(FileList[0]);
+            var (newWidth, newHeight) = GetFutureSize(FileList[_index]);
 
             if (newHeight >= newWidth)
             {

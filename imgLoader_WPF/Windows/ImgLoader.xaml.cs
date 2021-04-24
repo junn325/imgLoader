@@ -96,6 +96,7 @@ namespace imgLoader_WPF.Windows
         {
             Thread.CurrentThread.Name = "Main";
 
+#if DEBUG
             new Thread(() =>
                 {
                     while (true)
@@ -105,6 +106,7 @@ namespace imgLoader_WPF.Windows
                     }
                 })
                 { IsBackground = true }.Start();
+#endif
 
             var gbd = Array.Find(Directory.GetFiles(Directory.GetCurrentDirectory(), "*", SearchOption.AllDirectories), i => i.Contains("goodbyedpi"));
 
