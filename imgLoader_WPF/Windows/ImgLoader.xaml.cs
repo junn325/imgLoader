@@ -110,29 +110,40 @@ namespace imgLoader_WPF.Windows
 
             var gbd = Array.Find(Directory.GetFiles(Directory.GetCurrentDirectory(), "*", SearchOption.AllDirectories), i => i.Contains("goodbyedpi"));
 
-            if (gbd != null
-                && File.Exists(gbd)
-                && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert.dll")
-                && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert32.sys")
-                && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert64.sys"))
+            new Thread(() =>
             {
-                var startInfo = new ProcessStartInfo
+                Process process = null;
+                if (gbd != null
+                    && File.Exists(gbd)
+                    && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert.dll")
+                    && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert32.sys")
+                    && File.Exists(Core.Dir.GetDirFromFile(gbd) + "\\WinDivert64.sys"))
                 {
-                    FileName               = gbd,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError  = true,
-                    UseShellExecute        = false,
-                    CreateNoWindow         = true
-                };
+                    var startInfo = new ProcessStartInfo
+                    {
+                        FileName               = gbd,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError  = true,
+                        UseShellExecute        = false,
+                        CreateNoWindow         = true,
+                    };
 
-                var process = new Process
+                    process = new Process
+                    {
+                        StartInfo           = startInfo,
+                        EnableRaisingEvents = true,
+                    };
+
+                    process.Start();
+                }
+
+                while (Dispatcher.Thread.IsAlive)
                 {
-                    StartInfo           = startInfo,
-                    EnableRaisingEvents = true
-                };
+                    Thread.Sleep(500);
+                }
 
-                process.Start();
-            }
+                process?.Kill();
+            }).Start();
 
             _winSetting = new Settings(this);
 
