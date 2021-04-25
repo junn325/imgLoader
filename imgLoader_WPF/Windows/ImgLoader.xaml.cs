@@ -108,10 +108,10 @@ namespace imgLoader_WPF.Windows
                 { IsBackground = true }.Start();
 #endif
 
-            var gbd = Array.Find(Directory.GetFiles(Directory.GetCurrentDirectory(), "*", SearchOption.AllDirectories), i => i.Contains("goodbyedpi"));
-
             new Thread(() =>
             {
+                var gbd = Array.Find(Directory.GetFiles(Directory.GetCurrentDirectory(), "*", SearchOption.AllDirectories), i => i.Contains("goodbyedpi"));
+
                 Process process = null;
                 if (gbd != null
                     && File.Exists(gbd)
