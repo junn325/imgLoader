@@ -55,9 +55,10 @@ namespace imgLoader_WPF.Windows
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _imgSvc = new ImgCacheService(this);
+            InputMethod.SetIsInputMethodEnabled(this, false);
 
-            Title = GetTitle(FileList[0]);
+            _imgSvc = new ImgCacheService(this);
+            Title   = GetTitle(FileList[0]);
 
             FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
             //_imgList = new BitmapImage[FileList.Length];
