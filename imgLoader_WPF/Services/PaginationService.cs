@@ -74,8 +74,8 @@ namespace imgLoader_WPF.Services
                         if (oriCnt + i >= _sender.List.Count)
                             return;
 
-                        InsertCounter();
                         _sender.ShowItems.Add(_sender.List[oriCnt + i]);
+                        InsertCounter();
                         //Debug.Assert(_showItems.Count <= _sender.List.Count);
                     }
 
