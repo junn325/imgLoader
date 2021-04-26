@@ -340,7 +340,7 @@ namespace imgLoader_WPF.Windows
             _imgRect.Width  = newWidth;
             _imgRect.Height = newHeight;
 
-            do
+            for (var i = 0; i < 5; i++)
             {
                 Debug.WriteLine("Size adjust");
 
@@ -349,12 +349,12 @@ namespace imgLoader_WPF.Windows
                     if (newHeight >= Cnvs.ActualHeight)
                     {
                         _imgRect.Height = Cnvs.ActualHeight;
-                        _imgRect.Width = (Cnvs.ActualHeight / newHeight) * newWidth;
+                        _imgRect.Width  = (Cnvs.ActualHeight / newHeight) * newWidth;
                     }
                     else
                     {
                         _imgRect.Height = newHeight;
-                        _imgRect.Width = newWidth;
+                        _imgRect.Width  = newWidth;
                     }
 
                     _imgRect.X =
@@ -371,12 +371,12 @@ namespace imgLoader_WPF.Windows
                 {
                     if (newWidth >= Cnvs.ActualWidth)
                     {
-                        _imgRect.Width = Cnvs.ActualWidth;
+                        _imgRect.Width  = Cnvs.ActualWidth;
                         _imgRect.Height = (Cnvs.ActualWidth / newWidth) * newHeight;
                     }
                     else
                     {
-                        _imgRect.Width = newWidth;
+                        _imgRect.Width  = newWidth;
                         _imgRect.Height = newHeight;
                     }
 
@@ -389,8 +389,9 @@ namespace imgLoader_WPF.Windows
                             ? 0
                             : (Cnvs.ActualHeight - _imgRect.Height) / 2;
                 }
+
+                if (Cnvs.ActualWidth >= _imgRect.Width && Cnvs.ActualHeight >= _imgRect.Height) break;
             }
-            while (_imgRect.Width > Cnvs.ActualWidth || _imgRect.Height > Cnvs.ActualHeight);
 
             _img.Width = _imgRect.Width;
             _img.Height = _imgRect.Height;
