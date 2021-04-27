@@ -398,7 +398,7 @@ namespace imgLoader_WPF.Windows
             }
             else
             {
-                Core.Dir.OpenOn(Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains($".{Core.InfoExt}")));
+                Core.Dir.OpenOn(Directory.EnumerateFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains($".{Core.InfoExt}")));
             }
 
             //Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);

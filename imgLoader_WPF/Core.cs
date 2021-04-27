@@ -440,7 +440,7 @@ namespace imgLoader_WPF
                 if (!Directory.Exists(imgSetPath)) return;
 
                 //var img = new BitmapImage();
-                var temp = Directory.GetFiles(imgSetPath, "*.*").Where(f => !f.Contains($".{Core.InfoExt}")).ToArray();
+                var temp = Directory.EnumerateFiles(imgSetPath, "*.*").Where(f => !f.Contains($".{Core.InfoExt}")).ToArray();
 
                 if (temp.Length == 0) return;
                 //img.BeginInit();
@@ -495,11 +495,8 @@ namespace imgLoader_WPF
             {
                 var result = new List<string>();
 
-                var files = Directory.GetFiles(path);
-                for (var i = 0; i < files.Length; i++)
+                foreach (var fileName in Directory.EnumerateFiles(path))
                 {
-                    var fileName = files[i];
-
                     if (!fileName.Contains(contains) || fileName.Contains(".lnk"))
                     {
                         continue;
@@ -508,11 +505,8 @@ namespace imgLoader_WPF
                     result.Add(fileName);
                 }
 
-                var dirs = Directory.GetDirectories(path);
-                for (var i = 0; i < dirs.Length; i++)
+                foreach (var dir in Directory.EnumerateDirectories(path))
                 {
-                    var dir = dirs[i];
-
                     if (dir.Contains("$RECYCLE.BIN") || dir.Contains(@":\Windows\") || dir.Contains(@":\Program Files"))
                     {
                         continue;
@@ -520,11 +514,11 @@ namespace imgLoader_WPF
 
                     try
                     {
-                        result.AddRange(GetFiles(dirs[i], contains));
+                        result.AddRange(GetFiles(dir, contains));
                     }
                     catch
                     {
-                        // ignored
+                        // 오류 발생 시 무시
                     }
                 }
 

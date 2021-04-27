@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,6 +14,17 @@ namespace TestSite
     {
         public static void Main(string[] args)
         {
+            var sw = new Stopwatch();
+            sw.Start();
+
+            int temp = 0;
+            for (int i = 0; i < 20; i++)
+            {
+                temp = Directory.EnumerateFiles(@"F:\문서\사진\Saved Pictures\고니\manga", "*", SearchOption.AllDirectories).Count();
+            }
+
+            Console.WriteLine(temp);
+            Console.WriteLine(sw.Elapsed.Ticks);
         }
 
     }
