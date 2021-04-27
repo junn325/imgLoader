@@ -89,7 +89,10 @@ namespace imgLoader_WPF.LoaderListCtrl
                 }
 
                 AuthorBlock.Text  = sb.ToString();
-                ImgCntBlock.Text  = data.ImgCount == -1 ? "" : $"{data.ImgCount} Imgs";
+                ImgCntBlock.Text = data.ImgCount == -1
+                                       ? ""
+                                       : $"{data.ImgCount} Imgs{(data.IsCntValid ? "" : "!")}";
+
                 NumBlock.Text     = data.Number;
                 SiteBlock.Text    = data.SiteName;
                 TitleBlock.Text   = data.Title;

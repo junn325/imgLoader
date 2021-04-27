@@ -147,6 +147,8 @@ namespace imgLoader_WPF.Services
             _sender.Index[indexIdx].View         = item.View;
             _sender.Index[indexIdx].Vote         = item.Vote;
             _sender.Index[indexIdx].Show         = item.Show;
+            _sender.Index[indexIdx].IsCntValid   = Directory.GetFiles(Core.Dir.GetDirFromFile(item.Route), "*").Length == item.ImgCount + 1;
+            _sender.Index[indexIdx].Route        = item.Route;
 
             var listIdx = FindItemIndex(_sender.List, e.FullPath);
             if (listIdx == -1)
@@ -166,6 +168,8 @@ namespace imgLoader_WPF.Services
                 _sender.List[listIdx].Title        = item.Title;
                 _sender.List[listIdx].View         = item.View;
                 _sender.List[listIdx].Vote         = item.Vote;
+                _sender.Index[indexIdx].IsCntValid = Directory.GetFiles(Core.Dir.GetDirFromFile(item.Route), "*").Length == item.ImgCount + 1;
+                _sender.Index[indexIdx].Route      = item.Route;
             }
             else
             {
@@ -273,11 +277,12 @@ namespace imgLoader_WPF.Services
                     item.Route  = infoRoute;
                     item.Number = Core.Dir.EHNumFromInternal(infoRoute.Split('\\')[^1].Split('.')[0]);
 
-                    item.SiteName = info[0];
-                    item.Title    = info[1];
-                    item.Author   = info[2];
-                    item.ImgCount = int.TryParse(info[3], out var parse) ? parse : -1;
-                    item.Tags     = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+                    item.SiteName   = info[0];
+                    item.Title      = info[1];
+                    item.Author     = info[2];
+                    item.ImgCount   = int.TryParse(info[3], out var parse) ? parse : -1;
+                    item.IsCntValid = Directory.GetFiles(Core.Dir.GetDirFromFile(infoRoute), "*").Length == item.ImgCount + 1;
+                    item.Tags       = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 
                     if (info[5].Contains(' ') && info[5].Contains('/'))
                     {
