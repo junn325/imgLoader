@@ -37,7 +37,10 @@ namespace imgLoader_WPF.Services
 
         private bool DoRequest(string srchText, Condition cond, int option)
         {
-            if (cond == Condition.Sort && option == SortItem.Option) return false;
+            if (cond == Condition.Sort && option == SortItem.Option)
+            {
+
+            }
             if (SearchList.Any(indItem => indItem.Content == srchText && indItem.Option == option)) return false;
 
             //var disableProcessing = System.Windows.Threading.Dispatcher.CurrentDispatcher.DisableProcessing();
