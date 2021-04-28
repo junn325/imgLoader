@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -315,8 +316,7 @@ namespace imgLoader_WPF.Windows
                 lItem.Proc.StartDownload();
 
                 Sorter.SortRefresh((SortOption)CondInd.SortItem.Option); //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
-
-                //Dispatcher.Invoke(ShowItemsCnt);
+                lItem.IsCntValid = Directory.GetFiles(Core.Dir.GetDirFromFile(lItem.Route), "*").Length == lItem.ImgCount + 1;
                 lItem.Proc = null;
                 Debug.WriteLine($"Complete: {lItem.Number}");
             });
