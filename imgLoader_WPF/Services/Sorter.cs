@@ -56,6 +56,33 @@ namespace imgLoader_WPF.Services
                     temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.LastViewDate));
                     break;
 
+                case SortOption.RTitle:
+                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.Title, StringComparer.OrdinalIgnoreCase));
+                    break;
+                case SortOption.RAuthor:
+                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.Author, StringComparer.OrdinalIgnoreCase));
+                    break;
+                case SortOption.RNumber:
+                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+                    break;
+                case SortOption.RVote:
+                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.Vote));
+                    break;
+                case SortOption.RPage:
+                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.ImgCount));
+                    break;
+                case SortOption.RDate:
+                    Core.ShowDate = true;
+                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.Date));
+                    break;
+                case SortOption.RView:
+                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.View));
+                    break;
+                case SortOption.RLastAcess:
+                    Core.ShowLastDate = true;
+                    temp  = new List<IndexItem>(_sender.List.OrderBy(i => i.LastViewDate));
+                    break;
+
                 default:
                     return;
             }
@@ -99,7 +126,15 @@ namespace imgLoader_WPF.Services
             Page,
             Date,
             View,
-            LastAccess
+            LastAccess,
+            RTitle,
+            RAuthor,
+            RNumber,
+            RVote,
+            RPage,
+            RDate,
+            RView,
+            RLastAcess
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,22 +26,34 @@ namespace imgLoader_WPF.Services
 
         internal void Add(string srchText, Condition cond, int option)
         {
+            if (option == SortItem.Option)
+            {
+                var enumLength = Enum.GetValues(typeof(Sorter.SortOption)).Length;
+                option += enumLength;
+
+                if (option >= enumLength) option -= (enumLength / 2);
+            }
+
             if (!DoRequest(srchText, cond, option)) return;
             AddIndicator(srchText, cond, option);
         }
 
         internal void Add(string srchText, Condition cond, int option, string label)
         {
+            if (option == SortItem.Option)
+            {
+                var enumLength = Enum.GetValues(typeof(Sorter.SortOption)).Length;
+                option += enumLength;
+
+                if (option >= enumLength) option -= (enumLength / 2);
+            }
+
             if (!DoRequest(srchText, cond, option)) return;
             AddIndicator(srchText, cond, option, label);
         }
 
         private bool DoRequest(string srchText, Condition cond, int option)
         {
-            if (cond == Condition.Sort && option == SortItem.Option)
-            {
-
-            }
             if (SearchList.Any(indItem => indItem.Content == srchText && indItem.Option == option)) return false;
 
             //var disableProcessing = System.Windows.Threading.Dispatcher.CurrentDispatcher.DisableProcessing();
@@ -131,8 +144,14 @@ namespace imgLoader_WPF.Services
                     6  => "Vote:",
                     _  => ""
                 },
-                Condition.Sort => "Sort:",
-                _              => ""
+                Condition.Sort => option switch
+                {
+                    >= 0 and <= 7  => "Sort:",
+                    >= 8 and <= 15 => "Sort:←",
+                    _              => ""
+                },
+
+                _ => ""
             };
             var tb = new TextBlock
             {
