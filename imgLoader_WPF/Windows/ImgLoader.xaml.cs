@@ -21,49 +21,6 @@ using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
 {
-    //!작품 -> 항목으로 표시할 것
-
-    //todo: 배경색깔 강제 통일 기능 (https://hiyobi.me/reader/1847608)
-    //조회수
-    //todo: 여러 폴더를 탭으로 동시에 관리
-    //폴더 두 개를 열고 없는 항목 체크
-    //조건이 있는 랜덤 -> List에서만 고름으로 달성?
-    //뷰어: 계속 다시 로드하지 말고 배열에 이미지를 담아놓을것
-    //최근 본 날짜 + 검색
-
-    //todo: 작업 표시줄에 프로그래스바 
-    //numericupdown 같은것으로 작품별로 순위 매기는 시스템
-    //todo: 작가, 태그 등으로 자동으로 폴더로 나눠주는 시스템
-    //todo: 항상 위로 상태로 떠 있다가 인터넷 창에서 누르면 자동으로 해당 작품 다운로드 
-    //todo: 작가/태그 분포, 주로 보는 작품 등 분석 기능
-    //todo: 여러 폴더를 지정해 동시에 관리
-    //todo: 아무 값 없는 분류(그냥 빨주노초파남보) 분류 기능
-    //우클릭 시 해당 항목 작가명/기타로 검색
-    //todo: 더블클릭으로 열기
-    //todo: 드래그로 사용자 정의 순서
-    //todo: CondInd 객체 새로고침, 수정 추가
-    //todo: 5항목마다 한칸씩 공백 삽입(아무 컨트롤 없는 LoaderItem 삽입?)
-    //todo: 페이지네이션시 이미 넘어간 항목 삭제
-    //todo: 마우스 올리면 썸네일
-
-    //  검색
-    //todo: 검색 조건에 AND, OR 추가
-    //todo: 작가명에 ;| 없는것들 고칠것
-    //todo: 그룹 검색 제대로 지원 ("|그룹명"은 | 바로 옆에 있는 그룹밖에 못 찾음)
-
-    //  관리
-    //todo: 자체 탐색기 만들기(메뉴-관리)
-    //todo: 정보 복구
-    //todo: 정보 직접 수정
-    //todo: 특정 정보 자동 치환 (ex: 작가명이 A에서 B로 바뀜 -> A = B로 자동 치환)
-    //todo: 작가별 트리식 정렬
-    //todo: 특정 이미지 숨기기(삭제x)
-    //todo: 단행본 나누기, 뷰어 좌측이나 우측에 작은 네모로 표시, ctrl+화살표(wasd)로 단행본 간 이동
-    //todo: 여러 작품이 하나로 나오는 것 처리 (예시: Gakuen Rankou (jairou))
-    //todo: 서로 다른 항목 자동 연결
-    //todo: 시작 페이지(썸네일)
-    //todo: 완전히 같은 이미지 탐색
-
     public partial class ImgLoader
     {
         internal InfoSavingService InfSvc;
@@ -315,7 +272,12 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
-                Sorter.SortRefresh((SortOption)CondInd.SortItem.Option); //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
+                //Sorter.SortRefresh((SortOption)CondInd.SortItem.Option); //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
+
+                List.Remove(lItem);
+                List.Insert(GetFutureIndexOnList(List, lItem), lItem);
+                PgSvc.Refresh();
+
                 lItem.IsCntValid = Directory.GetFiles(Core.Dir.GetDirFromFile(lItem.Route), "*").Length == lItem.ImgCount + 1;
                 lItem.Proc = null;
                 Debug.WriteLine($"Complete: {lItem.Number}");
@@ -324,6 +286,15 @@ namespace imgLoader_WPF.Windows
             service.Name = "AddItem";
             service.SetApartmentState(ApartmentState.STA);
             service.Start();
+        }
+
+        private int GetFutureIndexOnList(IEnumerable<IndexItem> index, IndexItem item)
+        {
+            var items = index.ToList();
+            items.Add(item);
+            var sorted = items.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase).ToList();
+
+            return sorted.IndexOf(item);
         }
 
         private void Search(string searchTxt, int option)

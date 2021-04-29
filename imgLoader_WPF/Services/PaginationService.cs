@@ -147,6 +147,17 @@ namespace imgLoader_WPF.Services
             _sender.ShowItemsCnt();
         }
 
+        internal void Refresh()
+        {
+            _sender.Dispatcher.Invoke(() =>
+            {
+                var disableProcessing = Dispatcher.CurrentDispatcher.DisableProcessing();
+                Clear();
+                Paginate(disableProcessing);
+                _sender.ShowItemsCnt();
+            });
+        }
+
         internal void Insert(int index, IndexItem item)
         {
             if (_sender.ItemCtrl.Dispatcher.CheckAccess())
