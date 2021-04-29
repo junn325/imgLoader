@@ -255,11 +255,7 @@ namespace imgLoader_WPF.Services
             SortItem.Content = "";
 
             var disableProcessing = _sender.Dispatcher.DisableProcessing();
-
-            _sender.Sorter.DoSortList(Sorter.SortOption.Title);
-            _sender.PgSvc.Clear();
-            _sender.PgSvc.Paginate(disableProcessing);
-            _sender.ShowItemsCnt();
+            _sender.Sorter.SortRefresh(Sorter.SortOption.Title, disableProcessing);
         }
 
         internal void RemoveSrch(IndItem item)
@@ -276,8 +272,6 @@ namespace imgLoader_WPF.Services
             }
 
             var searchItem = SearchList.Where(indItem => indItem.Condition == Condition.Search).ToArray();
-            _sender.PgSvc.Clear();
-
             if (searchItem.Length == 0)
             {
                 _sender.List.Clear();
@@ -307,9 +301,7 @@ namespace imgLoader_WPF.Services
                 }
             }
 
-            _sender.Sorter.DoSortList((Sorter.SortOption)SortItem.Option);
-            _sender.PgSvc.Paginate(disableProcessing);
-            _sender.ShowItemsCnt();
+            _sender.Sorter.SortRefresh((Sorter.SortOption)SortItem.Option);
         }
 
         internal void Clear()
@@ -328,18 +320,14 @@ namespace imgLoader_WPF.Services
             SortItem.Content = "";
 
             _sender.PnlCond.Children.Clear();
-
             _sender.List.Clear();
-            _sender.PgSvc.Clear();
 
             foreach (var indexItem in _sender.Index)
             {
                 _sender.List.Add(indexItem);
             }
 
-            _sender.Sorter.DoSortList(Sorter.SortOption.Title);
-            _sender.PgSvc.Paginate(disableProcessing);
-            _sender.ShowItemsCnt();
+            _sender.Sorter.SortRefresh(Sorter.SortOption.Title, disableProcessing);
         }
 
         internal struct IndItem

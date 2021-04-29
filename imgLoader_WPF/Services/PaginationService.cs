@@ -89,6 +89,8 @@ namespace imgLoader_WPF.Services
 
         private void InsertCounter()
         {
+            return; //항목 삭제, 삽입시 너무 비용이 큼
+
             _counter++;
             if (_counter != 5) return;
 
@@ -112,25 +114,22 @@ namespace imgLoader_WPF.Services
 
         internal void Clear()
         {
-            //var disableProcessing = _sender.Dispatcher.DisableProcessing();
-
             RefreshCounter();
             if (_sender.Scroll.Dispatcher.CheckAccess())
             {
-                _sender.Scroll.ScrollToTop();
+                //_sender.Scroll.ScrollToTop();
                 _sender.ShowItems.Clear();
             }
             else
             {
                 _sender.Scroll.Dispatcher.Invoke(() =>
                 {
-                    _sender.Scroll.ScrollToTop();
+                    //_sender.Scroll.ScrollToTop();
                     _sender.ShowItems.Clear();
                 });
             }
 
             _sender.ShowItemsCnt();
-            //return disableProcessing;
         }
 
         internal void Remove(IndexItem item)

@@ -10,6 +10,7 @@ using System.Windows;
 
 using imgL_Sites;
 
+using imgLoader_WPF.Services;
 using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
@@ -313,6 +314,16 @@ namespace imgLoader_WPF
             {
                 list.Add(item);
             }
+        }
+
+        internal static int GetFutureIndexOnList(IEnumerable<IndexItem> index, IndexItem item, Sorter.SortOption option)
+        {
+            var items = index.ToList();
+            items.Add(item);
+            //var sorted = items.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase).ToList();
+            var sorted = Sorter.GetSortedList(items, option);
+
+            return sorted.IndexOf(item);
         }
 
         internal static class Dir

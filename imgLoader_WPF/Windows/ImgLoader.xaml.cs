@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,7 +16,7 @@ using System.Windows.Threading;
 using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Services;
 
-using static imgLoader_WPF.Services.Sorter;
+//using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
 {
@@ -179,7 +178,7 @@ namespace imgLoader_WPF.Windows
             {
                 item.Proc?.DoStop();
 
-                Core.Log($"Delete: try delete {_clickedItem.Route}");
+                Core.Log($"Delete: try delete {item.Route}");
 
                 var wait = true;
                 do
@@ -204,8 +203,8 @@ namespace imgLoader_WPF.Windows
                 //var result = IdxSvc.DoIndex();
                 //IdxSvc.Refresh(result.infoFiles, result.newFiles);
 
-                List.Remove(_clickedItem);
-                PgSvc.Remove(_clickedItem);
+                List.Remove(item);
+                PgSvc.Remove(item);
             }).Start();
         }
 
@@ -272,10 +271,8 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 lItem.Proc.StartDownload();
 
-                //Sorter.SortRefresh((SortOption)CondInd.SortItem.Option); //todo: 재정렬을 하지 말고 정렬될 위치에 끼워넣는식으로 바꿀것
-
                 List.Remove(lItem);
-                List.Insert(GetFutureIndexOnList(List, lItem), lItem);
+                List.Insert(Core.GetFutureIndexOnList(List, lItem, (Sorter.SortOption)CondInd.SortItem.Option), lItem);
                 PgSvc.Refresh();
 
                 lItem.IsCntValid = Directory.GetFiles(Core.Dir.GetDirFromFile(lItem.Route), "*").Length == lItem.ImgCount + 1;
@@ -286,15 +283,6 @@ namespace imgLoader_WPF.Windows
             service.Name = "AddItem";
             service.SetApartmentState(ApartmentState.STA);
             service.Start();
-        }
-
-        private int GetFutureIndexOnList(IEnumerable<IndexItem> index, IndexItem item)
-        {
-            var items = index.ToList();
-            items.Add(item);
-            var sorted = items.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase).ToList();
-
-            return sorted.IndexOf(item);
         }
 
         private void Search(string searchTxt, int option)
@@ -707,22 +695,22 @@ namespace imgLoader_WPF.Windows
 
         private void TitleSort_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("Title", ConditionIndicator.Condition.Sort, (int)SortOption.Title);
+            CondInd.Add("Title", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.Title);
         }
 
         private void AuthorSort_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("Author", ConditionIndicator.Condition.Sort, (int)SortOption.Author);
+            CondInd.Add("Author", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.Author);
         }
 
         private void PageSort_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("Page", ConditionIndicator.Condition.Sort, (int)SortOption.Page);
+            CondInd.Add("Page", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.Page);
         }
 
         private void NumberSort_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("Number", ConditionIndicator.Condition.Sort, (int)SortOption.Number);
+            CondInd.Add("Number", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.Number);
         }
 
         private void Manage_Click(object sender, RoutedEventArgs e)
@@ -732,7 +720,7 @@ namespace imgLoader_WPF.Windows
 
         private void DateSort_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("Date", ConditionIndicator.Condition.Sort, (int)SortOption.Date);
+            CondInd.Add("Date", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.Date);
         }
 
         private void Random_Click(object sender, RoutedEventArgs e)
@@ -773,12 +761,12 @@ namespace imgLoader_WPF.Windows
 
         private void VoteSort_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("Vote", ConditionIndicator.Condition.Sort, (int)SortOption.Vote);
+            CondInd.Add("Vote", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.Vote);
         }
 
         private void ViewSort_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("View", ConditionIndicator.Condition.Sort, (int)SortOption.View);
+            CondInd.Add("View", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.View);
         }
 
         private void Setting_Click(object sender, RoutedEventArgs e)
@@ -788,7 +776,7 @@ namespace imgLoader_WPF.Windows
 
         private void MenuSortLastDate_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("LastAccess", ConditionIndicator.Condition.Sort, (int)SortOption.LastAccess);
+            CondInd.Add("LastAccess", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.LastAccess);
         }
 
         #endregion

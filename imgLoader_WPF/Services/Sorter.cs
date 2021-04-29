@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Threading;
 
+using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Windows;
 
 using Dispatcher = System.Windows.Threading.Dispatcher;
@@ -18,78 +19,78 @@ namespace imgLoader_WPF.Services
             _sender = sender;
         }
 
+        internal static List<IndexItem> GetSortedList(List<IndexItem> list, SortOption sortOption)
+        {
+            switch (sortOption)
+            {
+                //todo: OrderBy로 새 리스트를 만들지 말고 insert로 정렬하도록 변경할 것
+                case SortOption.Title:
+                    return new List<IndexItem>(list.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
+
+                case SortOption.Author:
+                    return new List<IndexItem>(list.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
+
+                case SortOption.Number:
+                    return new List<IndexItem>(list.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+
+                case SortOption.Vote:
+                    return new List<IndexItem>(list.OrderByDescending(i => i.Vote));
+
+                case SortOption.Page:
+                    return new List<IndexItem>(list.OrderBy(i => i.ImgCount));
+
+                case SortOption.Date:
+                    Core.ShowDate = true;
+                    return new List<IndexItem>(list.OrderByDescending(i => i.Date));
+
+                case SortOption.View:
+                    return new List<IndexItem>(list.OrderByDescending(i => i.View));
+
+                case SortOption.LastAccess:
+                    Core.ShowLastDate = true;
+                    return new List<IndexItem>(list.OrderByDescending(i => i.LastViewDate));
+
+                    //
+                case SortOption.RTitle:
+                    return new List<IndexItem>(list.OrderByDescending(i => i.Title, StringComparer.OrdinalIgnoreCase));
+
+                case SortOption.RAuthor:
+                    return new List<IndexItem>(list.OrderByDescending(i => i.Author, StringComparer.OrdinalIgnoreCase));
+
+                case SortOption.RNumber:
+                    return new List<IndexItem>(list.OrderByDescending(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
+
+                case SortOption.RVote:
+                    return new List<IndexItem>(list.OrderBy(i => i.Vote));
+
+                case SortOption.RPage:
+                    return new List<IndexItem>(list.OrderByDescending(i => i.ImgCount));
+
+                case SortOption.RDate:
+                    Core.ShowDate = true;
+                    return new List<IndexItem>(list.OrderBy(i => i.Date));
+
+                case SortOption.RView:
+                    return new List<IndexItem>(list.OrderBy(i => i.View));
+
+                case SortOption.RLastAcess:
+                    Core.ShowLastDate = true;
+                    return new List<IndexItem>(list.OrderBy(i => i.LastViewDate));
+            }
+
+            return null;
+        }
+
         internal void DoSortList(SortOption sortOption)
         {
             //_sender.Scroll.ScrollToTop();
             Core.ShowDate = false;
             Core.ShowLastDate = false;
 
-            List<IndexItem> temp;
-            switch (sortOption)
-            {
-                //todo: OrderBy로 새 리스트를 만들지 말고 insert로 구현하는 정렬 알고리즘 제작할 것
-
-                case SortOption.Number:
-                    temp = new List<IndexItem>(_sender.List.OrderBy(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
-                    break;
-                case SortOption.Title:
-                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.Title, StringComparer.OrdinalIgnoreCase));
-                    break;
-                case SortOption.Page:
-                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.ImgCount));
-                    break;
-                case SortOption.Author:
-                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.Author, StringComparer.OrdinalIgnoreCase));
-                    break;
-                case SortOption.Date:
-                    Core.ShowDate = true;
-                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.Date));
-                    break;
-                case SortOption.Vote:
-                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.Vote));
-                    break;
-                case SortOption.View:
-                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.View));
-                    break;
-                case SortOption.LastAccess:
-                    Core.ShowLastDate = true;
-                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.LastViewDate));
-                    break;
-
-                case SortOption.RTitle:
-                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.Title, StringComparer.OrdinalIgnoreCase));
-                    break;
-                case SortOption.RAuthor:
-                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.Author, StringComparer.OrdinalIgnoreCase));
-                    break;
-                case SortOption.RNumber:
-                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => int.TryParse(i.Number, out var result) ? result : int.MaxValue));
-                    break;
-                case SortOption.RVote:
-                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.Vote));
-                    break;
-                case SortOption.RPage:
-                    temp = new List<IndexItem>(_sender.List.OrderByDescending(i => i.ImgCount));
-                    break;
-                case SortOption.RDate:
-                    Core.ShowDate = true;
-                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.Date));
-                    break;
-                case SortOption.RView:
-                    temp = new List<IndexItem>(_sender.List.OrderBy(i => i.View));
-                    break;
-                case SortOption.RLastAcess:
-                    Core.ShowLastDate = true;
-                    temp  = new List<IndexItem>(_sender.List.OrderBy(i => i.LastViewDate));
-                    break;
-
-                default:
-                    return;
-            }
+            var sortedList = GetSortedList(_sender.List, sortOption);
 
             _sender.List.Clear();
-
-            foreach (var item in temp)
+            foreach (var item in sortedList)
             {
                 _sender.List.Add(item);
             }

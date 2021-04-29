@@ -11,7 +11,7 @@ using imgLoader_WPF.Windows;
 namespace imgLoader_WPF.Services
 {
     //컬렉션은 IndexItem을 담고있음                        
-    //매 /interval/ 밀리초마다 인덱싱
+    //매 `interval` 밀리초마다 인덱싱
 
     internal class IndexingService
     {
