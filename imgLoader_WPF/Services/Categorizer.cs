@@ -16,5 +16,30 @@ namespace imgLoader_WPF.Services
         {
 
         }
+
+        internal void AddCategory()
+        {
+
+        }
+
+        internal void RemoveCategory()
+        {
+
+        }
+
+        internal void AddToCategory()
+        {
+
+        }
+
+        internal void RemoveFromCategory()
+        {
+
+        }
+
+        internal void SaveToFile()
+        {
+
+        }
     }
 }
