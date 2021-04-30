@@ -1,4 +1,8 @@
-﻿using System;
+﻿//사용된 외부 프로젝트: https://github.com/ValdikSS/GoodbyeDPI
+
+//모든 disableprocessing은 PaginationService.Paginate로 끝남
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,8 +19,6 @@ using System.Windows.Threading;
 
 using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Services;
-
-//using static imgLoader_WPF.Services.Sorter;
 
 namespace imgLoader_WPF.Windows
 {
@@ -103,12 +105,10 @@ namespace imgLoader_WPF.Windows
             }).Start();
 
             _winSetting = new Settings(this);
+            Properties.Settings.Default.Upgrade();
+            Menu.Focus(); //메뉴 미리 로드
 
             if (!Directory.Exists(Core.FilesRoute)) Directory.CreateDirectory(Core.FilesRoute);
-
-            Properties.Settings.Default.Upgrade();
-
-            Menu.Focus(); //메뉴 미리 로드
 
             if (Core.Route.Length == 0 && File.Exists(Core.FilesRoute + Core.RouteFile) && Directory.Exists(File.ReadAllText(Core.FilesRoute + Core.RouteFile)))
             {
@@ -151,11 +151,6 @@ namespace imgLoader_WPF.Windows
             PgSvc  = new PaginationService(this);
             InfSvc = new InfoSavingService();
             IdxSvc = new IndexingService(this);
-
-            //var disableProcessing = Dispatcher.DisableProcessing();
-            //InfSvc.Start();
-            //IdxSvc.Start();
-            //PgSvc.Paginate(disableProcessing);
         }
 
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)

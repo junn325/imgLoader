@@ -26,7 +26,7 @@ namespace imgLoader_WPF.Services
 
         internal void Add(string srchText, Condition cond, int option)
         {
-            if (option == SortItem.Option)
+            if (cond == Condition.Sort && option == SortItem.Option)
             {
                 var enumLength = Enum.GetValues(typeof(Sorter.SortOption)).Length;
                 option += enumLength;
@@ -265,12 +265,6 @@ namespace imgLoader_WPF.Services
 
             var disableProcessing = _sender.Dispatcher.DisableProcessing();
 
-            if (item.Condition == Condition.Sort)
-            {
-                _sender.Sorter.SortRefresh(Sorter.SortOption.Title, disableProcessing);
-                return;
-            }
-
             var searchItem = SearchList.Where(indItem => indItem.Condition == Condition.Search).ToArray();
             if (searchItem.Length == 0)
             {
@@ -301,7 +295,7 @@ namespace imgLoader_WPF.Services
                 }
             }
 
-            _sender.Sorter.SortRefresh((Sorter.SortOption)SortItem.Option);
+            _sender.Sorter.SortRefresh((Sorter.SortOption)SortItem.Option, disableProcessing);
         }
 
         internal void Clear()
