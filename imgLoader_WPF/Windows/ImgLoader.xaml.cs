@@ -31,6 +31,7 @@ namespace imgLoader_WPF.Windows
         internal Sorter Sorter;
         internal Searcher Searcher;
         internal ConditionIndicator CondInd;
+        internal Categorizer Categorizer;
 
         private Settings _winSetting;
 
@@ -151,6 +152,8 @@ namespace imgLoader_WPF.Windows
             PgSvc  = new PaginationService(this);
             InfSvc = new InfoSavingService();
             IdxSvc = new IndexingService(this);
+            Categorizer = new Categorizer(this);
+            Categorizer.SaveToFile();
         }
 
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
