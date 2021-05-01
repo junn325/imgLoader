@@ -16,7 +16,7 @@ namespace imgLoader_WPF.Services
 
         private ImgLoader _sender;
 
-        internal List<(string, string)> CategoryList = new();
+        internal List<(string, StringBuilder)> CategoryList = new();
 
         public Categorizer(ImgLoader sender)
         {
@@ -28,34 +28,45 @@ namespace imgLoader_WPF.Services
 
             foreach (var cat in content.Split("},", StringSplitOptions.RemoveEmptyEntries))
             {
-                CategoryList.Add((cat.Split(':')[0], cat.Split('{')[1]));
+                CategoryList.Add((cat.Split(':')[0], new StringBuilder().Append(cat.Split('{')[1])));
             }
         }
 
-        internal void AddCategory()
+        internal void AddCategory(string catName)
         {
-
+            CategoryList.Add((catName, new StringBuilder()));
         }
 
-        internal void RemoveCategory()
+        internal void RemoveCategory(string catName)
         {
-
+            for (int i = 0; i < CategoryList.Count; i++)
+            {
+                if (CategoryList[i].Item1 != catName) continue;
+                CategoryList.Remove(CategoryList[i]);
+            }
         }
 
-        internal void AddToCategory()
+        internal void AddToCategory(string catName, string number)
         {
-
+            for (int i = 0; i < CategoryList.Count; i++)
+            {
+                if (CategoryList[i].Item1 != catName) continue;
+                CategoryList[i].Item2.Append(',').Append(number);
+            }
         }
 
-        internal void RemoveFromCategory()
+        internal void RemoveFromCategory(string catName, string number)
         {
-
+            for (int i = 0; i < CategoryList.Count; i++)
+            {
+                if (CategoryList[i].Item1 != catName) continue;
+                CategoryList[i].Item2.Replace($",{number}", "");
+            }
         }
 
         internal void SaveToFile()
         {
             var sb = new StringBuilder();
-
             foreach (var (catName, numbers) in CategoryList)
             {
                 sb.Append(catName).Append(":{").Append(numbers).Append("},");

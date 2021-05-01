@@ -32,6 +32,7 @@ namespace imgLoader_WPF.Windows
         internal Searcher Searcher;
         internal ConditionIndicator CondInd;
         internal Categorizer Categorizer;
+        internal DelayStream DelayStream;
 
         private Settings _winSetting;
 
@@ -153,7 +154,8 @@ namespace imgLoader_WPF.Windows
             InfSvc = new InfoSavingService();
             IdxSvc = new IndexingService(this);
             Categorizer = new Categorizer(this);
-            Categorizer.SaveToFile();
+            DelayStream = new DelayStream();
+            Categorizer.AddToCategory("Red", "test");
         }
 
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)

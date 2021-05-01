@@ -80,34 +80,28 @@ namespace imgLoader_WPF
             }).Start();
         }
 
-        internal static void CreateInfo(string infoPath,  imgL_Sites.ISite site)
+        internal static void CreateInfo(string infoPath, ISite site, DelayStream stream)
         {
             if (!Directory.Exists(Dir.GetDirFromFile(infoPath)))
                 throw new DirectoryNotFoundException();
             if (site == null)
                 throw new NullReferenceException("\"site\" is null.");
 
-            using var fs = Dir.DelayStream(infoPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            using var sw = new StreamWriter(fs, Encoding.UTF8);
+            var sb = new StringBuilder();
 
             var info = site.GetInfo();
-
             Debug.Assert(info[2].Contains('|'));
-
             for (var i = 0; i < info.Length; i++)
             {
-                sw.Write(
+                sb.Append(
                     i != info.Length - 1
                         ? info[i] + '\n'
                         : info[i]
                 );
             }
-            sw.Write($"\n{DateTime.Now.ToString(CultureInfo.InvariantCulture)}\n0\n1\n0"); //0=Vote, 1=Show, 0=View
+            sb.Append('\n').Append(DateTime.Now.ToString(CultureInfo.InvariantCulture)).Append("\n0\n1\n0"); //0=Vote, 1=Show, 0=View
 
-            sw.Flush();                 //┐
-            fs.SetLength(fs.Position);  //오류 등으로 원래 담겨야할 줄 수 이상의 줄이 있을 때 지움
-
-            sw.Close();
+            stream.Save(infoPath, sb.ToString());
 
             File.SetAttributes(infoPath, FileAttributes.Hidden);
         }
@@ -394,34 +388,34 @@ namespace imgLoader_WPF
                 return dirName;
             }
 
-            internal static FileStream DelayStream(string route, FileMode mode, FileAccess access)
-            {
-                FileStream file = null;
+            //internal static FileStream DelayStream(string route, FileMode mode, FileAccess access)
+            //{
+            //    FileStream file = null;
 
-                var temp = false;
-                var thres = 0;
+            //    var temp = false;
+            //    var thres = 0;
 
-                while (!temp)
-                {
-                    try
-                    {
-                        file = new FileStream(route, mode, access);
-                        temp = true;
-                    }
-                    catch (Exception ex)
-                    {
-                        if (thres++ > 100) break;
+            //    while (!temp)
+            //    {
+            //        try
+            //        {
+            //            file = new FileStream(route, mode, access);
+            //            temp = true;
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            if (thres++ > 100) break;
 
-                        temp = false;
-                        Log($"{route} wait: {ex.Message}");
-                        Thread.Sleep(20);
-                    }
-                }
+            //            temp = false;
+            //            Log($"{route} wait: {ex.Message}");
+            //            Thread.Sleep(20);
+            //        }
+            //    }
 
-                //if (file == null) throw new Exception("stream is null");
+            //    //if (file == null) throw new Exception("stream is null");
 
-                return file;
-            }
+            //    return file;
+            //}
 
             internal static void OpenDir(string path)
             {
@@ -441,10 +435,10 @@ namespace imgLoader_WPF
 
             internal static void OpenOn(string path)
             {
-                if (!File.Exists(Core.OpenWith)) return;
+                if (!File.Exists(OpenWith)) return;
                 if (!File.Exists(path)) return;
 
-                Process.Start(Core.OpenWith, path);
+                Process.Start(OpenWith, path);
             }
 
             internal static void OpenOnCanvas(string imgSetPath, string title, string author, ImgLoader sender)
@@ -452,7 +446,7 @@ namespace imgLoader_WPF
                 if (!Directory.Exists(imgSetPath)) return;
 
                 //var img = new BitmapImage();
-                var temp = Directory.EnumerateFiles(imgSetPath, "*.*").Where(f => !f.Contains($".{Core.InfoExt}")).ToArray();
+                var temp = Directory.EnumerateFiles(imgSetPath, "*.*").Where(f => !f.Contains($".{InfoExt}")).ToArray();
 
                 if (temp.Length == 0) return;
                 //img.BeginInit();
@@ -465,8 +459,8 @@ namespace imgLoader_WPF
 
             internal static (List<string>, List<string>) CompareWorkspace(string firstPath, string secondPath)
             {
-                var first = Directory.GetFiles(firstPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-                var second = Directory.GetFiles(secondPath, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
+                var first = Directory.GetFiles(firstPath, $"*.{InfoExt}", SearchOption.AllDirectories);
+                var second = Directory.GetFiles(secondPath, $"*.{InfoExt}", SearchOption.AllDirectories);
 
                 var result1 = new List<string>();
                 var result2 = new List<string>();
@@ -488,20 +482,6 @@ namespace imgLoader_WPF
                 return (result1, result2);
             }
 
-            internal static int[] TestRead(string route)
-            {
-                using var sr = new StreamReader(Dir.DelayStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite), Encoding.UTF8);
-                var temp = new int[1000];
-                var count = 0;
-                var itr = 0;
-                do
-                {
-                    count = sr.Read();
-                    temp[itr++] = count;
-                } while (count > 0);
-
-                return temp;
-            }
 
             internal static List<string> GetFiles(string path, string contains)
             {

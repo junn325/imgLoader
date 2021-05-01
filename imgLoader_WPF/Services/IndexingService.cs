@@ -193,7 +193,7 @@ namespace imgLoader_WPF.Services
 
         private static IndexItem GetItemFromInfo(string fileName)
         {
-            using var sr = new StreamReader(Core.Dir.DelayStream(fileName, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+            using var sr = new StreamReader(new (fileName, FileMode.Open, FileAccess.Read), Encoding.UTF8);
             var infos = sr.ReadToEnd().Replace("\r\n", "\n");
             sr.Close();
             if (string.IsNullOrWhiteSpace(infos)) return null;
@@ -264,7 +264,8 @@ namespace imgLoader_WPF.Services
             {
                 if (!File.Exists(infoRoute)) continue;
 
-                using var sr = new StreamReader(Core.Dir.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+                //using var sr = new StreamReader(Core.Dir.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+                _sender.DelayStream.
                 var infos = sr.ReadToEnd().Replace("\r\n", "\n");
                 sr.Close();
                 if (string.IsNullOrWhiteSpace(infos)) continue;
