@@ -626,7 +626,7 @@ namespace imgLoader_WPF.Windows
             //{
             //    _imgList[i] = null;
             //}
-            //Sender.Focus();
+            Sender.Focus();
             GC.Collect();
         }
 
