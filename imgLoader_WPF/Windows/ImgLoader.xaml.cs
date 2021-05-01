@@ -351,7 +351,7 @@ namespace imgLoader_WPF.Windows
         {
             if (Properties.Settings.Default.UseBasicViewer)
             {
-                Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
+                Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author, this);
             }
             else
             {
@@ -749,7 +749,7 @@ namespace imgLoader_WPF.Windows
 
             if (Properties.Settings.Default.UseBasicViewer)
             {
-                Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author);
+                Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(List[rand].Route), List[rand].Title, List[rand].Author, this);
             }
             else
             {

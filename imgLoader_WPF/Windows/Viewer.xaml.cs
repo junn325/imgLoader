@@ -26,6 +26,7 @@ namespace imgLoader_WPF.Windows
         private const byte Scale = 15; //percent
         private int _movePix = 50;
 
+        internal ImgLoader Sender;
         private ImgCacheService _imgSvc;
         private System.Windows.Controls.Image _img;
 
@@ -393,8 +394,11 @@ namespace imgLoader_WPF.Windows
                 if (Cnvs.ActualWidth >= _imgRect.Width && Cnvs.ActualHeight >= _imgRect.Height) break;
             }
 
-            _img.Width = _imgRect.Width;
+            _img.Width  = _imgRect.Width;
             _img.Height = _imgRect.Height;
+            _imgRect.X  = newWidth  >= Cnvs.ActualWidth ? 0 : (Cnvs.ActualWidth   - _imgRect.Width)  / 2;
+            _imgRect.Y  = newHeight >= Cnvs.ActualHeight ? 0 : (Cnvs.ActualHeight - _imgRect.Height) / 2;
+
             _img.Arrange(_imgRect);
 
             //_img.UpdateLayout();
@@ -622,6 +626,7 @@ namespace imgLoader_WPF.Windows
             //{
             //    _imgList[i] = null;
             //}
+            //Sender.Focus();
             GC.Collect();
         }
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -446,7 +447,7 @@ namespace imgLoader_WPF
                 Process.Start(Core.OpenWith, path);
             }
 
-            internal static void OpenOnCanvas(string imgSetPath, string title, string author)
+            internal static void OpenOnCanvas(string imgSetPath, string title, string author, ImgLoader sender)
             {
                 if (!Directory.Exists(imgSetPath)) return;
 
@@ -458,7 +459,7 @@ namespace imgLoader_WPF
                 //img.UriSource = new Uri(temp[0]);
                 //img.EndInit();
 
-                var canvas = new Viewer { TTitle = title, Author = author, FileList = temp};
+                var canvas = new Viewer { TTitle = title, Author = author, FileList = temp, Sender = sender };
                 canvas.Show();
             }
 
