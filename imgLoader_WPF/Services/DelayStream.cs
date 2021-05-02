@@ -8,7 +8,7 @@ namespace imgLoader_WPF.Services
 {
     internal class DelayStream
     {
-        private const int Interval = 2000;
+        private const int Interval = 20;
 
         private bool _stop = false;
         private int test = 0;

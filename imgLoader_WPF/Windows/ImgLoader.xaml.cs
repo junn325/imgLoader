@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -849,10 +850,38 @@ namespace imgLoader_WPF.Windows
 
         private void D_Else2_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < 999; i++)
+            var swt = new Stopwatch();
+            swt.Start();
+
+            string a = null;
+
+            var t1 = new Thread(() =>
             {
-                PgSvc.Add(new IndexItem() {IsSeparator =true});
-            }
+                for (int i = 0; i < 10; i++)
+                {
+                    using var fs = DelayStream.RequestStream(@"F:\문서\사진\Saved Pictures\고니\i\test.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite).Result;
+                    //using var fs = Core.Dir.DelayStream(@"F:\문서\사진\Saved Pictures\고니\i\test.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                    using var sw = new StreamWriter(fs, Encoding.UTF8);
+                    sw.WriteLine($"test{i}");
+                }
+            });
+            var t2 = new Thread(() =>
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    //using var fs = Core.Dir.DelayStream(@"F:\문서\사진\Saved Pictures\고니\i\test.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                    using var fs = DelayStream.RequestStream(@"F:\문서\사진\Saved Pictures\고니\i\test.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite).Result;
+                    using var sr = new StreamReader(fs, Encoding.UTF8);
+
+                    a = sr.ReadToEnd();
+                }
+
+                Debug.WriteLine(a);
+                Debug.WriteLine(swt.Elapsed.Ticks);
+            });
+
+            t1.Start();
+            t2.Start();
         }
 
         private void LoaderItem_MouseDoubleClick(object sender, MouseButtonEventArgs e)
