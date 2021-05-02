@@ -39,13 +39,14 @@ namespace imgLoader_WPF.Services
                     return new List<IndexItem>(list.OrderBy(i => i.ImgCount));
 
                 case SortOption.Date:
-                    Core.ShowDate = true;
+                    //Core.ShowDate = true;
                     return new List<IndexItem>(list.OrderByDescending(i => i.Date));
 
                 case SortOption.View:
                     return new List<IndexItem>(list.OrderByDescending(i => i.View));
 
                 case SortOption.LastAccess:
+                    Core.ShowDate     = false;
                     Core.ShowLastDate = true;
                     return new List<IndexItem>(list.OrderByDescending(i => i.LastViewDate));
 
@@ -66,13 +67,14 @@ namespace imgLoader_WPF.Services
                     return new List<IndexItem>(list.OrderByDescending(i => i.ImgCount));
 
                 case SortOption.RDate:
-                    Core.ShowDate = true;
+                    //Core.ShowDate = true;
                     return new List<IndexItem>(list.OrderBy(i => i.Date));
 
                 case SortOption.RView:
                     return new List<IndexItem>(list.OrderBy(i => i.View));
 
                 case SortOption.RLastAcess:
+                    Core.ShowDate     = false;
                     Core.ShowLastDate = true;
                     return new List<IndexItem>(list.OrderBy(i => i.LastViewDate));
             }
@@ -82,8 +84,8 @@ namespace imgLoader_WPF.Services
 
         internal void DoSortList(SortOption sortOption)
         {
-            //_sender.Scroll.ScrollToTop();
-            Core.ShowDate = false;
+            _sender.Scroll.ScrollToTop();
+            Core.ShowDate = true;
             Core.ShowLastDate = false;
 
             var sortedList = GetSortedList(_sender.List, sortOption);

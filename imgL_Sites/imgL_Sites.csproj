@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	<TargetFramework>net5.0</TargetFramework>
-	<AssemblyVersion>1.0.0.181</AssemblyVersion>
-	<FileVersion>1.0.0.181</FileVersion>
+	<AssemblyVersion>1.0.0.182</AssemblyVersion>
+	<FileVersion>1.0.0.182</FileVersion>
   </PropertyGroup>
 </Project>

@@ -46,15 +46,9 @@ namespace imgLoader_WPF
             _item.IsDownloading = true;
 
             _site = Load(_url);
-            if (_site == null)
-            {
-                if (!IsStop) MessageBox.Show("Address Unreachable.");
-                return false;
-            }
+            if (_site?.IsValidated() != true) return false;
 
-            if (!_site.IsValidated()) return false;
-
-            _imgUrl  = _site.GetImgUrls();
+            _imgUrl = _site.GetImgUrls();
             _referer = _site.Referer;
 
             IsImgLoading = new bool[_imgUrl.Count];

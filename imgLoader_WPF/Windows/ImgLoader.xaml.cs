@@ -526,7 +526,7 @@ namespace imgLoader_WPF.Windows
 
             foreach (var i in ItemCtrl.ContextMenu.Items)
             {
-                if (i.GetType() == typeof(System.Windows.Controls.Separator)) continue;
+                if (i.GetType() == typeof(Separator)) continue;
 
                 var item = (MenuItem)i;
 
