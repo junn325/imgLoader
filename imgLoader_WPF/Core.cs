@@ -87,21 +87,27 @@ namespace imgLoader_WPF
             if (site == null)
                 throw new NullReferenceException("\"site\" is null.");
 
-            var sb = new StringBuilder();
+            using var fs = stream.RequestStream(infoPath, FileMode.OpenOrCreate, FileAccess.ReadWrite).Result;
+            using var sw = new StreamWriter(fs, Encoding.UTF8);
 
             var info = site.GetInfo();
+
             Debug.Assert(info[2].Contains('|'));
+
             for (var i = 0; i < info.Length; i++)
             {
-                sb.Append(
+                sw.Write(
                     i != info.Length - 1
                         ? info[i] + '\n'
                         : info[i]
                 );
             }
-            sb.Append('\n').Append(DateTime.Now.ToString(CultureInfo.InvariantCulture)).Append("\n0\n1\n0"); //0=Vote, 1=Show, 0=View
+            sw.Write($"\n{DateTime.Now.ToString(CultureInfo.InvariantCulture)}\n0\n1\n0"); //0=Vote, 1=Show, 0=View
 
-            stream.Write(infoPath, sb.ToString());
+            sw.Flush();                //┐
+            fs.SetLength(fs.Position); //오류 등으로 원래 담겨야할 줄 수 이상의 줄이 있을 때 지움
+
+            sw.Close();
 
             File.SetAttributes(infoPath, FileAttributes.Hidden);
         }

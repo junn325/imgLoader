@@ -316,9 +316,9 @@ namespace imgLoader_WPF.Services
             _sender.PnlCond.Children.Clear();
             _sender.List.Clear();
 
-            foreach (var indexItem in _sender.Index)
+            for (var i = 0; i < _sender.Index.Count; i++)
             {
-                _sender.List.Add(indexItem);
+                _sender.List.Add(_sender.Index[i]);
             }
 
             _sender.Sorter.SortRefresh(Sorter.SortOption.Title, disableProcessing);

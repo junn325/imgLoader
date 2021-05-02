@@ -18,8 +18,8 @@ namespace imgLoader_WPF.Windows
         private readonly ImgLoader _sender;
         //private readonly ScrollViewer _scroll;
 
-        private const string TextPath = "Double click to select a path or enter directly";
-        private const string TextOpen = "Double click to select a program or enter directly";
+        private const string TextPath = "Double click to select a path or input directly and press enter";
+        private const string TextOpen = "Double click to select a program or input directly and press enter";
 
         internal Settings(ImgLoader sender)
         {
@@ -46,13 +46,11 @@ namespace imgLoader_WPF.Windows
 
         private void TextBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            var b = new System.Windows.Forms.FolderBrowserDialog();
-            if (b.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                TxtPath.Text = b.SelectedPath;
-        }
+            var fbd = new System.Windows.Forms.FolderBrowserDialog();
+            if (fbd.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
+            TxtPath.Text = fbd.SelectedPath;
+
             if (TxtPath.Text == TextPath || Core.Route == TxtPath.Text) return;
             if (!Directory.Exists(TxtPath.Text)) return;
 
@@ -196,6 +194,14 @@ namespace imgLoader_WPF.Windows
 
         private void TxtOpen_TextChanged(object sender, TextChangedEventArgs e)
         {
+        }
+
+        private void TxtOpen_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            var ofd = new System.Windows.Forms.OpenFileDialog();
+            ofd.Filter = "Executable files (*.exe)|*.exe";
+            if (ofd.ShowDialog() != System.Windows.Forms.DialogResult.OK) return;
+
             if (TxtOpen.Text == TextOpen || Core.OpenWith == TxtOpen.Text) return;
             if (!File.Exists(TxtOpen.Text)) return;
 
@@ -212,15 +218,76 @@ namespace imgLoader_WPF.Windows
             {
                 File.WriteAllText(Core.FilesRoute + Core.OpenFile, Core.OpenWith);
             }
+        }
+
+        private void TxtPath_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+            if (TxtPath.Text == TextPath || Core.Route == TxtPath.Text) return;
+            if (!Directory.Exists(TxtPath.Text)) return;
+
+            Core.Route = TxtPath.Text;
+
+            _sender.BlockIdx.Dispatcher.Invoke(() => _sender.BlockIdx.Visibility = Visibility.Visible);
+
+            _sender.CondInd.Clear();
+
+            _sender.Index.Clear();
+            _sender.List.Clear();
+
+            _sender.Scroll.ScrollToTop();
+            _sender.IdxSvc.Pause();
+
+            new Thread(() =>
+            {
+                _sender.IdxSvc.DoIndex();
+
+                new Thread(() =>
+                {
+                    _sender.Dispatcher.Invoke(() =>
+                    {
+                        _sender.PgSvc.Clear();
+                        _sender.BlockIdx.Visibility = Visibility.Hidden;
+                        _sender.ShowItemsCnt();
+                    });
+
+                    _sender.PgSvc.Paginate();
+                    _sender.IdxSvc.Resume();
+                }).Start();
+            }).Start();
+
+            if (File.Exists(Core.FilesRoute + Core.RouteFile))
+            {
+                if (File.ReadAllText(Core.FilesRoute + Core.RouteFile) != Core.Route)
+                {
+                    File.WriteAllText(Core.FilesRoute + Core.RouteFile, Core.Route);
+                }
+            }
+            else
+            {
+                File.WriteAllText(Core.FilesRoute + Core.RouteFile, Core.Route);
+            }
 
         }
 
-        private void TxtOpen_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        private void TxtOpen_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            var b = new System.Windows.Forms.OpenFileDialog();
-            b.Filter = "Executable files (*.exe)|*.exe";
-            if (b.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                TxtPath.Text = b.FileName;
+            if (TxtOpen.Text == TextOpen || Core.OpenWith == TxtOpen.Text) return;
+            if (!File.Exists(TxtOpen.Text)) return;
+
+            Core.OpenWith = TxtOpen.Text;
+
+            if (File.Exists(Core.FilesRoute + Core.OpenFile))
+            {
+                //if (File.ReadAllText(Core.FilesRoute + Core.OpenFile) != Core.OpenWith)
+                //{
+                File.WriteAllText(Core.FilesRoute + Core.OpenFile, Core.OpenWith);
+                //}
+            }
+            else
+            {
+                File.WriteAllText(Core.FilesRoute + Core.OpenFile, Core.OpenWith);
+            }
         }
     }
 }

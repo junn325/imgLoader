@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
+using System.Diagnostics;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,11 +8,12 @@ namespace imgLoader_WPF.Services
 {
     internal class DelayStream
     {
-        private const int Interval = 1000;
+        private const int Interval = 2000;
 
         private bool _stop = false;
+        private int test = 0;
 
-        private readonly Queue<(string, string, bool)> _fileQueue = new();
+        private readonly Queue<(string, Task<FileStream>)> _streamQueue = new();
 
         public DelayStream()
         {
@@ -21,16 +21,22 @@ namespace imgLoader_WPF.Services
             {
                 while (!_stop)
                 {
-                    if (_fileQueue.Count == 0)
+                    if (_streamQueue.Count == 0)
                     {
-                        Thread.Sleep(Interval);
+                        for (int i = 0; i < 20; i++)
+                        {
+                            if (_streamQueue.Count != 0) break;
+                            Thread.Sleep(Interval / 20);
+                        }
                         continue;
                     }
 
-                    var (route, content, isRead) = _fileQueue.Peek();
-                    if (isRead) _ = PerformRead(route);
-                    else PerformWrite(route, content);
-                    _fileQueue.Dequeue();
+                    var (route, task) = _streamQueue.Peek();
+
+                    //Core.Log("start: " + route);
+                    Debug.Assert(task != null);
+                    task.Start();
+                    //Core.Log("deq: " + _streamQueue.Dequeue().Item1);
                 }
             });
             service.Name = "DelStream";
@@ -39,32 +45,17 @@ namespace imgLoader_WPF.Services
             service.Start();
         }
 
-        internal void Write(string route, string content)
+        internal async Task<FileStream> RequestStream(string route, FileMode mode, FileAccess access)
         {
-            _fileQueue.Enqueue((route, content, false));
-        }
+            test++;
+            var result = new Task<FileStream>(() => new FileStream(route, mode, access));
 
-        internal void Read(string route)
-        {
-            _fileQueue.Enqueue((route, "", true));
-        }
+            lock (_streamQueue)
+            {
+                _streamQueue.Enqueue((route, result));
+            }
 
-        private static void PerformWrite(string route, string content)
-        {
-            using var fs = new FileStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            using var sw = new StreamWriter(fs, Encoding.UTF8);
-            sw.Write(content);
-
-            sw.Flush();                //┐
-            fs.SetLength(fs.Position); //오류 등으로 원래 담겨야할 줄 수 이상의 줄이 있을 때 지움
-        }
-
-        private static async Task<string> PerformRead(string route)
-        {
-            await using var fs = new FileStream(route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            using var sw = new StreamReader(fs, Encoding.UTF8);
-
-            return await sw.ReadToEndAsync().ConfigureAwait(false);
+            return await result.ConfigureAwait(false);
         }
     }
 }

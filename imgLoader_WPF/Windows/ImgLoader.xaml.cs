@@ -146,16 +146,15 @@ namespace imgLoader_WPF.Windows
 
             ItemCtrl.ItemsSource = ShowItems;
 
-            CondInd  = new ConditionIndicator(this);
-            Sorter   = new Sorter(this);
-            Searcher = new Searcher(this);
+            DelayStream = new DelayStream();
+            CondInd     = new ConditionIndicator(this);
+            Sorter      = new Sorter(this);
+            Searcher    = new Searcher(this);
 
             PgSvc  = new PaginationService(this);
-            InfSvc = new InfoSavingService();
+            InfSvc = new InfoSavingService(this);
             IdxSvc = new IndexingService(this);
             Categorizer = new Categorizer(this);
-            DelayStream = new DelayStream();
-            Categorizer.AddToCategory("Red", "test");
         }
 
         private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
@@ -232,7 +231,7 @@ namespace imgLoader_WPF.Windows
                 Index.Insert(0, lItem);
                 List.Insert(0, lItem);
 
-                lItem.Proc = new Processor(url, lItem);
+                lItem.Proc = new Processor(this, url, lItem);
                 lItem.Proc.LoadInfo();
 
                 lItem.Proc.Pause = lItem.Proc.Pause || !Properties.Settings.Default.Down_Immid;

@@ -11,6 +11,8 @@ using System.Windows;
 //using imgL_Sites;
 using imgL_Sites;
 
+using imgLoader_WPF.Windows;
+
 namespace imgLoader_WPF
 {
     internal class Processor
@@ -33,8 +35,11 @@ namespace imgLoader_WPF
         private Dictionary<string, string> _imgUrl;
         private ISite _site;
 
-        public Processor(string url, IndexItem item)
+        private ImgLoader _sender;
+
+        public Processor(ImgLoader sender, string url, IndexItem item)
         {
+            _sender = sender;
             //try
             //{
             if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
@@ -163,7 +168,7 @@ namespace imgLoader_WPF
                 MessageBox.Show("Test");
             }
 
-            Core.CreateInfo(_route, _site);
+            Core.CreateInfo(_route, _site, _sender.DelayStream);
 
             return Error.End;
             //}

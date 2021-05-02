@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 using imgLoader_WPF.Windows;
 
@@ -191,9 +192,9 @@ namespace imgLoader_WPF.Services
             //});
         }
 
-        private static IndexItem GetItemFromInfo(string fileName)
+        private IndexItem GetItemFromInfo(string fileName)
         {
-            using var sr = new StreamReader(new (fileName, FileMode.Open, FileAccess.Read), Encoding.UTF8);
+            using var sr = new StreamReader(_sender.DelayStream.RequestStream(fileName, FileMode.Open, FileAccess.Read).Result, Encoding.UTF8);
             var infos = sr.ReadToEnd().Replace("\r\n", "\n");
             sr.Close();
             if (string.IsNullOrWhiteSpace(infos)) return null;
@@ -259,77 +260,87 @@ namespace imgLoader_WPF.Services
 
             var infoFiles = Core.Dir.GetFiles(Core.Route, Core.InfoExt).ToArray();
             //infoFiles = Directory.GetFiles(Core.Route, $"*.{Core.InfoExt}", SearchOption.AllDirectories);
-
+            var tasks = new List<Task>();
             foreach (var infoRoute in infoFiles.Where(item => _sender.Index.All(i => i.Route != item)).ToArray())
             {
                 if (!File.Exists(infoRoute)) continue;
 
-                //using var sr = new StreamReader(Core.Dir.DelayStream(infoRoute, FileMode.Open, FileAccess.Read), Encoding.UTF8);
-                _sender.DelayStream.
-                var infos = sr.ReadToEnd().Replace("\r\n", "\n");
-                sr.Close();
-                if (string.IsNullOrWhiteSpace(infos)) continue;
-
-                var info = Core.InitArray(Core.InfoCount, infos.Split('\n'));
-
-                var item = new IndexItem();
-                try
-                {
-                    item.Route  = infoRoute;
-                    item.Number = Core.Dir.EHNumFromInternal(infoRoute.Split('\\')[^1].Split('.')[0]);
-
-                    item.SiteName   = info[0];
-                    item.Title      = info[1];
-                    item.Author     = info[2];
-                    item.ImgCount   = int.TryParse(info[3], out var parse) ? parse : -1;
-                    item.IsCntValid = Directory.GetFiles(Core.Dir.GetDirFromFile(infoRoute), "*").Length == item.ImgCount + 1;
-                    item.Tags       = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
-
-                    if (info[5].Contains(' ') && info[5].Contains('/'))
-                    {
-                        var date = info[5].Split(' ');
-                        int.TryParse(date[0].Split('/')[0], out var month);
-                        int.TryParse(date[0].Split('/')[1], out var day);
-                        int.TryParse(date[0].Split('/')[2], out var year);
-                        int.TryParse(date[1].Split(':')[0], out var hour);
-                        int.TryParse(date[1].Split(':')[1], out var minute);
-                        int.TryParse(date[1].Split(':')[2], out var second);
-                        item.Date = new DateTime(year, month, day, hour, minute, second);
-                    }
-
-                    item.Vote = info[6] != null ? int.Parse(info[6]) : 0;
-                    item.Show = info[7] == null || info[7] == "1";
-                    item.View = info[8] != null ? int.Parse(info[8]) : 0;
-
-                    if (info.Length > 9 && info[9] != null && info[9].Contains(' ') && info[9].Contains('/'))
-                    {
-                        var lastDate = info[9].Split(' ');
-                        int.TryParse(lastDate[0].Split('/')[0], out var month);
-                        int.TryParse(lastDate[0].Split('/')[1], out var day);
-                        int.TryParse(lastDate[0].Split('/')[2], out var year);
-                        int.TryParse(lastDate[1].Split(':')[0], out var hour);
-                        int.TryParse(lastDate[1].Split(':')[1], out var minute);
-                        int.TryParse(lastDate[1].Split(':')[2], out var second);
-                        item.LastViewDate = new DateTime(year, month, day, hour, minute, second);
-                    }
-                }
-                catch
-                {
-                    item.IsError  = true;
-                    item.Title    = "";
-                    item.Author   = "Info read error. Recovery is required.";
-                    item.Vote     = -1;
-                    item.View     = -1;
-                    item.ImgCount = -1;
-                }
-
-                _sender.Index.Add(item);
-
-                if (info[7] == null || info[7] == "0")
-                    continue;
-
-                _sender.List.Add(item);
+                var task = IndexAsync(infoRoute);
+                tasks.Add(task);
+                //task.Start();
             }
+
+            Task.WaitAll(tasks.ToArray());
+        }
+
+        internal async Task IndexAsync(string infoRoute)
+        {
+            await using var fs = await _sender.DelayStream.RequestStream(infoRoute, FileMode.Open, FileAccess.Read).ConfigureAwait(false);
+            using var sr = new StreamReader(fs, Encoding.UTF8);
+            var infos = (await sr.ReadToEndAsync().ConfigureAwait(false)).Replace("\r\n", "\n");
+            sr.Close();
+            if (string.IsNullOrWhiteSpace(infos)) 
+                return;
+
+            var info = Core.InitArray(Core.InfoCount, infos.Split('\n'));
+
+            var item = new IndexItem();
+            try
+            {
+                item.Route = infoRoute;
+                item.Number = Core.Dir.EHNumFromInternal(infoRoute.Split('\\')[^1].Split('.')[0]);
+
+                item.SiteName = info[0];
+                item.Title = info[1];
+                item.Author = info[2];
+                item.ImgCount = int.TryParse(info[3], out var parse) ? parse : -1;
+                item.IsCntValid = Directory.GetFiles(Core.Dir.GetDirFromFile(infoRoute), "*").Length == item.ImgCount + 1;
+                item.Tags = info[4].Split("tags:")[1].Split('\n')[0].Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+                if (info[5].Contains(' ') && info[5].Contains('/'))
+                {
+                    var date = info[5].Split(' ');
+                    int.TryParse(date[0].Split('/')[0], out var month);
+                    int.TryParse(date[0].Split('/')[1], out var day);
+                    int.TryParse(date[0].Split('/')[2], out var year);
+                    int.TryParse(date[1].Split(':')[0], out var hour);
+                    int.TryParse(date[1].Split(':')[1], out var minute);
+                    int.TryParse(date[1].Split(':')[2], out var second);
+                    item.Date = new DateTime(year, month, day, hour, minute, second);
+                }
+
+                item.Vote = info[6] != null ? int.Parse(info[6]) : 0;
+                item.Show = info[7] == null || info[7] == "1";
+                item.View = info[8] != null ? int.Parse(info[8]) : 0;
+
+                if (info.Length > 9 && info[9] != null && info[9].Contains(' ') && info[9].Contains('/'))
+                {
+                    var lastDate = info[9].Split(' ');
+                    int.TryParse(lastDate[0].Split('/')[0], out var month);
+                    int.TryParse(lastDate[0].Split('/')[1], out var day);
+                    int.TryParse(lastDate[0].Split('/')[2], out var year);
+                    int.TryParse(lastDate[1].Split(':')[0], out var hour);
+                    int.TryParse(lastDate[1].Split(':')[1], out var minute);
+                    int.TryParse(lastDate[1].Split(':')[2], out var second);
+                    item.LastViewDate = new DateTime(year, month, day, hour, minute, second);
+                }
+            }
+            catch
+            {
+                item.IsError = true;
+                item.Title = "";
+                item.Author = "Info read error. Recovery is required.";
+                item.Vote = -1;
+                item.View = -1;
+                item.ImgCount = -1;
+            }
+
+            _sender.Index.Add(item);
+
+            if (info[7] == null || info[7] == "0")
+                return;
+
+            _sender.List.Add(item);
         }
 
         internal void Refresh(string[] infoFiles, string[] newFiles)

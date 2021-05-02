@@ -53,7 +53,7 @@
             <Label Grid.Row="1" Grid.Column="0" Content="Open with" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0" Padding="0,0,0,0"/>
 
             <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch">
-                <TextBox x:Name="TxtPath" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0" MouseDoubleClick="TextBox_MouseDoubleClick" TextChanged="TextBox_TextChanged"/>
+                <TextBox x:Name="TxtPath" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="0,0,5,0" MouseDoubleClick="TextBox_MouseDoubleClick" PreviewKeyDown="TxtPath_PreviewKeyDown"/>
             </Grid>
 
             <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch">
@@ -61,7 +61,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBox Grid.Column="0" x:Name="TxtOpen" Text="" Margin="0,0,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" MouseDoubleClick="TxtOpen_MouseDoubleClick" TextChanged="TxtOpen_TextChanged"/>
+                <TextBox Grid.Column="0" x:Name="TxtOpen" Text="" Margin="0,0,5,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" MouseDoubleClick="TxtOpen_MouseDoubleClick" PreviewKeyDown="TxtOpen_PreviewKeyDown"/>
                 <CheckBox x:Name="ChkOpenBasic" Grid.Column="1" Content="Open with basic viewer" IsChecked="True" Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Stretch" Click="ChkOpenBasic_Click"/>
             </Grid>
 

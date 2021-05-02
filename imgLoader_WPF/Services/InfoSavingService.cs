@@ -4,6 +4,8 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
+using imgLoader_WPF.Windows;
+
 namespace imgLoader_WPF.Services
 {
     internal class InfoSavingService
@@ -11,12 +13,16 @@ namespace imgLoader_WPF.Services
         private const int Interval = 1000;
 
         private bool _stop = false;
+
         private readonly StringBuilder _sb = new();
+        private readonly ImgLoader _sender;
 
         private readonly Queue<IndexItem> _saveQueue = new();
 
-        public InfoSavingService()
+        public InfoSavingService(ImgLoader sender)
         {
+            _sender = sender;
+
             var service = new Thread(() =>
             {
                 while (!_stop)
@@ -42,7 +48,7 @@ namespace imgLoader_WPF.Services
             _saveQueue.Enqueue(item);
         }
 
-        private static void PerformSave(IndexItem item, StringBuilder sb)
+        private void PerformSave(IndexItem item, StringBuilder sb)
         {
             if (string.IsNullOrWhiteSpace(item.Route)) return;
             if (!Directory.Exists(Core.Dir.GetDirFromFile(item.Route))) return;
@@ -73,7 +79,7 @@ namespace imgLoader_WPF.Services
                 .Append(item.View).Append('\n')
                 .Append(item.LastViewDate.ToString(CultureInfo.InvariantCulture));
 
-            using var fs = Core.Dir.DelayStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            using var fs = _sender.DelayStream.RequestStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite).Result;
             using var sw = new StreamWriter(fs, Encoding.UTF8);
             sw.Write(sb.ToString());
 
