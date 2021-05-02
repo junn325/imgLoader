@@ -233,9 +233,13 @@ namespace imgLoader_WPF.Windows
                 List.Insert(0, lItem);
 
                 lItem.Proc = new Processor(url, lItem);
-                if (lItem.Proc.LoadInfo())
+                if (!lItem.Proc.LoadInfo())
                 {
                     MessageBox.Show("Address Unreachable.");
+                    PgSvc.Remove(lItem);
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
+                    return;
                 }
 
                 lItem.Proc.Pause = lItem.Proc.Pause || !Properties.Settings.Default.Down_Immid;
@@ -273,7 +277,10 @@ namespace imgLoader_WPF.Windows
                 lItem.RefreshInfo();
                 if (!lItem.Proc.StartDownload())
                 {
-
+                    PgSvc.Remove(lItem);
+                    Index.Remove(lItem);
+                    List.Remove(lItem);
+                    return;
                 }
 
                 List.Remove(lItem);

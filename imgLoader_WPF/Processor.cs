@@ -118,7 +118,7 @@ namespace imgLoader_WPF
 
             DoStop();
 
-            return true;
+            return !IsStop;
         }
 
         /// <summary>
@@ -356,7 +356,10 @@ namespace imgLoader_WPF
                 _failed.Clear();
 
                 if (_tasks == null) return;
-                Task.WaitAll(_tasks);
+                foreach (var task in _tasks)
+                {
+                    task?.Wait();
+                }
                 //_stop = false;
 
                 _tasks = null;
