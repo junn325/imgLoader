@@ -394,34 +394,34 @@ namespace imgLoader_WPF
                 return dirName;
             }
 
-            //internal static FileStream DelayStream(string route, FileMode mode, FileAccess access)
-            //{
-            //    FileStream file = null;
+            internal static FileStream DelayStream(string route, FileMode mode, FileAccess access)
+            {
+                FileStream file = null;
 
-            //    var temp = false;
-            //    var thres = 0;
+                var temp = false;
+                var thres = 0;
 
-            //    while (!temp)
-            //    {
-            //        try
-            //        {
-            //            file = new FileStream(route, mode, access);
-            //            temp = true;
-            //        }
-            //        catch (Exception ex)
-            //        {
-            //            if (thres++ > 100) break;
+                while (!temp)
+                {
+                    try
+                    {
+                        file = new FileStream(route, mode, access);
+                        temp = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (thres++ > 100) break;
 
-            //            temp = false;
-            //            Log($"{route} wait: {ex.Message}");
-            //            Thread.Sleep(20);
-            //        }
-            //    }
+                        temp = false;
+                        Log($"{route} wait: {ex.Message}");
+                        Thread.Sleep(20);
+                    }
+                }
 
-            //    //if (file == null) throw new Exception("stream is null");
+                //if (file == null) throw new Exception("stream is null");
 
-            //    return file;
-            //}
+                return file;
+            }
 
             internal static void OpenDir(string path)
             {

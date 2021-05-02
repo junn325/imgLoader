@@ -36,6 +36,7 @@ namespace imgLoader_WPF.Services
                     //Core.Log("start: " + route);
                     Debug.Assert(task != null);
                     task.Start();
+                    _streamQueue.Dequeue();
                     //Core.Log("deq: " + _streamQueue.Dequeue().Item1);
                 }
             });
@@ -45,7 +46,7 @@ namespace imgLoader_WPF.Services
             service.Start();
         }
 
-        internal async Task<FileStream> RequestStream(string route, FileMode mode, FileAccess access)
+        internal Task<FileStream> RequestStream(string route, FileMode mode, FileAccess access)
         {
             test++;
             var result = new Task<FileStream>(() => new FileStream(route, mode, access));
@@ -55,7 +56,8 @@ namespace imgLoader_WPF.Services
                 _streamQueue.Enqueue((route, result));
             }
 
-            return await result.ConfigureAwait(false);
+            //return await result.ConfigureAwait(false);
+            return result;
         }
     }
 }
