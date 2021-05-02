@@ -25,7 +25,5 @@ namespace imgLoader_WPF
         internal NoParam RefreshInfo, ShownChang;
         internal VisOne ProgPanelVis;
         internal IntOne ProgBarMax, ProgBarVal;
-
-        //todo: 델리게이트들을 Core로 옮길 수 있는가?
     }
 }

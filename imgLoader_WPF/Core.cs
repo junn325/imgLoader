@@ -80,14 +80,14 @@ namespace imgLoader_WPF
             }).Start();
         }
 
-        internal static void CreateInfo(string infoPath, ISite site, DelayStream stream)
+        internal static void CreateInfo(string infoPath, ISite site)
         {
             if (!Directory.Exists(Dir.GetDirFromFile(infoPath)))
                 throw new DirectoryNotFoundException();
             if (site == null)
                 throw new NullReferenceException("\"site\" is null.");
 
-            using var fs = stream.RequestStream(infoPath, FileMode.OpenOrCreate, FileAccess.ReadWrite).Result;
+            using var fs = Dir.DelayStream(infoPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             using var sw = new StreamWriter(fs, Encoding.UTF8);
 
             var info = site.GetInfo();

@@ -224,7 +224,7 @@ namespace imgLoader_WPF.Windows
 
         internal void AddItem(string url)
         {
-            var lItem = new IndexItem { Author = "준비 중...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
+            var lItem = new IndexItem { Author = "Connecting...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
 
             var service = new Thread(() =>
             {
@@ -232,8 +232,11 @@ namespace imgLoader_WPF.Windows
                 Index.Insert(0, lItem);
                 List.Insert(0, lItem);
 
-                lItem.Proc = new Processor(this, url, lItem);
-                lItem.Proc.LoadInfo();
+                lItem.Proc = new Processor(url, lItem);
+                if (lItem.Proc.LoadInfo())
+                {
+                    MessageBox.Show("Address Unreachable.");
+                }
 
                 lItem.Proc.Pause = lItem.Proc.Pause || !Properties.Settings.Default.Down_Immid;
 
@@ -257,7 +260,6 @@ namespace imgLoader_WPF.Windows
                 while (lItem.RefreshInfo == null)
                 {
                     Task.Delay(100).Wait();
-                    Debug.WriteLine("Main: TxtUrl_KeyUp: Wait");
                 }
 
                 if (lItem.Proc.IsStop)
@@ -269,7 +271,10 @@ namespace imgLoader_WPF.Windows
                 }
 
                 lItem.RefreshInfo();
-                lItem.Proc.StartDownload();
+                if (!lItem.Proc.StartDownload())
+                {
+
+                }
 
                 List.Remove(lItem);
                 List.Insert(Core.GetFutureIndexOnList(List, lItem, (Sorter.SortOption)CondInd.SortItem.Option), lItem);

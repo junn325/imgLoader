@@ -79,7 +79,7 @@ namespace imgLoader_WPF.Services
                 .Append(item.View).Append('\n')
                 .Append(item.LastViewDate.ToString(CultureInfo.InvariantCulture));
 
-            using var fs = _sender.DelayStream.RequestStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite).Result;
+            using var fs = Core.Dir.DelayStream(item.Route, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             using var sw = new StreamWriter(fs, Encoding.UTF8);
             sw.Write(sb.ToString());
 

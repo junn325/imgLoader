@@ -35,14 +35,11 @@ namespace imgLoader_WPF
         private Dictionary<string, string> _imgUrl;
         private ISite _site;
 
-        private ImgLoader _sender;
-
-        public Processor(ImgLoader sender, string url, IndexItem item)
+        public Processor(string url, IndexItem item)
         {
-            _sender = sender;
             //try
             //{
-            if (string.IsNullOrEmpty(url)) throw new NullReferenceException("url was empty");
+            if (string.IsNullOrEmpty(url)) return;
             _item = item;
             _url  = url;
 
@@ -54,7 +51,7 @@ namespace imgLoader_WPF
             //}
         }
 
-        internal void LoadInfo()
+        internal bool LoadInfo()
         {
             IsStop = false;
             _item.IsDownloading = true;
@@ -62,11 +59,11 @@ namespace imgLoader_WPF
             _site = Load(_url);
             if (_site == null)
             {
-                if (!IsStop) MessageBox.Show("주소에 연결할 수 없음.");
-                return;
+                if (!IsStop) MessageBox.Show("Address Unreachable.");
+                return false;
             }
 
-            if (!_site.IsValidated()) throw new Exception("Failed to Initialize: Processor: Invalidate");
+            if (!_site.IsValidated()) return false;
 
             _imgUrl  = _site.GetImgUrls();
             _referer = _site.Referer;
@@ -97,9 +94,11 @@ namespace imgLoader_WPF
             //}
 
             IsValidated = _site.IsValidated();
+
+            return true;
         }
 
-        internal void StartDownload()
+        internal bool StartDownload()
         {
             IsStop = false;
 
@@ -107,16 +106,19 @@ namespace imgLoader_WPF
 
             if (temp != Error.End)
             {
-                if (temp == Error.Cancel) return;
+                if (temp == Error.Cancel) return false;
 
                 _item.IsDownloading = false;
-                throw new Exception("Failed to Load: Processor.Load()");
+
+                return false;
             }
 
             AllocTask(_route, _imgUrl);
             _item.IsDownloading = false;
 
             DoStop();
+
+            return true;
         }
 
         /// <summary>
@@ -126,7 +128,7 @@ namespace imgLoader_WPF
         {
             var site = Core.LoadSite(url);
 
-            return site == null || !site.IsValidated()
+            return site?.IsValidated() != true
                        ? null
                        : site;
         }
@@ -168,7 +170,7 @@ namespace imgLoader_WPF
                 MessageBox.Show("Test");
             }
 
-            Core.CreateInfo(_route, _site, _sender.DelayStream);
+            Core.CreateInfo(_route, _site);
 
             return Error.End;
             //}
