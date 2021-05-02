@@ -101,7 +101,7 @@ namespace imgLoader_WPF
             }
             sb.Append('\n').Append(DateTime.Now.ToString(CultureInfo.InvariantCulture)).Append("\n0\n1\n0"); //0=Vote, 1=Show, 0=View
 
-            stream.Save(infoPath, sb.ToString());
+            stream.Write(infoPath, sb.ToString());
 
             File.SetAttributes(infoPath, FileAttributes.Hidden);
         }

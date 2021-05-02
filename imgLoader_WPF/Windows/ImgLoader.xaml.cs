@@ -609,7 +609,7 @@ namespace imgLoader_WPF.Windows
         //{
         //    _clickedItem.Show = false;
 
-        //    InfSvc.Save(_clickedItem);
+        //    InfSvc.Write(_clickedItem);
         //    _index.Remove(_clickedItem);
 
         //    _idxSvc.DoIndex(_sb);

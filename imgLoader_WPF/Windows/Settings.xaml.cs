@@ -138,13 +138,13 @@ namespace imgLoader_WPF.Windows
         private void CheckNoIndex_Click(object sender, RoutedEventArgs e)
         {
             //Properties.Settings.Default.NoIndex = CheckNoIndex.IsChecked.GetValueOrDefault();
-            //Properties.Settings.Default.Save();
+            //Properties.Settings.Default.Write();
         }
 
         private void CheckSearch_Click(object sender, RoutedEventArgs e)
         {
             //Properties.Settings.Default.see = CheckNoIndex.IsChecked.GetValueOrDefault();
-            //Properties.Settings.Default.Save();
+            //Properties.Settings.Default.Write();
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

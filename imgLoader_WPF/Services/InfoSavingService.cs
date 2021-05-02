@@ -80,8 +80,6 @@ namespace imgLoader_WPF.Services
             sw.Flush();                 //┐
             fs.SetLength(fs.Position);  //오류 등으로 원래 담겨야할 줄 수 이상의 줄이 있을 때 지움
 
-            sw.Close();
-
             sb.Clear();
         }
     }
