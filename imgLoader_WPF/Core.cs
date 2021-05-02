@@ -451,13 +451,9 @@ namespace imgLoader_WPF
             {
                 if (!Directory.Exists(imgSetPath)) return;
 
-                //var img = new BitmapImage();
                 var temp = Directory.EnumerateFiles(imgSetPath, "*.*").Where(f => !f.Contains($".{InfoExt}")).ToArray();
 
                 if (temp.Length == 0) return;
-                //img.BeginInit();
-                //img.UriSource = new Uri(temp[0]);
-                //img.EndInit();
 
                 var canvas = new Viewer { TTitle = title, Author = author, FileList = temp, Sender = sender };
                 canvas.Show();

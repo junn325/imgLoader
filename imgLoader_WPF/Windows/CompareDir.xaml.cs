@@ -1,20 +1,21 @@
 ﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
 
 namespace imgLoader_WPF.Windows
 {
     public partial class CompareDir : Window
     {
-        private ImgLoader _sender;
+        private readonly ImgLoader _sender;
         private readonly ObservableCollection<CompareData> _itemsData = new();
         public CompareDir(ImgLoader sender)
         {
             InitializeComponent();
-            _sender = sender;
+
+            _sender   = sender;
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            MaxWidth  = SystemParameters.MaximizedPrimaryScreenWidth;
         }
 
         private void TitleGrid_MouseMove(object sender, MouseEventArgs e)

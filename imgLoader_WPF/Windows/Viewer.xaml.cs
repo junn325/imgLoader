@@ -27,7 +27,7 @@ namespace imgLoader_WPF.Windows
         private int _movePix = 50;
 
         internal ImgLoader Sender;
-        private ImgCacheService _imgSvc;
+        //private ImgCacheService _imgSvc;
         private System.Windows.Controls.Image _img;
 
         //private Rect _oriPosition;
@@ -40,8 +40,6 @@ namespace imgLoader_WPF.Windows
         private int _index;
         private int _min;
         private int _thres;
-
-        private long _size;
 
         internal string TTitle = "";
         internal string Author = "";
@@ -58,28 +56,22 @@ namespace imgLoader_WPF.Windows
         {
             InputMethod.SetIsInputMethodEnabled(this, false);
 
-            _imgSvc = new ImgCacheService(this);
+            //_imgSvc = new ImgCacheService(this);
             Title   = GetTitle(FileList[0]);
 
             FileList = FileList.OrderBy(n => Regex.Replace(n, @"\d+", nn => nn.Value.PadLeft(4, '0'))).ToArray();
-            //_imgList = new BitmapImage[FileList.Length];
 
             var len = new FileInfo(FileList[0]).Length;
-            _size += len;
             Debug.WriteLine($"+{len}");
 
             _img = new System.Windows.Controls.Image();
-            //_img.VerticalAlignment = VerticalAlignment.Center;
-            //_img.HorizontalAlignment = HorizontalAlignment.Center;        //활성화시 확대 안됨
 
             DockPanel.SetDock(_img, Dock.Top);
             RenderOptions.SetBitmapScalingMode(_img, BitmapScalingMode.Fant);
 
             Cnvs.Children.Insert(0, _img);
 
-            //_imgList[0] = ImageLoad(FileList[0]);
             _img.Source = ImageLoad(FileList[0]);
-            //_img.Source = _imgList[0];
             _img.UpdateLayout();
 
             PBar.Maximum = FileList.Length;
@@ -301,15 +293,11 @@ namespace imgLoader_WPF.Windows
 
         private void CacheImage(int index)
         {
-            _imgSvc.Add(index);
+            //_imgSvc.Add(index);
         }
 
         internal void LoadImage(int index)
         {
-            var length = new FileInfo(FileList[index]).Length;
-            _size += length;
-            //Debug.WriteLine($"+{length}");
-
             //_imgList[index] = ImageLoad(FileList[index]);
             //Dispatcher.Invoke(() => _imgList[index] = ImageLoad(FileList[index]));
         }
@@ -317,11 +305,6 @@ namespace imgLoader_WPF.Windows
         private void ReleaseImage(int index)
         {
             //_imgList[index] = null;
-
-            var temp = new FileInfo(FileList[index]).Length;
-            _size -= temp;
-            Debug.WriteLine($"-{temp}");
-
             //_size -= new FileInfo(FileList[index]).Length;
         }
 
@@ -436,31 +419,6 @@ namespace imgLoader_WPF.Windows
             }
 
             return ((int)width, (int)height);
-        }
-
-        public static Bitmap ResizeImageWithOptions(System.Drawing.Image image, int width, int height)
-        {
-            var destRect = new Rectangle(0, 0, width, height);
-            var destImage = new Bitmap(width, height);
-
-            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
-
-            using (var graphics = Graphics.FromImage(destImage))
-            {
-                graphics.CompositingMode    = CompositingMode.SourceCopy;
-                graphics.CompositingQuality = CompositingQuality.HighQuality;
-                graphics.InterpolationMode  = InterpolationMode.HighQualityBicubic;
-                graphics.SmoothingMode      = SmoothingMode.HighQuality;
-                graphics.PixelOffsetMode    = PixelOffsetMode.HighQuality;
-
-                using (var wrapMode = new ImageAttributes())
-                {
-                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
-                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
-                }
-            }
-
-            return destImage;
         }
         //
 
@@ -626,7 +584,6 @@ namespace imgLoader_WPF.Windows
             //{
             //    _imgList[i] = null;
             //}
-            Sender.Focus();
             GC.Collect();
         }
 

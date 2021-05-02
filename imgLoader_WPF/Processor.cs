@@ -3,22 +3,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Security.Policy;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-//using imgL_Sites;
 using imgL_Sites;
-
-using imgLoader_WPF.Windows;
 
 namespace imgLoader_WPF
 {
     internal class Processor
     {
-        public bool[] IsImgLoading;
-        public bool Pause, IsStop, IsValidated;
+        internal bool[] IsImgLoading;
+        internal bool Pause, IsStop, IsValidated;
 
         internal int ProgVal;
         internal int ProgMax;
@@ -66,7 +62,7 @@ namespace imgLoader_WPF
             _number = Core.GetNumber(_url);
             _artist = Core.GetArtistFromRaw(_site.GetArtist());
             _title  = GetTitle(_site.GetTitle());
-            _route  = GetPath(_artist, _title);
+            _route  = GetInfoPath(_artist, _title);
             _info   = _site.GetInfo();
 
             if (_number == null || _artist == null || _title == null || _route == null || _info == null)
@@ -109,9 +105,6 @@ namespace imgLoader_WPF
             return !IsStop;
         }
 
-        /// <summary>
-        ///     Can be null
-        /// </summary>
         private static ISite Load(string url)
         {
             var site = Core.LoadSite(url);
@@ -132,7 +125,7 @@ namespace imgLoader_WPF
                        : temp;
         }
 
-        private string GetPath(string artist, string title)
+        private string GetInfoPath(string artist, string title)
         {
             if (artist == null || title == null) return null;
 
@@ -147,12 +140,10 @@ namespace imgLoader_WPF
                     : temp;
 
             return $@"{Core.Route}\{temp}\{Core.Dir.EHNumFromRaw(_number)}.{Core.InfoExt}";
-        } //returns info path
+        }
 
         private bool CreateInfo()
         {
-            //try
-            //{
             if (!CheckDupl())
             {
                 Directory.CreateDirectory(Core.Dir.GetDirFromFile(_route));
@@ -163,16 +154,6 @@ namespace imgLoader_WPF
             }
 
             return Core.CreateInfo(_route, _site);
-
-            //}
-            //catch (DirectoryNotFoundException)
-            //{
-            //    return Error.NoDir;
-            //}
-            //catch (FileNotFoundException)
-            //{
-            //    return Error.NoFile;
-            //}
         }
 
         internal bool CheckDupl()
@@ -209,10 +190,6 @@ namespace imgLoader_WPF
             {
                 _item.ProgPanelVis.Invoke(Visibility.Hidden);
                 //_item.TagPanelVis.Invoke(Visibility.Visible);
-            }
-            else
-            {
-                Console.Write("\n Download failed.\n");
             }
         }
 
@@ -351,18 +328,9 @@ namespace imgLoader_WPF
                 {
                     task?.Wait();
                 }
-                //_stop = false;
 
                 _tasks = null;
             }).Start();
         }
-
-        //private enum Error
-        //{
-        //    End,
-        //    Cancel,
-        //    NoDir,
-        //    NoFile
-        //}
     }
 }

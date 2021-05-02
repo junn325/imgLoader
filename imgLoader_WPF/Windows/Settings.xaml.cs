@@ -24,7 +24,9 @@ namespace imgLoader_WPF.Windows
         internal Settings(ImgLoader sender)
         {
             InitializeComponent();
-            _sender = sender;
+            _sender   = sender;
+            MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            MaxWidth  = SystemParameters.MaximizedPrimaryScreenWidth;
             //_index = index;
             //_scroll = scroll;
         }

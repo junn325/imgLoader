@@ -4,7 +4,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Settings" Width="724" Height="175" MinWidth="724" MinHeight="160" Loaded="Window_Loaded" Closing="Window_Closing" WindowStyle="None" WindowStartupLocation="CenterScreen">
+        Title="Settings" Width="724" Height="111" MinWidth="724" MinHeight="111" Loaded="Window_Loaded" Closing="Window_Closing" WindowStyle="None" WindowStartupLocation="CenterScreen">
 
     <WindowChrome.WindowChrome>
         <WindowChrome NonClientFrameEdges="None" CaptionHeight="25" GlassFrameThickness="5" />
@@ -14,7 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />
             <RowDefinition Height="50" />
-            <RowDefinition />
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -68,18 +68,18 @@
             <!--<CheckBox  x:Name="CheckNoIndex" Content="경로 인덱싱을 사용하지 않고 직접 새로고침만 사용" VerticalAlignment="Bottom" Click="CheckNoIndex_Click" Margin="5,0,0,0"/>-->
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <StackPanel Grid.Column="0" Margin="5">
+            <StackPanel Grid.Column="0" Margin="5" Visibility="Collapsed">
                 <CheckBox x:Name="CheckAuthorName" Content="폴더명에 작가 이름을 표시하지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckAuthorName_Click"/>
                 <CheckBox x:Name="CheckDupl" Content="중복 항목 다운로드 시 물어보지 않음" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckDupl_Click"/>
                 <CheckBox x:Name="ChkPauseCmpAdd" Content="항목 비교에서 다운로드 대기열 추가 시 자동으로 일시정지" VerticalAlignment="Top" HorizontalAlignment="Left" Click="ChkPauseCompareAdd_Click"/>
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Margin="5">
+            <StackPanel Grid.Column="1" Margin="5" Visibility="Collapsed">
                 <CheckBox x:Name="CheckImmid" Content="항목 모두 즉시 다운로드 시작" IsChecked="True" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckImmid_Click"/>
                 <!--<CheckBox x:Name="CheckFolder" Content="북마크에서 로드한 항목은 북마크 제목으로 폴더명을 정함" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckFolder_Click"/>-->
                 <CheckBox x:Name="CheckSearch" Content="검색: 검색 창을 종료하는 한 번만 검색을 수행" VerticalAlignment="Top" HorizontalAlignment="Left" Click="CheckSearch_Click"/>

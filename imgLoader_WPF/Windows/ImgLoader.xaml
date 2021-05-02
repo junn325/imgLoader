@@ -5,7 +5,7 @@
         xmlns:loaderListCtrl="clr-namespace:imgLoader_WPF.LoaderListCtrl"
         x:Class="imgLoader_WPF.Windows.ImgLoader"
         mc:Ignorable="d"
-        Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" Closing="ImgLoader_WPF_Closing" WindowStyle="None" ResizeMode="CanResizeWithGrip">
+        Title="ImgLoader" Height="450" Width="800" Loaded="ImgLoader_WPF_Loaded" WindowStartupLocation="CenterScreen" WindowStyle="None" ResizeMode="CanResizeWithGrip" Closing="ImgLoader_WPF_Closing">
 
     <WindowChrome.WindowChrome>
         <WindowChrome NonClientFrameEdges="None" CaptionHeight="25" GlassFrameThickness="5" />

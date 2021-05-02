@@ -37,8 +37,8 @@ namespace imgLoader_WPF.Windows
 
         private Settings _winSetting;
 
-        internal readonly List<IndexItem> Index = new(); //인덱싱 결과
-        internal readonly List<IndexItem> List = new(); //표시되어야 할 총 항목
+        internal readonly List<IndexItem> Index = new();                     //인덱싱 결과
+        internal readonly List<IndexItem> List = new();                      //표시되어야 할 총 항목
         internal readonly ObservableCollection<IndexItem> ShowItems = new(); //실제 표시되는 항목
 
         private IndexItem _clickedItem;
@@ -47,6 +47,7 @@ namespace imgLoader_WPF.Windows
         {
             InitializeComponent();
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight;
+            MaxWidth  = SystemParameters.MaximizedPrimaryScreenWidth;
         }
 
         private void Button_Click_5(object sender, RoutedEventArgs e)
@@ -101,7 +102,7 @@ namespace imgLoader_WPF.Windows
 
                 while (Dispatcher.Thread.IsAlive)
                 {
-                    Thread.Sleep(500);
+                    Thread.Sleep(1000);
                 }
 
                 process?.Kill();
@@ -132,14 +133,13 @@ namespace imgLoader_WPF.Windows
                 Core.OpenWith = "";
             }
 
-#if DEBUG
-            Core.Route = "F:\\문서\\사진\\Saved Pictures\\고니\\i\\새 폴더 (4)";
-#endif
 #if !DEBUG
             D_Stop.IsEnabled = false;
             D_Else1.IsEnabled = false;
+            D_Else2.IsEnabled = false;
             D_Stop.Visibility = Visibility.Collapsed;
             D_Else1.Visibility = Visibility.Collapsed;
+            D_Else2.Visibility = Visibility.Collapsed;
 #endif
             foreach (RadioButton radio in PnlRadio.Children) radio.PreviewKeyUp += TxtSrchAll_KeyUp;
 
@@ -152,9 +152,9 @@ namespace imgLoader_WPF.Windows
             Sorter      = new Sorter(this);
             Searcher    = new Searcher(this);
 
-            PgSvc  = new PaginationService(this);
-            InfSvc = new InfoSavingService(this);
-            IdxSvc = new IndexingService(this);
+            PgSvc       = new PaginationService(this);
+            InfSvc      = new InfoSavingService(this);
+            IdxSvc      = new IndexingService(this);
             Categorizer = new Categorizer(this);
         }
 
@@ -353,7 +353,7 @@ namespace imgLoader_WPF.Windows
 
         private void ShowInfo(string content)
         {
-            //프로그램 오른쪽 아래에 작게 표시
+            //우측 하단 표시
         }
 
         private void ShowError(string content)
@@ -371,9 +371,6 @@ namespace imgLoader_WPF.Windows
             {
                 Core.Dir.OpenOn(Directory.EnumerateFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains($".{Core.InfoExt}")));
             }
-
-            //Core.Dir.OpenOnCanvas(Core.Dir.GetDirFromFile(_clickedItem.Route), _clickedItem.Title, _clickedItem.Author);
-            //Process.Start(@"C:\Program Files\Honeyview\Honeyview.exe", Directory.GetFiles(Core.Dir.GetDirFromFile(_clickedItem.Route), "*").First(i => !i.Contains(".ilif")));
 
             _clickedItem.LastViewDate = DateTime.Now;
             _clickedItem.View++;
