@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -116,14 +118,15 @@ namespace imgL_Sites
 
         public string GetTitle()
         {
-            return _title ?? throw new Exception("_title was Null");
+            return _title;
         }
 
         public string[] GetInfo()
         {
             var info = new string[5];
+
             info[0] = "EHentai";
-            info[1] = _title ?? throw new Exception("_title was Null");
+            info[1] = _title;
             info[2] = $"{_artist}|{_group}";
             info[3] = _src_data.GetStringValue("filecount");
 

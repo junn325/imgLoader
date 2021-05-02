@@ -224,7 +224,7 @@ namespace imgLoader_WPF.Windows
 
         internal void AddItem(string url)
         {
-            var lItem = new IndexItem { Author = "Connecting...", ImgCount = -1, View = -1, Number = Core.GetNum(url) };
+            var lItem = new IndexItem { Author = "Connecting...", ImgCount = -1, View = -1, Number = Core.GetNumber(url) };
 
             var service = new Thread(() =>
             {

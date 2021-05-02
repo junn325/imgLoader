@@ -80,12 +80,12 @@ namespace imgLoader_WPF
             }).Start();
         }
 
-        internal static void CreateInfo(string infoPath, ISite site)
+        internal static bool CreateInfo(string infoPath, ISite site)
         {
             if (!Directory.Exists(Dir.GetDirFromFile(infoPath)))
-                throw new DirectoryNotFoundException();
+                return false;
             if (site == null)
-                throw new NullReferenceException("\"site\" is null.");
+                return false;
 
             using var fs = Dir.DelayStream(infoPath, FileMode.OpenOrCreate, FileAccess.ReadWrite);
             using var sw = new StreamWriter(fs, Encoding.UTF8);
@@ -110,10 +110,14 @@ namespace imgLoader_WPF
             sw.Close();
 
             File.SetAttributes(infoPath, FileAttributes.Hidden);
+
+            return true;
         }
 
-        internal static string GetNum(string url)
+        internal static string GetNumber(string url)
         {
+            if (url == null) return null;
+
             var val = url.Contains("//") ? url.Split("//")[1] : url;
 
             if (val.Contains("hitomi")) return val.Contains("-") ? val.Split('-').Last().Split('.')[0] : val.Split('/')[2].Split(".html")[0];
@@ -135,7 +139,7 @@ namespace imgLoader_WPF
         /// </summary>
         internal static ISite LoadSite(string url)
         {
-            var mNumber = GetNum(url);
+            var mNumber = GetNumber(url);
             if (mNumber.Length == 0) return null;
 
             if (url == mNumber)     //입력값이 번호
@@ -164,13 +168,14 @@ namespace imgLoader_WPF
 
             return null;
         }
-        
+
         internal static string GetArtistFromRaw(string rawArtist)
         {
             var sb = new StringBuilder();
-            string temp;
 
+            if (rawArtist == null) return null;
             if (rawArtist == "|") return "";
+
             if (!rawArtist.Contains('|') && !rawArtist.Contains(';')) return rawArtist;
             if (rawArtist.Split('|')[0].Length != 0)
             {
@@ -179,7 +184,7 @@ namespace imgLoader_WPF
                     if (s.Length == 0) continue;
                     sb.Append(s).Append(", ");
                 }
-                temp = sb.ToString()[..(sb.Length - 2)];
+                var temp = sb.ToString()[..(sb.Length - 2)];
 
                 sb.Clear();
 
@@ -189,23 +194,18 @@ namespace imgLoader_WPF
                     sb.Append(s).Append(", ");
                 }
 
-                temp =
-                    sb.Length != 0
+                return sb.Length != 0
                         ? $"{temp} ({sb.ToString()[..(sb.Length - 2)]})"
                         : temp;
             }
-            else
-            {
-                foreach (var s in rawArtist.Split('|')[1].Split(';'))
-                {
-                    if (s.Length == 0) continue;
-                    sb.Append(s).Append(", ");
-                }
 
-                temp = sb.ToString()[..(sb.Length - 2)];
+            foreach (var s in rawArtist.Split('|')[1].Split(';'))
+            {
+                if (s.Length == 0) continue;
+                sb.Append(s).Append(", ");
             }
 
-            return temp;
+            return sb.ToString()[..(sb.Length - 2)];
         }
 
         internal static int CountIndexOf(this string target, char find, int count)

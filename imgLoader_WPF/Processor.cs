@@ -37,18 +37,11 @@ namespace imgLoader_WPF
 
         public Processor(string url, IndexItem item)
         {
-            //try
-            //{
             if (string.IsNullOrEmpty(url)) return;
             _item = item;
             _url  = url;
 
             item.IsDownloading = true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception($"Failed to Initialize: Processor: {ex.StackTrace}");
-            //}
         }
 
         internal bool LoadInfo()
@@ -70,11 +63,17 @@ namespace imgLoader_WPF
 
             IsImgLoading = new bool[_imgUrl.Count];
 
-            _number = Core.GetNum(_url);
+            _number = Core.GetNumber(_url);
             _artist = Core.GetArtistFromRaw(_site.GetArtist());
             _title  = GetTitle(_site.GetTitle());
-            _route  = Getpath(_artist, _title);
+            _route  = GetPath(_artist, _title);
             _info   = _site.GetInfo();
+
+            if (_number == null || _artist == null || _title == null || _route == null || _info == null)
+            {
+                IsValidated = false;
+                return false;
+            }
 
             _item.ImgCount = _imgUrl.Count;
             _item.Author   = _site.GetArtist();
@@ -87,12 +86,6 @@ namespace imgLoader_WPF
             _item.Vote     = 0;
             _item.View     = 0;
 
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception($"Failed to Initialize: Processor: {ex.StackTrace}");
-            //}
-
             IsValidated = _site.IsValidated();
 
             return true;
@@ -102,14 +95,9 @@ namespace imgLoader_WPF
         {
             IsStop = false;
 
-            var temp = CreateInfo();
-
-            if (temp != Error.End)
+            if (!CreateInfo())
             {
-                if (temp == Error.Cancel) return false;
-
                 _item.IsDownloading = false;
-
                 return false;
             }
 
@@ -135,6 +123,8 @@ namespace imgLoader_WPF
 
         private static string GetTitle(string title)
         {
+            if (title == null) return null;
+
             var temp = Core.Dir.DirFilter(title);
 
             return Encoding.Unicode.GetByteCount(temp) > 255
@@ -142,8 +132,10 @@ namespace imgLoader_WPF
                        : temp;
         }
 
-        private string Getpath(string artist, string title)
+        private string GetPath(string artist, string title)
         {
+            if (artist == null || title == null) return null;
+
             var temp =
                 artist?.Length == 0
                     ? $"{title}"
@@ -157,7 +149,7 @@ namespace imgLoader_WPF
             return $@"{Core.Route}\{temp}\{Core.Dir.EHNumFromRaw(_number)}.{Core.InfoExt}";
         } //returns info path
 
-        private Error CreateInfo()
+        private bool CreateInfo()
         {
             //try
             //{
@@ -167,12 +159,11 @@ namespace imgLoader_WPF
             }
             else
             {
-                MessageBox.Show("Test");
+                return false;
             }
 
-            Core.CreateInfo(_route, _site);
+            return Core.CreateInfo(_route, _site);
 
-            return Error.End;
             //}
             //catch (DirectoryNotFoundException)
             //{
@@ -366,12 +357,12 @@ namespace imgLoader_WPF
             }).Start();
         }
 
-        private enum Error
-        {
-            End,
-            Cancel,
-            NoDir,
-            NoFile
-        }
+        //private enum Error
+        //{
+        //    End,
+        //    Cancel,
+        //    NoDir,
+        //    NoFile
+        //}
     }
 }
