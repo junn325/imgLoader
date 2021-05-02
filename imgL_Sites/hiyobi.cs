@@ -103,6 +103,15 @@ namespace imgL_Sites
                 }
             }
 
+            if (_src_api.GetValue("parodys", '[', ']').Length != 0)
+            {
+                foreach (var item in _src_api.GetValue("parodys", '[', ']').Split('{'))
+                {
+                    if (item.Length == 0) continue;
+                    sb.Append("parody:").Append(item.Split('}')[0].GetStringValue("value")).Append(';');
+                }
+            }
+
             info[4] = sb.ToString().Trim();
 
             return info;

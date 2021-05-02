@@ -127,11 +127,25 @@ namespace imgL_Sites
                     .Append(':')
                     .Append(item.Split('}')[0].GetStringValue("tag")).Append(';');
             }
-            foreach (var item in _src_gall.Split("Characters</td><td>")[1].Split("</ul>")[0].Split("<li>"))
-            {
-                if (!item.Contains("li")) continue;
 
-                sb.Append("character").Append(':').Append(item.Split("</a></li>")[0].Split('>')[1].Trim()).Append(';');
+            if (_src_gall.Contains("Characters</td><td>"))
+            {
+                foreach (var item in _src_gall.Split("Characters</td><td>")[1].Split("</ul>")[0].Split("<li>"))
+                {
+                    if (!item.Contains("li")) continue;
+
+                    sb.Append("character").Append(':').Append(item.Split("</a></li>")[0].Split('>')[1].Trim()).Append(';');
+                }
+            }
+
+            if (_src_gall.Contains("Series</td><td>"))
+            {
+                foreach (var item in _src_gall.Split("Series</td><td>")[1].Split("</ul>")[0].Split("<li>"))
+                {
+                    if (!item.Contains("li")) continue;
+
+                    sb.Append("Series").Append(':').Append(item.Split("</a></li>")[0].Split('>')[1].Trim()).Append(';');
+                }
             }
 
             info[4] = sb.ToString().Trim();
