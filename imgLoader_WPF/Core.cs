@@ -23,7 +23,6 @@ namespace imgLoader_WPF
 
         internal const string RouteFile = "ILRout";
         internal const string OpenFile = "ILOpen";
-        internal const string IndexFile = "ILIdx";
 
         internal const string LogDir = "ILLOG";
         internal const string LogFile = "ILLG";
@@ -38,7 +37,6 @@ namespace imgLoader_WPF
         private static readonly string[] DFilter = { "|", ":", "?", "\"", "<", ">", "/", "*", "..." };
         private static readonly string[] DReplace = { "│", "：", "？", "″", "˂", "˃", "／", "＊", "…" };
 
-        //internal const string PreparationText = "준비 중...";
         //internal static List<string> PrevAddress = new List<string>(5);
 
         //private static readonly List<ListViewItem> LvItem = new List<ListViewItem>();
@@ -208,54 +206,6 @@ namespace imgLoader_WPF
             return sb.ToString()[..(sb.Length - 2)];
         }
 
-        internal static int CountIndexOf(this string target, char find, int count)
-        {
-            for (int i = 0; i < target.Length; i++)
-            {
-                if (target[i] != find) continue;
-                if (count == 0) return i;
-                count--;
-            }
-
-            return -1;
-        }
-
-        internal static void SearchFromAll(List<IndexItem> searchIndex, string search, List<IndexItem> destIndex)
-        {
-            var sb = new StringBuilder();
-
-            var temp = new string[searchIndex.Count];
-            var searchResult = new List<IndexItem>(searchIndex);
-
-            for (var i = 0; i < searchIndex.Count; i++)
-            {
-                var item = searchIndex[i];
-
-                sb.Append(item.Author).Append(item.Number).Append(item.SiteName).Append(item.Title);
-                foreach (var tag in item.Tags) sb.Append(tag);
-
-                temp[i] = sb.ToString();
-                sb.Clear();
-            }
-
-            for (var i = 0; i < searchIndex.Count; i++)
-            {
-                foreach (var srch in search.Split(','))             //검색어 나열
-                {
-                    if (!temp[i].Contains(srch, StringComparison.OrdinalIgnoreCase))
-                    {
-                        searchResult.Remove(searchIndex[i]);
-                    }
-                }
-            }
-
-            destIndex.Clear();
-            foreach (var item in searchResult)
-            {
-                destIndex.Add(item);
-            }
-        }
-
         internal static T[] AppendArray<T>(T[] a, T[] b)
         {
             var temp = new T[a.Length + b.Length];
@@ -300,21 +250,6 @@ namespace imgLoader_WPF
             }
 
             return temp;
-        }
-
-        internal static IEnumerable<IndexItem> CompareCollections(IEnumerable<IndexItem> collect1, IEnumerable<IndexItem> collect2)
-        {
-            return collect1.Where(item => collect2.All(i => i.Title != item.Title));
-        }
-
-        internal static void RefreshList(List<IndexItem> list, IEnumerable<IndexItem> newContent)
-        {
-            list.Clear();
-
-            foreach (var item in newContent)
-            {
-                list.Add(item);
-            }
         }
 
         internal static int GetFutureIndexOnList(IEnumerable<IndexItem> index, IndexItem item, Sorter.SortOption option)
@@ -483,7 +418,6 @@ namespace imgLoader_WPF
 
                 return (result1, result2);
             }
-
 
             internal static List<string> GetFiles(string path, string contains)
             {

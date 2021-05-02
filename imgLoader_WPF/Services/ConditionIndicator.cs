@@ -204,7 +204,6 @@ namespace imgLoader_WPF.Services
             }
         }
 
-        //private int _click;
         private void SortClickHandler(object sender, MouseEventArgs e)
         {
             //new Thread(() =>

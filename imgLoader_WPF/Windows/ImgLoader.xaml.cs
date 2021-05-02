@@ -153,7 +153,7 @@ namespace imgLoader_WPF.Windows
             Searcher    = new Searcher(this);
 
             PgSvc       = new PaginationService(this);
-            InfSvc      = new InfoSavingService(this);
+            InfSvc      = new InfoSavingService();
             IdxSvc      = new IndexingService(this);
             Categorizer = new Categorizer(this);
         }
@@ -802,7 +802,6 @@ namespace imgLoader_WPF.Windows
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            //MessageBox.Show($"{this.Left}, {this.Top}");
             var disableProcessing = ItemCtrl.Dispatcher.DisableProcessing();
 
             PgSvc.Clear();

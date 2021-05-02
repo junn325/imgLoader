@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Threading;
 
-using imgLoader_WPF.LoaderListCtrl;
 using imgLoader_WPF.Windows;
 
 using Dispatcher = System.Windows.Threading.Dispatcher;

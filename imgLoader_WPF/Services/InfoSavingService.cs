@@ -4,25 +4,18 @@ using System.IO;
 using System.Text;
 using System.Threading;
 
-using imgLoader_WPF.Windows;
-
 namespace imgLoader_WPF.Services
 {
     internal class InfoSavingService
     {
         private const int Interval = 1000;
-
         private bool _stop = false;
 
         private readonly StringBuilder _sb = new();
-        private readonly ImgLoader _sender;
-
         private readonly Queue<IndexItem> _saveQueue = new();
 
-        public InfoSavingService(ImgLoader sender)
+        public InfoSavingService()
         {
-            _sender = sender;
-
             var service = new Thread(() =>
             {
                 while (!_stop)

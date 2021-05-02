@@ -6,7 +6,6 @@ namespace imgLoader_WPF
     {
         internal delegate void NoParam();
         internal delegate void IntOne(int value);
-        //internal delegate void DblOne(double value);
         internal delegate void VisOne(System.Windows.Visibility value);
 
         internal Processor Proc;
