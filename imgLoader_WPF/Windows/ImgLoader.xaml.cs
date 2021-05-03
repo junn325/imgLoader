@@ -647,7 +647,7 @@ namespace imgLoader_WPF.Windows
             Search(_clickedItem.Tags, (int)Searcher.SearchOption.Tag);
         }
 
-        private void SearchSMenu_Click(object sender, RoutedEventArgs e)
+        private void SearchSManual_Click(object sender, RoutedEventArgs e)
         {
             BdrSrch.Visibility = Visibility.Visible;
             TxtSrchAll.Focus();
@@ -697,6 +697,9 @@ namespace imgLoader_WPF.Windows
                     break;
                 case "NHentai":
                     Clipboard.SetText($"https://nhentai.net/g/{_clickedItem.Number}");
+                    break;
+                case "Pixiv":
+                    Clipboard.SetText($"https://www.pixiv.net/artworks/{_clickedItem.Number}");
                     break;
             }
         }
@@ -784,7 +787,7 @@ namespace imgLoader_WPF.Windows
 
         private void MenuSortLastDate_Click(object sender, RoutedEventArgs e)
         {
-            CondInd.Add("LastAccess", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.LastAccess);
+            CondInd.Add("LastViewed", ConditionIndicator.Condition.Sort, (int)Sorter.SortOption.LastAccess);
         }
 
         #endregion

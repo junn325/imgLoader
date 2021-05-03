@@ -22,44 +22,44 @@
                 <ItemsControl x:Name="ItemCtrl" ItemsSource="{Binding Index}" IsTabStop="False">
                     <ItemsControl.ContextMenu>
                         <ContextMenu x:Name="Menu">
-                            <MenuItem x:Name="MenuOpen" Header="열기" IsEnabled="False" Click="Open_Click"/>
-                            <MenuItem x:Name="MenuManage" Header="관리" IsEnabled="False" Click="Manage_Click"/>
+                            <MenuItem x:Name="MenuOpen" Header="Open" IsEnabled="False" Click="Open_Click"/>
+                            <MenuItem x:Name="MenuManage" Header="Manage" IsEnabled="False" Click="Manage_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="MenuAdd" Header="추가" Click="AddItem_Click"/>
+                            <MenuItem x:Name="MenuAdd" Header="Add" Click="AddItem_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="MenuCancel" Header="취소" IsEnabled="False" Click="Cancel_Click"/>
-                            <MenuItem x:Name="MenuPause" Header="일시중지" IsEnabled="False" Click="Pause_Click"/>
-                            <MenuItem x:Name="MenuResume" Header="재개" IsEnabled="False" Click="Resume_Click"/>
+                            <MenuItem x:Name="MenuCancel" Header="Cancel" IsEnabled="False" Click="Cancel_Click"/>
+                            <MenuItem x:Name="MenuPause" Header="Pause" IsEnabled="False" Click="Pause_Click"/>
+                            <MenuItem x:Name="MenuResume" Header="Resume" IsEnabled="False" Click="Resume_Click"/>
                             <!--<Separator/>
                             <MenuItem Header="목록에서만 제거" IsEnabled="False" Click="RemoveOnlyList_Click"/>-->
                             <Separator/>
-                            <MenuItem x:Name="MenuDel" Header="삭제" IsEnabled="False" Click="Delete_Click"/>
+                            <MenuItem x:Name="MenuDel" Header="Delete" IsEnabled="False" Click="Delete_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="MenuSrch" Header="검색" >
-                                <MenuItem x:Name="MenuSrchManual" Header="직접 검색" Click="SearchSMenu_Click"/>
+                            <MenuItem x:Name="MenuSrch" Header="Search" >
+                                <MenuItem x:Name="MenuSrchManual" Header="Manual Search" Click="SearchSManual_Click"/>
                                 <Separator/>
-                                <MenuItem x:Name="MenuSrchAuthor" Header="작가" Click="AuthorSrch_Click"/>
-                                <MenuItem x:Name="MenuSrchTitle" Header="사이트" Click="SiteSrch_Click"/>
-                                <MenuItem x:Name="MenuSrchTag" Header="태그" Click="TagSrch_Click"/>
+                                <MenuItem x:Name="MenuSrchAuthor" Header="Author" Click="AuthorSrch_Click"/>
+                                <MenuItem x:Name="MenuSrchSite" Header="Site" Click="SiteSrch_Click"/>
+                                <MenuItem x:Name="MenuSrchTag" Header="Tags" Click="TagSrch_Click"/>
                             </MenuItem>
-                            <MenuItem x:Name="MenuSort" Header="정렬">
-                                <MenuItem x:Name="MenuSortTitle" Header="제목" Click="TitleSort_Click"/>
-                                <MenuItem x:Name="MenuSortAuthor" Header="작가" Click="AuthorSort_Click"/>
+                            <MenuItem x:Name="MenuSort" Header="Sort">
+                                <MenuItem x:Name="MenuSortTitle" Header="Title" Click="TitleSort_Click"/>
+                                <MenuItem x:Name="MenuSortAuthor" Header="Author" Click="AuthorSort_Click"/>
                                 <Separator/>
-                                <MenuItem x:Name="MenuSortVote" Header="점수" Click="VoteSort_Click"/>
-                                <MenuItem x:Name="MenuSortDate" Header="날짜" Click="DateSort_Click"/>
-                                <MenuItem x:Name="MenuSortView" Header="조회수" Click="ViewSort_Click"/>
-                                <MenuItem x:Name="MenuSortLastDate" Header="조회 날짜" Click="MenuSortLastDate_Click"/>
+                                <MenuItem x:Name="MenuSortVote" Header="Vote" Click="VoteSort_Click"/>
+                                <MenuItem x:Name="MenuSortDate" Header="Date" Click="DateSort_Click"/>
+                                <MenuItem x:Name="MenuSortView" Header="Views" Click="ViewSort_Click"/>
+                                <MenuItem x:Name="MenuSortLastDate" Header="LastViewed" Click="MenuSortLastDate_Click"/>
                                 <Separator/>
-                                <MenuItem x:Name="MenuSortPage" Header="페이지수" Click="PageSort_Click"/>
-                                <MenuItem x:Name="MenuSortNum" Header="번호" Click="NumberSort_Click"/>
+                                <MenuItem x:Name="MenuSortPage" Header="Pages" Click="PageSort_Click"/>
+                                <MenuItem x:Name="MenuSortNum" Header="Number" Click="NumberSort_Click"/>
                             </MenuItem>
                             <Separator/>
-                            <MenuItem x:Name="MenuRand" Header="무작위 선택" IsEnabled="False" Click="Random_Click"/>
-                            <MenuItem x:Name="MenuOpenExpl" Header="탐색기에서 열기" IsEnabled="False" Click="OpenExplorer_Click"/>
-                            <MenuItem x:Name="MenuCpyAddr" Header="링크 복사" Click="CopyAddress_Click"/>
+                            <MenuItem x:Name="MenuRand" Header="Random Open" IsEnabled="False" Click="Random_Click"/>
+                            <MenuItem x:Name="MenuOpenExpl" Header="Open on Explorer" IsEnabled="False" Click="OpenExplorer_Click"/>
+                            <MenuItem x:Name="MenuCpyAddr" Header="Copy Address" Click="CopyAddress_Click"/>
                             <Separator/>
-                            <MenuItem x:Name="MenuSetting" Header="설정" Click="Setting_Click"/>
+                            <MenuItem x:Name="MenuSetting" Header="Settings" Click="Setting_Click"/>
                         </ContextMenu>
                     </ItemsControl.ContextMenu>
                     <ItemsControl.ItemsPanel>
@@ -81,7 +81,7 @@
         <Border x:Name="BdrAdd" Background="{StaticResource BrushB}" Visibility="Hidden" MouseDown="AddBorder_MouseDown">
             <Grid Height="35" HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
                 <TextBox x:Name="TxtUrl" Height="21" VerticalAlignment="Center" KeyUp="TxtUrl_KeyUp" TextChanged="TxtUrl_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
-                <TextBlock x:Name="BlockAdd" Height="21" VerticalAlignment="Center" Text="주소 입력 후 Enter 키로 다운로드 시작" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>
+                <TextBlock x:Name="BlockAdd" Height="21" VerticalAlignment="Center" Text="Input address and press enter to start download" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown"/>
             </Grid>
         </Border>
 
@@ -102,17 +102,17 @@
             </Grid.Resources>
 
             <StackPanel x:Name="PnlRadio" Grid.Row="0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Height="20" Margin="5,0,5,0" Background="{StaticResource BrushP}" Orientation="Horizontal" MouseDown="StackPanel_MouseDown" PreviewKeyUp="TxtSrchAll_KeyUp">
-                <RadioButton x:Name="RadioAll" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" IsChecked="True" Content="전체" Click="AllRadio_Click"/>
-                <RadioButton x:Name="RadioTitle" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="제목" Click="AllRadio_Click"/>
-                <RadioButton x:Name="RadioAuthor" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="작가" Click="AllRadio_Click"/>
-                <RadioButton x:Name="RadioTag" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="태그" Click="AllRadio_Click"/>
-                <RadioButton x:Name="RadioNum" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="번호" Click="AllRadio_Click"/>
-                <!--<RadioButton x:Name="RadioCnt" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="페이지"/>-->
+                <RadioButton x:Name="RadioAll" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" IsChecked="True" Content="All" Click="AllRadio_Click"/>
+                <RadioButton x:Name="RadioTitle" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="Title" Click="AllRadio_Click"/>
+                <RadioButton x:Name="RadioAuthor" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="Author" Click="AllRadio_Click"/>
+                <RadioButton x:Name="RadioTag" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="Tag" Click="AllRadio_Click"/>
+                <RadioButton x:Name="RadioNum" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="Number" Click="AllRadio_Click"/>
+                <!--<RadioButton x:Name="RadioCnt" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="Page"/>-->
             </StackPanel>
 
             <Grid Margin="4,0,4,0" Grid.Row="1" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">
                 <TextBox x:Name="TxtSrchAll" Height="21" VerticalAlignment="Center" KeyUp="TxtSrchAll_KeyUp" TextChanged="TxtSrchAll_TextChanged" FlowDirection="LeftToRight" MouseDown="TxtUrl_MouseDown"/>
-                <TextBlock x:Name="BlockSrchLbl" Height="21" VerticalAlignment="Center" Text="검색어 입력 후 Enter 키로 검색" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
+                <TextBlock x:Name="BlockSrchLbl" Height="21" VerticalAlignment="Center" Text="Input term and press enter to search" Padding="5,2,0,0" MouseDown="TxtUrl_MouseDown" MouseUp="LabelBlock_Srch_MouseUp"/>
             </Grid>
 
             <WrapPanel x:Name="PnlRecent" Grid.Row="2">
@@ -146,7 +146,7 @@
             <TextBlock Text="(메시지)\n(메시지)" VerticalAlignment="Center" TextAlignment="Center" Background="White"/>
         </Grid>
 
-        <TextBlock x:Name="BlockCnt" Text="(항목 개수) items" VerticalAlignment="Bottom" Margin="10,0,0,3"/>
+        <TextBlock x:Name="BlockCnt" Text="(count) items" VerticalAlignment="Bottom" Margin="10,0,0,3"/>
 
         <Button x:Name="D_Stop" Content="정지" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="0,0,0,7" Height="27" Width="76" Click="Button_Click_5"/>
         <Button x:Name="D_Else1" Content="Button" VerticalAlignment="Bottom" HorizontalAlignment="Center" Height="27" Margin="0,0,200,7" Width="80" Click="Button_Click_2"/>

@@ -154,6 +154,9 @@ namespace imgLoader_WPF
                 temp = new EHentai(mNumber);
                 if (temp.IsValidated()) return temp;
 
+                temp = new Pixiv(mNumber);
+                if (temp.IsValidated()) return temp;
+
                 return null;
             }
 
