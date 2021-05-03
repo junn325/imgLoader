@@ -143,8 +143,8 @@ namespace imgL.Services
                 },
                 Condition.Sort => option switch
                 {
-                    >= 0 and <= 7  => "Sort:",
-                    >= 8 and <= 15 => "Sort:←",
+                    >= -1 and <= 6  => "Sort:",
+                    >= 7 and <= 14 => "Sort:←",
                     _              => ""
                 },
 
