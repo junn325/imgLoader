@@ -48,6 +48,7 @@ namespace imgLoader_WPF.Services
                 _watcher.Created += AddIndex;
                 _watcher.Deleted += RemoveIndex;
                 _watcher.Changed += RefreshIndex;
+                _watcher.Renamed += RenamedIndex;
 
                 _watcher.IncludeSubdirectories = true;
             }
@@ -177,6 +178,10 @@ namespace imgLoader_WPF.Services
             var itemIdx = FindItemIndex(_sender.ShowItems, e.FullPath);
             if (itemIdx != -1)
             {
+                while (_sender.ShowItems[itemIdx].RefreshInfo == null)
+                {
+                    Thread.Sleep(50);
+                }
                 _sender.ShowItems[itemIdx].RefreshInfo();
                 return;
             }
@@ -189,7 +194,80 @@ namespace imgLoader_WPF.Services
             //});
         }
 
-        private IndexItem GetItemFromInfo(string fileName)
+        private void RenamedIndex(object sender, RenamedEventArgs e)
+        {
+            Debug.WriteLine("IdxSvc: RenamedIndex");
+
+            var indexIdx = FindItemIndex(_sender.Index, e.OldFullPath);
+            if (indexIdx == -1)
+            {
+                Debug.WriteLine("IdxSvc: RenamedIndex: indexIdx: search failed");
+                return;
+            }
+
+            var item = GetItemFromInfo(e.FullPath);
+
+            _sender.Index[indexIdx].Author       = item.Author;
+            _sender.Index[indexIdx].Date         = item.Date;
+            _sender.Index[indexIdx].ImgCount     = item.ImgCount;
+            _sender.Index[indexIdx].LastViewDate = item.LastViewDate;
+            _sender.Index[indexIdx].SiteName     = item.SiteName;
+            _sender.Index[indexIdx].Tags         = item.Tags;
+            _sender.Index[indexIdx].Title        = item.Title;
+            _sender.Index[indexIdx].View         = item.View;
+            _sender.Index[indexIdx].Vote         = item.Vote;
+            _sender.Index[indexIdx].Show         = item.Show;
+            _sender.Index[indexIdx].IsCntValid   = Directory.GetFiles(Core.Dir.GetDirFromFile(item.Route), "*").Length == item.ImgCount + 1;
+            _sender.Index[indexIdx].Route        = item.Route;
+            _sender.Index[indexIdx].Number       = item.Number;
+
+            var listIdx = FindItemIndex(_sender.List, e.FullPath);
+            if (listIdx == -1)
+            {
+                Debug.WriteLine("IdxSvc: RenamedIndex: listIdx: search failed");
+                return;
+            }
+
+            if (item.Show)
+            {
+                _sender.List[listIdx].Author       = item.Author;
+                _sender.List[listIdx].Date         = item.Date;
+                _sender.List[listIdx].ImgCount     = item.ImgCount;
+                _sender.List[listIdx].LastViewDate = item.LastViewDate;
+                _sender.List[listIdx].SiteName     = item.SiteName;
+                _sender.List[listIdx].Tags         = item.Tags;
+                _sender.List[listIdx].Title        = item.Title;
+                _sender.List[listIdx].View         = item.View;
+                _sender.List[listIdx].Vote         = item.Vote;
+                _sender.List[listIdx].IsCntValid   = Directory.GetFiles(Core.Dir.GetDirFromFile(item.Route), "*").Length == item.ImgCount + 1;
+                _sender.List[listIdx].Route        = item.Route;
+                _sender.List[listIdx].Number       = item.Number;
+            }
+            else
+            {
+                _sender.List.RemoveAt(listIdx);
+            }
+
+            var itemIdx = FindItemIndex(_sender.ShowItems, e.FullPath);
+            if (itemIdx != -1)
+            {
+                while (_sender.ShowItems[itemIdx].RefreshInfo == null)
+                {
+                    Thread.Sleep(50);
+                }
+                _sender.ShowItems[itemIdx].RefreshInfo();
+                return;
+            }
+
+            //_sender.Dispatcher.Invoke(() =>
+            //{
+            //    using var disableprocessing = _sender.Dispatcher.DisableProcessing();
+            //    _sender.PgSvc.Clear();
+            //    _sender.PgSvc.Paginate(disableprocessing);
+            //});
+        }
+
+        private static IndexItem GetItemFromInfo(string fileName)
         {
             using var sr = new StreamReader(Core.Dir.DelayStream(fileName, FileMode.Open, FileAccess.Read), Encoding.UTF8);
             var infos = sr.ReadToEnd().Replace("\r\n", "\n");
