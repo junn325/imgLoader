@@ -90,6 +90,8 @@ namespace imgLoader_WPF.Services
 
             var sortedList = GetSortedList(_sender.List, sortOption);
 
+            if (sortedList == null) return;
+
             _sender.List.Clear();
             foreach (var item in sortedList)
             {

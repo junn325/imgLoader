@@ -31,7 +31,7 @@ namespace imgLoader_WPF.Services
                 var enumLength = Enum.GetValues(typeof(Sorter.SortOption)).Length;
                 option += enumLength;
 
-                if (option >= enumLength) option -= (enumLength / 2);
+                if (option >= enumLength - 1) option -= (enumLength / 2);
             }
 
             if (!DoRequest(srchText, cond, option)) return;

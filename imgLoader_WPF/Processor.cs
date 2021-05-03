@@ -93,9 +93,15 @@ namespace imgLoader_WPF
             AllocTask(_route, _imgUrl);
             _item.IsDownloading = false;
 
+            if (IsStop)
+            {
+                DoStop();
+                return false;
+            }
+
             DoStop();
 
-            return !IsStop;
+            return true;
         }
 
         private static ISite Load(string url)
