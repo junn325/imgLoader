@@ -1,4 +1,6 @@
-﻿using System;
+﻿//사용된 외부 프로젝트: https://github.com/ValdikSS/GoodbyeDPI
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
