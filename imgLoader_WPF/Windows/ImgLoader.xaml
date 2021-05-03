@@ -107,7 +107,7 @@
                 <RadioButton x:Name="RadioAuthor" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="작가" Click="AllRadio_Click"/>
                 <RadioButton x:Name="RadioTag" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="태그" Click="AllRadio_Click"/>
                 <RadioButton x:Name="RadioNum" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="번호" Click="AllRadio_Click"/>
-                <!--<RadioButton x:Name="ImgCntRadio" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="페이지"/>-->
+                <!--<RadioButton x:Name="RadioCnt" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,5,0" Content="페이지"/>-->
             </StackPanel>
 
             <Grid Margin="4,0,4,0" Grid.Row="1" VerticalAlignment="Center" Background="Transparent" MouseUp="Border_MouseUp" MouseDown="TxtUrl_MouseDown">

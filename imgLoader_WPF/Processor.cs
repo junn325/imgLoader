@@ -34,6 +34,7 @@ namespace imgLoader_WPF
         public Processor(string url, IndexItem item)
         {
             if (string.IsNullOrEmpty(url)) return;
+
             _item = item;
             _url  = url;
 
@@ -48,16 +49,14 @@ namespace imgLoader_WPF
             _site = Load(_url);
             if (_site?.IsValidated() != true) return false;
 
-            _imgUrl = _site.GetImgUrls();
-            _referer = _site.Referer;
-
+            _imgUrl      = _site.GetImgUrls();
+            _referer     = _site.Referer;
             IsImgLoading = new bool[_imgUrl.Count];
-
-            _number = Core.GetNumber(_url);
-            _artist = Core.GetArtistFromRaw(_site.GetArtist());
-            _title  = GetTitle(_site.GetTitle());
-            _route  = GetInfoPath(_artist, _title);
-            _info   = _site.GetInfo();
+            _number      = Core.GetNumber(_url);
+            _artist      = Core.GetArtistFromRaw(_site.GetArtist());
+            _title       = GetTitle(_site.GetTitle());
+            _route       = GetInfoPath(_artist, _title);
+            _info        = _site.GetInfo();
 
             if (_number == null || _artist == null || _title == null || _route == null || _info == null)
             {
@@ -124,7 +123,7 @@ namespace imgLoader_WPF
             if (artist == null || title == null) return null;
 
             var temp =
-                artist?.Length == 0
+                artist.Length == 0
                     ? $"{title}"
                     : $"{title} ({artist})";
 
@@ -177,7 +176,7 @@ namespace imgLoader_WPF
 
             Task.WaitAll(_tasks);
 
-            var success = HandleFail(path, 5);  //thres = 5;
+            var success = HandleFail(path, 3);  //thres = 3;
 
             Core.Log($"Item:Complete: {path}");
             if (success)

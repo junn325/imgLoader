@@ -158,70 +158,6 @@ namespace imgLoader_WPF.Windows
             Categorizer = new Categorizer(this);
         }
 
-        private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
-        {
-            border.Visibility = Visibility.Hidden;
-            Focus();
-
-            txtB.Text = "";
-            label.Visibility = Visibility.Visible;
-        }
-
-        private void DeleteItemDir(IndexItem item)
-        {
-            if (!File.Exists(item.Route)) return;
-
-            item.Show = false;
-            item.IsDownloading = false;
-
-            new Thread(() =>
-            {
-                item.Proc?.DoStop();
-
-                Core.Log($"Delete: try delete {item.Route}");
-
-                var wait = true;
-                do
-                {
-                    if (item.Proc == null) break;
-
-                    foreach (var isLoading in item.Proc.IsImgLoading)
-                    {
-                        if (isLoading)
-                        {
-                            wait = true;
-                            Thread.Sleep(50);
-                            break;
-                        }
-
-                        wait = false;
-                    }
-                } while (wait);
-
-                Directory.Delete(Core.Dir.GetDirFromFile(item.Route), true);
-
-                //var result = IdxSvc.DoIndex();
-                //IdxSvc.Refresh(result.infoFiles, result.newFiles);
-
-                List.Remove(item);
-                PgSvc.Remove(item);
-            }).Start();
-        }
-
-        internal void ShowItemsCnt()
-        {
-            Debug.WriteLine("ShowItemsCnt: Call");
-
-            if (Dispatcher.CheckAccess())
-            {
-                BlockCnt.Text = $"{List.Count} items | {Core.Route}";
-            }
-            else
-            {
-                Dispatcher.Invoke(() => BlockCnt.Text = $"{List.Count} items | {Core.Route}");
-            }
-        }
-
         internal void AddItem(string url)
         {
             var lItem = new IndexItem { Author = "Connecting...", ImgCount = -1, View = -1, Number = Core.GetNumber(url) };
@@ -297,29 +233,6 @@ namespace imgLoader_WPF.Windows
             service.Start();
         }
 
-        private void Search(string searchTxt, int option)
-        {
-            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
-
-            AddRecent(searchTxt, option);
-        }
-
-        private void Search(string[] searchTags, int option)
-        {
-            foreach (var itemTag in searchTags)
-            {
-                CondInd.Add(itemTag, ConditionIndicator.Condition.Search, option);
-
-                AddRecent(itemTag, option);
-            }
-        }
-
-        private void Search(string searchTxt, int option, string label)
-        {
-            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
-            AddRecent(searchTxt, option);
-        }
-
         private void AddRecent(string searchTxt, int option)
         {
             var tag = option switch
@@ -351,6 +264,91 @@ namespace imgLoader_WPF.Windows
             PnlRecent.Children.Insert(1, block);
         }
 
+        private void DeleteItemDir(IndexItem item)
+        {
+            if (!File.Exists(item.Route)) return;
+
+            item.Show          = false;
+            item.IsDownloading = false;
+
+            new Thread(() =>
+            {
+                item.Proc?.DoStop();
+
+                Core.Log($"Delete: try delete {item.Route}");
+
+                var wait = true;
+                do
+                {
+                    if (item.Proc == null) break;
+
+                    foreach (var isLoading in item.Proc.IsImgLoading)
+                    {
+                        if (isLoading)
+                        {
+                            wait = true;
+                            Thread.Sleep(50);
+                            break;
+                        }
+
+                        wait = false;
+                    }
+                } while (wait);
+
+                Directory.Delete(Core.Dir.GetDirFromFile(item.Route), true);
+
+                //var result = IdxSvc.DoIndex();
+                //IdxSvc.Refresh(result.infoFiles, result.newFiles);
+
+                List.Remove(item);
+                PgSvc.Remove(item);
+            }).Start();
+        }
+
+        private void HideBorder(UIElement border, TextBox txtB, TextBlock label)
+        {
+            border.Visibility = Visibility.Hidden;
+            Focus();
+
+            txtB.Text = "";
+            label.Visibility = Visibility.Visible;
+        }
+
+        private void Search(string searchTxt, int option)
+        {
+            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option);
+
+            AddRecent(searchTxt, option);
+        }
+
+        private void Search(string[] searchTags, int option)
+        {
+            foreach (var itemTag in searchTags)
+            {
+                CondInd.Add(itemTag, ConditionIndicator.Condition.Search, option);
+
+                AddRecent(itemTag, option);
+            }
+        }
+
+        private void Search(string searchTxt, int option, string label)
+        {
+            CondInd.Add(searchTxt, ConditionIndicator.Condition.Search, option, label);
+            AddRecent(searchTxt, option);
+        }
+
+        internal void ShowItemsCnt()
+        {
+            if (Dispatcher.CheckAccess())
+            {
+                BlockCnt.Text = $"{List.Count} items | {Core.Route}";
+            }
+            else
+            {
+                Dispatcher.Invoke(() => BlockCnt.Text = $"{List.Count} items | {Core.Route}");
+            }
+        }
+
         private void ShowInfo(string content)
         {
             //우측 하단 표시
@@ -378,6 +376,7 @@ namespace imgLoader_WPF.Windows
             _clickedItem.ShownChang.Invoke();
             InfSvc.Save(_clickedItem);
         }
+
         //
 
         private void TxtUrl_KeyUp(object sender, KeyEventArgs e)
