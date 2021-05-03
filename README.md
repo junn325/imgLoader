@@ -1,7 +1,9 @@
 # imgL
 
 Serial image downloader  
-Use at your own risk.
+Use at your own risk.  
+
+Used External project: <https://github.com/ValdikSS/GoodbyeDPI>  
 </br>
 ![screenshot](Screenshot.png)
 </br>
