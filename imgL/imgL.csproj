@@ -1,0 +1,115 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>imgL</AssemblyName>
+    <Version>0</Version>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <FileVersion>0.4.0.3355</FileVersion>
+    <AssemblyVersion>0.4.0.3355</AssemblyVersion>
+    <StartupObject></StartupObject>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Font\IBMPlexSansKR-Regular.ttf" />
+    <None Remove="Font\IBMPlexSansKR-SemiBold.ttf" />
+    <None Remove="Font\NanumGothic.ttf" />
+    <None Remove="Font\NanumGothicBold.ttf" />
+    <None Remove="Font\Wingdings2.ttf" />
+    <None Remove="GoodbyeDPI\goodbyedpi.exe" />
+    <None Remove="GoodbyeDPI\LICENSE_ValdikSS_GoodbyeDPI" />
+    <None Remove="GoodbyeDPI\WinDivert.dll" />
+    <None Remove="GoodbyeDPI\WinDivert32.sys" />
+    <None Remove="GoodbyeDPI\WinDivert64.sys" />
+    <None Remove="LoaderListCtrl\Icon\DownOver.png" />
+    <None Remove="LoaderListCtrl\Icon\Dwn.png" />
+    <None Remove="LoaderListCtrl\Icon\Up.png" />
+    <None Remove="LoaderListCtrl\Icon\UpOver.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="GoodbyeDPI\goodbyedpi.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoodbyeDPI\LICENSE_ValdikSS_GoodbyeDPI">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoodbyeDPI\WinDivert.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoodbyeDPI\WinDivert32.sys">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="GoodbyeDPI\WinDivert64.sys">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--<FrameworkReference Include="Microsoft.AspNetCore.App" />-->
+    <FrameworkReference Include="Microsoft.WindowsDesktop.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="imgL_Sites">
+      <HintPath>imgL_Sites.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Font\IBMPlexSansKR-Regular.ttf" />
+    <Resource Include="Font\IBMPlexSansKR-SemiBold.ttf" />
+    <Resource Include="Font\NanumGothic.ttf" />
+    <Resource Include="Font\NanumGothicBold.ttf" />
+    <Resource Include="Font\Wingdings2.ttf" />
+    <Resource Include="LoaderListCtrl\Icon\DownOver.png" />
+    <Resource Include="LoaderListCtrl\Icon\Dwn.png" />
+    <Resource Include="LoaderListCtrl\Icon\Up.png" />
+    <Resource Include="LoaderListCtrl\Icon\UpOver.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Windows\CompareDir.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+    </Page>
+  </ItemGroup>
+
+</Project>

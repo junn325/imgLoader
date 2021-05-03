@@ -1,0 +1,86 @@
+﻿<Window x:Class="imgL.Windows.Settings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Settings" Width="724" Height="111" MinWidth="724" MinHeight="111" Loaded="Window_Loaded"
+        Closing="Window_Closing" WindowStyle="None" WindowStartupLocation="CenterScreen">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome NonClientFrameEdges="None" CaptionHeight="25" GlassFrameThickness="5" />
+    </WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="50" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Stretch" Height="30" Grid.Row="0" Grid.Column="0"
+              Grid.ColumnSpan="2" MouseMove="Grid_MouseMove" Background="Transparent">
+            <Grid.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Width" Value="20" />
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+                    <!--Windowchrome위에서 클릭 허용-->
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="Foreground" Value="Black" />
+                    <Setter Property="BorderThickness" Value="0" />
+                    <Setter Property="Padding" Value="2" />
+                </Style>
+                <Style TargetType="{x:Type DockPanel}">
+                    <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+                </Style>
+            </Grid.Resources>
+            <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8,4,8,0" />
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Height="20" Margin="0,4,10,0" Content="Ñ"
+                    FontFamily="{StaticResource Wingdings 2}" FontSize="15" Click="Button_Click_1" />
+        </Grid>
+
+        <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="Path" HorizontalAlignment="Right" VerticalAlignment="Center"
+                   Margin="5,0,5,0" Padding="0,0,0,0" />
+            <Label Grid.Row="1" Grid.Column="0" Content="Open with" HorizontalAlignment="Left"
+                   VerticalAlignment="Center" Margin="5,0,5,0" Padding="0,0,0,0" />
+
+            <Grid Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <TextBox x:Name="TxtPath" Text="" HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                         Margin="0,0,5,0" MouseDoubleClick="TxtPath_MouseDoubleClick"
+                         PreviewKeyDown="TxtPath_PreviewKeyDown" />
+            </Grid>
+
+            <Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="TxtOpen" Text="" Margin="0,0,5,0" HorizontalAlignment="Stretch"
+                         VerticalAlignment="Center" MouseDoubleClick="TxtOpen_MouseDoubleClick"
+                         PreviewKeyDown="TxtOpen_PreviewKeyDown" />
+                <CheckBox x:Name="ChkOpenBasic" Grid.Column="1" Content="Open with basic viewer" IsChecked="True"
+                          Margin="0,0,5,0" VerticalAlignment="Center" HorizontalAlignment="Stretch"
+                          Click="ChkOpenBasic_Click" />
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+            <Button Grid.Column="0" Width="150" Content="Show missing items from" HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom" Margin="5" Click="Button_Click_2" />
+        </Grid>
+    </Grid>
+</Window>
