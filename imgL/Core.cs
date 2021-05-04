@@ -15,7 +15,7 @@ namespace imgL
 {
     internal static class Core
     {
-        internal const string ProjectName = "imgLoader";
+        internal const string ProjectName = "imgL";
         internal static readonly string FilesRoute = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.imgL\\";
 
         internal const string RouteFile = "ILRout";
