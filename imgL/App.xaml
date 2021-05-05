@@ -1,0 +1,14 @@
+﻿<!-- Used External Project: https://github.com/ValdikSS/GoodbyeDPI-->
+
+<Application x:Class="imgL.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             StartupUri="Windows/ImgL.xaml">
+    <Application.Resources>
+        <FontFamily x:Key="Wingdings 2">pack://application:,,,/Font/#Wingdings 2</FontFamily>
+        <FontFamily x:Key="IBMPlexSansKR_SB">pack://application:,,,/Font/#IBM Plex Sans KR SemiBold</FontFamily>
+        <FontFamily x:Key="IBMPlexSansKR_R">pack://application:,,,/Font/#IBM Plex Sans KR Regular</FontFamily>
+        <FontFamily x:Key="NanumGothic_R">pack://application:,,,/Font/#나눔고딕</FontFamily>
+        <FontFamily x:Key="NanumGothic_B">pack://application:,,,/Font/#나눔고딕 Bold</FontFamily>
+    </Application.Resources>
+</Application>
