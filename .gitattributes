@@ -60,6 +60,10 @@
 #*.pdf   diff=astextplain
 #*.PDF   diff=astextplain
 #*.rtf   diff=astextplain
+<<<<<<< HEAD
 #*.RTF   diff=astextplain
 
 Etcs/**/* linguist-vendored
+=======
+#*.RTF   diff=astextplain
+>>>>>>> 17c475f06a744d759ca82dec354dc6da2b1fa860
